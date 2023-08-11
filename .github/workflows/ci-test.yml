@@ -1,7 +1,10 @@
+name: CI
+
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   build:
@@ -29,6 +32,12 @@ jobs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         npm ci
+        
+    - name: Create .env.development for CI
+      run: |
+        pwd
+        echo "${{ secrets.ENV_DEVELOPMENT }}" > .env.development
+        cat .env.development
 
     - name: Real Test
       run: |
