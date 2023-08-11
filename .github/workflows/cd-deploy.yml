@@ -64,7 +64,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.PRIVATE_KEY }}
           source: "./build/*"
-          target: "/home/ec2-user/actions-tmp-repo"
+          target: "/home/ec2-user/d-yes/actions-tmp-repo"
 
       - name: Remove Github Actions IP From Security Group
         run: |
@@ -84,7 +84,7 @@ jobs:
           script_stop: true
           script: |
             cd d-yes/frontend-react
-            cp -r ~/actions-tmp-repo/build/* ./html/
+            cp -r /home/ec2-user/d-yes/actions-tmp-repo/build/* d-yes/frontend-react/html/
 
             docker image prune -f
             docker logout
