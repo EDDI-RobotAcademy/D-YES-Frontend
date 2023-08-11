@@ -32,7 +32,7 @@ jobs:
 
     - name: Real Test
       run: |
-        npm run test:unit
+        npm run test
 
     - name: send FRONTEND_TEST_FINISH_TRIGGER
       run: |
