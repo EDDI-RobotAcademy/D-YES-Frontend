@@ -84,7 +84,7 @@ jobs:
           script_stop: true
           script: |
             cd d-yes/frontend-react
-            cp -r /home/ec2-user/d-yes/actions-tmp-repo/build/* d-yes/frontend-react/html/
+            cp -r /home/ec2-user/d-yes/actions-tmp-repo/build/* ./html/
 
             docker image prune -f
             docker logout
