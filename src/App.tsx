@@ -1,3 +1,4 @@
+import Footer from "layout/footer/Footer";
 import { AuthProvider } from "navigation/AuthConText";
 import Header from "navigation/Header";
 import MainPage from "page/MainPage";
@@ -12,6 +13,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<MainPage />} />
           </Routes>
+          <Footer />
         </Header>
       </BrowserRouter>
     </AuthProvider>
