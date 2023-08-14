@@ -1,0 +1,37 @@
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 10px;
+  height: 20px;
+}
+
+.top-bar .Menu,
+.top-bar .Menu-logout,
+.top-bar .PetCareFinder,
+.top-bar .search-bar-container input {
+  font-size: 8px;
+  vertical-align: middle !important; 
+}
+
+.menu-container {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 추가 */
+  position: fixed;
+  top: 0;
+  right: 10px; /* 우측 정렬 */
+}
+
+.Menu {
+  color: black;
+  margin: 8px;
+  text-decoration: none;
+}
+
+.Menu-logout {
+  color: black;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
