@@ -12,13 +12,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkAuthorization = useCallback((): boolean => {
-    const accessToken = localStorage.getItem("accessToken");
-    return !!accessToken;
+    const userToken = localStorage.getItem("userToken");
+    return !!userToken;
+  }, []);
+  
+  const saveTokenFromUrl = useCallback(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const userToken = urlSearchParams.get('userToken');
+
+    if (userToken) {
+      localStorage.setItem('userToken', userToken);
+      setIsLoggedIn(true);
+    }
   }, []);
 
   useEffect(() => {
     setIsLoggedIn(checkAuthorization());
-  }, [checkAuthorization]);
+    saveTokenFromUrl();
+  }, [checkAuthorization, saveTokenFromUrl]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, checkAuthorization }}>
