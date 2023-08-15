@@ -1,4 +1,4 @@
-import Slider from "react-slick";
+import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -14,7 +14,7 @@ const images: Image[] = [
 ];
 
 const Carousel: React.FC = () => {
-  const settings = {
+  const settings: Settings = {
     dots: true, // 아래에 점 표시
     infinite: true, // 슬라이드 무한 반복
     fade: true, // fade 효과
@@ -23,6 +23,7 @@ const Carousel: React.FC = () => {
     speed: 500, // 전환 속도
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘겨지는 슬라이드 수
+    lazyLoad: "anticipated",
   };
   return (
     <div>
