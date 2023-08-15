@@ -18,15 +18,15 @@ const Footer: React.FC = () => {
                 <div className="table-style">
                   <div className="flex table-col">
                     <p className="title-width">월-목요일</p>
-                    <p className="content-font">11:00 ~ 18:00 (점심시간 12:00 ~ 13:00)</p>
+                    <div>11:00 ~ 18:00 (점심시간 12:00 ~ 13:00)</div>
                   </div>
                   <div className="flex table-col">
                     <p className="title-width">금요일</p>
-                    <p className="content-font">09:00 ~ 18:00 (점심시간 12:00 ~ 13:00)</p>
+                    <div>09:00 ~ 18:00 (점심시간 12:00 ~ 13:00)</div>
                   </div>
                   <div className="flex table-col">
                     <p className="title-width">토·일·공휴일</p>
-                    <p className="content-font">휴무</p>
+                    <div>휴무</div>
                   </div>
                 </div>
               </div>
@@ -34,10 +34,10 @@ const Footer: React.FC = () => {
           </div>
           <div className="flex button-style">
             <button className="flex button-detail-1">
-              <p className="button-text-1">문의하기</p>
+              <div className="button-text-1">문의하기</div>
             </button>
             <button className="flex button-detail-2">
-              <p className="button-text-2">자주 묻는 질문</p>
+              <div className="button-text-2">자주 묻는 질문</div>
             </button>
           </div>
         </div>
