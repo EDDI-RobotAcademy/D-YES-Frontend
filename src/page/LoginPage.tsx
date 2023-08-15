@@ -1,6 +1,7 @@
 import { Box, Container } from "@mui/material";
 import KakaoLogin from "oauth/kakao/KakaoLogin";
 import GoogleLogin from "oauth/google/GoogleLogin";
+import NaverLogin from "oauth/naver/NaverLogin";
 
 import "./css/loginPage.css";
 
@@ -18,6 +19,7 @@ const LoginPage = () => {
         <div className="login-icons">
           <KakaoLogin />
           <GoogleLogin />
+          <NaverLogin />
         </div>
       </Container>
     </Box>
