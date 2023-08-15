@@ -1,25 +1,13 @@
 .top-bar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  margin-right: 10px;
-  height: 20px;
-}
-
-.top-bar .Menu,
-.top-bar .Menu-logout,
-.top-bar .PetCareFinder,
-.top-bar .search-bar-container input {
-  font-size: 8px;
-  vertical-align: middle !important;
-}
-
-.menu-container {
-  display: flex;
-  align-items: center; /* 세로 중앙 정렬 추가 */
-  position: fixed;
-  top: 0;
-  right: 10px; /* 우측 정렬 */
+  height: 60px;
+  background-color: white;
+  width: 1024px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 50;
 }
 
 .Menu {
@@ -34,4 +22,30 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
+  max-width: 100px;
+}
+
+.Menu-logout img {
+  max-width: 100px;
+}
+
+.Home {
+  color: black;
+  margin: 8px;
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+.Login img {
+  max-width: 90px;
+  
+}
+
+.MyPage img {
+  max-width: 100px;
+}
+
+.MyPage {
+  margin-left: auto;
+  margin-right: 20px;
 }
