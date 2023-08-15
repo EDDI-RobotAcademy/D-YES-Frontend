@@ -4,3 +4,11 @@
   font-family: "SUIT-Bold";
   font-size: x-large;
 }
+
+.login-icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
