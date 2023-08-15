@@ -1,6 +1,10 @@
 import "../css/loginButton.css";
 
-const NaverLogin = () => {
+interface naverLoginProps {
+  onSuccess: () => void;
+}
+
+const NaverLogin: React.FC<naverLoginProps> = ({ onSuccess }) => {
   const CLIENT_ID = `${process.env.REACT_APP_NAVER_AUTH_CLIENT_ID}`;
   const REDIRECT_URI = `${process.env.REACT_APP_NAVER_REDIRECT_URL}`;
   const STATE: string = Math.random().toString(36).slice(2, 16);

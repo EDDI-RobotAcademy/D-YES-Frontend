@@ -4,8 +4,15 @@ import GoogleLogin from "oauth/google/GoogleLogin";
 import NaverLogin from "oauth/naver/NaverLogin";
 
 import "./css/loginPage.css";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const LoginPage = () => {
+  const { setIsLoggedIn } = useAuth();
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
+
   return (
     <Box
       display="flex"
@@ -17,9 +24,9 @@ const LoginPage = () => {
       <Container maxWidth="xs">
         <div className="login-header">로그인·회원가입</div>
         <div className="login-icons">
-          <KakaoLogin />
-          <GoogleLogin />
-          <NaverLogin />
+          <KakaoLogin onSuccess={handleLoginSuccess} />
+          <GoogleLogin onSuccess={handleLoginSuccess} />
+          <NaverLogin onSuccess={handleLoginSuccess} />
         </div>
       </Container>
     </Box>
