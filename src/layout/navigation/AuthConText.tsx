@@ -1,5 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -13,9 +12,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkAuthorization = useCallback((): boolean => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
     return !!accessToken;
-  }, []); 
+  }, []);
 
   useEffect(() => {
     setIsLoggedIn(checkAuthorization());
@@ -31,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = (): AuthContextType => {
   const auth = useContext(AuthContext);
   if (!auth) {
-    throw new Error('AuthProvider밖에서 사용할 수 없습니다.');
+    throw new Error("AuthProvider밖에서 사용할 수 없습니다.");
   }
   return auth;
 };
