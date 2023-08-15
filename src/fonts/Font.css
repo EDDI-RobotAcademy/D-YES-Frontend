@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+@font-face {
+  font-family: "SUIT-Bold";
+  src: url("./SUIT-Bold.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-ExtraBold";
+  src: url("./SUIT-ExtraBold.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-ExtraLight";
+  src: url("./SUIT-ExtraLight.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-Heavy";
+  src: url("./SUIT-Heavy.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-Light";
+  src: url("./SUIT-Light.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-Medium";
+  src: url("./SUIT-Medium.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-Regular";
+  src: url("./SUIT-Regular.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-SemiBold";
+  src: url("./SUIT-SemiBold.otf") format("opentype");
+}
+@font-face {
+  font-family: "SUIT-Thin";
+  src: url("./SUIT-Thin.otf") format("opentype");
+}
