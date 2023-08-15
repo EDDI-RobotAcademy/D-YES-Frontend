@@ -1,6 +1,10 @@
 import "../css/loginButton.css";
 
-const GoogleLoginButton = () => {
+interface googleLoginProps {
+  onSuccess: () => void;
+}
+
+const GoogleLoginButton: React.FC<googleLoginProps> = ({ onSuccess }) => {
   const CLIENT_ID = `${process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}`;
   const REDIRECT_URI = `${process.env.REACT_APP_GOOGLE_REDIRECT_URL}`;
   const googleURL =
