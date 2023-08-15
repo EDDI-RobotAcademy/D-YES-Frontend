@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "./AuthConText";
 import "./css/Header.css";
 
@@ -8,10 +8,20 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
-  const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    setIsLoggedIn(false);
+  
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    urlSearchParams.delete('userToken'); 
+  
+    window.history.replaceState({}, document.title, `${window.location.pathname}?${urlSearchParams.toString()}`);
+  
+    alert('로그아웃했습니다.');
+    window.location.href = '/';
+  };
 
   return (
     <div className="header-fontstyle">
