@@ -23,6 +23,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (userToken) {
       localStorage.setItem('userToken', userToken);
       setIsLoggedIn(true);
+  
+      window.location.href = "/";
     }
   }, []);
 
