@@ -1,0 +1,10 @@
+.Toastify__toast {
+  background-color: rgba(0, 0, 0, 0.8); /* 투명한 블랙 배경색 설정 */
+  color: white; /* 텍스트 색상 설정 */
+  font-size: 12px; /* 원하는 글씨 크기로 설정 */
+
+}
+
+.Toastify__toast-body > .Toastify__toast-icon {
+  display: none; /* 아이콘을 숨김 */
+}

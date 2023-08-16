@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthConText";
 import "./css/Header.css";
+import { toast } from "react-toastify";
 
 type HeaderProps = {
   children?: ReactNode;
@@ -31,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       `${window.location.pathname}?${urlSearchParams.toString()}`
     );
 
-    alert("로그아웃했습니다.");
+    toast.success("로그아웃했습니다.");
     window.location.href = "/";
   };
 
