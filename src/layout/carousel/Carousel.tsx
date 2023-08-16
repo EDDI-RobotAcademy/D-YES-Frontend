@@ -15,7 +15,6 @@ const images: Image[] = [
 
 const Carousel: React.FC = () => {
   const settings: Settings = {
-    dots: true, // 아래에 점 표시
     infinite: true, // 슬라이드 무한 반복
     fade: true, // fade 효과
     autoplay: true, // 자동으로 다음 슬라이드로
@@ -23,11 +22,12 @@ const Carousel: React.FC = () => {
     speed: 500, // 전환 속도
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘겨지는 슬라이드 수
-    lazyLoad: "anticipated",
+    lazyLoad: "anticipated", // 현재 페이지의 전, 후 페이지를 로드해준다
   };
   return (
     <div>
       <Slider className="slider" {...settings}>
+        {/* map을 사용해 images의 요소를 하나씩 뽑아옴 */}
         {images.map((image) => {
           return (
             <div className="slide-container" key={image.id}>
