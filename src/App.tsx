@@ -6,6 +6,7 @@ import MainPage from "page/MainPage";
 import MyPage from "page/user/myPage/MyPage";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SnackBar from "layout/snackBar/SnackBar";
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         </Routes>
         <Footer />
       </BrowserRouter>
+      <SnackBar/>
     </AuthProvider>
   );
 };
