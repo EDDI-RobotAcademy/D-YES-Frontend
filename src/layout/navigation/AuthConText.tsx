@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 type AuthContextType = {
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  // 인증상태를 확인하여 로그인이 되어있으면 true로 동작 
+  // 인증상태를 확인하여 로그인이 되어있으면 true로 동작
   // 로그인이 안되어있으면 로그인 페이지로 이동시킬 수 있음
   // 이 설정을 하고싶으면 해당 페이지에서 설정해줘야함
   checkAuthorization: () => boolean;
@@ -19,14 +19,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const userToken = localStorage.getItem("userToken");
     return !!userToken;
   }, []); // 빈 배열을 의존성으로 설정하여 함수가 변하지 않도록 함
-  
+
   const saveTokenFromUrl = useCallback(() => {
-    // url에서 userToken추출 
+    // url에서 userToken추출
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const userToken = urlSearchParams.get('userToken');
+    const userToken = urlSearchParams.get("userToken");
 
     if (userToken) {
-      localStorage.setItem('userToken', userToken);
+      localStorage.setItem("userToken", userToken);
       setIsLoggedIn(true);
 
       // 로그인 성공 후 홈페이지로 리다이렉트
