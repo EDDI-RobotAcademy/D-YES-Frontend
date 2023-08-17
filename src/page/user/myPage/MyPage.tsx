@@ -3,6 +3,7 @@ import { Box, Button, Container, InputLabel, OutlinedInput } from "@mui/material
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
+import { User } from "../entity/User";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -13,8 +14,17 @@ const MyPage = () => {
     enabled: !!userToken,
   });
 
+  const userAddress: User =
+    typeof user?.address === "string"
+      ? JSON.parse(user.address)
+      : user?.address || {
+          address: "",
+          zipCode: "",
+          addressDetail: "",
+        };
+
   const handleEditClick = () => {
-    navigate("/updateInfo");
+    navigate("/updateInfo",  { state: { userAddress } });
   };
 
   const handleCancelClick = () => {
@@ -81,7 +91,7 @@ const MyPage = () => {
           id="address"
           name="address"
           disabled
-          value={user?.address || ""}
+          value={userAddress?.address || ""}
           sx={{ borderRadius: "4px", marginBottom: "16px" }}
         />
         <InputLabel htmlFor="zipNo" sx={{ fontSize: "12px" }}>
@@ -91,7 +101,7 @@ const MyPage = () => {
           id="zipNo"
           name="zipCode"
           disabled
-          value={user?.zipCode || ""}
+          value={userAddress?.zipCode || ""}
           sx={{ borderRadius: "4px", marginBottom: "16px" }}
         />
         <InputLabel htmlFor="addrDetail" sx={{ fontSize: "12px" }}>
@@ -101,7 +111,7 @@ const MyPage = () => {
           id="addrDetail"
           name="addressDetail"
           disabled
-          value={user?.addressDetail || ""}
+          value={userAddress?.addressDetail || ""}
           sx={{ borderRadius: "4px", marginBottom: "16px" }}
         />
         <Button variant="outlined" onClick={handleEditClick}>
