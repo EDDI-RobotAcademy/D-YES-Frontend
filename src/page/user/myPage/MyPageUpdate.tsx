@@ -72,20 +72,29 @@ const MyPageUpdate = () => {
   };
 
   const handleEditFinishClick = async () => {
-    const updatedData: any = {
-      userId,
-      userToken,
-      email,
-      nickName,
-      profileImg,
-      contactNumber,
-      ...userAddress,
-    };
+    try {
+      const updatedData: any = {
+        userId,
+        userToken,
+        email,
+        nickName,
+        profileImg,
+        contactNumber,
+        ...userAddress,
+
+      };
       
-    await mutation.mutateAsync(updatedData);
-    queryClient.invalidateQueries(["user", userId]);
-    console.log("확인", updatedData);
-    navigate("/myPage");
+      await mutation.mutateAsync(updatedData);
+      queryClient.invalidateQueries(["user", userId]);
+      console.log("확인", updatedData);
+      navigate("/myPage");
+    } catch (error) {
+      if ((error as AxiosError).response && (error as AxiosError).response?.status === 400) {
+        toast.error("페이지를 찾을 수 없습니다.");
+      } else {
+        toast.error("서버와 통신 중 오류가 발생했습니다.");
+      }
+    }
   };
 
   return (
