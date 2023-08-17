@@ -7,6 +7,7 @@ import MyPage from "page/user/myPage/MyPage";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SnackBar from "layout/snackBar/SnackBar";
+import MyPageUpdate from "page/user/myPage/MyPageUpdate";
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/myPage" element={<MyPage />} />
+          <Route path="/updateInfo" element={<MyPageUpdate />} />
         </Routes>
         <Footer />
       </BrowserRouter>
