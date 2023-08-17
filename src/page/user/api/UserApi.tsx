@@ -58,3 +58,13 @@ export const useUserUpdateMutation = (): UseMutationResult<User, unknown, User> 
     },
   });
 };
+
+// 이메일 중복 확인
+export const checkEmailDuplicate = async (email: string) => {
+  const response = await axiosInstance.springAxiosInst.get(`/user/check-email`, {
+    params: {
+      email: email,
+    },
+  });
+  return response.data;
+};

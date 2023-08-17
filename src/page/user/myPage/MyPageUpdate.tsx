@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
-  // checkEmailDuplicate,
+  checkEmailDuplicate,
   // checkNicknameDuplicate,
   useUserQuery,
   useUserUpdateMutation,
@@ -37,7 +37,9 @@ const MyPageUpdate = () => {
   const [nickName, setNickName] = useState(user?.nickName || "");
   const [contactNumber, setContactNumber] = useState(user?.contactNumber || "");
   const [profileImg, setProfileImg] = useState(user?.profileImg || "");
-  // const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
+  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
+  const [isEmailChanged, setIsEmailChanged] = useState(false);
+  
   // const [isNickNameAvailable, setIsNickNameAvailable] = useState<boolean>(false);
   
   const [userAddress, setUserAddress] = useState({
@@ -45,7 +47,6 @@ const MyPageUpdate = () => {
     zipCode: user?.zipCode || "",
     addressDetail: user?.addressDetail || "",
   });
-  ;
   
   useEffect(() => {
     if (location.state && location.state.userAddress) {
@@ -71,7 +72,30 @@ const MyPageUpdate = () => {
     }).open();
   };
 
+  const handleDuplicateCheck = async () => {
+    const isDuplicate = await checkEmailDuplicate(email);
+    if (isDuplicate) {
+      setIsEmailAvailable(true);
+      toast.success("사용가능한 이메일입니다.");
+    } else {
+      setIsEmailAvailable(false);
+      toast.error("중복된 이메일입니다.");
+    }
+  };
+
+  // 이메일 상태가 변경될 때마다 isEmailChanged 상태를 true로 설정
+  useEffect(() => {
+    setIsEmailChanged(email !== user?.email); // 변경 여부 판단
+  }, [email, user]);
+
   const handleEditFinishClick = async () => {
+    // 이미 중복된 이메일인 경우 수정 완료 버튼을 비활성화
+    // 수정을 원하는 사용자의 기존 이메일과 동일하다면 수정 완료 버튼 활성화
+    if (!isEmailAvailable && email !== user?.email) {
+      toast.error("중복된 이메일입니다. 수정할 수 없습니다.");
+      return;
+    }
+    
     try {
       const updatedData: any = {
         userId,
@@ -114,13 +138,14 @@ const MyPageUpdate = () => {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
-            {/* <Button
+            <Button
               variant="outlined"
               onClick={handleDuplicateCheck}
               style={{ fontSize: "14px", height: "56px", padding: "0 26px", marginBottom: "16px" }}
+              disabled={!isEmailChanged && email === user?.email}
             >
               중복확인
-            </Button> */}
+            </Button>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
