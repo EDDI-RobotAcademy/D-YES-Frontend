@@ -5,7 +5,7 @@ import { useQueryClient } from "react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   checkEmailDuplicate,
-  // checkNicknameDuplicate,
+  checkNicknameDuplicate,
   useUserQuery,
   useUserUpdateMutation,
 } from "../api/UserApi";
@@ -39,21 +39,21 @@ const MyPageUpdate = () => {
   const [profileImg, setProfileImg] = useState(user?.profileImg || "");
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
   const [isEmailChanged, setIsEmailChanged] = useState(false);
-  
-  // const [isNickNameAvailable, setIsNickNameAvailable] = useState<boolean>(false);
-  
+  const [isNickNameAvailable, setIsNickNameAvailable] = useState<boolean>(false);
+  const [isNickNameChanged, setIsNickNameChanged] = useState(false);
+
   const [userAddress, setUserAddress] = useState({
     address: user?.address || "",
     zipCode: user?.zipCode || "",
     addressDetail: user?.addressDetail || "",
   });
-  
+
   useEffect(() => {
     if (location.state && location.state.userAddress) {
       setUserAddress(location.state.userAddress);
     }
-  }, [location.state]); 
-  
+  }, [location.state]);
+
   const userToken = localStorage.getItem("userToken");
 
   const mutation = useUserUpdateMutation();
@@ -61,7 +61,7 @@ const MyPageUpdate = () => {
   const onClickAddr = () => {
     new window.daum.Postcode({
       oncomplete: function (data: IAddr) {
-        setUserAddress(prev => ({
+        setUserAddress((prev) => ({
           ...prev, // 이전 객체의 모든 속성을 복사
           // 주소, 우편번호 업데이트
           address: data.address,
@@ -83,19 +83,34 @@ const MyPageUpdate = () => {
     }
   };
 
+  const handleDuplicateNicknameCheck = async () => {
+    const isDuplicate = await checkNicknameDuplicate(nickName);
+    if (isDuplicate) {
+      setIsNickNameAvailable(true);
+      toast.success("사용가능한 닉네임입니다.");
+    } else {
+      setIsNickNameAvailable(false);
+      toast.error("중복된 닉네임입니다.");
+    }
+  };
+
   // 이메일 상태가 변경될 때마다 isEmailChanged 상태를 true로 설정
   useEffect(() => {
     setIsEmailChanged(email !== user?.email); // 변경 여부 판단
-  }, [email, user]);
+    setIsNickNameChanged(nickName !== user?.nickName); // 변경 여부 판단
+  }, [email, nickName, user]);
 
   const handleEditFinishClick = async () => {
-    // 이미 중복된 이메일인 경우 수정 완료 버튼을 비활성화
-    // 수정을 원하는 사용자의 기존 이메일과 동일하다면 수정 완료 버튼 활성화
-    if (!isEmailAvailable && email !== user?.email) {
-      toast.error("중복된 이메일입니다. 수정할 수 없습니다.");
+    // 이미 중복된 이메일, 닉네임인 경우 수정 완료 버튼을 비활성화
+    // 수정을 원하는 사용자의 기존 이메일, 닉네임과 동일하다면 수정 완료 버튼 활성화
+    if (
+      (!isEmailAvailable && email !== user?.email) ||
+      (!isNickNameAvailable && nickName !== user?.nickName)
+    ) {
+      toast.error("중복된 이메일 또는 닉네임입니다. 수정할 수 없습니다.");
       return;
     }
-    
+
     try {
       const updatedData: any = {
         userId,
@@ -105,9 +120,8 @@ const MyPageUpdate = () => {
         profileImg,
         contactNumber,
         ...userAddress,
-
       };
-      
+
       await mutation.mutateAsync(updatedData);
       queryClient.invalidateQueries(["user", userId]);
       console.log("확인", updatedData);
@@ -161,13 +175,14 @@ const MyPageUpdate = () => {
               value={nickName}
               onChange={(event) => setNickName(event.target.value)}
             />
-            {/* <Button
+            <Button
               variant="outlined"
               onClick={handleDuplicateNicknameCheck}
               style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
+              disabled={!isNickNameChanged && nickName === user?.nickName}
             >
               중복확인
-            </Button> */}
+            </Button>
           </div>
         </div>
         <div>
@@ -195,7 +210,6 @@ const MyPageUpdate = () => {
               sx={{ width: "300px", marginBottom: "16px" }}
               value={userAddress.address}
               InputProps={{ onClick: onClickAddr }}
-
             />
             <Button
               variant="outlined"
@@ -228,8 +242,10 @@ const MyPageUpdate = () => {
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
             value={userAddress.addressDetail}
-            onChange={(event) => setUserAddress(prev => ({ ...prev, addressDetail: event.target.value }))}
-            />
+            onChange={(event) =>
+              setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }))
+            }
+          />
         </div>
         <Button variant="outlined" onClick={handleEditFinishClick}>
           수정완료

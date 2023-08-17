@@ -34,7 +34,7 @@ export const updateInfo = async (updatedData: User): Promise<User> => {
   const { userToken, email, nickName, profileImg, contactNumber, address, zipCode, addressDetail } =
     updatedData;
 
-    const response = await axiosInstance.springAxiosInst.put<User>("/user/updateInfo", {
+  const response = await axiosInstance.springAxiosInst.put<User>("/user/updateInfo", {
     userToken,
     email,
     nickName,
@@ -64,6 +64,16 @@ export const checkEmailDuplicate = async (email: string) => {
   const response = await axiosInstance.springAxiosInst.get(`/user/check-email`, {
     params: {
       email: email,
+    },
+  });
+  return response.data;
+};
+
+// 닉네임 중복 확인
+export const checkNicknameDuplicate = async (nickName: string) => {
+  const response = await axiosInstance.springAxiosInst.get(`/user/check-nickName`, {
+    params: {
+      nickName: nickName,
     },
   });
   return response.data;
