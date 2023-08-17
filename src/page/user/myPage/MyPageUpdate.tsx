@@ -10,6 +10,7 @@ import {
   useUserUpdateMutation,
 } from "../api/UserApi";
 import { toast } from "react-toastify";
+import "./css/MyPage.css";
 
 declare global {
   interface Window {
@@ -41,6 +42,7 @@ const MyPageUpdate = () => {
   const [isEmailChanged, setIsEmailChanged] = useState(false);
   const [isNickNameAvailable, setIsNickNameAvailable] = useState<boolean>(false);
   const [isNickNameChanged, setIsNickNameChanged] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(true);
 
   const [userAddress, setUserAddress] = useState({
     address: user?.address || "",
@@ -72,7 +74,14 @@ const MyPageUpdate = () => {
     }).open();
   };
 
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
   const handleDuplicateCheck = async () => {
+    if (!email.match(emailRegex)) {
+      setIsEmailValid(false);
+      toast.error("유효한 이메일 형식이 아닙니다.");
+      return;
+    }
     const isDuplicate = await checkEmailDuplicate(email);
     if (isDuplicate) {
       setIsEmailAvailable(true);
@@ -94,6 +103,21 @@ const MyPageUpdate = () => {
     }
   };
 
+  const handleContactNumber = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    let formattedPhoneNumber = value.replace(/[^0-9]/g, ""); // 숫자 이외의 문자 제거
+    formattedPhoneNumber = formattedPhoneNumber.slice(0, 11); // 11자리까지만 유지
+    if (formattedPhoneNumber.length === 11) {
+      formattedPhoneNumber = `${formattedPhoneNumber.slice(0, 3)}-${formattedPhoneNumber.slice(
+        3,
+        7
+      )}-${formattedPhoneNumber.slice(7)}`;
+    }
+    setContactNumber(formattedPhoneNumber);
+  };
+
   // 이메일 상태가 변경될 때마다 isEmailChanged 상태를 true로 설정
   useEffect(() => {
     setIsEmailChanged(email !== user?.email); // 변경 여부 판단
@@ -107,7 +131,7 @@ const MyPageUpdate = () => {
       (!isEmailAvailable && email !== user?.email) ||
       (!isNickNameAvailable && nickName !== user?.nickName)
     ) {
-      toast.error("중복된 이메일 또는 닉네임입니다. 수정할 수 없습니다.");
+      toast.error("사용할 수 없는 이메일 또는 닉네임입니다.");
       return;
     }
 
@@ -136,122 +160,135 @@ const MyPageUpdate = () => {
   };
 
   return (
-    <Container sx={{ marginTop: "1em", width: "500px", maxWidth: "500px" }}>
-      <Box display="flex" flexDirection="column" gap={1} p={2}>
-        <h1>회원정보 수정</h1>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-          <InputLabel htmlFor="email" shrink>
-            이메일
-          </InputLabel>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+    <div className="mypage-container">
+      <Container sx={{ marginTop: "1em", width: "500px", maxWidth: "500px" }}>
+        <Box display="flex" flexDirection="column" gap={1} p={2}>
+          <h1>회원정보 수정</h1>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <InputLabel htmlFor="email" shrink>
+              이메일
+            </InputLabel>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <TextField
+                id="email"
+                fullWidth
+                variant="outlined"
+                sx={{ width: "300px", marginBottom: "16px" }}
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setIsEmailValid(true);
+                }}
+              />
+              <Button
+                variant="outlined"
+                onClick={handleDuplicateCheck}
+                style={{
+                  fontSize: "14px",
+                  height: "56px",
+                  padding: "0 26px",
+                  marginBottom: "16px",
+                }}
+                disabled={!isEmailChanged && email === user?.email}
+              >
+                중복확인
+              </Button>
+            </div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <InputLabel htmlFor="nickname" shrink>
+              닉네임
+            </InputLabel>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+              <TextField
+                id="nickname"
+                fullWidth
+                variant="outlined"
+                sx={{ width: "300px", marginBottom: "16px" }}
+                value={nickName}
+                onChange={(event) => setNickName(event.target.value)}
+              />
+              <Button
+                variant="outlined"
+                onClick={handleDuplicateNicknameCheck}
+                style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
+                disabled={!isNickNameChanged && nickName === user?.nickName}
+              >
+                중복확인
+              </Button>
+            </div>
+          </div>
+          <div>
+            <InputLabel htmlFor="contactNumber" shrink style={{ position: "absolute" }}>
+              휴대폰 번호
+            </InputLabel>
             <TextField
-              id="email"
+              id="contactNumber"
               fullWidth
               variant="outlined"
-              sx={{ width: "300px", marginBottom: "16px" }}
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              sx={{ paddingTop: "24px", marginBottom: "16px" }}
+              value={contactNumber}
+              onChange={(event) => {
+                setContactNumber(event.target.value);
+                handleContactNumber(event); // 수정된 부분
+              }}
             />
-            <Button
-              variant="outlined"
-              onClick={handleDuplicateCheck}
-              style={{ fontSize: "14px", height: "56px", padding: "0 26px", marginBottom: "16px" }}
-              disabled={!isEmailChanged && email === user?.email}
-            >
-              중복확인
-            </Button>
           </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-          <InputLabel htmlFor="nickname" shrink>
-            닉네임
-          </InputLabel>
-          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <InputLabel htmlFor="addr" shrink>
+              주소
+            </InputLabel>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+              <TextField
+                id="addr"
+                fullWidth
+                variant="outlined"
+                sx={{ width: "300px", marginBottom: "16px" }}
+                value={userAddress.address}
+                InputProps={{ onClick: onClickAddr }}
+              />
+              <Button
+                variant="outlined"
+                onClick={onClickAddr}
+                style={{ fontSize: "14px", height: "56px", padding: "0 40px" }}
+              >
+                검색
+              </Button>
+            </div>
+          </div>
+          <div>
+            <InputLabel htmlFor="zipNo" shrink style={{ position: "absolute" }}>
+              우편번호
+            </InputLabel>
             <TextField
-              id="nickname"
+              id="zipNo"
               fullWidth
               variant="outlined"
-              sx={{ width: "300px", marginBottom: "16px" }}
-              value={nickName}
-              onChange={(event) => setNickName(event.target.value)}
+              sx={{ paddingTop: "24px", marginBottom: "16px" }}
+              value={userAddress.zipCode}
             />
-            <Button
-              variant="outlined"
-              onClick={handleDuplicateNicknameCheck}
-              style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
-              disabled={!isNickNameChanged && nickName === user?.nickName}
-            >
-              중복확인
-            </Button>
           </div>
-        </div>
-        <div>
-          <InputLabel htmlFor="contactNumber" shrink style={{ position: "absolute" }}>
-            휴대폰 번호
-          </InputLabel>
-          <TextField
-            id="contactNumber"
-            fullWidth
-            variant="outlined"
-            sx={{ paddingTop: "24px", marginBottom: "16px" }}
-            value={contactNumber}
-            onChange={(event) => setContactNumber(event.target.value)}
-          />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-          <InputLabel htmlFor="addr" shrink>
-            주소
-          </InputLabel>
-          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+          <div>
+            <InputLabel htmlFor="addressDetail" shrink style={{ position: "absolute" }}>
+              상세주소
+            </InputLabel>
             <TextField
-              id="addr"
+              id="addressDetail"
               fullWidth
               variant="outlined"
-              sx={{ width: "300px", marginBottom: "16px" }}
-              value={userAddress.address}
-              InputProps={{ onClick: onClickAddr }}
+              sx={{ paddingTop: "24px", marginBottom: "16px" }}
+              value={userAddress.addressDetail}
+              onChange={(event) =>
+                setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }))
+              }
             />
-            <Button
-              variant="outlined"
-              onClick={onClickAddr}
-              style={{ fontSize: "14px", height: "56px", padding: "0 40px" }}
-            >
-              검색
-            </Button>
           </div>
-        </div>
-        <div>
-          <InputLabel htmlFor="zipNo" shrink style={{ position: "absolute" }}>
-            우편번호
-          </InputLabel>
-          <TextField
-            id="zipNo"
-            fullWidth
-            variant="outlined"
-            sx={{ paddingTop: "24px", marginBottom: "16px" }}
-            value={userAddress.zipCode}
-          />
-        </div>
-        <div>
-          <InputLabel htmlFor="addressDetail" shrink style={{ position: "absolute" }}>
-            상세주소
-          </InputLabel>
-          <TextField
-            id="addressDetail"
-            fullWidth
-            variant="outlined"
-            sx={{ paddingTop: "24px", marginBottom: "16px" }}
-            value={userAddress.addressDetail}
-            onChange={(event) =>
-              setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }))
-            }
-          />
-        </div>
-        <Button variant="outlined" onClick={handleEditFinishClick}>
-          수정완료
-        </Button>
-      </Box>
-    </Container>
+          <Button variant="outlined" onClick={handleEditFinishClick}>
+            수정완료
+          </Button>
+        </Box>
+      </Container>
+    </div>
   );
 };
 
