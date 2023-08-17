@@ -17,7 +17,6 @@ export const UserMyPage = async (): Promise<User | null> => {
       userToken: userToken,
     },
   });
-  console.log("정보확인", response.data);
   return response.data;
 };
 

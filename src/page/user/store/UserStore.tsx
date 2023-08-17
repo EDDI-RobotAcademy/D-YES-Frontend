@@ -7,7 +7,7 @@ interface UserState {
 }
 
 export const useUserStore = create<UserState>((set) => ({
-    user: null,
+  user: null,
   setUser: (user) => set({ user })
 }))
 export default useUserStore
