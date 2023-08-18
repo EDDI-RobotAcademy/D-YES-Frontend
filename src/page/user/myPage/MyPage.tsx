@@ -9,9 +9,17 @@ const MyPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
+  const hasFetchedRef = React.useRef(false);
 
-  const { data: user } = useQuery("user", UserMyPage, {
-    enabled: !!userToken,
+  const fetchUser = async () => {
+    hasFetchedRef.current = true;
+    const userData = await UserMyPage();
+    return userData;
+  };
+  
+  const { data: user } = useQuery("user", fetchUser, {
+    enabled: !!userToken && !hasFetchedRef.current,
+    initialData: queryClient.getQueryData("user") || undefined,
   });
 
   const userAddress: User =
