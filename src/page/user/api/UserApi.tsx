@@ -78,3 +78,12 @@ export const checkNicknameDuplicate = async (nickName: string) => {
   });
   return response.data;
 };
+
+// 회원 로그아웃
+export const userLogout = async () => {
+  await axiosInstance.springAxiosInst.get(`/user/logOut`, {
+    params: {
+      userToken: userToken,
+    },
+  });
+};

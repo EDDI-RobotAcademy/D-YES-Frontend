@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./AuthConText";
 import "./css/Header.css";
 import { toast } from "react-toastify";
+import { userLogout } from "page/user/api/UserApi";
 
 type HeaderProps = {
   children?: ReactNode;
@@ -13,6 +14,8 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
 
   // 로그아웃 동작
   const handleLogout = () => {
+    userLogout();
+    
     localStorage.removeItem("userToken");
     // userToken이 제거되면 setIsLoggedIn이 false로 변경되어
     // 로그인 상태가 아니라는 것을 인식시킴
