@@ -38,11 +38,9 @@ const MyPageUpdate = () => {
   const [nickName, setNickName] = useState(user?.nickName || "");
   const [contactNumber, setContactNumber] = useState(user?.contactNumber || "");
   const [profileImg, setProfileImg] = useState(user?.profileImg || "");
-  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
-  const [isEmailChanged, setIsEmailChanged] = useState(false);
-  const [isNickNameAvailable, setIsNickNameAvailable] = useState<boolean>(false);
-  const [isNickNameChanged, setIsNickNameChanged] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [checkedEmailDuplicated, setCheckedEmailDuplicated] = useState<boolean>(true);
+  const [checkedNickNameDuplicated, setCheckedNickNameDuplicated] = useState<boolean>(true);
 
   const [userAddress, setUserAddress] = useState({
     address: user?.address || "",
@@ -82,23 +80,26 @@ const MyPageUpdate = () => {
       toast.error("유효한 이메일 형식이 아닙니다.");
       return;
     }
+
+    // 이메일 중복 여부 확인
     const isDuplicate = await checkEmailDuplicate(email);
     if (isDuplicate) {
-      setIsEmailAvailable(true);
-      toast.success("사용가능한 이메일입니다.");
+      setCheckedEmailDuplicated(true);
+      toast.success("사용 가능한 이메일입니다.");
     } else {
-      setIsEmailAvailable(false);
+      setCheckedEmailDuplicated(false);
       toast.error("중복된 이메일입니다.");
     }
   };
 
+  // 닉네임 중복 여부 확인
   const handleDuplicateNicknameCheck = async () => {
     const isDuplicate = await checkNicknameDuplicate(nickName);
     if (isDuplicate) {
-      setIsNickNameAvailable(true);
-      toast.success("사용가능한 닉네임입니다.");
+      setCheckedNickNameDuplicated(true);
+      toast.success("사용 가능한 닉네임입니다.");
     } else {
-      setIsNickNameAvailable(false);
+      setCheckedNickNameDuplicated(false);
       toast.error("중복된 닉네임입니다.");
     }
   };
@@ -118,20 +119,23 @@ const MyPageUpdate = () => {
     setContactNumber(formattedPhoneNumber);
   };
 
-  // 이메일 상태가 변경될 때마다 isEmailChanged 상태를 true로 설정
   useEffect(() => {
-    setIsEmailChanged(email !== user?.email); // 변경 여부 판단
-    setIsNickNameChanged(nickName !== user?.nickName); // 변경 여부 판단
+    setCheckedEmailDuplicated(email == user?.email || email === "");
+    setCheckedNickNameDuplicated(nickName == user?.nickName || nickName === "");
   }, [email, nickName, user]);
 
   const handleEditFinishClick = async () => {
-    // 이미 중복된 이메일, 닉네임인 경우 수정 완료 버튼을 비활성화
-    // 수정을 원하는 사용자의 기존 이메일, 닉네임과 동일하다면 수정 완료 버튼 활성화
+    console.log("이메일 중복 확인 됐니?: " + checkedEmailDuplicated);
+    console.log("닉네임 중복 확인 됐니?: " + checkedNickNameDuplicated);
+    console.log("@ . 포함하는 이메일이니?: " + isEmailValid);
+    console.log("이메일 공백이니: " + (email === ""));
+    console.log("닉네임 공백이니: " + (nickName === ""));
     if (
-      (!isEmailAvailable && email !== user?.email) ||
-      (!isNickNameAvailable && nickName !== user?.nickName)
+      checkedEmailDuplicated === false ||
+      checkedNickNameDuplicated === false ||
+      isEmailValid === false
     ) {
-      toast.error("사용할 수 없는 이메일 또는 닉네임입니다.");
+      toast.error("이메일 혹은 닉네임을 확인해주세요.");
       return;
     }
 
@@ -176,8 +180,10 @@ const MyPageUpdate = () => {
                 sx={{ width: "300px", marginBottom: "16px" }}
                 value={email}
                 onChange={(event) => {
+                  if (event.target.value === "") {
+                    setCheckedEmailDuplicated(true);
+                  }
                   setEmail(event.target.value);
-                  setIsEmailValid(true);
                 }}
               />
               <Button
@@ -189,7 +195,7 @@ const MyPageUpdate = () => {
                   padding: "0 26px",
                   marginBottom: "16px",
                 }}
-                disabled={!isEmailChanged && email === user?.email}
+                disabled={email == user?.email && checkedEmailDuplicated}
               >
                 중복확인
               </Button>
@@ -206,13 +212,18 @@ const MyPageUpdate = () => {
                 variant="outlined"
                 sx={{ width: "300px", marginBottom: "16px" }}
                 value={nickName}
-                onChange={(event) => setNickName(event.target.value)}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    setCheckedNickNameDuplicated(true);
+                  }
+                  setNickName(event.target.value);
+                }}
               />
               <Button
                 variant="outlined"
                 onClick={handleDuplicateNicknameCheck}
                 style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
-                disabled={!isNickNameChanged && nickName === user?.nickName}
+                disabled={nickName == user?.nickName && checkedNickNameDuplicated}
               >
                 중복확인
               </Button>
