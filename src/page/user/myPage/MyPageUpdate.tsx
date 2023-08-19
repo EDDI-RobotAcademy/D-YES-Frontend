@@ -49,8 +49,26 @@ const MyPageUpdate = () => {
   });
 
   useEffect(() => {
-    if (location.state && location.state.userAddress) {
-      setUserAddress(location.state.userAddress);
+    if (location.state) {
+      // 주소 정보 업데이트
+      if (location.state.userAddress) {
+        setUserAddress(location.state.userAddress);
+      }
+  
+      // 이메일 정보 업데이트
+      if (location.state.userEmail) {
+        setEmail(location.state.userEmail);
+      }
+  
+      // 닉네임 정보 업데이트
+      if (location.state.userNickName) {
+        setNickName(location.state.userNickName);
+      }
+  
+      // 휴대폰 번호 정보 업데이트
+      if (location.state.userContactNumber) {
+        setContactNumber(location.state.userContactNumber);
+      }
     }
   }, [location.state]);
 
