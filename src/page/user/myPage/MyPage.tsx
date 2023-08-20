@@ -32,9 +32,15 @@ const MyPage = () => {
         };
 
   const handleEditClick = () => {
-    navigate("/updateInfo", { state: { userAddress } });
+    navigate("/updateInfo", {
+      state: {
+        userAddress,
+        userEmail: user?.email, 
+        userNickName: user?.nickName,
+        userContactNumber: user?.contactNumber, 
+      }
+    });
   };
-
   const handleCancelClick = () => {
     queryClient.invalidateQueries("user");
     navigate("/");

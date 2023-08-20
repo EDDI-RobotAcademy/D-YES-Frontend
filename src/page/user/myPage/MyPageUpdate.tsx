@@ -49,8 +49,26 @@ const MyPageUpdate = () => {
   });
 
   useEffect(() => {
-    if (location.state && location.state.userAddress) {
-      setUserAddress(location.state.userAddress);
+    if (location.state) {
+      // 주소 정보 업데이트
+      if (location.state.userAddress) {
+        setUserAddress(location.state.userAddress);
+      }
+  
+      // 이메일 정보 업데이트
+      if (location.state.userEmail) {
+        setEmail(location.state.userEmail);
+      }
+  
+      // 닉네임 정보 업데이트
+      if (location.state.userNickName) {
+        setNickName(location.state.userNickName);
+      }
+  
+      // 휴대폰 번호 정보 업데이트
+      if (location.state.userContactNumber) {
+        setContactNumber(location.state.userContactNumber);
+      }
     }
   }, [location.state]);
 
@@ -67,6 +85,10 @@ const MyPageUpdate = () => {
           address: data.address,
           zipCode: data.zonecode,
         }));
+
+        localStorage.setItem("address", data.address);
+        localStorage.setItem("zipCode", data.zonecode);
+        localStorage.getItem("addressDetail");
         document.getElementById("addrDetail")?.focus();
       },
     }).open();
@@ -120,6 +142,46 @@ const MyPageUpdate = () => {
   };
 
   useEffect(() => {
+    // 입력데이터 유지
+    // localStorage에서 저장된 데이터 불러오기
+    const savedEmail = localStorage.getItem("email");
+    const savedNickName = localStorage.getItem("nickName");
+    const savedContactNumber = localStorage.getItem("contactNumber");
+    const savedAddress = localStorage.getItem("address");
+    const savedZipCode = localStorage.getItem("zipCode");
+    const savedAddressDetail = localStorage.getItem("addressDetail");
+
+    // 불러온 데이터가 있다면 해당 데이터를 상태에 적용
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+    if (savedNickName) {
+      setNickName(savedNickName);
+    }
+    if (savedContactNumber) {
+      setContactNumber(savedContactNumber);
+    }
+    if (savedAddress) {
+      setUserAddress((prev) => ({
+        ...prev,
+        address: savedAddress,
+      }));
+    }
+    if (savedZipCode) {
+      setUserAddress((prev) => ({
+        ...prev,
+        zipCode: savedZipCode,
+      }));
+    }
+    if (savedAddressDetail) {
+      setUserAddress((prev) => ({
+        ...prev,
+        addressDetail: savedAddressDetail,
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
     setCheckedEmailDuplicated(email == user?.email || email === "");
     setCheckedNickNameDuplicated(nickName == user?.nickName || nickName === "");
   }, [email, nickName, user]);
@@ -130,6 +192,7 @@ const MyPageUpdate = () => {
     console.log("@ . 포함하는 이메일이니?: " + isEmailValid);
     console.log("이메일 공백이니: " + (email === ""));
     console.log("닉네임 공백이니: " + (nickName === ""));
+
     if (
       checkedEmailDuplicated === false ||
       checkedNickNameDuplicated === false ||
@@ -154,6 +217,13 @@ const MyPageUpdate = () => {
       queryClient.invalidateQueries(["user", userId]);
       console.log("확인", updatedData);
       navigate("/myPage");
+
+      localStorage.removeItem("email");
+      localStorage.removeItem("nickName");
+      localStorage.removeItem("contactNumber");
+      localStorage.removeItem("address");
+      localStorage.removeItem("zipCode");
+      localStorage.removeItem("addressDetail");
     } catch (error) {
       if ((error as AxiosError).response && (error as AxiosError).response?.status === 400) {
         toast.error("페이지를 찾을 수 없습니다.");
@@ -184,6 +254,7 @@ const MyPageUpdate = () => {
                     setCheckedEmailDuplicated(true);
                   }
                   setEmail(event.target.value);
+                  localStorage.setItem("email", event.target.value);
                 }}
               />
               <Button
@@ -217,6 +288,7 @@ const MyPageUpdate = () => {
                     setCheckedNickNameDuplicated(true);
                   }
                   setNickName(event.target.value);
+                  localStorage.setItem("nickName", event.target.value);
                 }}
               />
               <Button
@@ -242,6 +314,7 @@ const MyPageUpdate = () => {
               onChange={(event) => {
                 setContactNumber(event.target.value);
                 handleContactNumber(event); // 수정된 부분
+                localStorage.setItem("contactNumber", event.target.value);
               }}
             />
           </div>
@@ -289,9 +362,10 @@ const MyPageUpdate = () => {
               variant="outlined"
               sx={{ paddingTop: "24px", marginBottom: "16px" }}
               value={userAddress.addressDetail}
-              onChange={(event) =>
-                setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }))
-              }
+              onChange={(event) => {
+                setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }));
+                localStorage.setItem("addressDetail", event.target.value);
+              }}
             />
           </div>
           <Button variant="outlined" onClick={handleEditFinishClick}>
