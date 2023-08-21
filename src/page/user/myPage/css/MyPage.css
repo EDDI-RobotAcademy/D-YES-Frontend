@@ -1,3 +1,39 @@
-.mypage-container{
+.mypage-container {
   font-family: "SUIT-SemiBold";
+  margin-top: 1em;
+  width: 500px;
+  max-width: 500px;
+}
+.content-align {
+  display: flex;
+  justify-content: center;
+}
+.profile-image-container {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  object-fit: cover;
+}
+.profile-image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.input-font-size {
+  font-size: 12px !important;
+}
+.output-style {
+  border-radius: 4px;
+  margin-bottom: 16px;
 }

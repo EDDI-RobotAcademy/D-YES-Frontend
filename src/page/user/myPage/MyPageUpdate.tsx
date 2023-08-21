@@ -1,4 +1,4 @@
-import { Box, Button, Container, InputLabel, TextField } from "@mui/material";
+import { Box, Button, Container, IconButton, InputLabel, TextField } from "@mui/material";
 import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
@@ -10,6 +10,10 @@ import {
   useUserUpdateMutation,
 } from "../api/UserApi";
 import { toast } from "react-toastify";
+import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
+import { useDropzone } from "react-dropzone";
+import { uploadFileAwsS3 } from "utility/s3/awsS3";
+
 import "./css/MyPage.css";
 
 declare global {
@@ -41,6 +45,16 @@ const MyPageUpdate = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [checkedEmailDuplicated, setCheckedEmailDuplicated] = useState<boolean>(true);
   const [checkedNickNameDuplicated, setCheckedNickNameDuplicated] = useState<boolean>(true);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const onDrop = (acceptedFile: File[]) => {
+    setSelectedImage(acceptedFile[0]);
+    localStorage.setItem("profileImg", acceptedFile[0].name);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+  });
 
   const [userAddress, setUserAddress] = useState({
     address: user?.address || "",
@@ -50,21 +64,26 @@ const MyPageUpdate = () => {
 
   useEffect(() => {
     if (location.state) {
+      // 프로필 사진 업데이트
+      if (location.state.userProfileImg) {
+        setProfileImg(location.state.userProfileImg);
+      }
+
       // 주소 정보 업데이트
       if (location.state.userAddress) {
         setUserAddress(location.state.userAddress);
       }
-  
+
       // 이메일 정보 업데이트
       if (location.state.userEmail) {
         setEmail(location.state.userEmail);
       }
-  
+
       // 닉네임 정보 업데이트
       if (location.state.userNickName) {
         setNickName(location.state.userNickName);
       }
-  
+
       // 휴대폰 번호 정보 업데이트
       if (location.state.userContactNumber) {
         setContactNumber(location.state.userContactNumber);
@@ -144,6 +163,7 @@ const MyPageUpdate = () => {
   useEffect(() => {
     // 입력데이터 유지
     // localStorage에서 저장된 데이터 불러오기
+    const savedImg = localStorage.getItem("profileImg");
     const savedEmail = localStorage.getItem("email");
     const savedNickName = localStorage.getItem("nickName");
     const savedContactNumber = localStorage.getItem("contactNumber");
@@ -152,6 +172,9 @@ const MyPageUpdate = () => {
     const savedAddressDetail = localStorage.getItem("addressDetail");
 
     // 불러온 데이터가 있다면 해당 데이터를 상태에 적용
+    if (savedImg) {
+      setProfileImg(savedImg);
+    }
     if (savedEmail) {
       setEmail(savedEmail);
     }
@@ -181,17 +204,38 @@ const MyPageUpdate = () => {
     }
   }, []);
 
+  const getImageUrl = (imagePath: string) => {
+    return (
+      "https://" +
+      `${process.env.REACT_APP_AWS_BUCKET_NAME}` +
+      ".s3." +
+      `${process.env.REACT_APP_AWS_BUCKET_REGION}` +
+      ".amazonaws.com/" +
+      `${imagePath}`
+    );
+  };
+
+  const removeLocalStorageItems = () => {
+    localStorage.removeItem("profileImg");
+    localStorage.removeItem("email");
+    localStorage.removeItem("nickName");
+    localStorage.removeItem("contactNumber");
+    localStorage.removeItem("address");
+    localStorage.removeItem("zipCode");
+    localStorage.removeItem("addressDetail");
+  };
+
   useEffect(() => {
     setCheckedEmailDuplicated(email == user?.email || email === "");
     setCheckedNickNameDuplicated(nickName == user?.nickName || nickName === "");
   }, [email, nickName, user]);
 
   const handleEditFinishClick = async () => {
-    console.log("이메일 중복 확인 됐니?: " + checkedEmailDuplicated);
-    console.log("닉네임 중복 확인 됐니?: " + checkedNickNameDuplicated);
-    console.log("@ . 포함하는 이메일이니?: " + isEmailValid);
-    console.log("이메일 공백이니: " + (email === ""));
-    console.log("닉네임 공백이니: " + (nickName === ""));
+    // console.log("이메일 중복 확인 됐니?: " + checkedEmailDuplicated);
+    // console.log("닉네임 중복 확인 됐니?: " + checkedNickNameDuplicated);
+    // console.log("@ . 포함하는 이메일이니?: " + isEmailValid);
+    // console.log("이메일 공백이니: " + (email === ""));
+    // console.log("닉네임 공백이니: " + (nickName === ""));
 
     if (
       checkedEmailDuplicated === false ||
@@ -208,22 +252,26 @@ const MyPageUpdate = () => {
         userToken,
         email,
         nickName,
-        profileImg,
+        profileImg: selectedImage ? selectedImage.name : user?.profileImg || "",
         contactNumber,
         ...userAddress,
       };
+      const fileToUpload = selectedImage ? new File([selectedImage], selectedImage.name) : "";
+
+      // console.log("변경된 이미지 타입 확인", typeof selectedImage);
+      // console.log("변경된 이미지 확인", selectedImage?.name);
 
       await mutation.mutateAsync(updatedData);
+
+      if (fileToUpload) {
+        uploadFileAwsS3(fileToUpload);
+      }
+
       queryClient.invalidateQueries(["user", userId]);
-      console.log("확인", updatedData);
+      // console.log("확인", updatedData);
       navigate("/myPage");
 
-      localStorage.removeItem("email");
-      localStorage.removeItem("nickName");
-      localStorage.removeItem("contactNumber");
-      localStorage.removeItem("address");
-      localStorage.removeItem("zipCode");
-      localStorage.removeItem("addressDetail");
+      removeLocalStorageItems();
     } catch (error) {
       if ((error as AxiosError).response && (error as AxiosError).response?.status === 400) {
         toast.error("페이지를 찾을 수 없습니다.");
@@ -233,147 +281,191 @@ const MyPageUpdate = () => {
     }
   };
 
+  const handleCancelClick = () => {
+    removeLocalStorageItems();
+    navigate("/myPage");
+  };
+
   return (
-    <div className="mypage-container">
-      <Container sx={{ marginTop: "1em", width: "500px", maxWidth: "500px" }}>
-        <Box display="flex" flexDirection="column" gap={1} p={2}>
-          <h1>회원정보 수정</h1>
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <InputLabel htmlFor="email" shrink>
-              이메일
-            </InputLabel>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <TextField
-                id="email"
-                fullWidth
-                variant="outlined"
-                sx={{ width: "300px", marginBottom: "16px" }}
-                value={email}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    setCheckedEmailDuplicated(true);
-                  }
-                  setEmail(event.target.value);
-                  localStorage.setItem("email", event.target.value);
-                }}
-              />
-              <Button
-                variant="outlined"
-                onClick={handleDuplicateCheck}
+    <Container className="mypage-container">
+      <Box display="flex" flexDirection="column" gap={1} p={2}>
+        <h1>회원정보 수정</h1>
+        <p>프로필 이미지</p>
+        <div className="content-align">
+          <div
+            className="profile-image-container"
+            style={{ cursor: "pointer" }}
+            {...getRootProps()}
+          >
+            {selectedImage ? (
+              <img
+                src={URL.createObjectURL(selectedImage)}
+                alt="Preview"
                 style={{
-                  fontSize: "14px",
-                  height: "56px",
-                  padding: "0 26px",
-                  marginBottom: "16px",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
                 }}
-                disabled={email == user?.email && checkedEmailDuplicated}
-              >
-                중복확인
-              </Button>
-            </div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <InputLabel htmlFor="nickname" shrink>
-              닉네임
-            </InputLabel>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-              <TextField
-                id="nickname"
-                fullWidth
-                variant="outlined"
-                sx={{ width: "300px", marginBottom: "16px" }}
-                value={nickName}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    setCheckedNickNameDuplicated(true);
+              />
+            ) : (
+              <div className="profile-image">
+                <img
+                  src={
+                    profileImg && profileImg.includes("://") ? profileImg : getImageUrl(profileImg)
                   }
-                  setNickName(event.target.value);
-                  localStorage.setItem("nickName", event.target.value);
-                }}
-              />
-              <Button
-                variant="outlined"
-                onClick={handleDuplicateNicknameCheck}
-                style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
-                disabled={nickName == user?.nickName && checkedNickNameDuplicated}
-              >
-                중복확인
-              </Button>
-            </div>
+                  style={{ maxWidth: "100%", maxHeight: "100%" }}
+                />
+              </div>
+            )}
+            <input {...getInputProps()} />
+            <span style={{ position: "absolute" }}>
+              <IconButton aria-label="Add" component="span">
+                <AddAPhotoOutlinedIcon fontSize="large" />
+              </IconButton>
+            </span>
           </div>
-          <div>
-            <InputLabel htmlFor="contactNumber" shrink style={{ position: "absolute" }}>
-              휴대폰 번호
-            </InputLabel>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          <InputLabel htmlFor="email" shrink>
+            이메일
+          </InputLabel>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <TextField
-              id="contactNumber"
+              id="email"
               fullWidth
               variant="outlined"
-              sx={{ paddingTop: "24px", marginBottom: "16px" }}
-              value={contactNumber}
+              sx={{ width: "300px", marginBottom: "16px" }}
+              value={email}
               onChange={(event) => {
-                setContactNumber(event.target.value);
-                handleContactNumber(event); // 수정된 부분
-                localStorage.setItem("contactNumber", event.target.value);
+                if (event.target.value === "") {
+                  setCheckedEmailDuplicated(true);
+                }
+                setEmail(event.target.value);
+                localStorage.setItem("email", event.target.value);
               }}
             />
+            <Button
+              variant="outlined"
+              onClick={handleDuplicateCheck}
+              style={{
+                fontSize: "14px",
+                height: "56px",
+                padding: "0 26px",
+                marginBottom: "16px",
+              }}
+              disabled={email == user?.email && checkedEmailDuplicated}
+            >
+              중복확인
+            </Button>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <InputLabel htmlFor="addr" shrink>
-              주소
-            </InputLabel>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-              <TextField
-                id="addr"
-                fullWidth
-                variant="outlined"
-                sx={{ width: "300px", marginBottom: "16px" }}
-                value={userAddress.address}
-                InputProps={{ onClick: onClickAddr }}
-              />
-              <Button
-                variant="outlined"
-                onClick={onClickAddr}
-                style={{ fontSize: "14px", height: "56px", padding: "0 40px" }}
-              >
-                검색
-              </Button>
-            </div>
-          </div>
-          <div>
-            <InputLabel htmlFor="zipNo" shrink style={{ position: "absolute" }}>
-              우편번호
-            </InputLabel>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          <InputLabel htmlFor="nickname" shrink>
+            닉네임
+          </InputLabel>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
             <TextField
-              id="zipNo"
+              id="nickname"
               fullWidth
               variant="outlined"
-              sx={{ paddingTop: "24px", marginBottom: "16px" }}
-              value={userAddress.zipCode}
-            />
-          </div>
-          <div>
-            <InputLabel htmlFor="addressDetail" shrink style={{ position: "absolute" }}>
-              상세주소
-            </InputLabel>
-            <TextField
-              id="addressDetail"
-              fullWidth
-              variant="outlined"
-              sx={{ paddingTop: "24px", marginBottom: "16px" }}
-              value={userAddress.addressDetail}
+              sx={{ width: "300px", marginBottom: "16px" }}
+              value={nickName}
               onChange={(event) => {
-                setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }));
-                localStorage.setItem("addressDetail", event.target.value);
+                if (event.target.value === "") {
+                  setCheckedNickNameDuplicated(true);
+                }
+                setNickName(event.target.value);
+                localStorage.setItem("nickName", event.target.value);
               }}
             />
+            <Button
+              variant="outlined"
+              onClick={handleDuplicateNicknameCheck}
+              style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
+              disabled={nickName == user?.nickName && checkedNickNameDuplicated}
+            >
+              중복확인
+            </Button>
           </div>
-          <Button variant="outlined" onClick={handleEditFinishClick}>
-            수정완료
-          </Button>
-        </Box>
-      </Container>
-    </div>
+        </div>
+        <div>
+          <InputLabel htmlFor="contactNumber" shrink style={{ position: "absolute" }}>
+            휴대폰 번호
+          </InputLabel>
+          <TextField
+            id="contactNumber"
+            fullWidth
+            variant="outlined"
+            sx={{ paddingTop: "24px", marginBottom: "16px" }}
+            value={contactNumber}
+            onChange={(event) => {
+              setContactNumber(event.target.value);
+              handleContactNumber(event);
+              localStorage.setItem("contactNumber", event.target.value);
+            }}
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          <InputLabel htmlFor="addr" shrink>
+            주소
+          </InputLabel>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+            <TextField
+              id="addr"
+              fullWidth
+              variant="outlined"
+              sx={{ width: "300px", marginBottom: "16px" }}
+              value={userAddress.address}
+              InputProps={{ onClick: onClickAddr }}
+            />
+            <Button
+              variant="outlined"
+              onClick={onClickAddr}
+              style={{ fontSize: "14px", height: "56px", padding: "0 40px" }}
+            >
+              검색
+            </Button>
+          </div>
+        </div>
+        <div>
+          <InputLabel htmlFor="zipNo" shrink style={{ position: "absolute" }}>
+            우편번호
+          </InputLabel>
+          <TextField
+            id="zipNo"
+            fullWidth
+            variant="outlined"
+            sx={{ paddingTop: "24px", marginBottom: "16px" }}
+            value={userAddress.zipCode}
+          />
+        </div>
+        <div>
+          <InputLabel htmlFor="addressDetail" shrink style={{ position: "absolute" }}>
+            상세주소
+          </InputLabel>
+          <TextField
+            id="addressDetail"
+            fullWidth
+            variant="outlined"
+            sx={{ paddingTop: "24px", marginBottom: "16px" }}
+            value={userAddress.addressDetail}
+            onChange={(event) => {
+              setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }));
+              localStorage.setItem("addressDetail", event.target.value);
+            }}
+          />
+        </div>
+        <Button variant="outlined" onClick={handleEditFinishClick}>
+          수정완료
+        </Button>
+        <Button variant="outlined" onClick={handleCancelClick}>
+          취소
+        </Button>
+      </Box>
+    </Container>
   );
 };
 
