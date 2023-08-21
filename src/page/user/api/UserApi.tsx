@@ -88,3 +88,13 @@ export const userLogout = async () => {
   });
   return response.data;
 };
+
+// 회원 탈퇴
+export const deleteInfo = async () => {
+  const response = await axiosInstance.springAxiosInst.delete(`/user/withdrawal`, {
+    params: {
+      userToken: userToken,
+    },
+  });
+  return response.data;
+};
