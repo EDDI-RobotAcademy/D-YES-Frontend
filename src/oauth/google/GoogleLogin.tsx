@@ -10,6 +10,7 @@ const GoogleLoginButton: React.FC<googleLoginProps> = ({ onSuccess }) => {
   const googleURL =
     "https://accounts.google.com/o/oauth2/v2/auth?" +
     "scope=https://www.googleapis.com/auth/userinfo.profile&" +
+    "+https://www.googleapis.com/auth/userinfo.email&" +
     "response_type=code&" +
     `redirect_uri=${REDIRECT_URI}&` +
     `client_id=${CLIENT_ID}&` +
