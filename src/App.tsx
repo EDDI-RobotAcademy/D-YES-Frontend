@@ -8,6 +8,8 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SnackBar from "layout/snackBar/SnackBar";
 import MyPageUpdate from "page/user/myPage/MyPageUpdate";
+import WithdrawalPage from "page/user/withdrawal/WithdrawalPage";
+import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
 
 const App: React.FC = () => {
   return (
@@ -19,10 +21,12 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/myPage" element={<MyPage />} />
           <Route path="/updateInfo" element={<MyPageUpdate />} />
+          <Route path="/withdrawal" element={<WithdrawalPage />} />
+          <Route path="/exit" element={<WithdrawalComplete />} />
         </Routes>
         <Footer />
       </BrowserRouter>
-      <SnackBar/>
+      <SnackBar />
     </AuthProvider>
   );
 };

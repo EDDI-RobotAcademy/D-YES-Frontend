@@ -1,0 +1,17 @@
+.withdrawal-container {
+  font-family: "SUIT-Bold";
+  font-size: x-large;
+}
+
+.italic-font {
+  font-style: italic;
+}
+.align-right {
+  display: flex;
+  justify-content: right;
+}
+.exit-style {
+  font-family: "SUIT-Bold";
+  font-size: x-large;
+  margin-bottom: 10px;
+}

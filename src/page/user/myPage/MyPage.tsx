@@ -43,6 +43,11 @@ const MyPage = () => {
       },
     });
   };
+
+  const handleWithdrawalClick = () => {
+    navigate("/withdrawal");
+  };
+
   const handleCancelClick = () => {
     queryClient.invalidateQueries("user");
     navigate("/");
@@ -160,7 +165,9 @@ const MyPage = () => {
         <Button variant="outlined" onClick={handleEditClick}>
           회원정보 수정
         </Button>
-        {/* <Button variant='outlined' onClick={ handleDeleteClick }>탈퇴</Button> */}
+        <Button variant="outlined" onClick={handleWithdrawalClick}>
+          회원 탈퇴
+        </Button>
         <Button variant="outlined" onClick={handleCancelClick}>
           돌아가기
         </Button>
