@@ -286,6 +286,12 @@ const MyPageUpdate = () => {
     navigate("/myPage");
   };
 
+  useEffect(() => {
+    return () => {
+      removeLocalStorageItems();
+    };
+  }, []);
+
   return (
     <Container className="mypage-container">
       <Box display="flex" flexDirection="column" gap={1} p={2}>
