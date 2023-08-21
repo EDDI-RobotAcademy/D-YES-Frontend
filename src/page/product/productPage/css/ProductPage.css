@@ -1,0 +1,30 @@
+.input-container {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease-in-out, padding 0.3s ease-in-out;
+  margin-bottom: 10px; /* 토글 간의 기본 간격 설정 */
+
+}
+
+.input-container.active {
+  height: auto;
+  padding: 20px;
+}
+
+.text-field-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.text-field-label {
+  flex: 0 0 140px;
+}
+
+.text-field-input {
+  flex-grow: 1 !important;
+}
+
+.cell {
+  border-right: 1px solid white;
+}
