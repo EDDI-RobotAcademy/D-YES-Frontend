@@ -4,7 +4,7 @@ const AWS_BUCKET_NAME = `${process.env.REACT_APP_AWS_BUCKET_NAME}`;
 const AWS_BUCKET_REGION = process.env.REACT_APP_AWS_BUCKET_REGION;
 const AWS_IDENTITY_POOL_ID = `${process.env.REACT_APP_AWS_BUCKET_IDENTITY_POOL_ID}`;
 
-export function awsS3Config(): AWS.S3 {
+function awsS3Config(): AWS.S3 {
   AWS.config.update({
     region: AWS_BUCKET_REGION,
     credentials: new AWS.CognitoIdentityCredentials({
@@ -19,23 +19,29 @@ export function awsS3Config(): AWS.S3 {
   });
 }
 
-export function uploadFileAwsS3(mainFile: File) {
+export async function uploadFileAwsS3(mainFile: File) {
   const s3 = awsS3Config();
-  s3.upload(
-    {
-      Bucket: AWS_BUCKET_NAME,
-      Key: mainFile.name,
-      Body: mainFile,
-      ACL: "public-read",
-    },
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.log("이미지 업로드 성공");
-    }
-  );
+  try {
+    await s3
+      .upload({
+        Bucket: AWS_BUCKET_NAME,
+        Key: mainFile.name,
+        Body: mainFile,
+        ACL: "public-read",
+      })
+      .promise();
+
+    console.log("이미지 업로드 성공");
+
+    const latestObjectVersion = await getLatestObjectVersion(AWS_BUCKET_NAME, mainFile.name);
+
+    console.log("여기까지 가니");
+    console.log("Latest Object Version:", latestObjectVersion);
+
+    return latestObjectVersion;
+  } catch (err) {
+    console.error("Error uploading file:", err);
+  }
 }
 
 export function uploadFilesAwsS3(detailsFiles: File[]) {
@@ -57,6 +63,23 @@ export function uploadFilesAwsS3(detailsFiles: File[]) {
       }
     );
   });
+}
+
+async function getLatestObjectVersion(bucketName: string, objectKey: string) {
+  const s3 = awsS3Config();
+  const listObjectVersionsParams = {
+    Bucket: bucketName,
+    Prefix: objectKey,
+  };
+
+  const objectVersions = await s3.listObjectVersions(listObjectVersionsParams).promise();
+
+  if (objectVersions.Versions && objectVersions.Versions.length > 0) {
+    const latestVersion = objectVersions.Versions[0]; // 최신 버전은 리스트의 첫 번째 요소
+    return latestVersion.VersionId;
+  } else {
+    throw new Error("No object versions found.");
+  }
 }
 
 export function deleteAwsS3File(key: string) {

@@ -253,6 +253,16 @@ const MyPageUpdate = () => {
       toast.error("이메일 혹은 닉네임을 확인해주세요.");
       return;
     }
+    // 선택한 이미지가 있다면 File을, 아니면 ""
+    const fileToUpload = selectedImage ? new File([selectedImage], selectedImage.name) : "";
+
+    // 선택한 이미지가 있으면 S3에 업로드.
+    // 리턴받은 버전 정보를 s3ObjectVersion에 저장
+    let s3ObjectVersion = "";
+
+    if (fileToUpload) {
+      s3ObjectVersion = (await uploadFileAwsS3(fileToUpload)) || "";
+    }
 
     try {
       const updatedData: any = {
@@ -260,20 +270,16 @@ const MyPageUpdate = () => {
         userToken,
         email,
         nickName,
-        profileImg: selectedImage ? selectedImage.name : user?.profileImg || "",
+        profileImg: selectedImage
+          ? selectedImage.name + "?versionId=" + s3ObjectVersion
+          : user?.profileImg || "",
         contactNumber,
         ...userAddress,
       };
-      const fileToUpload = selectedImage ? new File([selectedImage], selectedImage.name) : "";
-
       // console.log("변경된 이미지 타입 확인", typeof selectedImage);
       // console.log("변경된 이미지 확인", selectedImage?.name);
 
       await mutation.mutateAsync(updatedData);
-
-      if (fileToUpload) {
-        uploadFileAwsS3(fileToUpload);
-      }
 
       queryClient.invalidateQueries(["user", userId]);
       // console.log("확인", updatedData);
