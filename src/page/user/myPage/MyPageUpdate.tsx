@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
-import imageCompression from "browser-image-compression";
+import { compressImg } from "utility/s3/imageCompression";
 
 import "./css/MyPage.css";
 
@@ -47,19 +47,6 @@ const MyPageUpdate = () => {
   const [checkedEmailDuplicated, setCheckedEmailDuplicated] = useState<boolean>(true);
   const [checkedNickNameDuplicated, setCheckedNickNameDuplicated] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-
-  const compressImg = async (image: File): Promise<File> => {
-    try {
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 300,
-      };
-      return await imageCompression(image, options);
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  };
 
   const onDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length > 0) {
