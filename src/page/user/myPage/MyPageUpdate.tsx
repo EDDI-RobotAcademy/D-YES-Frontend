@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
-import { compressImg } from "utility/s3/imageCompression";
+import { compressImgForProfile } from "utility/s3/imageCompression";
 
 import "./css/MyPage.css";
 
@@ -51,7 +51,7 @@ const MyPageUpdate = () => {
   const onDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length > 0) {
       try {
-        const compressedImage = await compressImg(acceptedFile[0]);
+        const compressedImage = await compressImgForProfile(acceptedFile[0]);
         setSelectedImage(compressedImage);
         localStorage.setItem("profileImg", compressedImage.name);
       } catch (error) {
