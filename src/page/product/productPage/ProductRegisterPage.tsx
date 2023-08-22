@@ -28,6 +28,8 @@ const ProductRegisterPage = () => {
   const [selectedOption, setSelectedOption] = useState<
     "" | { value: string; label: string } | undefined
   >("");
+  const [optionToggleHeight, setOptionToggleHeight] = useState(200);
+
 
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
@@ -100,12 +102,17 @@ const ProductRegisterPage = () => {
   // 옵션 추가
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
+    // 옵션정보에서 추가버튼을 누르면 토글 증가 
+    setOptionToggleHeight(optionToggleHeight + 100);
+
   };
 
   // 옵션 삭제
   const handleDeleteOption = (index: number) => {
     const newOptions = [...useOptions];
     newOptions.splice(index, 1);
+    // 옵션정보에서 삭제버튼을 누르면 토글 감소
+    setOptionToggleHeight(optionToggleHeight - 100);
     setUseOptions(newOptions);
   };
 
@@ -170,7 +177,7 @@ const ProductRegisterPage = () => {
             <div className="text-field-label">상세 이미지</div>
             <TextField name="detailImgs" className="text-field-input text-field" />
           </ToggleComponent>
-          <ToggleComponent label="옵션정보" height={200}>
+          <ToggleComponent label="옵션정보" height={optionToggleHeight}>
             <Box display="flex" flexDirection="column" gap={2}>
               <OptionTable
                 optionRows={useOptions}
