@@ -2,6 +2,7 @@
   font-family: "SUIT-SemiBold";
   margin-top: 1em;
   max-width: 500px !important;
+  margin-bottom: 80px;
 }
 .content-align {
   display: flex;
@@ -35,4 +36,28 @@
 .output-style {
   border-radius: 4px;
   margin-bottom: 16px;
+  border-style: none;
+  font-family: "SUIT-Regular" !important;
+}
+
+.mypage-btn {
+  background-color: rgb(255, 104, 58) !important;
+  color: white !important;
+  font-family: "SUIT-SemiBold" !important;
+  font-size: 16px !important;
+  height: 58px;
+}
+
+.check-btn {
+  background-color: rgb(201, 201, 201) !important;
+  color: white !important;
+  font-family: "SUIT-Regular" !important;
+  font-size: 16px !important;
+  height: 58px;
+}
+
+.withdrawal-btn {
+  color: rgb(31, 31, 31) !important;
+  font-family: "SUIT-SemiBold" !important;
+  font-size: 14px !important;
 }

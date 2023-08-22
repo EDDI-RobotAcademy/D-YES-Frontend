@@ -78,7 +78,6 @@ const MyPage = () => {
     <Container className="mypage-container">
       <Box display="flex" flexDirection="column" gap={1} p={2}>
         <h1>회원정보</h1>
-        <InputLabel className="input-font-size">프로필 이미지</InputLabel>
         <div className="content-align">
           <div className="profile-image-container">
             {imageLoaded && (
@@ -165,14 +164,14 @@ const MyPage = () => {
           disabled
           value={userAddress?.addressDetail || ""}
         />
-        <Button variant="outlined" onClick={handleEditClick}>
-          회원정보 수정
+        <Button className="mypage-btn" onClick={handleEditClick}>
+          수정하기
         </Button>
-        <Button variant="outlined" onClick={handleWithdrawalClick}>
-          회원 탈퇴
-        </Button>
-        <Button variant="outlined" onClick={handleCancelClick}>
+        {/* <Button className="mypage-btn" onClick={handleCancelClick}>
           돌아가기
+        </Button> */}
+        <Button className="withdrawal-btn" onClick={handleWithdrawalClick}>
+          회원탈퇴
         </Button>
       </Box>
     </Container>

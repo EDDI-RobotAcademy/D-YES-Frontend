@@ -6,9 +6,40 @@
 }
 
 .login-icons {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 4px;
+  margin-bottom: 70px;
+}
+
+.login-text span, h2{
+  display: flex;
+  color: white;
+  font-family: "SUIT-Bold";
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

@@ -16,12 +16,14 @@ const NaverLogin: React.FC<naverLoginProps> = ({ onSuccess }) => {
     `redirect_uri=${REDIRECT_URI}`;
 
   return (
-    <img
-      className="oauth-login-btn"
-      alt="네이버 로그인"
-      src="img/NaverLoginIcon.png"
-      onClick={() => (window.location.href = naverURL)}
-    />
+    <div className="oauth-login-btn-container" onClick={() => (window.location.href = naverURL)}>
+      <img
+        className="oauth-login-btn"
+        alt="네이버 로그인"
+        src="img/NaverLoginIcon1.png"
+      />
+      <p className="oauth-login-text">네이버 로그인</p>
+    </div>
   );
 };
 

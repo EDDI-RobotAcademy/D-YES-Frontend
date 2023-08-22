@@ -17,12 +17,14 @@ const GoogleLoginButton: React.FC<googleLoginProps> = ({ onSuccess }) => {
     "access_type=offline";
 
   return (
-    <img
-      className="oauth-login-btn"
-      alt="구글 로그인"
-      src="img/GoogleLoginIcon.png"
-      onClick={() => (window.location.href = googleURL)}
-    />
+    <div className="oauth-login-btn-container" onClick={() => (window.location.href = googleURL)}>
+      <img
+        className="oauth-login-btn"
+        alt="구글 로그인"
+        src="img/GoogleLoginIcon1.png"
+      />
+      <p className="oauth-login-text">구글 로그인</p>
+    </div>
   );
 };
 

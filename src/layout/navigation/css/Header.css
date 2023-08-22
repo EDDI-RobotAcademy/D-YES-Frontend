@@ -26,7 +26,8 @@
   cursor: pointer;
   font-size: 16px;
   max-width: 100px;
-  margin-right: 40px;
+  margin-right: 20px;
+  font-family: "SUIT-ExtraBold";
 }
 
 .Menu-logout img {
@@ -48,13 +49,14 @@
   max-width: 100px;
 }
 
-.MyPage {
+.MyPage, .Login {
   margin-left: auto;
   margin-right: 20px;
+  text-decoration: none;
+  color: black;
 }
 
 .register {
-  color: black; /* Change the color to your preferred color */
-  text-decoration: none; /* Remove the underline */
-  font-size: 17px; /* Increase the font size to your preferred value */
+  color: rgb(255, 0, 0);
+  text-decoration: none;
 }
