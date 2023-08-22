@@ -19,6 +19,7 @@
     "@types/react-slick": "^0.23.10",
     "aws-sdk": "^2.1439.0",
     "axios": "^1.4.0",
+    "browser-image-compression": "^2.0.2",
     "matchmedia-polyfill": "^0.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

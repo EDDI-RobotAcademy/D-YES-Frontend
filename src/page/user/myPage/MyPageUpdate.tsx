@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
+import imageCompression from "browser-image-compression";
 
 import "./css/MyPage.css";
 
@@ -47,9 +48,29 @@ const MyPageUpdate = () => {
   const [checkedNickNameDuplicated, setCheckedNickNameDuplicated] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const onDrop = (acceptedFile: File[]) => {
-    setSelectedImage(acceptedFile[0]);
-    localStorage.setItem("profileImg", acceptedFile[0].name);
+  const compressImg = async (image: File): Promise<File> => {
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 300,
+      };
+      return await imageCompression(image, options);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
+  const onDrop = async (acceptedFile: File[]) => {
+    if (acceptedFile.length > 0) {
+      try {
+        const compressedImage = await compressImg(acceptedFile[0]);
+        setSelectedImage(compressedImage);
+        localStorage.setItem("profileImg", compressedImage.name);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
