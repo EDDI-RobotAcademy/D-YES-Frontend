@@ -1,7 +1,7 @@
 export interface useOptions {
   optionName: string;
-  optionPrice: string;
-  stock: string;
-  value: string;
+  optionPrice: number;
+  stock: number;
+  value: number;
   unit: string;
 }

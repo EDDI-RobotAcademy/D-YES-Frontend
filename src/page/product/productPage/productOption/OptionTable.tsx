@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   TableContainer,
   TableHead,
@@ -9,11 +9,11 @@ import {
   TextField,
   IconButton,
   Select,
-  MenuItem
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import '../css/ProductPage.css';
-import { useOptions } from 'page/product/entity/useOptions';
+  MenuItem,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import "../css/ProductPage.css";
+import { useOptions } from "page/product/entity/useOptions";
 
 interface OptionTableProps {
   optionRows: useOptions[];
@@ -21,35 +21,46 @@ interface OptionTableProps {
   onDeleteOption: (index: number) => void;
 }
 
-const OptionTable: React.FC<OptionTableProps> = ({ optionRows, onChangeOption, onDeleteOption }) => {
-
+const OptionTable: React.FC<OptionTableProps> = ({
+  optionRows,
+  onChangeOption,
+  onDeleteOption,
+}) => {
   const unitOption = [
-    { value: 'KG', label: 'KG' },
-    { value: 'G', label: 'G' },
-    { value: 'EA', label: 'EA' }
+    { value: "KG", label: "KG" },
+    { value: "G", label: "G" },
+    { value: "EA", label: "EA" },
   ];
 
   // 기본적으로 하나의 빈 옵션을 추가하여 시작
   if (optionRows.length === 0) {
     optionRows.push({
-      optionName: '',
-      optionPrice: '',
-      stock: '',
-      value: '',
-      unit: ''
+      optionName: "",
+      optionPrice: 0,
+      stock: 0,
+      value: 0,
+      unit: "",
     });
   }
 
   return (
     <TableContainer component={Paper}>
       <table>
-        <TableHead style={{ backgroundColor: '#D0D0D0' }}>
+        <TableHead style={{ backgroundColor: "#D0D0D0" }}>
           <TableRow>
-            <TableCell className="cell" style={{ width: '40%', textAlign: 'center' }}>옵션명</TableCell>
-            <TableCell className="cell" style={{ width: '25%', textAlign: 'center' }}>가격</TableCell>
-            <TableCell className="cell" style={{ width: '15%', textAlign: 'center' }}>재고</TableCell>
-            <TableCell className="cell" style={{ textAlign: 'center' }}>단위</TableCell>
-            <TableCell style={{ textAlign: 'center' }}>삭제</TableCell>
+            <TableCell className="cell" style={{ width: "40%", textAlign: "center" }}>
+              옵션명
+            </TableCell>
+            <TableCell className="cell" style={{ width: "25%", textAlign: "center" }}>
+              가격
+            </TableCell>
+            <TableCell className="cell" style={{ width: "15%", textAlign: "center" }}>
+              재고
+            </TableCell>
+            <TableCell className="cell" style={{ textAlign: "center" }}>
+              단위
+            </TableCell>
+            <TableCell style={{ textAlign: "center" }}>삭제</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -69,10 +80,10 @@ const OptionTable: React.FC<OptionTableProps> = ({ optionRows, onChangeOption, o
               <TableCell>
                 <TextField
                   name="optionPrice"
-                  value={option.optionPrice}
+                  value={option.optionPrice || 0} 
                   fullWidth
                   onChange={(event) => {
-                    const updatedOption = { ...option, optionPrice: event.target.value };
+                    const updatedOption = { ...option, optionPrice: parseInt(event.target.value) };
                     onChangeOption(index, updatedOption);
                   }}
                 />
@@ -80,25 +91,25 @@ const OptionTable: React.FC<OptionTableProps> = ({ optionRows, onChangeOption, o
               <TableCell>
                 <TextField
                   name="stock"
-                  value={option.stock}
+                  value={option.stock || 0}
                   fullWidth
                   onChange={(event) => {
-                    const updatedOption = { ...option, stock: event.target.value };
+                    const updatedOption = { ...option, stock: parseInt(event.target.value) };
                     onChangeOption(index, updatedOption);
                   }}
                 />
               </TableCell>
               <TableCell>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                <TextField
-                  name="amount"
-                  value={option.value}
-                  fullWidth
-                  onChange={(event) => {
-                    const updatedOption = { ...option, amount: event.target.value };
-                    onChangeOption(index, updatedOption);
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <TextField
+                    name="value"
+                    value={option.value || 0}
+                    fullWidth
+                    onChange={(event) => {
+                      const updatedOption = { ...option, value: parseInt(event.target.value) };
+                      onChangeOption(index, updatedOption);
+                    }}
+                  />
                   <Select
                     name="unit"
                     value={option.unit}
@@ -127,7 +138,7 @@ const OptionTable: React.FC<OptionTableProps> = ({ optionRows, onChangeOption, o
             </TableRow>
           ))}
         </TableBody>
-      </table> 
+      </table>
     </TableContainer>
   );
 };

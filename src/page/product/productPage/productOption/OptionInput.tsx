@@ -9,9 +9,9 @@ interface OptionInputProps {
 const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
   const [option, setOption] = useState<useOptions>({
     optionName: '',
-    optionPrice: '',
-    stock: '',
-    value: '',
+    optionPrice: 0,
+    stock: 0,
+    value: 0,
     unit: ''
   });
 
@@ -19,9 +19,9 @@ const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
     onAddOption(option);
     setOption({
       optionName: '',
-      optionPrice: '',
-      stock: '',
-      value: '',
+      optionPrice: 0,
+      stock: 0,
+      value: 0,
       unit: ''
     });
   };

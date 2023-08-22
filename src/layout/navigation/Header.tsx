@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             <button className="Menu-logout" onClick={handleLogout}>
               <img src="img/Logout.png" alt="로그아웃" />
             </button>
-            <Link className="register" to={"/productRegitser"}>상품등록</Link>
+            <Link className="register" to={"/productRegister"}>상품등록</Link>
           </>
         ) : (
           <>
