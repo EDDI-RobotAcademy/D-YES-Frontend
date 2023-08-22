@@ -1,8 +1,7 @@
 .mypage-container {
   font-family: "SUIT-SemiBold";
   margin-top: 1em;
-  width: 500px;
-  max-width: 500px;
+  max-width: 500px !important;
 }
 .content-align {
   display: flex;
