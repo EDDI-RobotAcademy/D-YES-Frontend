@@ -12,7 +12,6 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
-
   // 로그아웃 동작
   const handleLogout = async () => {
     try {
@@ -22,14 +21,12 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       // 로그인 상태가 아니라는 것을 인식시킴
       // 따라서 헤더가 로그아웃 마이페이지에서 로그인으로 변경
       setIsLoggedIn(false);
-
       // 추출된 userToken을 삭제
       // 원래는 로컬에 저장된 userToken을 삭제해서 로그아웃을 진행하려했지만
       // 로그아웃을 해도 url에 userToken정보가 남아있어서 로그아웃이 진행되지않는 문제가 발생
       // url에서도 userToken을 제거해서 홈페이지 내부에 userToken의 정보를 남기지않게 만듬
       const urlSearchParams = new URLSearchParams(window.location.search);
       urlSearchParams.delete("userToken");
-
       window.history.replaceState(
         {},
         document.title,
@@ -60,6 +57,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             <button className="Menu-logout" onClick={handleLogout}>
               <img src="img/Logout.png" alt="로그아웃" />
             </button>
+            <Link className="register" to={"/productPage"}>관리자 페이지</Link>
           </>
         ) : (
           <>
@@ -73,5 +71,4 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     </div>
   );
 };
-
 export default Header;
