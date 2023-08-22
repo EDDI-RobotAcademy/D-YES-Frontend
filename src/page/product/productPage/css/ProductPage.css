@@ -29,7 +29,6 @@
   border-right: 1px solid white;
 }
 
-
 .product-page {
   display: flex;
   align-items: stretch; /* 사이드바와 컨텐츠를 높이 기준으로 맞추기 */
@@ -109,3 +108,4 @@
     margin: 0 20px; /* 화면 크기가 1200px 이하일 때 마진 값 조절 */
   }
 }
+

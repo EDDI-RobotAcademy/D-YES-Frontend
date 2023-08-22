@@ -10,6 +10,7 @@ import SnackBar from "layout/snackBar/SnackBar";
 import MyPageUpdate from "page/user/myPage/MyPageUpdate";
 import WithdrawalPage from "page/user/withdrawal/WithdrawalPage";
 import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
+import ProductRegisterPage from "page/product/productPage/ProductRegisterPage";
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Route path="/updateInfo" element={<MyPageUpdate />} />
           <Route path="/withdrawal" element={<WithdrawalPage />} />
           <Route path="/exit" element={<WithdrawalComplete />} />
+          <Route path="/productRegister" element={<ProductRegisterPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
