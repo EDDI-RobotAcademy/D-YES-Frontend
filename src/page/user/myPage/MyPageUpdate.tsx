@@ -322,8 +322,10 @@ const MyPageUpdate = () => {
                 src={URL.createObjectURL(selectedImage)}
                 alt="Preview"
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  width: "100px",
+                  height: "100px",
                   position: "absolute",
                   top: 0,
                   left: 0,

@@ -86,6 +86,7 @@ const MyPage = () => {
                 <img
                   onLoad={handleImageLoad}
                   src={
+                    // 기본 이미지인 경우 그대로 사용(url 형식), 변경된 이미지인 경우 S3에서
                     user?.profileImg && user?.profileImg.includes("://")
                       ? user?.profileImg
                       : getImageUrl(user?.profileImg || "")
@@ -94,6 +95,8 @@ const MyPage = () => {
                   style={{
                     maxWidth: "100%",
                     maxHeight: "100%",
+                    width: "100px",
+                    height: "100px",
                     display: imageLoaded ? "block" : "none",
                   }}
                   alt="프로필 이미지"
