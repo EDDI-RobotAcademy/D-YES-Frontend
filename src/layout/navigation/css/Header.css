@@ -26,6 +26,7 @@
   cursor: pointer;
   font-size: 16px;
   max-width: 100px;
+  margin-right: 40px;
 }
 
 .Menu-logout img {
@@ -50,4 +51,10 @@
 .MyPage {
   margin-left: auto;
   margin-right: 20px;
+}
+
+.register {
+  color: black; /* Change the color to your preferred color */
+  text-decoration: none; /* Remove the underline */
+  font-size: 17px; /* Increase the font size to your preferred value */
 }
