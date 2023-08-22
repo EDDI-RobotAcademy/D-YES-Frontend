@@ -144,7 +144,7 @@ const ProductRegisterPage = () => {
                     onChange={handleOptionChange}
                     className="text-field"
                     sx={{
-                      minWidth: "625px",
+                      width: "100%",
                     }}
                   >
                     <MenuItem value="">
