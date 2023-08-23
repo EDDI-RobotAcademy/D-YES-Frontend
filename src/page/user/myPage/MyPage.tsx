@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
 import { User } from "../entity/User";
+import { getImageUrl } from "utility/s3/awsS3";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -52,17 +53,6 @@ const MyPage = () => {
   //   queryClient.invalidateQueries("user");
   //   navigate("/");
   // };
-
-  const getImageUrl = (imagePath: string) => {
-    return (
-      "https://" +
-      `${process.env.REACT_APP_AWS_BUCKET_NAME}` +
-      ".s3." +
-      `${process.env.REACT_APP_AWS_BUCKET_REGION}` +
-      ".amazonaws.com/" +
-      `${imagePath}`
-    );
-  };
 
   const handleImageLoad = () => {
     setImageLoaded(true);
