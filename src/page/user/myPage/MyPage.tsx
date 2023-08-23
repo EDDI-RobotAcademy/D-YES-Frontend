@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
 import { User } from "../entity/User";
+import { getImageUrl } from "utility/s3/awsS3";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -53,17 +54,6 @@ const MyPage = () => {
   //   navigate("/");
   // };
 
-  const getImageUrl = (imagePath: string) => {
-    return (
-      "https://" +
-      `${process.env.REACT_APP_AWS_BUCKET_NAME}` +
-      ".s3." +
-      `${process.env.REACT_APP_AWS_BUCKET_REGION}` +
-      ".amazonaws.com/" +
-      `${imagePath}`
-    );
-  };
-
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
@@ -92,10 +82,8 @@ const MyPage = () => {
                   }
                   key={user?.profileImg}
                   style={{
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                    width: "100px",
-                    height: "100px",
+                    width: "auto",
+                    height: "auto",
                     display: imageLoaded ? "block" : "none",
                   }}
                   alt="프로필 이미지"

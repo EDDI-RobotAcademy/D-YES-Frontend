@@ -5,6 +5,7 @@ import NaverLogin from "oauth/naver/NaverLogin";
 
 import "./css/loginPage.css";
 import { useAuth } from "layout/navigation/AuthConText";
+import { getImageUrl } from "utility/s3/awsS3";
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useAuth();
@@ -14,7 +15,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Box 
+    <Box
       className="login-box"
       display="flex"
       flexDirection="column"
@@ -23,7 +24,11 @@ const LoginPage = () => {
       minHeight="100vh"
     >
       <div className="login-container">
-        <img className="login-background" src="img/login_background.jpg" alt="Login Background"/>
+        <img
+          className="login-background"
+          src={getImageUrl("resources/LoginBackground.jpg")}
+          alt="Login Background"
+        />
         <Container maxWidth="xs">
           <div className="login-icons">
             <div className="login-text">

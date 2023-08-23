@@ -7,8 +7,9 @@
   align-items: center;
   height: 60px;
   background-color: white;
-  width: 1024px;
-  margin: 0 auto;
+  width: auto;
+  margin-left: 50px;
+  margin-right: 50px;
   position: relative;
   z-index: 50;
 }
@@ -49,7 +50,8 @@
   max-width: 100px;
 }
 
-.MyPage, .Login {
+.MyPage,
+.Login {
   margin-left: auto;
   margin-right: 20px;
   text-decoration: none;
