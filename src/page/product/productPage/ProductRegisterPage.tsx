@@ -30,7 +30,6 @@ const ProductRegisterPage = () => {
   >("");
   const [optionToggleHeight, setOptionToggleHeight] = useState(200);
 
-
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
       queryClient.setQueryData("product", data);
@@ -102,9 +101,8 @@ const ProductRegisterPage = () => {
   // 옵션 추가
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
-    // 옵션정보에서 추가버튼을 누르면 토글 증가 
+    // 옵션정보에서 추가버튼을 누르면 토글 증가
     setOptionToggleHeight(optionToggleHeight + 100);
-
   };
 
   // 옵션 삭제
@@ -129,11 +127,13 @@ const ProductRegisterPage = () => {
       <form onSubmit={handleSubmit} onClick={handleFormClick}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 등록</h1>
-          <ToggleComponent label="기본정보" height={200}>
+          <ToggleComponent label="기본정보" height={150}>
             <Box display="flex" flexDirection="column" gap={2}>
               <div className="text-field-container">
-                <div className="text-field-label" aria-label="상품명">상품명</div>
-                <TextField name="productName" className="text-field-input text-field" />
+                <div className="text-field-label" aria-label="상품명">
+                  상품명
+                </div>
+                <TextField name="productName" className="text-field-input" size="small" />
               </div>
               <div className="text-field-container">
                 <div className="text-field-label">재배방식</div>
@@ -167,15 +167,15 @@ const ProductRegisterPage = () => {
               </div>
               <div className="text-field-container">
                 <div className="text-field-label">판매자(농가) 정보</div>
-                <TextField name="sellerInfo" className="text-field-input text-field" />
+                <TextField name="sellerInfo" className="text-field-input" size="small" />
               </div>
             </Box>
           </ToggleComponent>
-          <ToggleComponent label="이미지" height={150}>
+          <ToggleComponent label="이미지" height={120}>
             <div className="text-field-label">메인 이미지</div>
-            <TextField name="mainImg" className="text-field-input text-field" />
+            <TextField name="mainImg" className="text-field-input" size="small" />
             <div className="text-field-label">상세 이미지</div>
-            <TextField name="detailImgs" className="text-field-input text-field" />
+            <TextField name="detailImgs" className="text-field-input" size="small" />
           </ToggleComponent>
           <ToggleComponent label="옵션정보" height={optionToggleHeight}>
             <Box display="flex" flexDirection="column" gap={2}>
@@ -198,7 +198,7 @@ const ProductRegisterPage = () => {
               </div>
               <TextField
                 name="productDescription"
-                className="text-field-input text-field"
+                className="text-field-input"
                 multiline
                 minRows={10}
                 maxRows={20}
