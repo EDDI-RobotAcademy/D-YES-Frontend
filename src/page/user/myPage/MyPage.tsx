@@ -82,9 +82,12 @@ const MyPage = () => {
                   }
                   key={user?.profileImg}
                   style={{
-                    width: "auto",
-                    height: "auto",
-                    display: imageLoaded ? "block" : "none",
+                    width: "100%", // 이미지의 가로 크기를 100%로 설정하여 원 안에 꽉 차도록 표시
+                    height: "100%", // 이미지의 세로 크기를 100%로 설정하여 원 안에 꽉 차도록 표시
+                    objectFit: "cover", // 이미지가 원 안에 가득 차도록 표시
+                    position: "absolute", // 이미지의 위치 조정을 위해 position 사용
+                    top: 0, // 이미지를 원안의 상단에 배치
+                    left: 0, // 이미지를 원안의 왼쪽에 배치
                   }}
                   alt="프로필 이미지"
                 />
