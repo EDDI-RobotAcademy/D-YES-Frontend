@@ -322,13 +322,9 @@ const MyPageUpdate = () => {
                 src={URL.createObjectURL(selectedImage)}
                 alt="Preview"
                 style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  width: "100px",
-                  height: "100px",
+                  width: "auto",
+                  height: "auto",
                   position: "absolute",
-                  top: 0,
-                  left: 0,
                 }}
               />
             ) : (
@@ -337,7 +333,10 @@ const MyPageUpdate = () => {
                   src={
                     profileImg && profileImg.includes("://") ? profileImg : getImageUrl(profileImg)
                   }
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
+                  style={{
+                    width: "auto",
+                    height: "auto",
+                  }}
                 />
               </div>
             )}
@@ -430,9 +429,9 @@ const MyPageUpdate = () => {
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
-              // InputProps={{
-              //   className: "output-style",
-              // }}
+            // InputProps={{
+            //   className: "output-style",
+            // }}
             value={contactNumber}
             onChange={(event) => {
               setContactNumber(event.target.value);

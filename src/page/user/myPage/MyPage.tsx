@@ -92,10 +92,8 @@ const MyPage = () => {
                   }
                   key={user?.profileImg}
                   style={{
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                    width: "100px",
-                    height: "100px",
+                    width: "auto",
+                    height: "auto",
                     display: imageLoaded ? "block" : "none",
                   }}
                   alt="프로필 이미지"
