@@ -36,3 +36,7 @@
   font-family: "SUIT-Thin";
   src: url("./SUIT-Thin.otf") format("opentype");
 }
+@font-face {
+  font-family: "OKGUNG";
+  src: url("./OK GUNG.otf") format("opentype");
+}
