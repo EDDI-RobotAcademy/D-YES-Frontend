@@ -1,3 +1,5 @@
+import { getImageUrl } from "utility/s3/awsS3";
+
 import "../css/loginButton.css";
 
 interface naverLoginProps {
@@ -20,7 +22,7 @@ const NaverLogin: React.FC<naverLoginProps> = ({ onSuccess }) => {
       <img
         className="oauth-login-btn"
         alt="네이버 로그인"
-        src="img/NaverLoginIcon1.png"
+        src={getImageUrl("resources/NaverLoginIcon.png")}
       />
       <p className="oauth-login-text">네이버 로그인</p>
     </div>
