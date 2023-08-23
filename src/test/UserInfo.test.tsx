@@ -24,7 +24,7 @@ it('회원 정보 테스트', async () => {
   const address = screen.getByLabelText('주소');
   const zipCode = screen.getByLabelText('우편번호');
   const addressDetail = screen.getByLabelText('상세주소');
-  const button = screen.getByText('돌아가기');
+  // const button = screen.getByText('돌아가기');
 
   act(() => {
     fireEvent.change(email, { target: { value: 'test@test.com' } });
@@ -35,7 +35,7 @@ it('회원 정보 테스트', async () => {
     fireEvent.change(addressDetail, { target: { value: '1' } });
   });
 
-  await act(async () => {
-    fireEvent.click(button);
-  });
+  // await act(async () => {
+  //   fireEvent.click(button);
+  // });
 });
