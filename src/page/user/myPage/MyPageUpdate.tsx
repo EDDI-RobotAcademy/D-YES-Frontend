@@ -309,7 +309,7 @@ const MyPageUpdate = () => {
   return (
     <Container className="mypage-container">
       <Box display="flex" flexDirection="column" gap={1} p={2}>
-        <h1>회원정보 수정</h1>
+        <h1 className="class-h1">회원정보 수정</h1>
         {/* <p>프로필 이미지</p> */}
         <div className="content-align">
           <div
@@ -356,14 +356,17 @@ const MyPageUpdate = () => {
           </InputLabel>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <TextField
+              className="mypage-text-field"
               id="email"
               fullWidth
               variant="outlined"
               sx={{ width: "300px", marginBottom: "16px" }}
-              // InputProps={{
-              //   className: "output-style",
-              // }}
               value={email}
+              inputProps={{
+                style: {
+                  fontFamily: "SUIT-light"
+                },
+              }}
               onChange={(event) => {
                 if (event.target.value === "") {
                   setCheckedEmailDuplicated(true);
@@ -373,7 +376,11 @@ const MyPageUpdate = () => {
               }}
             />
             <Button
-              // className="check-btn"
+              className={`mapage-btn ${
+                email === user?.email && checkedEmailDuplicated
+                  ? "gray-border-btn"
+                  : "orange-border-btn"
+              }`}
               variant="outlined"
               onClick={handleDuplicateCheck}
               style={{
@@ -394,14 +401,17 @@ const MyPageUpdate = () => {
           </InputLabel>
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
             <TextField
+              className="mypage-text-field"
               id="nickname"
               fullWidth
               variant="outlined"
               sx={{ width: "300px", marginBottom: "16px" }}
-              // InputProps={{
-              //   className: "output-style",
-              // }}
               value={nickName}
+              inputProps={{
+                style: {
+                  fontFamily: "SUIT-light"
+                },
+              }}
               onChange={(event) => {
                 if (event.target.value === "") {
                   setCheckedNickNameDuplicated(true);
@@ -411,7 +421,11 @@ const MyPageUpdate = () => {
               }}
             />
             <Button
-              // className="check-btn"
+              className={`mapage-btn ${
+                nickName === user?.nickName && checkedNickNameDuplicated
+                  ? "gray-border-btn"
+                  : "orange-border-btn"
+              }`}
               variant="outlined"
               onClick={handleDuplicateNicknameCheck}
               style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
@@ -426,14 +440,18 @@ const MyPageUpdate = () => {
             휴대폰 번호
           </InputLabel>
           <TextField
+            className="zip-text-field"
             id="contactNumber"
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
-              // InputProps={{
-              //   className: "output-style",
-              // }}
             value={contactNumber}
+            InputProps={{
+              style: {
+                backgroundColor: "rgb(250, 250, 250)",
+                fontFamily: "SUIT-light"
+              },
+            }}
             onChange={(event) => {
               setContactNumber(event.target.value);
               handleContactNumber(event);
@@ -447,36 +465,52 @@ const MyPageUpdate = () => {
           </InputLabel>
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
             <TextField
+              className="mypage-text-field"
               id="addr"
               fullWidth
               variant="outlined"
               sx={{ width: "300px", marginBottom: "16px" }}
               value={userAddress.address}
-              InputProps={{ onClick: onClickAddr }}
+              InputProps={{
+                onClick: onClickAddr,
+                style: {
+                  fontFamily: "SUIT-light"
+                },
+              }}
             />
             <Button
-              // className="check-btn"
+              className="mapage-btn"
               variant="outlined"
               onClick={onClickAddr}
-              style={{ fontSize: "14px", height: "56px", padding: "0 40px" }}
+              style={{
+                fontSize: "14px",
+                color: "orange",
+                height: "56px",
+                padding: "0 40px",
+                borderColor: "orange",
+              }}
             >
               검색
             </Button>
           </div>
         </div>
         <div>
-          <InputLabel htmlFor="zipNo" shrink style={{ position: "absolute" }}>
+          <InputLabel htmlFor="zipNo" shrink style={{ position: "absolute" }} className="zip-label">
             우편번호
           </InputLabel>
           <TextField
+            className="zip-text-field"
             id="zipNo"
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
-            InputProps={{
-              className: "output-style",
-            }}
             value={userAddress.zipCode}
+            InputProps={{
+              style: {
+                backgroundColor: "rgb(250, 250, 250)",
+                fontFamily: "SUIT-light"
+              },
+            }}
           />
         </div>
         <div>
@@ -484,14 +518,18 @@ const MyPageUpdate = () => {
             상세주소
           </InputLabel>
           <TextField
+            className="zip-text-field"
             id="addressDetail"
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
-            InputProps={{
-              className: "output-style",
-            }}
             value={userAddress.addressDetail}
+            InputProps={{
+              style: {
+                backgroundColor: "rgb(250, 250, 250)",
+                fontFamily: "SUIT-light"
+              },
+            }}
             onChange={(event) => {
               setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }));
               localStorage.setItem("addressDetail", event.target.value);
