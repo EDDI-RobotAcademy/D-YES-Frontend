@@ -10,17 +10,17 @@ import SnackBar from "layout/snackBar/SnackBar";
 import MyPageUpdate from "page/user/myPage/MyPageUpdate";
 import WithdrawalPage from "page/user/withdrawal/WithdrawalPage";
 import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
-import ProductRegisterPage from "page/product/productPage/ProductRegisterPage";
-import ProductPage from "page/product/productPage/ProductPage";
+import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
+import ProductPage from "page/product/productAdmin/ProductPage";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
   const [showFooter, setShowFooter] = useState(true);
-  
+
   return (
     <AuthProvider>
       <BrowserRouter>
-      {showHeader && <Header />}
+        {showHeader && <Header />}
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -30,16 +30,11 @@ const App: React.FC = () => {
           <Route path="/exit" element={<WithdrawalComplete />} />
           <Route
             path="/productPage"
-            element={
-              <ProductPage
-                setShowHeader={setShowHeader}
-                setShowFooter={setShowFooter}
-              />
-            }
+            element={<ProductPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
           />
           <Route path="/productRegister" element={<ProductRegisterPage />} />
         </Routes>
-      {showFooter && <Footer />}
+        {showFooter && <Footer />}
       </BrowserRouter>
       <SnackBar />
     </AuthProvider>

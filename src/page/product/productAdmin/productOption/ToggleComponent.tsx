@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import '../css/ProductPage.css';
+import React, { useState, useRef, useEffect } from "react";
+import "../css/ProductPage.css";
 
 interface ToggleComponentProps {
   label: string;
@@ -15,38 +15,38 @@ const ToggleComponent: React.FC<ToggleComponentProps> = ({ label, children, heig
 
   useEffect(() => {
     if (contentRef.current) {
-      setContentHeight(isInputVisible ? height : 0); 
+      setContentHeight(isInputVisible ? height : 0);
     }
   }, [isInputVisible, height]);
 
   const handleButtonClick = () => {
     setInputVisible(!isInputVisible);
   };
-  
+
   return (
     <div>
       <button
         ref={buttonRef}
         onClick={handleButtonClick}
         style={{
-          width: '100%',
-          height: '40px',
-          fontWeight: 'normal',
-          border: 'none',
-          backgroundColor: '#D0D0D0' 
+          width: "100%",
+          height: "40px",
+          fontWeight: "normal",
+          border: "none",
+          backgroundColor: "#D0D0D0",
         }}
       >
         {isInputVisible ? label : label}
       </button>
       <div
-        className={`input-container ${isInputVisible ? 'active' : ''}`}
-        style={{ height: contentHeight + 'px', overflow: 'hidden' }}
+        className={`input-container ${isInputVisible ? "active" : ""}`}
+        style={{ height: contentHeight + "px", overflow: "hidden" }}
         ref={contentRef}
       >
         {children}
       </div>
     </div>
   );
-}
+};
 
 export default ToggleComponent;

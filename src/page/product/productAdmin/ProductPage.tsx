@@ -43,9 +43,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter 
 
       <div className={`content ${showProductSection ? "expanded" : ""}`}>
         {/* showProductSection 값에 따라 상품 등록 페이지 렌더링 */}
-        <div className="content-inner">
-          {showProductSection && <ProductRegisterPage />}
-        </div>      
+        <div className="content-inner">{showProductSection && <ProductRegisterPage />}</div>
       </div>
     </div>
   );

@@ -3,7 +3,6 @@
   overflow: hidden;
   transition: height 0.3s ease-in-out, padding 0.3s ease-in-out;
   margin-bottom: 10px; /* 토글 간의 기본 간격 설정 */
-
 }
 
 .input-container.active {
@@ -84,7 +83,6 @@
   margin: 0;
   font-size: 16px;
   margin-top: 10px;
-
 }
 
 .sub-menu a {
