@@ -48,7 +48,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
       <table>
         <TableHead style={{ backgroundColor: "#D0D0D0" }}>
           <TableRow>
-            <TableCell className="cell" style={{ width: "40%", textAlign: "center" }}>
+            <TableCell className="cell" style={{ width: "30%", textAlign: "center" }}>
               옵션명
             </TableCell>
             <TableCell className="cell" style={{ width: "25%", textAlign: "center" }}>
@@ -69,6 +69,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
               <TableCell>
                 <TextField
                   name="optionName"
+                  size="small"
                   value={option.optionName}
                   fullWidth
                   onChange={(event) => {
@@ -80,7 +81,8 @@ const OptionTable: React.FC<OptionTableProps> = ({
               <TableCell>
                 <TextField
                   name="optionPrice"
-                  value={option.optionPrice || 0} 
+                  size="small"
+                  value={option.optionPrice || 0}
                   fullWidth
                   onChange={(event) => {
                     const updatedOption = { ...option, optionPrice: parseInt(event.target.value) };
@@ -91,6 +93,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
               <TableCell>
                 <TextField
                   name="stock"
+                  size="small"
                   value={option.stock || 0}
                   fullWidth
                   onChange={(event) => {
@@ -103,6 +106,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <TextField
                     name="value"
+                    size="small"
                     value={option.value || 0}
                     fullWidth
                     onChange={(event) => {
@@ -112,11 +116,13 @@ const OptionTable: React.FC<OptionTableProps> = ({
                   />
                   <Select
                     name="unit"
+                    size="small"
                     value={option.unit}
                     onChange={(event) => {
                       const updatedOption = { ...option, unit: event.target.value };
                       onChangeOption(index, updatedOption);
                     }}
+                    sx={{ minWidth: "70px" }}
                   >
                     {unitOption.map((unit, unitIndex) => (
                       <MenuItem key={unitIndex} value={unit.value}>
