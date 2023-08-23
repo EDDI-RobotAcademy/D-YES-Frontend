@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, InputLabel, OutlinedInput } from "@mui/material";
+import { Box, Button, Container, InputLabel, OutlinedInput, colors } from "@mui/material";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
@@ -77,7 +77,7 @@ const MyPage = () => {
   return (
     <Container className="mypage-container">
       <Box display="flex" flexDirection="column" gap={1} p={2}>
-        <h1>회원정보</h1>
+        <h1 className="class-h1">회원정보</h1>
         <div className="content-align">
           <div className="profile-image-container">
             {imageLoaded && (
@@ -108,60 +108,61 @@ const MyPage = () => {
           이메일
         </InputLabel>
         <OutlinedInput
-          className="output-style"
+          className="output-style no-border"
           id="email"
           name="email"
-          disabled
+          readOnly
           value={user?.email || ""}
+
         />
         <InputLabel className="input-font-size" htmlFor="nickName">
           닉네임
         </InputLabel>
         <OutlinedInput
-          className="output-style"
+          className="output-style no-border"
           id="nickName"
           name="nickName"
-          disabled
+          readOnly 
           value={user?.nickName || ""}
-        />
+          />
         <InputLabel className="input-font-size" htmlFor="contactNumber">
           휴대폰 번호
         </InputLabel>
         <OutlinedInput
-          className="output-style"
+          className="output-style no-border"
           id="contactNumber"
           name="contactNumber"
-          disabled
+          readOnly
           value={user?.contactNumber || ""}
         />
         <InputLabel className="input-font-size" htmlFor="address">
           주소
         </InputLabel>
         <OutlinedInput
-          className="output-style"
+          className="output-style no-border"
           id="address"
           name="address"
-          disabled
+          readOnly
           value={userAddress?.address || ""}
         />
         <InputLabel className="input-font-size" htmlFor="zipNo">
           우편번호
         </InputLabel>
         <OutlinedInput
-          className="output-style"
+          className="output-style no-border"
           id="zipNo"
           name="zipCode"
-          disabled
+          readOnly
           value={userAddress?.zipCode || ""}
         />
         <InputLabel className="input-font-size" htmlFor="addrDetail">
           상세주소
         </InputLabel>
         <OutlinedInput
-          className="output-style"
+          className="output-style no-border"
           id="addrDetail"
           name="addressDetail"
-          disabled
+          readOnly
           value={userAddress?.addressDetail || ""}
         />
         <Button className="mypage-btn" onClick={handleEditClick}>
