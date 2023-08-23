@@ -1,3 +1,5 @@
+import { getImageUrl } from "utility/s3/awsS3";
+
 import "../css/loginButton.css";
 
 interface googleLoginProps {
@@ -21,7 +23,7 @@ const GoogleLoginButton: React.FC<googleLoginProps> = ({ onSuccess }) => {
       <img
         className="oauth-login-btn"
         alt="구글 로그인"
-        src="img/GoogleLoginIcon1.png"
+        src={getImageUrl("resources/GoogleLoginIcon.png")}
       />
       <p className="oauth-login-text">구글 로그인</p>
     </div>

@@ -1,3 +1,5 @@
+import { getImageUrl } from "utility/s3/awsS3";
+
 import "../css/loginButton.css";
 
 interface KakaoLoginProps {
@@ -14,14 +16,14 @@ const KakaoLogin: React.FC<KakaoLoginProps> = ({ onSuccess }) => {
     "response_type=code";
 
   return (
-  <div className="oauth-login-btn-container" onClick={() => (window.location.href = kakaoURL)}>
-    <img
-      className="oauth-login-btn"
-      alt="카카오 로그인"
-      src="img/KakaoLoginIcon1.png"
-    />
-    <p className="oauth-login-text">카카오 로그인</p>
-  </div>
+    <div className="oauth-login-btn-container" onClick={() => (window.location.href = kakaoURL)}>
+      <img
+        className="oauth-login-btn"
+        alt="카카오 로그인"
+        src={getImageUrl("resources/KakaoLoginIcon.png")}
+      />
+      <p className="oauth-login-text">카카오 로그인</p>
+    </div>
   );
 };
 
