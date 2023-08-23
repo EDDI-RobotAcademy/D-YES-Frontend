@@ -48,10 +48,10 @@ const MyPage = () => {
     navigate("/withdrawal");
   };
 
-  const handleCancelClick = () => {
-    queryClient.invalidateQueries("user");
-    navigate("/");
-  };
+  // const handleCancelClick = () => {
+  //   queryClient.invalidateQueries("user");
+  //   navigate("/");
+  // };
 
   const getImageUrl = (imagePath: string) => {
     return (
