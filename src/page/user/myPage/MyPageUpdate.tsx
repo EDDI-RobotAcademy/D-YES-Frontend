@@ -310,7 +310,7 @@ const MyPageUpdate = () => {
     <Container className="mypage-container">
       <Box display="flex" flexDirection="column" gap={1} p={2}>
         <h1>회원정보 수정</h1>
-        <p>프로필 이미지</p>
+        {/* <p>프로필 이미지</p> */}
         <div className="content-align">
           <div
             className="profile-image-container"
@@ -360,6 +360,9 @@ const MyPageUpdate = () => {
               fullWidth
               variant="outlined"
               sx={{ width: "300px", marginBottom: "16px" }}
+              // InputProps={{
+              //   className: "output-style",
+              // }}
               value={email}
               onChange={(event) => {
                 if (event.target.value === "") {
@@ -370,6 +373,7 @@ const MyPageUpdate = () => {
               }}
             />
             <Button
+              // className="check-btn"
               variant="outlined"
               onClick={handleDuplicateCheck}
               style={{
@@ -394,6 +398,9 @@ const MyPageUpdate = () => {
               fullWidth
               variant="outlined"
               sx={{ width: "300px", marginBottom: "16px" }}
+              // InputProps={{
+              //   className: "output-style",
+              // }}
               value={nickName}
               onChange={(event) => {
                 if (event.target.value === "") {
@@ -404,6 +411,7 @@ const MyPageUpdate = () => {
               }}
             />
             <Button
+              // className="check-btn"
               variant="outlined"
               onClick={handleDuplicateNicknameCheck}
               style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
@@ -422,6 +430,9 @@ const MyPageUpdate = () => {
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
+              // InputProps={{
+              //   className: "output-style",
+              // }}
             value={contactNumber}
             onChange={(event) => {
               setContactNumber(event.target.value);
@@ -444,6 +455,7 @@ const MyPageUpdate = () => {
               InputProps={{ onClick: onClickAddr }}
             />
             <Button
+              // className="check-btn"
               variant="outlined"
               onClick={onClickAddr}
               style={{ fontSize: "14px", height: "56px", padding: "0 40px" }}
@@ -461,6 +473,9 @@ const MyPageUpdate = () => {
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
+            InputProps={{
+              className: "output-style",
+            }}
             value={userAddress.zipCode}
           />
         </div>
@@ -473,6 +488,9 @@ const MyPageUpdate = () => {
             fullWidth
             variant="outlined"
             sx={{ paddingTop: "24px", marginBottom: "16px" }}
+            InputProps={{
+              className: "output-style",
+            }}
             value={userAddress.addressDetail}
             onChange={(event) => {
               setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }));
@@ -480,10 +498,10 @@ const MyPageUpdate = () => {
             }}
           />
         </div>
-        <Button variant="outlined" onClick={handleEditFinishClick}>
+        <Button className="mypage-btn" onClick={handleEditFinishClick}>
           수정완료
         </Button>
-        <Button variant="outlined" onClick={handleCancelClick}>
+        <Button className="mypage-btn" onClick={handleCancelClick}>
           취소
         </Button>
       </Box>

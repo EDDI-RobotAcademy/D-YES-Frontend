@@ -14,21 +14,28 @@ const LoginPage = () => {
   };
 
   return (
-    <Box
+    <Box 
+      className="login-box"
       display="flex"
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
     >
-      <Container maxWidth="xs">
-        <div className="login-header">로그인·회원가입</div>
-        <div className="login-icons">
-          <KakaoLogin onSuccess={handleLoginSuccess} />
-          <GoogleLogin onSuccess={handleLoginSuccess} />
-          <NaverLogin onSuccess={handleLoginSuccess} />
-        </div>
-      </Container>
+      <div className="login-container">
+        <img className="login-background" src="img/login_background.jpg" alt="Login Background"/>
+        <Container maxWidth="xs">
+          <div className="login-icons">
+            <div className="login-text">
+              <h2>로그인·회원가입</h2>
+              <span>오늘부터 2주! 매일 업데이트되는 가격을 확인하세요</span>
+            </div>
+            <KakaoLogin onSuccess={handleLoginSuccess} />
+            <GoogleLogin onSuccess={handleLoginSuccess} />
+            <NaverLogin onSuccess={handleLoginSuccess} />
+          </div>
+        </Container>
+      </div>
     </Box>
   );
 };
