@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
-import { useOptions } from 'page/product/entity/useOptions';
+import React, { useState } from "react";
+import { TextField, Button, Box } from "@mui/material";
+import { useOptions } from "page/product/entity/useOptions";
 
 interface OptionInputProps {
   onAddOption: (option: useOptions) => void;
@@ -8,32 +8,32 @@ interface OptionInputProps {
 
 const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
   const [option, setOption] = useState<useOptions>({
-    optionName: '',
+    optionName: "",
     optionPrice: 0,
     stock: 0,
     value: 0,
-    unit: ''
+    unit: "",
   });
 
   const handleAddOption = () => {
     onAddOption(option);
     setOption({
-      optionName: '',
+      optionName: "",
       optionPrice: 0,
       stock: 0,
       value: 0,
-      unit: ''
+      unit: "",
     });
   };
 
   return (
-    <Box className='text-field-container'>
+    <Box className="text-field-container">
       <Button
         onClick={handleAddOption}
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          borderRadius: '0px', 
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          color: "white",
+          borderRadius: "0px",
         }}
       >
         추가
