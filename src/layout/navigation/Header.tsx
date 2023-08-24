@@ -11,7 +11,7 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, checkIsMainAdmin, checkIsNormalAdmin } = useAuth();
   // 로그아웃 동작
   const handleLogout = async () => {
     try {
@@ -53,21 +53,20 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           <>
             <Link className="MyPage" to={"/myPage"}>
               <p>마이페이지</p>
-              {/* <img src="img/MyPage.png" alt="마이페이지" /> */}
             </Link>
             <button className="Menu-logout" onClick={handleLogout}>
               <p>로그아웃</p>
-              {/* <img src="img/Logout.png" alt="로그아웃" /> */}
             </button>
-            <Link className="register" to={"/productPage"}>
-              <p>관리자 페이지</p>
-            </Link>
+            {checkIsMainAdmin() || checkIsNormalAdmin() ? (
+              <Link className="register" to={"/adminPage"}>
+                <p>관리자 페이지</p>
+              </Link>
+            ) : null}
           </>
         ) : (
           <>
             <Link className="Login" to={"/login"}>
               <p>로그인</p>
-              {/* <img src="img/Login.png" alt="로그인" /> */}
             </Link>
           </>
         )}

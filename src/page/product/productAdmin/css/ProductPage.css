@@ -28,23 +28,6 @@
   border-right: 1px solid white;
 }
 
-.product-page {
-  display: flex;
-  align-items: stretch; /* 사이드바와 컨텐츠를 높이 기준으로 맞추기 */
-}
-
-.sidebar {
-  background-color: #252525;
-  color: #fff;
-  width: 300px;
-  flex: 0 0 300px; /* 너비를 고정 */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 텍스트들을 가운데 정렬 */
-  overflow-y: auto; /* 사이드바가 내용보다 길 경우 스크롤 생성 */
-  min-height: 1000px; /* 최소 높이를 300px로 설정 (원하는 높이로 변경 가능) */
-}
-
 .logo {
   display: flex;
   align-items: center !important;
@@ -83,20 +66,6 @@
   margin: 0;
   font-size: 16px;
   margin-top: 10px;
-}
-
-.sub-menu a {
-  color: #aaa;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.sub-menu a:hover {
-  color: #fff;
-}
-
-.product-management {
-  padding: 50px; /* 오른쪽에 여백을 줌 */
 }
 
 .content-inner {
