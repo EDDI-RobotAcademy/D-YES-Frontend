@@ -7,6 +7,8 @@ type AuthContextType = {
   // 로그인이 안되어있으면 로그인 페이지로 이동시킬 수 있음
   // 이 설정을 하고싶으면 해당 페이지에서 설정해줘야함
   checkAuthorization: () => boolean;
+  checkIsMainAdmin: () => boolean;
+  checkIsNormalAdmin: () => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +36,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  // 메인 관리자 확인
+  const checkIsMainAdmin = useCallback((): boolean => {
+    const userToken = localStorage.getItem("userToken");
+    return userToken === "mainadmin";
+  }, []);
+
+  // 서브 관리자 확인
+  const checkIsNormalAdmin = useCallback((): boolean => {
+    const userToken = localStorage.getItem("userToken");
+    return userToken === "normaladmin";
+  }, []);
+
   // 이게 있어야 로그인상태를 유지시킴
   useEffect(() => {
     setIsLoggedIn(checkAuthorization());
@@ -41,7 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [checkAuthorization, saveTokenFromUrl]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, checkAuthorization }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, checkAuthorization, checkIsMainAdmin, checkIsNormalAdmin }}>
       {children}
     </AuthContext.Provider>
   );
