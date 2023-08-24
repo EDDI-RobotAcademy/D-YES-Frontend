@@ -322,9 +322,12 @@ const MyPageUpdate = () => {
                 src={URL.createObjectURL(selectedImage)}
                 alt="Preview"
                 style={{
-                  width: "auto",
-                  height: "auto",
-                  position: "absolute",
+                  width: "100%", // 이미지의 가로 크기를 100%로 설정하여 원 안에 꽉 차도록 표시
+                  height: "100%", // 이미지의 세로 크기를 100%로 설정하여 원 안에 꽉 차도록 표시
+                  objectFit: "cover", // 이미지가 원 안에 가득 차도록 표시
+                  position: "absolute", // 이미지의 위치 조정을 위해 position 사용
+                  top: 0, // 이미지를 원안의 상단에 배치
+                  left: 0, // 이미지를 원안의 왼쪽에 배치
                 }}
               />
             ) : (
@@ -334,8 +337,12 @@ const MyPageUpdate = () => {
                     profileImg && profileImg.includes("://") ? profileImg : getImageUrl(profileImg)
                   }
                   style={{
-                    width: "auto",
-                    height: "auto",
+                    width: "100%", // 이미지의 가로 크기를 100%로 설정하여 원 안에 꽉 차도록 표시
+                    height: "100%", // 이미지의 세로 크기를 100%로 설정하여 원 안에 꽉 차도록 표시
+                    objectFit: "cover", // 이미지가 원 안에 가득 차도록 표시
+                    position: "absolute", // 이미지의 위치 조정을 위해 position 사용
+                    top: 0, // 이미지를 원안의 상단에 배치
+                    left: 0, // 이미지를 원안의 왼쪽에 배치
                   }}
                 />
               </div>
