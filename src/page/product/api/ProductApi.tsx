@@ -6,7 +6,7 @@ import { ProductDetailImg } from "../entity/ProductDetailImg";
 import { UseQueryResult, useQuery } from "react-query";
 import useProductStore from "../store/ProductStore";
 
-// 상품 등록
+// 관리자용 상품 등록
 export const registerProduct = async (data: {
   productRegisterRequest: Product;
   productOptionRegisterRequest: useOptions[];
@@ -18,7 +18,13 @@ export const registerProduct = async (data: {
   return response.data;
 };
 
-// 상품 리스트
+// 사용자용 상품 리스트 확인
+export const getProductList = async () => {
+  const response = await axiosInstance.springAxiosInst.get("/product/user/list");
+  console.log("상품 리스트 데이터", response.data);
+  return response.data;
+
+// 관리자용 상품 리스트 확인
 export const fetchProductList = async (): Promise<Product[]> => {
   const response = await axiosInstance.springAxiosInst.get<Product[]>("/product/admin/list", {
     params: {
