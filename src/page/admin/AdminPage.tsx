@@ -6,6 +6,7 @@ import NormalAdminRegister from "./adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import { useAuth } from "layout/navigation/AuthConText";
 import { toast } from "react-toastify";
+import ProductList from "page/product/productAdmin/ProductList";
 
 interface ProductPageProps {
   setShowHeader: React.Dispatch<React.SetStateAction<boolean>>;
@@ -80,6 +81,7 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
           <div className="register-inner">
             {showProductSection === "register" && <ProductRegisterPage />}
           </div>
+          <div className="list-inner">{showProductSection === "list" && <ProductList />}</div>
           <div className="adminRegister-inner">
             {showProductSection === "adminRegister" && <NormalAdminRegister />}
           </div>
