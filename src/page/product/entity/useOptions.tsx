@@ -4,4 +4,5 @@ export interface useOptions {
   stock: number;
   value: number;
   unit: string;
+  optionSaleStatus: string;
 }

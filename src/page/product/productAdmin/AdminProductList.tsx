@@ -19,7 +19,7 @@ const ProductList = () => {
   const navigate = useNavigate();
   const setProducts = useProductStore((state) => state.setProducts);
   const [selectedOptions, setSelectedOptions] = useState<{ [productId: number]: string }>({});
-  const { data: products } = useProductListQuery() 
+  const { data: products } = useProductListQuery();
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -75,6 +75,9 @@ const ProductList = () => {
                 </TableCell>
                 <TableCell className="content-cell">{product.productId}</TableCell>
                 <TableCell className="content-cell">{product.productName}</TableCell>
+                <TableCell className="content-cell">
+                  {product.productSaleStatus === "AVAILABLE" ? "판매중" : "판매중지"}
+                </TableCell>
                 <TableCell className="content-cell">{product.cultivationMethod}</TableCell>
                 <TableCell className="content-cell">농가정보</TableCell>
                 <TableCell className="content-cell">
@@ -109,6 +112,15 @@ const ProductList = () => {
                     ? product.productOptionListResponse.find(
                         (option) => option.optionName === selectedOptions[product.productId]
                       )?.stock
+                    : ""}
+                </TableCell>
+                <TableCell>
+                  {selectedOptions[product.productId] && product.productOptionListResponse
+                    ? product.productOptionListResponse.find(
+                        (option) => option.optionName === selectedOptions[product.productId]
+                      )?.optionSaleStatus === "AVAILABLE"
+                      ? "판매중"
+                      : "판매중지"
                     : ""}
                 </TableCell>
               </TableRow>

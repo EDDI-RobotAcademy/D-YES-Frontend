@@ -40,6 +40,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
       stock: 0,
       value: 0,
       unit: "",
+      optionSaleStatus: "",
     });
   }
 

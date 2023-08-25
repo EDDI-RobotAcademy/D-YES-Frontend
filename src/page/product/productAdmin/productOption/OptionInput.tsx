@@ -13,6 +13,7 @@ const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
     stock: 0,
     value: 0,
     unit: "",
+    optionSaleStatus: "",
   });
 
   const handleAddOption = () => {
@@ -23,6 +24,7 @@ const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
       stock: 0,
       value: 0,
       unit: "",
+      optionSaleStatus: "",
     });
   };
 

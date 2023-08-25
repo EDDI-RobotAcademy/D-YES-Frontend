@@ -54,7 +54,7 @@ const ProductRegisterPage = () => {
     const { productName, productDescription, cultivationMethod, mainImg, detailImgs } =
       target.elements;
 
-    const optionObjects: useOptions[] = useOptions.map((option) => ({
+    const optionObjects: Partial<useOptions>[] = useOptions.map((option) => ({
       optionName: option.optionName,
       optionPrice: option.optionPrice,
       stock: option.stock,
@@ -87,6 +87,7 @@ const ProductRegisterPage = () => {
     await mutation.mutateAsync({
       ...data,
       productRegisterRequest: productRegisterRequest as Product,
+      productOptionRegisterRequest: optionObjects as useOptions[],
     });
   };
 
