@@ -70,7 +70,7 @@ const ProductRegisterPage = () => {
       { detailImgs: detailImgs.value },
     ];
 
-    const productRegisterRequest: Product = {
+    const productRegisterRequest: Partial<Product> = {
       productName: productName.value,
       productDescription: productDescription.value,
       cultivationMethod: cultivationMethod.value,
@@ -84,7 +84,10 @@ const ProductRegisterPage = () => {
     };
 
     console.log("데이터가 가냐:", data);
-    await mutation.mutateAsync(data);
+    await mutation.mutateAsync({
+      ...data,
+      productRegisterRequest: productRegisterRequest as Product,
+    });
   };
 
   const options = [
@@ -102,7 +105,7 @@ const ProductRegisterPage = () => {
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
     // 옵션정보에서 추가버튼을 누르면 토글 증가
-    setOptionToggleHeight(optionToggleHeight + 100);
+    setOptionToggleHeight(optionToggleHeight + 78);
   };
 
   // 옵션 삭제
@@ -110,7 +113,7 @@ const ProductRegisterPage = () => {
     const newOptions = [...useOptions];
     newOptions.splice(index, 1);
     // 옵션정보에서 삭제버튼을 누르면 토글 감소
-    setOptionToggleHeight(optionToggleHeight - 100);
+    setOptionToggleHeight(optionToggleHeight - 78);
     setUseOptions(newOptions);
   };
 

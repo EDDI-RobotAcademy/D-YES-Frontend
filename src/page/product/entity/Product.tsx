@@ -1,5 +1,9 @@
+import { useOptions } from "./useOptions";
+
 export interface Product {
-  productName: string,
-  productDescription: string,
-  cultivationMethod: string,
+  productId: number;
+  productName: string;
+  productDescription: string;
+  cultivationMethod: string;
+  productOptionListResponse: useOptions[];
 }

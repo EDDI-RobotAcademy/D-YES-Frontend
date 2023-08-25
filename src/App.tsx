@@ -13,6 +13,7 @@ import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
 import AdminPage from "page/admin/AdminPage";
 import NormalAdminRegister from "page/admin/adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
+import ProductList from "page/product/productAdmin/ProductList";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -34,6 +35,7 @@ const App: React.FC = () => {
             element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
           />
           <Route path="/productRegister" element={<ProductRegisterPage />} />
+          <Route path="/productList" element={<ProductList />} />
           <Route path="/adminRegister" element={<NormalAdminRegister />} />
         </Routes>
         {showFooter && <Footer />}
