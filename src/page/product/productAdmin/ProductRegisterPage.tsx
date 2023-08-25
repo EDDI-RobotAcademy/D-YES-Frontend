@@ -29,6 +29,7 @@ const ProductRegisterPage = () => {
     "" | { value: string; label: string } | undefined
   >("");
   const [optionToggleHeight, setOptionToggleHeight] = useState(200);
+  const userToken = localStorage.getItem("userToken")
 
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
@@ -81,6 +82,7 @@ const ProductRegisterPage = () => {
       productOptionRegisterRequest: optionObjects,
       productMainImageRegisterRequest: productMainImageRegisterRequest,
       productDetailImagesRegisterRequests: productDetailImagesRegisterRequests,
+      userToken: userToken || ""
     };
 
     console.log("데이터가 가냐:", data);
