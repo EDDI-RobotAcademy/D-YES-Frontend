@@ -14,7 +14,6 @@ import AdminPage from "page/admin/AdminPage";
 import NormalAdminRegister from "page/admin/adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
-import FarmRegisterPage from "page/admin/adminPage/FarmRegisterPage";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -38,7 +37,6 @@ const App: React.FC = () => {
           <Route path="/productRegister" element={<ProductRegisterPage />} />
           <Route path="/adminProductList" element={<AdminProductList />} />
           <Route path="/adminRegister" element={<NormalAdminRegister />} />
-          <Route path="/farmRegister" element={<FarmRegisterPage />} />
         </Routes>
         {showFooter && <Footer />}
       </BrowserRouter>
