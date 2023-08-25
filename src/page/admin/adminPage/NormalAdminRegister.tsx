@@ -94,9 +94,6 @@ const NormalAdminRegister = () => {
           </Grid>
         </form>
       </Container>
-      {/* <Snackbar open={showLoginFailureSnackbar} autoHideDuration={5000} onClose={() => setShowLoginFailureSnackbar(false)}
-        message="이메일과 비밀번호를 확인해주세요."
-      /> */}
     </Box>
   );
 };
