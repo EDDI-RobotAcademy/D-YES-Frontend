@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import "./adminPage/css/AdminPage.css";
 import NormalAdminRegister from "./adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
+import { useAuth } from "layout/navigation/AuthConText";
+import { toast } from "react-toastify";
 
 interface ProductPageProps {
   setShowHeader: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,7 +13,8 @@ interface ProductPageProps {
 }
 
 const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter }) => {
-  const [showProductSection, setShowProductSection] = useState("register"); // "register" or "list"
+  const [showProductSection, setShowProductSection] = useState("register");
+  const auth = useAuth();
 
   useEffect(() => {
     // 마운트되었을 때 Header를 숨기도록 설정
@@ -34,7 +37,21 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
             회원 관리
             <div className={`sub-menu ${showProductSection ? "show" : ""}`}>
               <div>
-                <Link to="#" onClick={() => setShowProductSection("adminRegister")}>
+                <Link
+                  to="#"
+                  onClick={() => {
+                    const userToken = localStorage.getItem("userToken");
+                    if (
+                      auth.checkAdminAuthorization() &&
+                      userToken &&
+                      userToken.includes("mainadmin")
+                    ) {
+                      setShowProductSection("adminRegister");
+                    } else {
+                      toast.error("권한이 없습니다.");
+                    }
+                  }}
+                >
                   - 관리자 등록
                 </Link>
               </div>
