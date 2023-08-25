@@ -15,7 +15,7 @@ import { fetchProductList, useProductListQuery } from "../api/ProductApi";
 import useProductStore from "../store/ProductStore";
 import { useNavigate } from "react-router-dom";
 
-const ProductList = () => {
+const AdminProductList = () => {
   const navigate = useNavigate();
   const setProducts = useProductStore((state) => state.setProducts);
   const [selectedOptions, setSelectedOptions] = useState<{ [productId: number]: string }>({});
@@ -132,4 +132,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default AdminProductList;
