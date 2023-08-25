@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "./adminPage/css/AdminPage.css";
 import NormalAdminRegister from "./adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
-import ProductList from "page/product/productAdmin/ProductList";
 import { useAuth } from "layout/navigation/AuthConText";
 import { toast } from "react-toastify";
 
