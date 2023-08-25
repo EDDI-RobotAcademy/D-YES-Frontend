@@ -80,7 +80,6 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
           <div className="register-inner">
             {showProductSection === "register" && <ProductRegisterPage />}
           </div>
-          <div className="list-inner">{showProductSection === "list" && <ProductList />}</div>
           <div className="adminRegister-inner">
             {showProductSection === "adminRegister" && <NormalAdminRegister />}
           </div>
