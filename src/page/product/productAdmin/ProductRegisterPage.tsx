@@ -29,6 +29,7 @@ const ProductRegisterPage = () => {
     "" | { value: string; label: string } | undefined
   >("");
   const [optionToggleHeight, setOptionToggleHeight] = useState(200);
+  const userToken = localStorage.getItem("userToken")
 
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
@@ -54,7 +55,7 @@ const ProductRegisterPage = () => {
     const { productName, productDescription, cultivationMethod, mainImg, detailImgs } =
       target.elements;
 
-    const optionObjects: useOptions[] = useOptions.map((option) => ({
+    const optionObjects: Partial<useOptions>[] = useOptions.map((option) => ({
       optionName: option.optionName,
       optionPrice: option.optionPrice,
       stock: option.stock,
@@ -70,7 +71,7 @@ const ProductRegisterPage = () => {
       { detailImgs: detailImgs.value },
     ];
 
-    const productRegisterRequest: Product = {
+    const productRegisterRequest: Partial<Product> = {
       productName: productName.value,
       productDescription: productDescription.value,
       cultivationMethod: cultivationMethod.value,
@@ -81,10 +82,15 @@ const ProductRegisterPage = () => {
       productOptionRegisterRequest: optionObjects,
       productMainImageRegisterRequest: productMainImageRegisterRequest,
       productDetailImagesRegisterRequests: productDetailImagesRegisterRequests,
+      userToken: userToken || ""
     };
 
     console.log("데이터가 가냐:", data);
-    await mutation.mutateAsync(data);
+    await mutation.mutateAsync({
+      ...data,
+      productRegisterRequest: productRegisterRequest as Product,
+      productOptionRegisterRequest: optionObjects as useOptions[],
+    });
   };
 
   const options = [
@@ -102,7 +108,7 @@ const ProductRegisterPage = () => {
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
     // 옵션정보에서 추가버튼을 누르면 토글 증가
-    setOptionToggleHeight(optionToggleHeight + 100);
+    setOptionToggleHeight(optionToggleHeight + 78);
   };
 
   // 옵션 삭제
@@ -110,7 +116,7 @@ const ProductRegisterPage = () => {
     const newOptions = [...useOptions];
     newOptions.splice(index, 1);
     // 옵션정보에서 삭제버튼을 누르면 토글 감소
-    setOptionToggleHeight(optionToggleHeight - 100);
+    setOptionToggleHeight(optionToggleHeight - 78);
     setUseOptions(newOptions);
   };
 
