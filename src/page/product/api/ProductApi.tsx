@@ -23,6 +23,7 @@ export const getProductList = async () => {
   const response = await axiosInstance.springAxiosInst.get("/product/user/list");
   console.log("상품 리스트 데이터", response.data);
   return response.data;
+};
 
 // 관리자용 상품 리스트 확인
 export const fetchProductList = async (): Promise<Product[]> => {
