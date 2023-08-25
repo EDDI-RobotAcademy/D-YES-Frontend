@@ -3,7 +3,7 @@ import { render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
-import ProductListPage from "page/product/productUser/UserProductList";
+import ProductListPage from "page/product/productUser/ProductListPage";
 import { Typography } from "@mui/material";
 
 jest.mock("page/product/api/ProductApi", () => ({
