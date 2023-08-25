@@ -11,7 +11,7 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
-  const { isLoggedIn, setIsLoggedIn, checkIsMainAdmin, checkIsNormalAdmin } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, checkAdminAuthorization } = useAuth();
   // 로그아웃 동작
   const handleLogout = async () => {
     try {
@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             <button className="Menu-logout" onClick={handleLogout}>
               <p>로그아웃</p>
             </button>
-            {checkIsMainAdmin() || checkIsNormalAdmin() ? (
+            {checkAdminAuthorization() ? (
               <Link className="register" to={"/adminPage"}>
                 <p>관리자 페이지</p>
               </Link>
