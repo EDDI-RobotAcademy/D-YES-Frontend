@@ -13,6 +13,7 @@ import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
 import AdminPage from "page/admin/AdminPage";
 import NormalAdminRegister from "page/admin/adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
+import ProductListPage from "page/product/productUser/ProductListPage";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -29,6 +30,7 @@ const App: React.FC = () => {
           <Route path="/updateInfo" element={<MyPageUpdate />} />
           <Route path="/withdrawal" element={<WithdrawalPage />} />
           <Route path="/exit" element={<WithdrawalComplete />} />
+          <Route path="/productList" element={<ProductListPage />} />
           <Route
             path="/adminPage"
             element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
@@ -42,4 +44,5 @@ const App: React.FC = () => {
     </AuthProvider>
   );
 };
+
 export default App;
