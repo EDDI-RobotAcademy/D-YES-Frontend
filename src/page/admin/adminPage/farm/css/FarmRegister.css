@@ -1,0 +1,32 @@
+.custom-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-input .input-container {
+  display: flex;
+  align-items: center;
+}
+
+.custom-input label.Mui-focused {
+  color: black;
+}
+
+.custom-input .MuiFilledInput-root {
+  background-color: white;
+  border-radius: 2px;
+}
+
+.custom-input .MuiFilledInput-root:hover {
+  border-color: black;
+}
+
+.custom-input .MuiFilledInput-root.Mui-focused .MuiFilledInput-input {
+  background-color: white;
+}
+
+.custom-input .MuiFilledInput-underline:before,
+.custom-input .MuiFilledInput-underline:after {
+  display: none;
+}
