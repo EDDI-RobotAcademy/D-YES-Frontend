@@ -15,6 +15,7 @@ import NormalAdminRegister from "page/admin/adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import ProductListPage from "page/product/productUser/ProductListPage";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
+import TopButton from "utility/TopButton";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -43,6 +44,7 @@ const App: React.FC = () => {
         {showFooter && <Footer />}
       </BrowserRouter>
       <SnackBar />
+      <TopButton />
     </AuthProvider>
   );
 };
