@@ -1,8 +1,8 @@
 import { FarmAddress } from "./FarmAddress";
 
 export interface Farm {
-  id: number;
+  farmId: number;
   farmName: string;
-  address: FarmAddress[];
+  farmAddress: FarmAddress;
   csContactNumber: string;
 }

@@ -112,7 +112,7 @@ const FarmRegister = () => {
       ? new File([selectedMainImage], selectedMainImage.name)
       : "";
     if (!mainFileToUpload) {
-      alert("농가 이미지를 등록해주세요");
+      toast.error("농가 이미지를 등록해주세요");
       return;
     }
 

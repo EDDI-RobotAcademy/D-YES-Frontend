@@ -31,3 +31,10 @@ export const farmRegister = async (data: {
   console.log("api확인", response.data);
   return response.data;
 };
+
+// 농가 목록
+export const getFarmList = async () => {
+  const response = await axiosInstance.springAxiosInst.get("/farm/list")
+  console.log("농가 리스트", response.data)
+  return response.data;
+}
