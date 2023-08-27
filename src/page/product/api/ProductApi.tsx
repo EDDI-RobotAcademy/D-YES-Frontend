@@ -3,7 +3,10 @@ import { Product } from "../entity/Product";
 import { useOptions } from "../entity/useOptions";
 import { ProductImg } from "../entity/ProductMainImg";
 import { ProductDetailImg } from "../entity/ProductDetailImg";
-import { UseQueryResult, useQuery } from "react-query";
+import {
+  UseQueryResult,
+  useQuery,
+} from "react-query";
 import useProductStore from "../store/ProductStore";
 
 // 관리자용 상품 등록
@@ -51,4 +54,19 @@ export const useProductListQuery = (): UseQueryResult<Product[], unknown> => {
   );
 
   return queryResult;
+};
+
+// 관리자용 상품 삭제
+export const deleteProducts = async (productIds: string[]): Promise<any> => {
+  const userToken = localStorage.getItem("userToken")
+  const deleteForm = {
+    userToken: userToken,
+    productIdList: productIds.map(id => parseInt(id))
+  };
+
+  const response = await axiosInstance.springAxiosInst.delete("/product/deleteList", {
+    data: deleteForm,
+  });
+
+  return response.data;
 };

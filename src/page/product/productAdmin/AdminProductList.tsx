@@ -11,15 +11,18 @@ import {
   TableRow,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { fetchProductList, useProductListQuery } from "../api/ProductApi";
+import { deleteProducts, fetchProductList, useProductListQuery } from "../api/ProductApi";
 import useProductStore from "../store/ProductStore";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
 
 const AdminProductList = () => {
   const navigate = useNavigate();
   const setProducts = useProductStore((state) => state.setProducts);
   const [selectedOptions, setSelectedOptions] = useState<{ [productId: number]: string }>({});
+  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const { data: products } = useProductListQuery();
+  const queryClient = useQueryClient(); 
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -32,6 +35,28 @@ const AdminProductList = () => {
     };
     fetchAllProducts();
   }, [setProducts]);
+
+  const handleCheckboxChange = (productId: number) => {
+    setSelectedProducts((prevSelectedProducts) =>
+      prevSelectedProducts.includes(productId)
+        ? prevSelectedProducts.filter((id) => id !== productId)
+        : [...prevSelectedProducts, productId]
+    );
+  };
+
+  const handleDeleteClick = async () => {
+    if (selectedProducts.length === 0) {
+      return;
+    }
+
+    try {
+      await deleteProducts(selectedProducts.map(id => id.toString()));
+      queryClient.invalidateQueries("productList");
+    } catch (error) {
+      console.error("상품 삭제 실패:", error);
+    }
+  };
+
 
   const handleEditClick = (productId: number) => {
     console.log(`상품 수정 번호: ${productId}`);
@@ -66,7 +91,10 @@ const AdminProductList = () => {
             products?.map((product) => (
               <TableRow key={product.productId} style={{ cursor: "pointer" }}>
                 <TableCell>
-                  <Checkbox />
+                  <Checkbox
+                    checked={selectedProducts.includes(product.productId)}
+                    onChange={() => handleCheckboxChange(product.productId)}
+                  />
                 </TableCell>
                 <TableCell>
                   <Button variant="outlined" onClick={() => handleEditClick(product.productId)}>
@@ -128,6 +156,9 @@ const AdminProductList = () => {
           )}
         </TableBody>
       </table>
+      <Button variant="outlined" onClick={handleDeleteClick}>
+        상품 삭제
+      </Button>
     </TableContainer>
   );
 };
