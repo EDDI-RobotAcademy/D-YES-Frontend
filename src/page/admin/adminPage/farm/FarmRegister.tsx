@@ -16,6 +16,9 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import "./css/FarmRegister.css";
+import { compressImg } from "utility/s3/imageCompression";
+import { useDropzone } from "react-dropzone";
+import { uploadFileAwsS3 } from "utility/s3/awsS3";
 
 declare global {
   interface Window {
@@ -33,7 +36,7 @@ const FarmRegister = () => {
   const userToken = localStorage.getItem("userToken");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-
+  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
 
   const mutation = useMutation(farmRegister, {
@@ -86,8 +89,38 @@ const FarmRegister = () => {
     setIsSelectOpen(false);
   };
 
+  const onMainImageDrop = async (acceptedFile: File[]) => {
+    if (acceptedFile.length) {
+      try {
+        const compressedImage = await compressImg(acceptedFile[0]);
+        setSelectedMainImage(compressedImage);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+    onDrop: onMainImageDrop,
+    maxFiles: 1,
+  });
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    const mainFileToUpload = selectedMainImage
+      ? new File([selectedMainImage], selectedMainImage.name)
+      : "";
+    if (!mainFileToUpload) {
+      alert("농가 이미지를 등록해주세요");
+      return;
+    }
+
+    const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
+
+    const mainImageNameWithVersion = mainFileToUpload
+    ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
+    : "undefined main image";
 
     const target = event.target as typeof event.target & {
       elements: {
@@ -96,7 +129,7 @@ const FarmRegister = () => {
         representativeName: { value: string };
         representativeContactNumber: { value: string };
         farmName: { value: string };
-        CSContactNumber: { value: string };
+        csContactNumber: { value: string };
         address: { value: string };
         zipCode: { value: string };
         addressDetail: { value: string };
@@ -114,11 +147,10 @@ const FarmRegister = () => {
       representativeName,
       representativeContactNumber,
       farmName,
-      CSContactNumber,
+      csContactNumber,
       address,
       zipCode,
       addressDetail,
-      mainImage,
       introduction,
     } = target.elements;
 
@@ -128,11 +160,11 @@ const FarmRegister = () => {
       representativeName: representativeName.value,
       representativeContactNumber: representativeContactNumber.value,
       farmName: farmName.value,
-      CSContactNumber: CSContactNumber.value,
+      csContactNumber: csContactNumber.value,
       address: address.value,
       zipCode: zipCode.value,
       addressDetail: addressDetail.value,
-      mainImage: mainImage.value,
+      mainImage: mainImageNameWithVersion ,
       introduction: introduction.value,
       produceTypes: selectedOptionsValues,
       userToken: userToken || "",
@@ -147,6 +179,9 @@ const FarmRegister = () => {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
+      width="500px" // 가로폭
+      paddingTop="50px" // 위쪽 패딩 값
+      paddingBottom="50px" // 아래쪽 패딩 값
     >
       <Container maxWidth="xs">
         <Typography gutterBottom style={{ fontSize: "20px" }}>
@@ -238,7 +273,7 @@ const FarmRegister = () => {
             <div style={{ position: "relative" }}>
               <TextField
                 label="고객센터 연락처"
-                name="CSContactNumber"
+                name="csContactNumber"
                 fullWidth
                 variant="filled"
                 margin="normal"
@@ -306,15 +341,33 @@ const FarmRegister = () => {
           </Grid>
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
-              <TextField
-                label="농가 사진"
-                name="mainImage"
-                fullWidth
-                variant="filled"
-                margin="normal"
-                className="custom-input"
-                InputLabelProps={{ shrink: true }}
-              />
+              <InputLabel style={{ fontSize: "12px", marginLeft: "12px" }}>농가 사진</InputLabel>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "400px",
+                  backgroundColor: "#e4e4e4",
+                  cursor: "pointer",
+                }}
+                {...mainImageRootProps()}
+              >
+                {selectedMainImage ? (
+                  <img
+                    // 선택된 사진이 있으면 미리보기
+                    src={URL.createObjectURL(selectedMainImage)}
+                    style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
+                    alt="Selected"
+                  />
+                ) : (
+                  <div style={{ textAlign: "center" }}>
+                    <div>농가 이미지를 추가해주세요.</div>
+                    <input {...mainImageInputProps()} />
+                  </div>
+                )}
+              </div>
             </div>
           </Grid>
           <Grid item xs={12}>

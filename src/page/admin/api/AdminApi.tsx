@@ -19,7 +19,7 @@ export const farmRegister = async (data: {
   representativeName: string;
   representativeContactNumber: string;
   farmName: string;
-  CSContactNumber: string;
+  csContactNumber: string;
   address: string;
   zipCode: string;
   addressDetail: string;

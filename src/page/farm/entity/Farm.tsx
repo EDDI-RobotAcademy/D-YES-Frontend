@@ -4,5 +4,5 @@ export interface Farm {
   id: number;
   farmName: string;
   address: FarmAddress[];
-  CSContactNumber: string;
+  csContactNumber: string;
 }
