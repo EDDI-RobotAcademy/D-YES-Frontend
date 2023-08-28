@@ -17,6 +17,7 @@ import ProductListPage from "page/product/productUser/ProductListPage";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
 import FarmRegisterPage from "./page/admin/adminPage/FarmRegisterPage";
 import TopButton from "utility/TopButton";
+import AdminProductModifyPage from "page/product/productAdmin/AdminProductModifyPage";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -42,6 +43,7 @@ const App: React.FC = () => {
           <Route path="/adminProductList" element={<AdminProductList />} />
           <Route path="/adminRegister" element={<NormalAdminRegister />} />
           <Route path="/farmRegister" element={<FarmRegisterPage />} />
+          <Route path="/adminPage/productModify/:productId" element={<AdminProductModifyPage />} />
         </Routes>
         {showFooter && <Footer />}
       </BrowserRouter>

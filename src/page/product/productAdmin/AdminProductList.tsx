@@ -58,8 +58,7 @@ const AdminProductList = () => {
   };
 
   const handleEditClick = (productId: number) => {
-    console.log(`상품 수정 번호: ${productId}`);
-    navigate("/adminPage/productModify");
+    navigate(`/adminPage/productModify/${productId}`);
   };
 
   return (

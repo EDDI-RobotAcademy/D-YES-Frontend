@@ -35,6 +35,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
   // 기본적으로 하나의 빈 옵션을 추가하여 시작
   if (optionRows.length === 0) {
     optionRows.push({
+      optionId: 0,
       optionName: "",
       optionPrice: 0,
       stock: 0,

@@ -56,10 +56,14 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
                   - 관리자 등록
                 </Link>
                 <div>
-                <Link to="#" className="list-button" onClick={() => setShowProductSection("farmRegister")}>
-                  - 농가 등록
-                </Link>
-              </div>
+                  <Link
+                    to="#"
+                    className="list-button"
+                    onClick={() => setShowProductSection("farmRegister")}
+                  >
+                    - 농가 등록
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

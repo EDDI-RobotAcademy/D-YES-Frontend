@@ -1,4 +1,5 @@
 export interface useOptions {
+  optionId: number;
   optionName: string;
   optionPrice: number;
   stock: number;

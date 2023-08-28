@@ -190,13 +190,12 @@ const ProductRegisterPage = () => {
     setSelectedOption(event.target.value as "" | { value: string; label: string });
   };
 
-// 옵션 추가
-const handleAddOption = (newOption: useOptions) => {
-  setUseOptions((prevOptions) => [...prevOptions, newOption]);
-  // 옵션정보에서 추가버튼을 누르면 토글 증가 
-  setOptionToggleHeight(optionToggleHeight + 78);
-
-};
+  // 옵션 추가
+  const handleAddOption = (newOption: useOptions) => {
+    setUseOptions((prevOptions) => [...prevOptions, newOption]);
+    // 옵션정보에서 추가버튼을 누르면 토글 증가
+    setOptionToggleHeight(optionToggleHeight + 78);
+  };
 
   // 옵션 삭제
   const handleDeleteOption = (index: number) => {
