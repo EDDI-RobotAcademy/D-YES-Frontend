@@ -15,6 +15,7 @@ import NormalAdminRegister from "page/admin/adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import ProductListPage from "page/product/productUser/ProductListPage";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
+import FarmRegisterPage from "./page/admin/adminPage/FarmRegisterPage";
 import TopButton from "utility/TopButton";
 
 const App: React.FC = () => {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
           <Route path="/productRegister" element={<ProductRegisterPage />} />
           <Route path="/adminProductList" element={<AdminProductList />} />
           <Route path="/adminRegister" element={<NormalAdminRegister />} />
+          <Route path="/farmRegister" element={<FarmRegisterPage />} />
         </Routes>
         {showFooter && <Footer />}
       </BrowserRouter>

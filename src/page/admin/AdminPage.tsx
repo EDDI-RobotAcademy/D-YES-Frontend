@@ -6,6 +6,7 @@ import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import { useAuth } from "layout/navigation/AuthConText";
 import { toast } from "react-toastify";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
+import FarmRegisterPage from "./adminPage/FarmRegisterPage";
 
 interface ProductPageProps {
   setShowHeader: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,6 +55,11 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
                 >
                   - 관리자 등록
                 </Link>
+                <div>
+                <Link to="#" className="list-button" onClick={() => setShowProductSection("farmRegister")}>
+                  - 농가 등록
+                </Link>
+              </div>
               </div>
             </div>
           </div>
@@ -67,7 +73,7 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
               </div>
               <div>
                 <Link to="#" className="list-button" onClick={() => setShowProductSection("list")}>
-                  - 상품 조회
+                  - 상품 목록
                 </Link>
               </div>
             </div>
@@ -83,6 +89,9 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
           <div className="list-inner">{showProductSection === "list" && <AdminProductList />}</div>
           <div className="adminRegister-inner">
             {showProductSection === "adminRegister" && <NormalAdminRegister />}
+          </div>
+          <div className="farmRegister-inner">
+            {showProductSection === "farmRegister" && <FarmRegisterPage />}
           </div>
         </div>
       </div>

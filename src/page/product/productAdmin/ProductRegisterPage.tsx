@@ -20,6 +20,8 @@ import { useOptions } from "../entity/useOptions";
 import { ProductImg } from "../entity/ProductMainImg";
 import { ProductDetailImg } from "../entity/ProductDetailImg";
 import { Product } from "../entity/Product";
+import { Farm } from "page/farm/entity/Farm";
+import FarmSearch from "./productOption/FarmSearch";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3, uploadFilesAwsS3 } from "utility/s3/awsS3";
@@ -32,9 +34,22 @@ const ProductRegisterPage = () => {
     "" | { value: string; label: string } | undefined
   >("");
   const [optionToggleHeight, setOptionToggleHeight] = useState(200);
+  const userToken = localStorage.getItem("userToken");
+  const [selectedFarmName, setSelectedFarmName] = useState("");
+  const [openFarmSearch, setOpenFarmSearch] = useState(false); // 팝업 오픈 상태
+  const [selectedFarm, setSelectedFarm] = useState<null | Farm>(null);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
-  const userToken = localStorage.getItem("userToken");
+
+  const handleOpenFarmSearch = () => {
+    setOpenFarmSearch(true);
+  };
+
+  // 농가 선택 후 처리 함수
+  const handleFarmSelect = (selectedFarm: Farm) => {
+    setSelectedFarm(selectedFarm);
+    setOpenFarmSearch(false); // 팝업 닫기
+  };
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length) {
@@ -109,11 +124,12 @@ const ProductRegisterPage = () => {
         productDescription: { value: string };
         cultivationMethod: { value: string };
         mainImg: { value: string };
-        detailImgs: { value: string[] };
+        detailImgs: { value: string };
+        farmName: { value: string };
       };
     };
 
-    const { productName, productDescription, cultivationMethod, mainImg, detailImgs } =
+    const { productName, productDescription, cultivationMethod, mainImg, detailImgs, farmName } =
       target.elements;
 
     const optionObjects: Partial<useOptions>[] = useOptions.map((option) => ({
@@ -152,6 +168,7 @@ const ProductRegisterPage = () => {
       productMainImageRegisterRequest: productMainImageRegisterRequest,
       productDetailImagesRegisterRequests: productDetailImagesRegisterRequests,
       userToken: userToken || "",
+      farmName: farmName.value,
     };
 
     console.log("데이터가 가냐:", data);
@@ -177,7 +194,8 @@ const ProductRegisterPage = () => {
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
     // 옵션정보에서 추가버튼을 누르면 토글 증가
-    setOptionToggleHeight(optionToggleHeight + 78);
+    setOptionToggleHeight(
+      + 78);
   };
 
   // 옵션 삭제
@@ -229,9 +247,7 @@ const ProductRegisterPage = () => {
                       width: "100%",
                     }}
                   >
-                    <MenuItem value="">
-                      <em>옵션을 선택해주세요</em>
-                    </MenuItem>
+                    <MenuItem value="">옵션을 선택해주세요</MenuItem>
                     {options.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
@@ -241,8 +257,23 @@ const ProductRegisterPage = () => {
                 </FormControl>
               </div>
               <div className="text-field-container">
-                <div className="text-field-label">판매자(농가) 정보</div>
-                <TextField name="sellerInfo" className="text-field-input" size="small" />
+                <div className="text-field-label">농가 이름</div>
+                <TextField
+                  name="farmName"
+                  className="text-field-input"
+                  size="small"
+                  value={selectedFarmName} // 선택된 농가 이름 상태를 값으로 설정
+                />
+                <Button onClick={handleOpenFarmSearch}>조회</Button>
+                <FarmSearch
+                  open={openFarmSearch}
+                  onClose={() => setOpenFarmSearch(false)} // 팝업 닫기 함수
+                  onSelectFarmName={setSelectedFarmName} // 선택된 농가 이름 상태 업데이트
+                  onSelectFarm={(selectedFarm) => {
+                    setSelectedFarmName(selectedFarm.farmName);
+                    handleFarmSelect(selectedFarm); // 농가 선택 후 처리 함수 호출
+                  }}
+                />
               </div>
             </Box>
           </ToggleComponent>
