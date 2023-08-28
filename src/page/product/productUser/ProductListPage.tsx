@@ -18,6 +18,7 @@ import RotatingIconButton from "./RotatingIconButton";
 import ToggleComponent from "../productAdmin/productOption/ToggleComponent";
 import { getImageUrl } from "utility/s3/awsS3";
 import { getProductList } from "../api/ProductApi";
+import { won } from "utility/filters/wonFilter";
 
 import "./css/ProductList.css";
 
@@ -259,7 +260,7 @@ const ProductListPage = () => {
                         color="text.secondary"
                         fontFamily={"SUIT-Light"}
                       >
-                        {product.minOptionPrice}
+                        {won(product.minOptionPrice)}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
