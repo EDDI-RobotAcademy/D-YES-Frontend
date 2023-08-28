@@ -22,7 +22,7 @@ const AdminProductList = () => {
   const [selectedOptions, setSelectedOptions] = useState<{ [productId: number]: string }>({});
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const { data: products } = useProductListQuery();
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -50,17 +50,16 @@ const AdminProductList = () => {
     }
 
     try {
-      await deleteProducts(selectedProducts.map(id => id.toString()));
+      await deleteProducts(selectedProducts.map((id) => id.toString()));
       queryClient.invalidateQueries("productList");
     } catch (error) {
       console.error("상품 삭제 실패:", error);
     }
   };
 
-
   const handleEditClick = (productId: number) => {
     console.log(`상품 수정 번호: ${productId}`);
-    navigate("/productModify");
+    navigate("/adminPage/productModify");
   };
 
   return (
@@ -73,7 +72,7 @@ const AdminProductList = () => {
             <TableCell>상품번호</TableCell>
             <TableCell>상품명</TableCell>
             <TableCell>상품 판매여부</TableCell>
-            <TableCell>농가정보</TableCell>
+            <TableCell>농가이름</TableCell>
             <TableCell>옵션명</TableCell>
             <TableCell>옵션가격</TableCell>
             <TableCell>재고</TableCell>
@@ -106,8 +105,7 @@ const AdminProductList = () => {
                 <TableCell className="content-cell">
                   {product.productSaleStatus === "AVAILABLE" ? "판매중" : "판매중지"}
                 </TableCell>
-                <TableCell className="content-cell">{product.cultivationMethod}</TableCell>
-                <TableCell className="content-cell">농가정보</TableCell>
+                <TableCell className="content-cell">{product.farmName}</TableCell>
                 <TableCell className="content-cell">
                   {product.productOptionListResponse &&
                   product.productOptionListResponse.length > 0 ? (
