@@ -1,3 +1,4 @@
+import { Farm } from "page/farm/entity/Farm";
 import { useOptions } from "./useOptions";
 
 export interface Product {
@@ -7,4 +8,5 @@ export interface Product {
   productDescription: string;
   cultivationMethod: string;
   productOptionListResponse: useOptions[];
+  farmName: string;
 }
