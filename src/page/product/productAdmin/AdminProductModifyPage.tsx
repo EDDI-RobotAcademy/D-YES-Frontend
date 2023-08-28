@@ -19,14 +19,8 @@ import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl } from "utility/s3/awsS3";
 
-interface RouteParams {
-  productId: string;
-  [key: string]: string;
-}
-
-const AdminProductModifyPage = () => {
+const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const navigate = useNavigate();
-  const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
   const [selectedOption, setSelectedOption] = useState<
     "" | { value: string; label: string } | undefined

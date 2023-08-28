@@ -16,8 +16,11 @@ import useProductStore from "../store/ProductStore";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 
-const AdminProductList = () => {
-  const navigate = useNavigate();
+interface AdminProductListProps {
+  setShowProductSection: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSection }) => {
   const setProducts = useProductStore((state) => state.setProducts);
   const [selectedOptions, setSelectedOptions] = useState<{ [productId: number]: string }>({});
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
@@ -58,7 +61,7 @@ const AdminProductList = () => {
   };
 
   const handleEditClick = (productId: number) => {
-    navigate(`/adminPage/productModify/${productId}`);
+    setShowProductSection(`productModify/${productId}`);
   };
 
   return (

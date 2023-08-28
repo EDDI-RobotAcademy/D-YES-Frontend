@@ -40,10 +40,8 @@ const App: React.FC = () => {
             element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
           />
           <Route path="/productRegister" element={<ProductRegisterPage />} />
-          <Route path="/adminProductList" element={<AdminProductList />} />
           <Route path="/adminRegister" element={<NormalAdminRegister />} />
           <Route path="/farmRegister" element={<FarmRegisterPage />} />
-          <Route path="/adminPage/productModify/:productId" element={<AdminProductModifyPage />} />
         </Routes>
         {showFooter && <Footer />}
       </BrowserRouter>
