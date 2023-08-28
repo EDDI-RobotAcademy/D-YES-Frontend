@@ -22,6 +22,9 @@ import { ProductDetailImg } from "../entity/ProductDetailImg";
 import { Product } from "../entity/Product";
 import { Farm } from "page/farm/entity/Farm";
 import FarmSearch from "./productOption/FarmSearch";
+import { compressImg } from "utility/s3/imageCompression";
+import { useDropzone } from "react-dropzone";
+import { uploadFileAwsS3, uploadFilesAwsS3 } from "utility/s3/awsS3";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -35,6 +38,8 @@ const ProductRegisterPage = () => {
   const [selectedFarmName, setSelectedFarmName] = useState("");
   const [openFarmSearch, setOpenFarmSearch] = useState(false); // 팝업 오픈 상태
   const [selectedFarm, setSelectedFarm] = useState<null | Farm>(null);
+  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
+  const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
 
   const handleOpenFarmSearch = () => {
     setOpenFarmSearch(true);
@@ -46,6 +51,47 @@ const ProductRegisterPage = () => {
     setOpenFarmSearch(false); // 팝업 닫기
   };
 
+  const onMainImageDrop = async (acceptedFile: File[]) => {
+    if (acceptedFile.length) {
+      try {
+        const compressedImage = await compressImg(acceptedFile[0]);
+        setSelectedMainImage(compressedImage);
+        // localStorage.setItem("mainImg", compressedImage.name);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const onDetailImageDrop = async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      try {
+        const compressedImages = await Promise.all(
+          acceptedFiles.map(async (file) => {
+            return await compressImg(file);
+          })
+        );
+        setSelectedDetailImages(compressedImages);
+        // localStorage.setItem(
+        //   "detailImg",
+        //   JSON.stringify(compressedImages.map((detailImage) => detailImage.name))
+        // );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+    onDrop: onMainImageDrop,
+    maxFiles: 1,
+  });
+
+  const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
+    onDrop: onDetailImageDrop,
+    maxFiles: 6,
+  });
+
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
       queryClient.setQueryData("product", data);
@@ -56,6 +102,21 @@ const ProductRegisterPage = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    const mainFileToUpload = selectedMainImage
+      ? new File([selectedMainImage], selectedMainImage.name)
+      : "";
+    if (!mainFileToUpload) {
+      alert("메인 이미지를 등록해주세요");
+      return;
+    }
+    const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
+
+    const detailImageUpload = selectedDetailImages.map(async (image) => {
+      const detailFileToUpload = new File([image], image.name);
+      return (await uploadFileAwsS3(detailFileToUpload)) || "";
+    });
+    const s3DetailObjectVersion = await Promise.all(detailImageUpload);
 
     const target = event.target as typeof event.target & {
       elements: {
@@ -80,12 +141,20 @@ const ProductRegisterPage = () => {
     }));
 
     const productMainImageRegisterRequest: ProductImg = {
-      mainImg: mainImg.value,
+      mainImg: selectedMainImage
+        ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
+        : "undefined main image",
     };
 
-    const productDetailImagesRegisterRequests: ProductDetailImg[] = [
-      { detailImgs: detailImgs.value },
-    ];
+    const detailImgsName = selectedDetailImages.map((image, idx) => {
+      return image.name + "?versionId=" + s3DetailObjectVersion[idx];
+    });
+
+    const productDetailImagesRegisterRequests: ProductDetailImg[] = detailImgsName.map(
+      (detailImg) => ({
+        detailImgs: detailImg,
+      })
+    );
 
     const productRegisterRequest: Partial<Product> = {
       productName: productName.value,
@@ -125,7 +194,8 @@ const ProductRegisterPage = () => {
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
     // 옵션정보에서 추가버튼을 누르면 토글 증가
-    setOptionToggleHeight(optionToggleHeight + 78);
+    setOptionToggleHeight(
+      + 78);
   };
 
   // 옵션 삭제
@@ -207,11 +277,72 @@ const ProductRegisterPage = () => {
               </div>
             </Box>
           </ToggleComponent>
-          <ToggleComponent label="이미지" height={120}>
+          <ToggleComponent label="이미지" height={850}>
             <div className="text-field-label">메인 이미지</div>
-            <TextField name="mainImg" className="text-field-input" size="small" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "400px",
+                backgroundColor: "#e4e4e4",
+                cursor: "pointer",
+              }}
+              {...mainImageRootProps()}
+            >
+              {selectedMainImage ? (
+                <img
+                  // 선택된 사진이 있으면 미리보기
+                  src={URL.createObjectURL(selectedMainImage)}
+                  style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
+                  alt="Selected"
+                />
+              ) : (
+                <div style={{ textAlign: "center" }}>
+                  <div>상품의 메인 이미지를 추가해주세요.</div>
+                  <div>메인 이미지는 사용자에게 가장 처음 보여지는 대표 이미지입니다.</div>
+                  <input {...mainImageInputProps()} />
+                </div>
+              )}
+            </div>
+
             <div className="text-field-label">상세 이미지</div>
-            <TextField name="detailImgs" className="text-field-input" size="small" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "400px",
+                backgroundColor: "#e4e4e4",
+                cursor: "pointer",
+                flexWrap: "wrap", // 이미지가 4개 이상일 경우 줄바꿈
+              }}
+              {...detailImageRootProps()}
+            >
+              {selectedDetailImages.length > 0 ? (
+                selectedDetailImages.map((image, idx) => (
+                  <img
+                    key={idx}
+                    src={URL.createObjectURL(image)}
+                    style={{
+                      width: "calc(33.33% - 16px)",
+                      height: "auto",
+                      margin: "8px",
+                      cursor: "pointer",
+                    }}
+                    alt={`Selected ${idx}`}
+                  />
+                ))
+              ) : (
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  <div>상품의 상세 이미지를 추가해주세요.</div>
+                  <div>상세 이미지는 최대 6장까지 등록할 수 있습니다.</div>
+                  <input {...detailImageInputProps()} />
+                </div>
+              )}
+            </div>
           </ToggleComponent>
           <ToggleComponent label="옵션정보" height={optionToggleHeight}>
             <Box display="flex" flexDirection="column" gap={2}>

@@ -16,6 +16,7 @@ import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import ProductListPage from "page/product/productUser/ProductListPage";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
 import FarmRegisterPage from "./page/admin/adminPage/FarmRegisterPage";
+import TopButton from "utility/TopButton";
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -45,6 +46,7 @@ const App: React.FC = () => {
         {showFooter && <Footer />}
       </BrowserRouter>
       <SnackBar />
+      <TopButton />
     </AuthProvider>
   );
 };
