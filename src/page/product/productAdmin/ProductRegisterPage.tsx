@@ -24,7 +24,7 @@ import { Farm } from "page/farm/entity/Farm";
 import FarmSearch from "./productOption/FarmSearch";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
-import { uploadFileAwsS3, uploadFilesAwsS3 } from "utility/s3/awsS3";
+import { uploadFileAwsS3 } from "utility/s3/awsS3";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -129,8 +129,7 @@ const ProductRegisterPage = () => {
       };
     };
 
-    const { productName, productDescription, cultivationMethod, mainImg, detailImgs, farmName } =
-      target.elements;
+    const { productName, productDescription, cultivationMethod, farmName } = target.elements;
 
     const optionObjects: Partial<useOptions>[] = useOptions.map((option) => ({
       optionName: option.optionName,
@@ -140,17 +139,17 @@ const ProductRegisterPage = () => {
       unit: option.unit,
     }));
 
-    const productMainImageRegisterRequest: ProductImg = {
+    const partialProductMainImageRegisterRequest: Partial<ProductImg> = {
       mainImg: selectedMainImage
         ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
         : "undefined main image",
     };
-
+    
     const detailImgsName = selectedDetailImages.map((image, idx) => {
       return image.name + "?versionId=" + s3DetailObjectVersion[idx];
     });
 
-    const productDetailImagesRegisterRequests: ProductDetailImg[] = detailImgsName.map(
+    const productDetailImagesRegisterRequests: Partial<ProductDetailImg>[] = detailImgsName.map(
       (detailImg) => ({
         detailImgs: detailImg,
       })
@@ -165,7 +164,7 @@ const ProductRegisterPage = () => {
     const data = {
       productRegisterRequest: productRegisterRequest,
       productOptionRegisterRequest: optionObjects,
-      productMainImageRegisterRequest: productMainImageRegisterRequest,
+      productMainImageRegisterRequest: partialProductMainImageRegisterRequest,
       productDetailImagesRegisterRequests: productDetailImagesRegisterRequests,
       userToken: userToken || "",
       farmName: farmName.value,
@@ -176,6 +175,8 @@ const ProductRegisterPage = () => {
       ...data,
       productRegisterRequest: productRegisterRequest as Product,
       productOptionRegisterRequest: optionObjects as useOptions[],
+      productMainImageRegisterRequest: partialProductMainImageRegisterRequest as ProductImg,
+      productDetailImagesRegisterRequests: productDetailImagesRegisterRequests as ProductDetailImg[]
     });
   };
 

@@ -12,6 +12,7 @@ import {
 } from "react-query";
 import useProductStore from "../store/ProductStore";
 import { ProductRead } from "../entity/ProductRead";
+import { ProductModify } from "../entity/ProductModify";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -40,7 +41,6 @@ export const fetchProductList = async (): Promise<Product[]> => {
       userToken: localStorage.getItem("userToken"),
     },
   });
-  console.log("리스트 데이터", response.data);
   return response.data;
 };
 
@@ -85,4 +85,40 @@ export const fetchProduct = async (productId: string): Promise<ProductRead | nul
 
 export const useProductQuery = (productId: string): UseQueryResult<ProductRead | null, unknown> => {
   return useQuery(["productRead", productId], () => fetchProduct(productId));
+};
+
+// 관리자 수정
+export const updateProduct = async (updatedData: ProductModify): Promise<ProductModify> => {
+  const {
+    productId,
+    productModifyRequest,
+    productOptionModifyRequest,
+    productMainImageModifyRequest,
+    productDetailImagesModifyRequest,
+    userToken = localStorage.getItem("userToken")
+  } = updatedData;
+  const response = await axiosInstance.springAxiosInst.put<ProductModify>(
+    `/product/modify/${productId}`,
+    { 
+      userToken,
+      productModifyRequest,
+      productOptionModifyRequest,
+      productMainImageModifyRequest,
+      productDetailImagesModifyRequest,
+    }
+  );
+  return response.data;
+};
+
+export const useProductUpdateMutation = (): UseMutationResult<
+  ProductModify,
+  unknown,
+  ProductModify
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(updateProduct, {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["productModify", data.productId], data);
+    },
+  });
 };

@@ -1,39 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { fetchProduct, useProductQuery } from "../api/ProductApi";
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
-} from "@mui/material";
+import { fetchProduct, useProductQuery, useProductUpdateMutation } from "../api/ProductApi";
+import { Box, Button, Container, FormControl, MenuItem, Select, TextField } from "@mui/material";
 import ToggleComponent from "./productOption/ToggleComponent";
 import OptionTable from "./productOption/OptionTable";
 import OptionInput from "./productOption/OptionInput";
 import { useOptions } from "../entity/useOptions";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
-import { getImageUrl } from "utility/s3/awsS3";
+import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
+import { useQueryClient } from "react-query";
+import { ProductModify } from "../entity/ProductModify";
+import { Product } from "../entity/Product";
+import { ProductImg } from "../entity/ProductMainImg";
+import { ProductDetailImg } from "../entity/ProductDetailImg";
+import { useNavigate } from "react-router-dom";
 
 const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const navigate = useNavigate();
   const { data } = useProductQuery(productId || "");
-  const [selectedOption, setSelectedOption] = useState<
-    "" | { value: string; label: string } | undefined
-  >("");
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
+  const [productName, setProductName] = useState("");
+  const [selectedCultivationMethod, setSelectedCultivationMethod] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const mutation = useProductUpdateMutation();
+  const queryClient = useQueryClient();
+  const userToken = localStorage.getItem("userToken");
 
   useEffect(() => {
     const fetchProductData = async () => {
       const data = await fetchProduct(productId || "");
-      console.log("읽기 확인", data);
+      if (data) {
+        // 수정 데이터 업데이트
+        setProductName(data.productResponseForAdmin?.productName || "");
+        setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
+        setUseOptions(data.optionResponseForAdmin || []);
+        setProductDescription(data.productResponseForAdmin?.productDescription || "");
+      }
     };
     fetchProductData();
   }, []);
@@ -44,16 +49,11 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
     { value: "ORGANIC", label: "유기농" },
   ];
 
-  const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
-    setSelectedOption(event.target.value as "" | { value: string; label: string });
-  };
-
   const onMainImageDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length) {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
-        // localStorage.setItem("mainImg", compressedImage.name);
       } catch (error) {
         console.error(error);
       }
@@ -69,22 +69,18 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
           })
         );
         setSelectedDetailImages(compressedImages);
-        // localStorage.setItem(
-        //   "detailImg",
-        //   JSON.stringify(compressedImages.map((detailImage) => detailImage.name))
-        // );
       } catch (error) {
         console.error(error);
       }
     }
   };
 
-  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+  const { getRootProps: mainImageRootProps } = useDropzone({
     onDrop: onMainImageDrop,
     maxFiles: 1,
   });
 
-  const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
+  const { getRootProps: detailImageRootProps } = useDropzone({
     onDrop: onDetailImageDrop,
     maxFiles: 6,
   });
@@ -123,6 +119,56 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
     }
   };
 
+  const handleEditFinishClick = async () => {
+    if (productName && selectedCultivationMethod && productDescription) {
+      const productModifyRequestData: Partial<Product> = {
+        productName: productName,
+        cultivationMethod: selectedCultivationMethod,
+        productDescription: productDescription,
+      };
+
+      const mainFileToUpload = selectedMainImage
+        ? new File([selectedMainImage], selectedMainImage.name)
+        : "";
+      if (!mainFileToUpload) {
+        alert("메인 이미지를 등록해주세요");
+        return;
+      }
+      const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
+
+      const productMainImageModifyRequest: ProductImg = {
+        mainImageId: data!.mainImageResponseForAdmin!.mainImageId,
+        mainImg: selectedMainImage
+          ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
+          : "undefined main image",
+      };
+
+      const detailImageUploadPromises = selectedDetailImages.map(async (image, idx) => {
+        const detailFileToUpload = new File([image], image.name);
+        const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
+        
+        return {
+          detailImageId: data!.detailImagesForAdmin[idx]!.detailImageId,
+          detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
+        };
+      });
+
+      const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
+
+      const updatedData: ProductModify = {
+        productId: parseInt(productId),
+        productModifyRequest: productModifyRequestData,
+        productOptionModifyRequest: useOptions,
+        productMainImageModifyRequest: productMainImageModifyRequest,
+        productDetailImagesModifyRequest: productDetailImagesModifyRequest,
+        userToken: userToken || "",
+      };
+      await mutation.mutateAsync(updatedData);
+      queryClient.invalidateQueries(["productModify", parseInt(productId)]);
+      navigate("/")
+    }
+  };
+
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
       <form onClick={handleFormClick}>
@@ -140,7 +186,8 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                       name="productName"
                       className="text-field-input"
                       size="small"
-                      value={data.productResponseForAdmin?.productName || ""}
+                      value={productName}
+                      onChange={(e) => setProductName(e.target.value)}
                     />
                   </div>
                   <div className="text-field-container">
@@ -155,8 +202,9 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                     >
                       <Select
                         name="cultivationMethod"
-                        value={data.productResponseForAdmin?.cultivationMethod || ""}
+                        value={selectedCultivationMethod}
                         sx={{ width: "100%" }}
+                        onChange={(e) => setSelectedCultivationMethod(e.target.value)}
                       >
                         <MenuItem value="" disabled>
                           옵션을 선택해주세요
@@ -194,13 +242,19 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                   }}
                   {...mainImageRootProps()}
                 >
-                  {data.mainImageResponseForAdmin?.mainImg && (
+                  {selectedMainImage ? (
+                    <img
+                      src={URL.createObjectURL(selectedMainImage)}
+                      style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
+                      alt="Selected"
+                    />
+                  ) : data.mainImageResponseForAdmin?.mainImg ? (
                     <img
                       src={getImageUrl(data.mainImageResponseForAdmin.mainImg)}
                       style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
                       alt="Selected"
                     />
-                  )}
+                  ) : null}
                 </div>
                 <div className="text-field-label">상세 이미지</div>
                 <div
@@ -216,7 +270,21 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                   }}
                   {...detailImageRootProps()}
                 >
-                  {data.detailImagesForAdmin?.length > 0
+                  {selectedDetailImages.length > 0
+                    ? selectedDetailImages.map((selectedImage, idx) => (
+                        <img
+                          key={idx}
+                          src={URL.createObjectURL(selectedImage)}
+                          style={{
+                            width: "calc(33.33% - 16px)",
+                            height: "auto",
+                            margin: "8px",
+                            cursor: "pointer",
+                          }}
+                          alt={`Selected ${idx}`}
+                        />
+                      ))
+                    : data.detailImagesForAdmin?.length > 0
                     ? data.detailImagesForAdmin.map((detailImage, idx) => (
                         <img
                           key={idx}
@@ -233,13 +301,10 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                     : null}
                 </div>
               </ToggleComponent>
-              <ToggleComponent
-                label="옵션정보"
-                height={calculateToggleHeight(data.optionResponseForAdmin)}
-              >
+              <ToggleComponent label="옵션정보" height={calculateToggleHeight(useOptions)}>
                 <Box display="flex" flexDirection="column" gap={2}>
                   <OptionTable
-                    optionRows={data.optionResponseForAdmin || []} // 서버에서 받아온 옵션 정보를 활용
+                    optionRows={useOptions || []}
                     onChangeOption={(index, updatedOption) => {
                       const newOptions = [...useOptions];
                       newOptions[index] = updatedOption;
@@ -261,7 +326,8 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                     multiline
                     minRows={10}
                     maxRows={20}
-                    value={data.productResponseForAdmin?.productDescription}
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
                   />
                 </Box>
               </ToggleComponent>
@@ -270,7 +336,9 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
             <p>Loading product data...</p>
           )}
         </Box>
-        <Button type="submit">수정 완료</Button>
+        <Button variant="outlined" onClick={handleEditFinishClick}>
+          수정 완료
+        </Button>
       </form>
     </Container>
   );
