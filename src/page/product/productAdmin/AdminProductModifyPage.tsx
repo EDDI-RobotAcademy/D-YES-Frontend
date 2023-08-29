@@ -165,7 +165,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       };
       await mutation.mutateAsync(updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
-      // navigate("/")
+      navigate("/")
     }
   };
 
