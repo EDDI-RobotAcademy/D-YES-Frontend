@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Carousel from "./carousel/Carousel";
+import Carousel from "./carousel/ProductCarousel";
 import { Image } from "./carousel/entity/Image";
 import { Settings } from "react-slick";
 import { won } from "utility/filters/wonFilter";
