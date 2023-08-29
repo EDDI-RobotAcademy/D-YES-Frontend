@@ -30,3 +30,8 @@
 .custom-input .MuiFilledInput-underline:after {
   display: none;
 }
+
+.farm-page-container {
+  display: flex;
+  background-color: lightgray;
+}

@@ -119,8 +119,8 @@ const FarmRegister = () => {
     const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
     const mainImageNameWithVersion = mainFileToUpload
-    ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
-    : "undefined main image";
+      ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
+      : "undefined main image";
 
     const target = event.target as typeof event.target & {
       elements: {
@@ -164,7 +164,7 @@ const FarmRegister = () => {
       address: address.value,
       zipCode: zipCode.value,
       addressDetail: addressDetail.value,
-      mainImage: mainImageNameWithVersion ,
+      mainImage: mainImageNameWithVersion,
       introduction: introduction.value,
       produceTypes: selectedOptionsValues,
       userToken: userToken || "",
@@ -182,6 +182,7 @@ const FarmRegister = () => {
       width="500px" // 가로폭
       paddingTop="50px" // 위쪽 패딩 값
       paddingBottom="50px" // 아래쪽 패딩 값
+      bgcolor="white" // 하얀색 백그라운드 컬러
     >
       <Container maxWidth="xs">
         <Typography gutterBottom style={{ fontSize: "20px" }}>
@@ -199,7 +200,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="상호명"
+                label="상호명*"
                 name="businessName"
                 fullWidth
                 variant="filled"
@@ -212,7 +213,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="사업자 등록 번호"
+                label="사업자 등록 번호*"
                 name="businessNumber"
                 fullWidth
                 variant="filled"
@@ -225,7 +226,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="대표자명"
+                label="대표자명*"
                 name="representativeName"
                 fullWidth
                 variant="filled"
@@ -238,7 +239,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="대표자 연락처"
+                label="대표자 연락처*"
                 name="representativeContactNumber"
                 fullWidth
                 variant="filled"
@@ -259,7 +260,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 이름"
+                label="농가 이름*"
                 name="farmName"
                 fullWidth
                 variant="filled"
@@ -272,7 +273,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="고객센터 연락처"
+                label="고객센터 연락처*"
                 name="csContactNumber"
                 fullWidth
                 variant="filled"
@@ -282,39 +283,34 @@ const FarmRegister = () => {
               />
             </div>
           </Grid>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <TextField
+              label="농가 주소*"
+              id="addr"
+              name="address"
+              fullWidth
+              variant="filled"
+              margin="normal"
+              className="custom-input"
+              InputLabelProps={{ shrink: true }}
+              value={addressInfo.address}
+            />
+            <Button
+              className="mapage-btn"
+              variant="outlined"
+              onClick={onClickAddr}
+              style={{
+                marginLeft: "8px",
+                marginTop: "8px",
+              }}
+            >
+              검색
+            </Button>
+          </div>
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 주소"
-                id="addr"
-                name="address"
-                fullWidth
-                variant="filled"
-                margin="normal"
-                className="custom-input"
-                InputLabelProps={{ shrink: true }}
-                value={addressInfo.address}
-              />
-            </div>
-          </Grid>
-          <Button
-            className="mapage-btn"
-            variant="outlined"
-            onClick={onClickAddr}
-            // style={{
-            //   fontSize: "14px",
-            //   color: "orange",
-            //   height: "56px",
-            //   padding: "0 40px",
-            //   borderColor: "orange",
-            // }}
-          >
-            검색
-          </Button>
-          <Grid item xs={12}>
-            <div style={{ position: "relative" }}>
-              <TextField
-                label="농가 우편번호"
+                label="농가 우편번호*"
                 id="zipNo"
                 name="zipCode"
                 fullWidth
@@ -329,7 +325,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 상세주소"
+                label="농가 상세주소*"
                 name="addressDetail"
                 fullWidth
                 variant="filled"
@@ -341,7 +337,7 @@ const FarmRegister = () => {
           </Grid>
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
-              <InputLabel style={{ fontSize: "12px", marginLeft: "12px" }}>농가 사진</InputLabel>
+              <InputLabel style={{ fontSize: "12px", marginLeft: "12px" }}>농가 사진*</InputLabel>
               <div
                 style={{
                   display: "flex",
@@ -388,7 +384,7 @@ const FarmRegister = () => {
               <div style={{ position: "relative" }}>
                 {selectedOptions.length === 0 && (
                   <InputLabel id="demo-simple-select-label" style={{ position: "absolute" }}>
-                    판매할 상품을 선택해주세요
+                    판매할 상품을 선택해주세요(필수)
                   </InputLabel>
                 )}{" "}
                 <Select
