@@ -1,0 +1,22 @@
+.normal-admin-register-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.normal-admin-register-box {
+    background-color: rgb(255, 255, 255);
+    width: 98%;
+    display: flex;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+.normal-admin-register-form {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+    padding-top: 0px;
+    padding-bottom: 60px;
+}

@@ -34,53 +34,96 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
     <div className="product-page">
       <div className={`sidebar ${showProductSection === "register" ? "" : "collapsed"}`}>
         <div>
-          <h2 className="logo">TTMARKET</h2>
+          <Link to="/" className="logo">
+            TTMARKET
+          </Link>
+
+          {/* 회원 관련 */}
           <div className={`product-management ${showProductSection ? "active" : ""}`}>
-            회원 관리
+            <p className="menu-name">
+              <img
+                className="menu-icon"
+                alt="회원"
+                src="img/account-icon.png"
+                width={20}
+              />
+              Account
+            </p>
             <div className={`sub-menu ${showProductSection ? "show" : ""}`}>
               <div>
-                <Link
-                  to="#"
-                  onClick={() => {
-                    const userToken = localStorage.getItem("userToken");
-                    if (
-                      auth.checkAdminAuthorization() &&
-                      userToken &&
-                      userToken.includes("mainadmin")
-                    ) {
-                      setShowProductSection("adminRegister");
-                    } else {
-                      toast.error("권한이 없습니다.");
-                    }
-                  }}
-                >
-                  - 관리자 등록
-                </Link>
-                <div>
+                <div className="account-menu">
+                  <Link
+                    to="#"
+                    onClick={() => {
+                      const userToken = localStorage.getItem("userToken");
+                      if (
+                        auth.checkAdminAuthorization() &&
+                        userToken &&
+                        userToken.includes("mainadmin")
+                      ) {
+                        setShowProductSection("adminRegister");
+                      } else {
+                        toast.error("권한이 없습니다.");
+                      }
+                    }}
+                  >
+                    <p className="account-menu">
+                      Admin
+                    </p>
+                  </Link>
+                </div>
+                <div className="account-menu">
                   <Link
                     to="#"
                     className="list-button"
                     onClick={() => setShowProductSection("farmRegister")}
                   >
-                    - 농가 등록
+                    <p className="account-menu">
+                      Farms
+                    </p>
+                  </Link>
+                </div>
+                <div className="account-menu">
+                  <Link
+                    to="/adminPage"
+                  >
+                    <p className="account-menu">
+                      Users
+                    </p>
                   </Link>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* 상품 관련 */}
           <div className={`product-management ${showProductSection ? "active" : ""}`}>
-            상품관리
+            <p className="menu-name">
+              <img
+                className="menu-icon"
+                alt="상품"
+                src="img/farm-icon.png"
+                width={20}
+              />
+              Product
+            </p>
             <div className={`sub-menu ${showProductSection ? "show" : ""}`}>
               <div>
+              <div className="product-menu">
                 <Link to="#" onClick={() => setShowProductSection("register")}>
-                  - 상품 등록
+                  <p className="product-menu">
+                    Product Register
+                  </p>
                 </Link>
               </div>
-              <div>
+              <div className="product-menu">
                 <Link to="#" className="list-button" onClick={() => setShowProductSection("list")}>
-                  - 상품 목록
+                  <p className="product-menu">
+                    Product List
+                  </p>
                 </Link>
               </div>
+            </div>
             </div>
           </div>
         </div>
