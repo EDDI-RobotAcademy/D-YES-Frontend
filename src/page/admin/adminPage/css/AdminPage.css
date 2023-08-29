@@ -1,6 +1,7 @@
 .product-page {
   display: flex;
   align-items: stretch; /* 사이드바와 컨텐츠를 높이 기준으로 맞추기 */
+  background-color: rgb(240, 240, 240);
 }
 
 .sidebar {
@@ -83,4 +84,8 @@
 .menu-icon {
   padding-right: 18px;
   color: white;
+}
+
+.content {
+  width: 100%;
 }

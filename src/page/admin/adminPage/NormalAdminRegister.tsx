@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { adminRegister } from "../api/AdminApi";
 import { Container, Box, Grid, TextField, Typography, Button } from "@mui/material";
 import "./css/AdminPage.css";
+import "./css/NormalAdminRegister.css"
 import { toast } from "react-toastify";
 
 const NormalAdminRegister = () => {
@@ -38,63 +39,75 @@ const NormalAdminRegister = () => {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      minHeight="100vh"
-      marginLeft={16}
-    >
-      <Container maxWidth="xs">
-        <Typography variant="h4" gutterBottom>
-          관리자 등록
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <div style={{ position: "relative" }}>
-                <TextField
-                  label="이름"
-                  name="name"
-                  fullWidth
-                  variant="filled"
-                  margin="normal"
-                  className="custom-input"
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    disableUnderline: true,
-                  }}
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12}>
-              <div style={{ position: "relative" }}>
-                <TextField
-                  label="id"
-                  name="id"
-                  fullWidth
-                  variant="filled"
-                  margin="normal"
-                  className="custom-input"
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{ disableUnderline: true }}
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                style={{ backgroundColor: "black", color: "white" }}
-                fullWidth
-              >
-                등록
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Container>
-    </Box>
+    <div className="normal-admin-register-container">
+      <div className="normal-admin-register-box">
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems={"center"}
+          justifyContent="center"
+          height="100vh"
+          width="100%"
+        >
+          <div className="normal-admin-register-form">
+            <Container maxWidth="xs">
+              <Typography gutterBottom sx={{ fontSize: "28px", fontFamily: "SUIT-ExtraBold", marginBottom: "0px"}}>
+                관리자 등록
+              </Typography>
+              <Typography gutterBottom sx={{ fontSize: "14px", fontFamily: "SUIT-Light", paddingBottom: "20px"}}>
+                관리자의 이름과 가입된 ID를 입력하세요
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <div style={{ position: "relative" }}>
+                      <TextField
+                        label="이름"
+                        name="name"
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        className="custom-input"
+                        InputLabelProps={{ shrink: true }}
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <div style={{ position: "relative" }}>
+                      <TextField
+                        label="id"
+                        name="id"
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        className="custom-input"
+                        InputLabelProps={{ shrink: true }}
+                        InputProps={{ disableUnderline: true }}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      style={{ backgroundColor: "#252525", color: "white", height: "60px" }}
+                      fullWidth
+                    >
+                    <Typography gutterBottom sx={{ fontSize: "16px", fontFamily: "SUIT-Regular"}}>
+                      등록
+                    </Typography>
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            </Container>
+          </div>
+        </Box>
+      </div>
+    </div>
   );
 };
 
