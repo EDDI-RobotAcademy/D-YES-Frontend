@@ -2,7 +2,7 @@ import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import "./css/Carousel.css";
+import "./css/ProductCarousel.css";
 import { Image } from "./entity/Image";
 import { useEffect, useRef } from "react";
 
@@ -23,11 +23,11 @@ const Carousel: React.FC<CarouselProps> = ({ images, settings, initialImageIndex
 
   return (
     <div>
-      <Slider ref={sliderRef} className="slider" {...settings}>
+      <Slider ref={sliderRef} className="product-slider" {...settings}>
         {images.map((image) => {
           return (
-            <div className="slide-container" key={image.id}>
-              <img className="slide-image" src={image.url} />
+            <div className="product-slide-container" key={image.id}>
+              <img className="product-slide-image" src={image.url} />
             </div>
           );
         })}
