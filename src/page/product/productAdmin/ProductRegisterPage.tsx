@@ -194,8 +194,7 @@ const ProductRegisterPage = () => {
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
     // 옵션정보에서 추가버튼을 누르면 토글 증가
-    setOptionToggleHeight(
-      + 78);
+    setOptionToggleHeight(optionToggleHeight + 78);
   };
 
   // 옵션 삭제

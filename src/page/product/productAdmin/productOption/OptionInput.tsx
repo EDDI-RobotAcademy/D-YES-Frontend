@@ -8,6 +8,7 @@ interface OptionInputProps {
 
 const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
   const [option, setOption] = useState<useOptions>({
+    optionId: 0,
     optionName: "",
     optionPrice: 0,
     stock: 0,
@@ -19,6 +20,7 @@ const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
   const handleAddOption = () => {
     onAddOption(option);
     setOption({
+      optionId: 0,
       optionName: "",
       optionPrice: 0,
       stock: 0,

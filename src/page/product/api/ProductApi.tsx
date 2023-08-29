@@ -4,10 +4,14 @@ import { useOptions } from "../entity/useOptions";
 import { ProductImg } from "../entity/ProductMainImg";
 import { ProductDetailImg } from "../entity/ProductDetailImg";
 import {
+  UseMutationResult,
   UseQueryResult,
+  useMutation,
   useQuery,
+  useQueryClient,
 } from "react-query";
 import useProductStore from "../store/ProductStore";
+import { ProductRead } from "../entity/ProductRead";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -58,10 +62,10 @@ export const useProductListQuery = (): UseQueryResult<Product[], unknown> => {
 
 // 관리자용 상품 삭제
 export const deleteProducts = async (productIds: string[]): Promise<any> => {
-  const userToken = localStorage.getItem("userToken")
+  const userToken = localStorage.getItem("userToken");
   const deleteForm = {
     userToken: userToken,
-    productIdList: productIds.map(id => parseInt(id))
+    productIdList: productIds.map((id) => parseInt(id)),
   };
 
   const response = await axiosInstance.springAxiosInst.delete("/product/deleteList", {
@@ -69,4 +73,16 @@ export const deleteProducts = async (productIds: string[]): Promise<any> => {
   });
 
   return response.data;
+};
+
+// 관리자용 수정 페이지에 접근했을 때 데이터 읽어오기
+export const fetchProduct = async (productId: string): Promise<ProductRead | null> => {
+  const response = await axiosInstance.springAxiosInst.get<ProductRead>(
+    `/product/admin/read/${productId}`
+  );
+  return response.data;
+};
+
+export const useProductQuery = (productId: string): UseQueryResult<ProductRead | null, unknown> => {
+  return useQuery(["productRead", productId], () => fetchProduct(productId));
 };
