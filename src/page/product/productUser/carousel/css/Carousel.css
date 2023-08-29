@@ -1,0 +1,44 @@
+.slider {
+  width: 100%;
+}
+
+.slide-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.slide-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100%;
+  height: 100%;
+}
+
+.text-uo {
+  position: absolute;
+  text-align: center;
+  font-size: 60px;
+  font-weight: 200;
+  font-family: "OKGUNG";
+  color: white;
+  padding: 10px;
+  width: 100%;
+  bottom: 340px;
+  animation: textAnimation 2s alternate;
+  letter-spacing: -1px;
+  line-height: 1.4;
+}
+
+@keyframes textAnimation {
+  from {
+    font-size: 30px;
+  }
+  to {
+    font-size: 60px;
+  }
+}

@@ -13,6 +13,7 @@ import {
 import useProductStore from "../store/ProductStore";
 import { ProductRead } from "../entity/ProductRead";
 import { ProductModify } from "../entity/ProductModify";
+import { ProductDetail } from "../entity/ProductDetail";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -95,11 +96,11 @@ export const updateProduct = async (updatedData: ProductModify): Promise<Product
     productOptionModifyRequest,
     productMainImageModifyRequest,
     productDetailImagesModifyRequest,
-    userToken = localStorage.getItem("userToken")
+    userToken = localStorage.getItem("userToken"),
   } = updatedData;
   const response = await axiosInstance.springAxiosInst.put<ProductModify>(
     `/product/modify/${productId}`,
-    { 
+    {
       userToken,
       productModifyRequest,
       productOptionModifyRequest,
@@ -121,4 +122,19 @@ export const useProductUpdateMutation = (): UseMutationResult<
       queryClient.setQueryData(["productModify", data.productId], data);
     },
   });
+};
+
+// 사용자용 상품 상세정보 확인
+export const getProductDetail = async (productId: string): Promise<ProductDetail | null> => {
+  const response = await axiosInstance.springAxiosInst.get<ProductDetail>(
+    `/product/user/read/${productId}`
+  );
+  console.log("확인", response.data);
+  return response.data;
+};
+
+export const useProductDetailQuery = (
+  productId: string
+): UseQueryResult<ProductDetail | null, unknown> => {
+  return useQuery(["productRead", productId], () => getProductDetail(productId));
 };
