@@ -1,0 +1,26 @@
+.button-container {
+  position: absolute;
+  top: 82%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 70px;
+  border-style: solid;
+  border-color: white;
+  opacity: 0;
+  transition: opacity 0.9s ease-in-out;
+}
+
+.goto-home {
+  color: white;
+  font-family: "SUIT-SemiBold";
+  font-size: 20px;
+  margin-left: -4px;
+  text-decoration: none;
+}
+.button-container.show {
+  opacity: 1;
+}
