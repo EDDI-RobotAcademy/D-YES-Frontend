@@ -75,7 +75,9 @@ const FarmRegister = () => {
     { value: "EGGPLANT", label: "가지" },
   ];
 
-  const handleSelectChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
+  const handleSelectChange = (
+    event: SelectChangeEvent<typeof selectedOptions>
+  ) => {
     const selectedValue = event.target.value as string[];
     setSelectedOptions(selectedValue);
     setIsSelectOpen(selectedValue.length === 0);
@@ -100,7 +102,10 @@ const FarmRegister = () => {
     }
   };
 
-  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+  const {
+    getRootProps: mainImageRootProps,
+    getInputProps: mainImageInputProps,
+  } = useDropzone({
     onDrop: onMainImageDrop,
     maxFiles: 1,
   });
@@ -173,28 +178,75 @@ const FarmRegister = () => {
     await mutation.mutateAsync(data);
   };
   return (
+    <div>
+      <div className="register-menu">
+        <img
+          className="farm-register-icon"
+          alt="농가 등록"
+          src="img/farm-register-icon.png"
+        />
+        <Typography
+          gutterBottom
+          style={{
+            fontSize: "16px",
+            fontFamily: "SUIT-Medium",
+            color: "#252525",
+            marginBottom: "0px",
+          }}
+        >
+          농가(사업자) 등록
+            <Typography
+              gutterBottom
+              sx={{
+                fontSize: "12px",
+                fontFamily: "SUIT-Regular",
+                color: "#252525",
+              }}
+            >
+            * 사업자 등록증에 있는 정보를 작성해주세요
+          </Typography>
+        </Typography>
+      </div>
     <Box
       display="flex"
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
-      width="500px" // 가로폭
-      paddingTop="50px" // 위쪽 패딩 값
+      paddingTop="20px" // 위쪽 패딩 값
       paddingBottom="50px" // 아래쪽 패딩 값
       bgcolor="white" // 하얀색 백그라운드 컬러
+      border="solid 1px lightgray"
+      paddingLeft="10px"
+      paddingRight="10px"
     >
-      <Container maxWidth="xs">
-        <Typography gutterBottom style={{ fontSize: "20px" }}>
-          농가(사업자) 등록
-        </Typography>
+      <Container maxWidth="sm">
         <form onSubmit={handleSubmit}>
           <Grid item xs={12}>
             <Typography
               gutterBottom
-              style={{ backgroundColor: "lightgray", padding: "10px", fontSize: "15px" }}
+              style={{
+                color: "black",
+                padding: "10px 10px 0px 0px",
+                marginBottom: "-6px",
+                fontSize: "15px",
+                fontFamily: "SUIT-Medium",
+                height: "32px",
+                alignItems: "center",
+              }}
             >
-              사업자 정보
+              | 사업자 정보
+            </Typography>
+            <Typography
+              gutterBottom
+              sx={{
+                color: "black",
+                padding: "0px 10px 0px 0px",
+                fontSize: "12px",
+                fontFamily: "SUIT-Light",
+              }}
+            >
+              법인 사업자 정보를 입력하세요
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -203,7 +255,7 @@ const FarmRegister = () => {
                 label="상호명*"
                 name="businessName"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -216,7 +268,7 @@ const FarmRegister = () => {
                 label="사업자 등록 번호*"
                 name="businessNumber"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -229,7 +281,7 @@ const FarmRegister = () => {
                 label="대표자명*"
                 name="representativeName"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -237,12 +289,12 @@ const FarmRegister = () => {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <div style={{ position: "relative" }}>
+            <div style={{ position: "relative", marginBottom: "28px" }}>
               <TextField
                 label="대표자 연락처*"
                 name="representativeContactNumber"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -252,18 +304,37 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <Typography
               gutterBottom
-              style={{ backgroundColor: "lightgray", padding: "10px", fontSize: "15px" }}
+              style={{
+                color: "black",
+                padding: "10px 10px 0px 0px",
+                marginBottom: "-6px",
+                fontSize: "15px",
+                fontFamily: "SUIT-Medium",
+                height: "32px",
+                alignItems: "center",
+              }}
             >
-              농가 정보
+              | 농가 정보
+            </Typography>
+            <Typography
+              gutterBottom
+              sx={{
+                color: "black",
+                padding: "0px 10px 0px 0px",
+                fontSize: "12px",
+                fontFamily: "SUIT-Light",
+              }}
+            >
+              상품 판매에 사용할 농가 정보를 입력하세요
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 이름*"
+                label="이름*"
                 name="farmName"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -276,7 +347,7 @@ const FarmRegister = () => {
                 label="고객센터 연락처*"
                 name="csContactNumber"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -285,11 +356,11 @@ const FarmRegister = () => {
           </Grid>
           <div style={{ display: "flex", alignItems: "center" }}>
             <TextField
-              label="농가 주소*"
+              label="주소*"
               id="addr"
               name="address"
               fullWidth
-              variant="filled"
+              variant="outlined"
               margin="normal"
               className="custom-input"
               InputLabelProps={{ shrink: true }}
@@ -302,6 +373,11 @@ const FarmRegister = () => {
               style={{
                 marginLeft: "8px",
                 marginTop: "8px",
+                paddingTop: "15px",
+                paddingBottom: "15px",
+                fontFamily: "SUIT-Light",
+                backgroundColor: "#0576B9",
+                color: "white"
               }}
             >
               검색
@@ -310,11 +386,11 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 우편번호*"
+                label="우편번호*"
                 id="zipNo"
                 name="zipCode"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -325,10 +401,10 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 상세주소*"
+                label="상세주소*"
                 name="addressDetail"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -337,7 +413,6 @@ const FarmRegister = () => {
           </Grid>
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
-              <InputLabel style={{ fontSize: "12px", marginLeft: "12px" }}>농가 사진*</InputLabel>
               <div
                 style={{
                   display: "flex",
@@ -354,12 +429,24 @@ const FarmRegister = () => {
                   <img
                     // 선택된 사진이 있으면 미리보기
                     src={URL.createObjectURL(selectedMainImage)}
-                    style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      cursor: "pointer",
+                    }}
                     alt="Selected"
                   />
                 ) : (
-                  <div style={{ textAlign: "center" }}>
-                    <div>농가 이미지를 추가해주세요.</div>
+                  <div style={{ textAlign: "center", fontFamily: "SUIT-Light" }}>
+                    <img
+                      className="upload-icon"
+                      alt="이미지 업로드"
+                      src="img/upload-icon.png"
+                      width={40}
+                      />
+                    <div>
+                      클릭하여 이미지를 추가해주세요
+                    </div>
                     <input {...mainImageInputProps()} />
                   </div>
                 )}
@@ -369,10 +456,10 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 소개"
+                label="농가 한 줄 소개"
                 name="introduction"
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
@@ -381,26 +468,32 @@ const FarmRegister = () => {
           </Grid>
           <FormControl fullWidth>
             <Grid item xs={12}>
-              <div style={{ position: "relative" }}>
+              <div style={{ position: "relative", paddingBottom: "8px" }}>
                 {selectedOptions.length === 0 && (
-                  <InputLabel id="demo-simple-select-label" style={{ position: "absolute" }}>
-                    판매할 상품을 선택해주세요(필수)
+                  <InputLabel
+                    id="demo-simple-select-label"
+                    style={{ position: "absolute", fontFamily: "SUIT-Regular" }}
+                  >
+                    판매할 품목을 선택해주세요 (필수)
                   </InputLabel>
                 )}{" "}
                 <Select
                   labelId="demo-simple-select-label"
                   name="produceTypes"
                   fullWidth
-                  variant="filled"
+                  multiple
                   value={selectedOptions}
                   open={isSelectOpen}
                   onClose={handleSelectClose}
                   onOpen={handleSelectOpen}
-                  multiple
                   onChange={handleSelectChange}
+                  style={{ fontFamily: "SUIT-Regular" }}
                 >
                   {options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                    <MenuItem 
+                      key={option.value} 
+                      value={option.value} 
+                      style={{ fontFamily: "SUIT-Regular" }}>
                       {option.label}
                     </MenuItem>
                   ))}
@@ -412,7 +505,13 @@ const FarmRegister = () => {
             <Button
               type="submit"
               variant="contained"
-              style={{ backgroundColor: "green", color: "white" }}
+              style={{ 
+                backgroundColor: "#0576B9", 
+                color: "white", 
+                fontFamily: "SUIT-Regular", 
+                fontSize: "16px",
+                marginTop: "12px"  
+              }}
               fullWidth
             >
               등록
@@ -421,6 +520,7 @@ const FarmRegister = () => {
         </form>
       </Container>
     </Box>
+  </div>
   );
 };
 
