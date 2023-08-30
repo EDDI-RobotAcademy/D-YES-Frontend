@@ -41,7 +41,7 @@ const FilterOptions: React.FC<{
   };
 
   return (
-    <div className="select-button">
+    <div>
       {Object.keys(tagMapping).map((tag) => (
         <FormControlLabel
           key={tag}
@@ -131,7 +131,7 @@ const ProductListPage = () => {
         <div className="product-filter-toggle">
           <ToggleComponent label="필터" height={50}>
             <Box>
-              <div className="button-container">
+              <div className="filter-button-container">
                 <div>
                   <FilterOptions
                     selectedFilters={selectedFilters}
