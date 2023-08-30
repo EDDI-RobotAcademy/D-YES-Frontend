@@ -13,6 +13,7 @@
   align-items: center;
 }
 .tag-common {
+  font-family: "SUIT-SemiBold";
   font-weight: bold;
   padding: 3px 6px;
   border-radius: 0.2rem;
@@ -73,4 +74,7 @@
 .product-price {
   font-family: "SUIT-Light";
   color: gray;
+}
+.farm-info {
+  text-align: right;
 }

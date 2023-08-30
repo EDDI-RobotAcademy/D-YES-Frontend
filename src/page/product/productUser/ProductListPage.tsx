@@ -216,7 +216,7 @@ const ProductListPage = () => {
                         position: "absolute",
                         top: "50%",
                         left: "50%",
-                        transform: "translate(-50%, -75%)",
+                        transform: "translate(-50%, -65%)",
                         maxWidth: "100%",
                         maxHeight: "100%",
                         zIndex: 1,
@@ -224,6 +224,39 @@ const ProductListPage = () => {
                     />
                   )}
                   <CardActionArea onClick={() => handleProductClick(product.productId)}>
+                    <CardContent
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        padding: "4px",
+                        fontFamily: "SUIT-Light",
+                        fontSize: "15px",
+                      }}
+                    >
+                      <div className="farm-info">
+                        {product.farmName}
+                        <br />
+                        {product.representativeName}
+                      </div>
+                      <CardMedia
+                        component="img"
+                        height="30"
+                        image={getImageUrl(product.mainImage)}
+                        alt={`farmImage ${product.productId}`}
+                        style={{
+                          position: "relative",
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          justifyContent: "flex-end",
+                          alignItems: "flex-end",
+                          overflow: "hidden",
+                          objectFit: "cover",
+                          paddingLeft: "6px",
+                        }}
+                      />
+                    </CardContent>
                     <CardMedia
                       component="img"
                       height="200"
