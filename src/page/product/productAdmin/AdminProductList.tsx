@@ -75,7 +75,7 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
             <TableRow>
               <TableCell className="cellStyle">체크박스</TableCell>
               <TableCell className="cellStyle">수정</TableCell>
-              <TableCell className="cellStyle">상품번호</TableCell>
+              <TableCell className="cellStyle" data-testid="product-id">상품번호</TableCell>
               <TableCell className="cellStyle" style={{ width: "200px" }}>
                 상품명
               </TableCell>
