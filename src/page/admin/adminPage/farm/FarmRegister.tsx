@@ -38,6 +38,33 @@ const FarmRegister = () => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
+  const initialAddressInfo = { address: "", zipCode: "" };
+  const [businessInfo, setBusinessInfo] = useState({
+    businessName: "",
+    businessNumber: "",
+    representativeName: "",
+    representativeContactNumber: "",
+    farmName: "",
+    csContactNumber: "",
+    addressDetail: "",
+    introduction: "",
+  });
+
+  const handleRegistrationComplete = () => {
+    setBusinessInfo({
+      businessName: "",
+      businessNumber: "",
+      representativeName: "",
+      representativeContactNumber: "",
+      farmName: "",
+      csContactNumber: "",
+      addressDetail: "",
+      introduction: "",
+    });
+    setSelectedOptions([]);
+    setSelectedMainImage(null);
+    setAddressInfo(initialAddressInfo);
+  };
 
   const mutation = useMutation(farmRegister, {
     onSuccess: (data) => {
@@ -171,7 +198,10 @@ const FarmRegister = () => {
     };
 
     await mutation.mutateAsync(data);
+
+    handleRegistrationComplete();
   };
+
   return (
     <Box
       display="flex"
@@ -207,6 +237,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.businessName}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    businessName: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -220,6 +257,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.businessNumber}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    businessNumber: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -233,6 +277,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.representativeName}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    representativeName: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -246,6 +297,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.representativeContactNumber}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    representativeContactNumber: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -267,6 +325,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.farmName}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    farmName: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -280,6 +345,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.csContactNumber}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    csContactNumber: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -332,6 +404,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.addressDetail}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    addressDetail: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -376,6 +455,13 @@ const FarmRegister = () => {
                 margin="normal"
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
+                value={businessInfo.introduction}
+                onChange={(e) =>
+                  setBusinessInfo((prev) => ({
+                    ...prev,
+                    introduction: e.target.value,
+                  }))
+                }
               />
             </div>
           </Grid>
@@ -386,7 +472,7 @@ const FarmRegister = () => {
                   <InputLabel id="demo-simple-select-label" style={{ position: "absolute" }}>
                     판매할 상품을 선택해주세요(필수)
                   </InputLabel>
-                )}{" "}
+                )}
                 <Select
                   labelId="demo-simple-select-label"
                   name="produceTypes"
