@@ -5,6 +5,9 @@ export interface ProductList {
   minOptionPrice: number;
   productMainImage: string;
   isSoldOut: boolean;
+  mainImage: string;
+  representativeName: string;
+  farmName: string;
 
   // sellerInfo: string;
   // ratings: number;
