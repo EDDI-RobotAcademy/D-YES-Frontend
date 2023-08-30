@@ -19,17 +19,24 @@ interface OptionTableProps {
   optionRows: useOptions[];
   onChangeOption: (index: number, updatedOption: useOptions) => void;
   onDeleteOption: (index: number) => void;
+  isEditMode: boolean;
 }
 
 const OptionTable: React.FC<OptionTableProps> = ({
   optionRows,
   onChangeOption,
   onDeleteOption,
+  isEditMode,
 }) => {
   const unitOption = [
     { value: "KG", label: "KG" },
     { value: "G", label: "G" },
     { value: "EA", label: "EA" },
+  ];
+
+  const saleStatus = [
+    { value: "AVAILABLE", label: "판매중" },
+    { value: "UNAVAILABLE", label: "판매중지" },
   ];
 
   // 기본적으로 하나의 빈 옵션을 추가하여 시작
@@ -62,6 +69,11 @@ const OptionTable: React.FC<OptionTableProps> = ({
             <TableCell className="cell" style={{ textAlign: "center" }}>
               단위
             </TableCell>
+            {isEditMode && (
+            <TableCell className="cell" style={{ textAlign: "center" }}>
+              옵션 판매여부
+            </TableCell>
+            )}
             <TableCell style={{ textAlign: "center" }}>삭제</TableCell>
           </TableRow>
         </TableHead>
@@ -134,6 +146,26 @@ const OptionTable: React.FC<OptionTableProps> = ({
                   </Select>
                 </div>
               </TableCell>
+              {isEditMode && (
+                <TableCell>
+                  <Select
+                    name="optionSaleStatus"
+                    size="small"
+                    value={option.optionSaleStatus}
+                    onChange={(event) => {
+                      const updatedOption = { ...option, optionSaleStatus: event.target.value };
+                      onChangeOption(index, updatedOption);
+                    }}
+                    sx={{ minWidth: "100px" }}
+                  >
+                    {saleStatus.map((status, statusIndex) => (
+                      <MenuItem key={statusIndex} value={status.value}>
+                        {status.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </TableCell>
+              )}
               <TableCell>
                 <IconButton
                   onClick={() => onDeleteOption(index)}

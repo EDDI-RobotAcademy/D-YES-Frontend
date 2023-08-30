@@ -354,6 +354,7 @@ const ProductRegisterPage = () => {
                   setUseOptions(newOptions);
                 }}
                 onDeleteOption={handleDeleteOption}
+                isEditMode={false}
               />
               <OptionInput onAddOption={handleAddOption} />
             </Box>
