@@ -39,6 +39,7 @@ const FarmRegister = () => {
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
   const initialAddressInfo = { address: "", zipCode: "" };
+  const [businessNumber, setBusinessNumber] = useState("");
   const [businessInfo, setBusinessInfo] = useState({
     businessName: "",
     businessNumber: "",
@@ -65,6 +66,34 @@ const FarmRegister = () => {
     setSelectedMainImage(null);
     setAddressInfo(initialAddressInfo);
   };
+
+  // 사업자 번호
+  const handleBusinessNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const cleanedValue = value.replace(/[^0-9]/g, "");
+    if (cleanedValue.length <= 10) {
+      const formattedValue = cleanedValue.replace(/(\d{3})(\d{2})(\d{5})/, "$1-$2-$3");
+      setBusinessInfo((prev) => ({
+        ...prev,
+        businessNumber: formattedValue,
+      }));
+    }
+  };
+
+  // 연락처
+  const handleContactNumberChange =
+    (fieldName: "representativeContactNumber" | "csContactNumber") =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      const cleanedValue = value.replace(/[^0-9]/g, "");
+      if (cleanedValue.length <= 11) {
+        const formattedValue = cleanedValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+        setBusinessInfo((prev) => ({
+          ...prev,
+          [fieldName]: formattedValue,
+        }));
+      }
+    };
 
   const mutation = useMutation(farmRegister, {
     onSuccess: (data) => {
@@ -197,7 +226,7 @@ const FarmRegister = () => {
       userToken: userToken || "",
     };
     const { produceTypes } = target.elements;
-  
+
     if (
       !businessName.value ||
       !businessNumber.value ||
@@ -276,12 +305,7 @@ const FarmRegister = () => {
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
                 value={businessInfo.businessNumber}
-                onChange={(e) =>
-                  setBusinessInfo((prev) => ({
-                    ...prev,
-                    businessNumber: e.target.value,
-                  }))
-                }
+                onChange={handleBusinessNumberChange}
               />
             </div>
           </Grid>
@@ -316,12 +340,7 @@ const FarmRegister = () => {
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
                 value={businessInfo.representativeContactNumber}
-                onChange={(e) =>
-                  setBusinessInfo((prev) => ({
-                    ...prev,
-                    representativeContactNumber: e.target.value,
-                  }))
-                }
+                onChange={handleContactNumberChange("representativeContactNumber")}
               />
             </div>
           </Grid>
@@ -364,12 +383,7 @@ const FarmRegister = () => {
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
                 value={businessInfo.csContactNumber}
-                onChange={(e) =>
-                  setBusinessInfo((prev) => ({
-                    ...prev,
-                    csContactNumber: e.target.value,
-                  }))
-                }
+                onChange={handleContactNumberChange("csContactNumber")}
               />
             </div>
           </Grid>
