@@ -34,7 +34,7 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
     <div className="product-page">
       <div className={`sidebar ${showProductSection === "register" ? "" : "collapsed"}`}>
         <div>
-          <Link to="/" className="logo">
+          <Link to="/" className="home-logo">
             TTMARKET
           </Link>
 
