@@ -242,7 +242,7 @@ const FarmRegister = () => {
               sx={{
                 color: "black",
                 padding: "0px 10px 0px 0px",
-                fontSize: "12px",
+                fontSize: "13px",
                 fontFamily: "SUIT-Light",
               }}
             >
@@ -321,7 +321,7 @@ const FarmRegister = () => {
               sx={{
                 color: "black",
                 padding: "0px 10px 0px 0px",
-                fontSize: "12px",
+                fontSize: "13px",
                 fontFamily: "SUIT-Light",
               }}
             >
@@ -376,8 +376,8 @@ const FarmRegister = () => {
                 paddingTop: "15px",
                 paddingBottom: "15px",
                 fontFamily: "SUIT-Light",
-                backgroundColor: "#0576B9",
-                color: "white"
+                backgroundColor: "#4F72CA",
+                color: "white",
               }}
             >
               검색
@@ -506,10 +506,10 @@ const FarmRegister = () => {
               type="submit"
               variant="contained"
               style={{ 
-                backgroundColor: "#0576B9", 
+                backgroundColor: "#DF726D", 
                 color: "white", 
                 fontFamily: "SUIT-Regular", 
-                fontSize: "16px",
+                fontSize: "14px",
                 marginTop: "12px"  
               }}
               fullWidth

@@ -82,7 +82,7 @@ const FarmList = () => {
             <button
               onClick={fetchFarmList}
               style={{
-                backgroundColor: "#0576B9",
+                backgroundColor: "#4F72CA",
                 border: "none",
                 color: "white",
                 padding: "6px 398px",
