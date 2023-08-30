@@ -12,7 +12,6 @@ import { useQueryClient } from "react-query";
 import { ProductModify } from "../entity/ProductModify";
 import { Product } from "../entity/Product";
 import { ProductImg } from "../entity/ProductMainImg";
-import { ProductDetailImg } from "../entity/ProductDetailImg";
 import { useNavigate } from "react-router-dom";
 
 const AdminProductModifyPage = ({ productId }: { productId: string }) => {
