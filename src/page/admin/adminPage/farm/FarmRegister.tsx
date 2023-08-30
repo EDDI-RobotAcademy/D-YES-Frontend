@@ -196,6 +196,24 @@ const FarmRegister = () => {
       produceTypes: selectedOptionsValues,
       userToken: userToken || "",
     };
+    const { produceTypes } = target.elements;
+  
+    if (
+      !businessName.value ||
+      !businessNumber.value ||
+      !representativeName.value ||
+      !representativeContactNumber.value ||
+      !farmName.value ||
+      !csContactNumber.value ||
+      !address.value ||
+      !zipCode.value ||
+      !addressDetail.value ||
+      !introduction.value ||
+      produceTypes.value.length === 0
+    ) {
+      toast.error("모든 필드를 입력해주세요.");
+      return;
+    }
 
     await mutation.mutateAsync(data);
 
@@ -448,7 +466,7 @@ const FarmRegister = () => {
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
               <TextField
-                label="농가 소개"
+                label="농가 소개*"
                 name="introduction"
                 fullWidth
                 variant="filled"
