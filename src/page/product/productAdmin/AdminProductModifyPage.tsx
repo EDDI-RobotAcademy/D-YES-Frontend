@@ -12,7 +12,6 @@ import { useQueryClient } from "react-query";
 import { ProductModify } from "../entity/ProductModify";
 import { Product } from "../entity/Product";
 import { ProductImg } from "../entity/ProductMainImg";
-import { ProductDetailImg } from "../entity/ProductDetailImg";
 import { useNavigate } from "react-router-dom";
 
 const AdminProductModifyPage = ({ productId }: { productId: string }) => {
@@ -146,7 +145,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       const detailImageUploadPromises = selectedDetailImages.map(async (image, idx) => {
         const detailFileToUpload = new File([image], image.name);
         const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
-        
+
         return {
           detailImageId: data!.detailImagesForAdmin[idx]!.detailImageId,
           detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
@@ -165,7 +164,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       };
       await mutation.mutateAsync(updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
-      navigate("/")
+      navigate("/");
     }
   };
 
@@ -301,20 +300,23 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                     : null}
                 </div>
               </ToggleComponent>
-              <ToggleComponent label="옵션정보" height={calculateToggleHeight(useOptions)}>
-                <Box display="flex" flexDirection="column" gap={2}>
-                  <OptionTable
-                    optionRows={useOptions || []}
-                    onChangeOption={(index, updatedOption) => {
-                      const newOptions = [...useOptions];
-                      newOptions[index] = updatedOption;
-                      setUseOptions(newOptions);
-                    }}
-                    onDeleteOption={handleDeleteOption}
-                  />
-                  <OptionInput onAddOption={handleAddOption} />
-                </Box>
-              </ToggleComponent>
+              {data.optionResponseForAdmin ? (
+                <ToggleComponent label="옵션정보" height={calculateToggleHeight(useOptions)}>
+                  <Box display="flex" flexDirection="column" gap={2}>
+                    <OptionTable
+                      optionRows={useOptions || []}
+                      onChangeOption={(index, updatedOption) => {
+                        const newOptions = [...useOptions];
+                        newOptions[index] = updatedOption;
+                        setUseOptions(newOptions);
+                      }}
+                      onDeleteOption={handleDeleteOption}
+                      isEditMode={true}
+                    />
+                    <OptionInput onAddOption={handleAddOption} />
+                  </Box>
+                </ToggleComponent>
+              ) : null}
               <ToggleComponent label="상세정보" height={300}>
                 <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
                   <div className="text-field-label" aria-label="상세정보">

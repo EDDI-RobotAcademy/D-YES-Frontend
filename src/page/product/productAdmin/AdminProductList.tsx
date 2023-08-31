@@ -105,7 +105,7 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
               <TableRow>
                 <TableCell className="cellStyle-header" style={{ width: "60px" }}>선택</TableCell>
                 <TableCell className="cellStyle-header" style={{ width: "60px" }}>수정</TableCell>
-                <TableCell className="cellStyle-header" style={{ width: "60px" }}>상품번호</TableCell>
+                <TableCell className="cellStyle-header" style={{ width: "60px" }} data-testid="product-id">상품번호</TableCell>
                 <TableCell className="cellStyle-header" style={{ width: "200px" }}>
                   상품명
                 </TableCell>
