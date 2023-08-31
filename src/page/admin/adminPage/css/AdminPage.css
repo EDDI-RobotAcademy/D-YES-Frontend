@@ -1,11 +1,11 @@
 .product-page {
   display: flex;
   align-items: stretch; /* 사이드바와 컨텐츠를 높이 기준으로 맞추기 */
-  background-color: rgb(240, 240, 240);
+  background-color: #f0f0f0;
 }
 
 .sidebar {
-  background-color: #252525;
+  background-color: #121E2D;
   color: #fff;
   width: 250px;
   flex: 0 0 250px; /* 너비를 고정 */
@@ -43,13 +43,15 @@
   max-height: 10px !important; /* 원하는 높이 값으로 조정 */
 }
 
-.logo {
+.home-logo {
   color: white;
   font-family: "SUIT-ExtraBold";
-  font-size: 20px !important;;
+  font-size: 20px;
   text-decoration: none;
-  margin-top: 30px;
+  margin-top: 40px;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .menu-name {
