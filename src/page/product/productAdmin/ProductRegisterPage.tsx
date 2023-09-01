@@ -85,7 +85,7 @@ const ProductRegisterPage = () => {
 
   const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
     onDrop: onDetailImageDrop,
-    maxFiles: 6,
+    maxFiles: 10,
   });
 
   const mutation = useMutation(registerProduct, {
@@ -154,6 +154,11 @@ const ProductRegisterPage = () => {
 
     if (selectedDetailImages.length === 0) {
       toast.error("상세 이미지를 추가해주세요.");
+      return;
+    }
+    
+    if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
+      toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
       return;
     }
 
@@ -373,7 +378,7 @@ const ProductRegisterPage = () => {
               ) : (
                 <div style={{ textAlign: "center", width: "100%" }}>
                   <div>상품의 상세 이미지를 추가해주세요.</div>
-                  <div>상세 이미지는 최대 6장까지 등록할 수 있습니다.</div>
+                  <div>상세 이미지는 최소 6장, 최대 10장까지 등록할 수 있습니다.</div>
                   <input {...detailImageInputProps()} />
                 </div>
               )}
