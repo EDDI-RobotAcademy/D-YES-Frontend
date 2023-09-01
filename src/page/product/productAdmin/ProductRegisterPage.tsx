@@ -136,22 +136,9 @@ const ProductRegisterPage = () => {
       return;
     }
 
-    if (useOptions.length === 1) {
-      const defaultOption = useOptions[0];
-      if (
-        !defaultOption.optionName ||
-        !defaultOption.optionPrice ||
-        !defaultOption.stock ||
-        !defaultOption.unit
-      ) {
-        toast.success("기본 옵션 정보를 모두 입력해주세요.");
-        return;
-      }
-    }
-
     // some함수는 배열 요소 중 하나라도 조건을 만족하면 true를 반환
     // some함수는 useOptions배열을 순회하면서 중복 여부를 확인
-    // 조건은 옵션명이 동일하고 옵션의 인덱스가 같이 않을 때 
+    // 조건은 옵션명이 동일하고 옵션의 인덱스가 같이 않을 때
     // 중복한 옵션이 있다면 true를 반환
     const isDuplicateOptionName = useOptions.some((option, index) =>
       useOptions.some(
@@ -162,6 +149,15 @@ const ProductRegisterPage = () => {
 
     if (isDuplicateOptionName) {
       toast.error("이미 존재하는 옵션 이름입니다.");
+      return;
+    }
+
+    const hasIncompleteOption = useOptions.some((option) => {
+      return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
+    });
+
+    if (hasIncompleteOption) {
+      toast.error("옵션 정보를 모두 입력해주세요.");
       return;
     }
 
