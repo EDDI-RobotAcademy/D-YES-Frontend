@@ -20,6 +20,13 @@ import TopButton from "utility/TopButton";
 import AdminProductModifyPage from "page/product/productAdmin/AdminProductModifyPage";
 import ProductDetailPage from "page/product/productUser/ProductDetail";
 import Cart from "page/cart/Cart";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "SUIT-SemiBold",
+  },
+});
 
 const App: React.FC = () => {
   const [showHeader, setShowHeader] = useState(true);
@@ -27,30 +34,32 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        {showHeader && <Header />}
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/myPage" element={<MyPage />} />
-          <Route path="/updateInfo" element={<MyPageUpdate />} />
-          <Route path="/withdrawal" element={<WithdrawalPage />} />
-          <Route path="/exit" element={<WithdrawalComplete />} />
-          <Route path="/productList" element={<ProductListPage />} />
-          <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
-          <Route
-            path="/adminPage"
-            element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
-          />
-          <Route path="/productRegister" element={<ProductRegisterPage />} />
-          <Route path="/adminRegister" element={<NormalAdminRegister />} />
-          <Route path="/farmRegister" element={<FarmRegisterPage />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        {showFooter && <Footer />}
-      </BrowserRouter>
-      <SnackBar />
-      <TopButton />
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          {showHeader && <Header />}
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/myPage" element={<MyPage />} />
+            <Route path="/updateInfo" element={<MyPageUpdate />} />
+            <Route path="/withdrawal" element={<WithdrawalPage />} />
+            <Route path="/exit" element={<WithdrawalComplete />} />
+            <Route path="/productList" element={<ProductListPage />} />
+            <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
+            <Route
+              path="/adminPage"
+              element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
+            />
+            <Route path="/productRegister" element={<ProductRegisterPage />} />
+            <Route path="/adminRegister" element={<NormalAdminRegister />} />
+            <Route path="/farmRegister" element={<FarmRegisterPage />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+          {showFooter && <Footer />}
+        </BrowserRouter>
+        <SnackBar />
+        <TopButton />
+      </ThemeProvider>
     </AuthProvider>
   );
 };
