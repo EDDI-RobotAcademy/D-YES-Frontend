@@ -82,7 +82,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
 
   const { getRootProps: detailImageRootProps } = useDropzone({
     onDrop: onDetailImageDrop,
-    maxFiles: 6,
+    maxFiles: 10,
   });
 
   function calculateToggleHeight(options: Array<any>) {
@@ -188,6 +188,11 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         toast.error("옵션 정보를 모두 입력해주세요.");
         return;
       }
+
+      if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
+        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+        return;
+      }  
 
       await mutation.mutateAsync(updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
