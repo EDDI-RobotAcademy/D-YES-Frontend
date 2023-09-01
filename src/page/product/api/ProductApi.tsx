@@ -85,7 +85,9 @@ export const fetchProduct = async (productId: string): Promise<ProductRead | nul
 };
 
 export const useProductQuery = (productId: string): UseQueryResult<ProductRead | null, unknown> => {
-  return useQuery(["productRead", productId], () => fetchProduct(productId));
+  return useQuery(["productRead", productId], () => fetchProduct(productId), {
+    refetchOnWindowFocus: false,
+  });
 };
 
 // 관리자 수정

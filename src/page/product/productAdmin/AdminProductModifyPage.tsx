@@ -24,6 +24,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
   const [productName, setProductName] = useState("");
   const [selectedCultivationMethod, setSelectedCultivationMethod] = useState("");
+  const [selectedSaleStatus, setSelectedSaleStatus] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const mutation = useProductUpdateMutation();
   const queryClient = useQueryClient();
@@ -38,6 +39,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
         setUseOptions(data.optionResponseForAdmin || []);
         setProductDescription(data.productResponseForAdmin?.productDescription || "");
+        setSelectedSaleStatus(data.productResponseForAdmin?.productSaleStatus || "AVAILABLE");
       }
     };
     fetchProductData();
@@ -47,6 +49,11 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
     { value: "PESTICIDE_FREE", label: "무농약" },
     { value: "ENVIRONMENT_FRIENDLY", label: "친환경" },
     { value: "ORGANIC", label: "유기농" },
+  ];
+
+  const saleStatus = [
+    { value: "AVAILABLE", label: "판매중" },
+    { value: "UNAVAILABLE", label: "판매중지" },
   ];
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
@@ -120,11 +127,12 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   };
 
   const handleEditFinishClick = async () => {
-    if (productName && selectedCultivationMethod && productDescription) {
+    if (productName && selectedCultivationMethod && productDescription && selectedSaleStatus) {
       const productModifyRequestData: Partial<Product> = {
         productName: productName,
         cultivationMethod: selectedCultivationMethod,
         productDescription: productDescription,
+        productSaleStatus: selectedSaleStatus,
       };
 
       const existingMainImageUrl = data?.mainImageResponseForAdmin?.mainImg;
@@ -192,7 +200,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
         toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
         return;
-      }  
+      }
 
       await mutation.mutateAsync(updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
@@ -207,7 +215,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
           <h1>상품 수정</h1>
           {data ? (
             <>
-              <ToggleComponent label="기본정보" height={150}>
+              <ToggleComponent label="기본정보" height={220}>
                 <Box display="flex" flexDirection="column" gap={2}>
                   <div className="text-field-container">
                     <div className="text-field-label" aria-label="상품명">
@@ -256,6 +264,33 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                       size="small"
                       value={data.farmInfoResponseForAdmin?.farmName}
                     />
+                  </div>
+                  <div className="text-field-container">
+                    <div className="text-field-label">판매 상태</div>
+                    <FormControl
+                      sx={{
+                        display: "flex",
+                        flexGrow: 1,
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Select
+                        name="saleStatus"
+                        value={selectedSaleStatus}
+                        sx={{ width: "100%" }}
+                        onChange={(e) => setSelectedSaleStatus(e.target.value)}
+                      >
+                        <MenuItem value="" disabled>
+                          판매 상태를 선택해주세요
+                        </MenuItem>
+                        {saleStatus.map((status) => (
+                          <MenuItem key={status.value} value={status.value}>
+                            {status.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                 </Box>
               </ToggleComponent>
