@@ -10,7 +10,7 @@ jest.mock("page/product/api/ProductApi", () => ({
   registerProduct: jest.fn().mockResolvedValue({ success: true }),
 }));
 
-it("회원 정보 테스트", async () => {
+it("상품 등록 정보 테스트", async () => {
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
@@ -20,12 +20,12 @@ it("회원 정보 테스트", async () => {
   );
 
   await act(async () => {
-    const productName = screen.getByLabelText("상품명");
-    const productDescription = screen.getByLabelText("상세정보");
-    const cultivationMethod = screen.getByText("재배방식");
-    const sellerInfo = screen.getByText("농가 이름");
-    const mainImg = screen.getByText("메인 이미지");
-    const detailImgs = screen.getByText("상세 이미지");
+    const productName = screen.getByLabelText("상품명*");
+    const productDescription = screen.getByLabelText("상세정보*");
+    const cultivationMethod = screen.getByText("재배방식*");
+    const sellerInfo = screen.getByText("농가 이름*");
+    const mainImg = screen.getByText("메인 이미지*");
+    const detailImgs = screen.getByText("상세 이미지*");
     const optionName = screen.getByText("옵션명");
     const optionPrice = screen.getByText("가격");
     const stock = screen.getByText("재고");
