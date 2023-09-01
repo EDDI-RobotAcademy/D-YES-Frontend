@@ -30,12 +30,9 @@ const FarmList = () => {
   return (
     <div>
       <div className="list-menu">
-        <img
-          className="farm-list-icon"
-          alt="농가 목록"
-          src="img/farm-list-icon.png"
-        />
-        <Typography
+        <img className="farm-list-icon" alt="농가 목록" src="img/farm-list-icon.png" />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Typography
             gutterBottom
             style={{
               fontSize: "16px",
@@ -45,7 +42,8 @@ const FarmList = () => {
             }}
           >
             등록된 농가 목록
-            <Typography
+          </Typography>
+          <Typography
             gutterBottom
             sx={{
               fontSize: "12px",
@@ -55,114 +53,111 @@ const FarmList = () => {
           >
             * 등록되어 있는 농가 목록을 확인해주세요
           </Typography>
-          </Typography>
         </div>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexDirection="column"
-          minHeight="158.8vh"
-          paddingTop="32px"
-          paddingBottom="20px"
-          bgcolor="white"
-          overflow="hidden" // 가로 스크롤 숨김
-          border="solid 1px lightgray"
-        >
-          <Box
-            flex="0"
+      </div>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        minHeight="158.8vh"
+        paddingTop="32px"
+        paddingBottom="20px"
+        bgcolor="white"
+        overflow="hidden" // 가로 스크롤 숨김
+        border="solid 1px lightgray"
+      >
+        <Box flex="0"></Box>
+        <Box bgcolor="white" flex="10" flexDirection="column" alignItems="center">
+          <button
+            onClick={fetchFarmList}
+            style={{
+              backgroundColor: "#4F72CA",
+              border: "none",
+              color: "white",
+              padding: "6px 398px",
+              cursor: "pointer",
+              fontSize: "14px",
+              marginBottom: "2px",
+              fontFamily: "SUIT-Light",
+            }}
           >
-          </Box>
-          <Box
-            bgcolor="white"
-            flex="10"
-            flexDirection="column"
-            alignItems="center"
+            농가 목록 불러오기
+          </button>
+          <TableContainer
+            component={Paper}
+            style={{ width: "900px", borderRadius: "0px", fontFamily: "SUIT-ExtraBold" }}
           >
-            <button
-              onClick={fetchFarmList}
+            <table
               style={{
-                backgroundColor: "#4F72CA",
-                border: "none",
-                color: "white",
-                padding: "6px 398px",
-                cursor: "pointer",
-                fontSize: "14px",
-                marginBottom: "2px",
-                fontFamily: "SUIT-Light",
+                borderCollapse: "collapse",
+                width: "100%",
+                textAlign: "center",
               }}
             >
-              농가 목록 불러오기
-            </button>
-            <TableContainer
-              component={Paper}
-              style={{ width: "900px", borderRadius: "0px", fontFamily: "SUIT-ExtraBold" }}
-            >
-              <table
-                style={{
-                  borderCollapse: "collapse",
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                <TableHead>
-                  <TableRow>
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    style={{
+                      width: "50px",
+                      padding: "18px 16px",
+                      textAlign: "center",
+                      color: "#252525",
+                      fontFamily: "SUIT-Medium",
+                    }}
+                  >
+                    ID
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      width: "350px",
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      color: "#252525",
+                      fontFamily: "SUIT-Medium",
+                    }}
+                  >
+                    농가 이름
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      width: "500px",
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      color: "#252525",
+                      fontFamily: "SUIT-Medium",
+                    }}
+                  >
+                    농가 주소
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <tbody>
+                {farmList.map((farm) => (
+                  <TableRow key={farm.farmId}>
                     <TableCell
-                      style={{
-                        width: "50px",
-                        padding: "18px 16px",
-                        textAlign: "center",
-                        color: "#252525",
-                        fontFamily: "SUIT-Medium"
-                      }}
+                      style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                     >
-                      ID
+                      {farm.farmId}
                     </TableCell>
                     <TableCell
-                      style={{
-                        width: "350px",
-                        padding: "8px 16px",
-                        textAlign: "center",
-                        color: "#252525",
-                        fontFamily: "SUIT-Medium"
-                      }}
+                      style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                     >
-                      농가 이름
+                      {farm.farmName}
                     </TableCell>
                     <TableCell
-                      style={{
-                        width: "500px",
-                        padding: "8px 16px",
-                        textAlign: "center",
-                        color: "#252525",
-                        fontFamily: "SUIT-Medium"
-                      }}
+                      style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                     >
-                      농가 주소
+                      {farm.farmAddress.address} {farm.farmAddress.addressDetail} (
+                      {farm.farmAddress.zipCode})
                     </TableCell>
                   </TableRow>
-                </TableHead>
-                <tbody>
-                  {farmList.map((farm) => (
-                    <TableRow key={farm.farmId}>
-                      <TableCell style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}>
-                        {farm.farmId}
-                      </TableCell>
-                      <TableCell style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}>
-                        {farm.farmName}
-                      </TableCell>
-                      <TableCell style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}>
-                        {farm.farmAddress.address} {farm.farmAddress.addressDetail} (
-                        {farm.farmAddress.zipCode})
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </tbody>
-              </table>
-            </TableContainer>
-          </Box>
+                ))}
+              </tbody>
+            </table>
+          </TableContainer>
         </Box>
-      
+      </Box>
     </div>
   );
 };

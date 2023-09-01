@@ -13,6 +13,7 @@ import { ProductModify } from "../entity/ProductModify";
 import { Product } from "../entity/Product";
 import { ProductImg } from "../entity/ProductMainImg";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
 
   const { getRootProps: detailImageRootProps } = useDropzone({
     onDrop: onDetailImageDrop,
-    maxFiles: 6,
+    maxFiles: 10,
   });
 
   function calculateToggleHeight(options: Array<any>) {
@@ -126,20 +127,24 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         productDescription: productDescription,
       };
 
+      const existingMainImageUrl = data?.mainImageResponseForAdmin?.mainImg;
+
       const mainFileToUpload = selectedMainImage
         ? new File([selectedMainImage], selectedMainImage.name)
-        : "";
-      if (!mainFileToUpload) {
-        alert("메인 이미지를 등록해주세요");
-        return;
+        : undefined;
+
+      let s3MainObjectVersion = "";
+      if (mainFileToUpload) {
+        s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
       }
-      const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
       const productMainImageModifyRequest: ProductImg = {
         mainImageId: data!.mainImageResponseForAdmin!.mainImageId,
-        mainImg: selectedMainImage
-          ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
-          : "undefined main image",
+        mainImg: mainFileToUpload
+          ? selectedMainImage
+            ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
+            : "undefined main image"
+          : existingMainImageUrl || "undefined main image",
       };
 
       const detailImageUploadPromises = selectedDetailImages.map(async (image, idx) => {
@@ -162,6 +167,33 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         productDetailImagesModifyRequest: productDetailImagesModifyRequest,
         userToken: userToken || "",
       };
+
+      const isDuplicateOptionName = useOptions.some((option, index) =>
+        useOptions.some(
+          (otherOption, otherIndex) =>
+            option.optionName === otherOption.optionName && index !== otherIndex
+        )
+      );
+
+      if (isDuplicateOptionName) {
+        toast.error("이미 존재하는 옵션 이름입니다.");
+        return;
+      }
+
+      const hasIncompleteOption = useOptions.some((option) => {
+        return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
+      });
+
+      if (hasIncompleteOption) {
+        toast.error("옵션 정보를 모두 입력해주세요.");
+        return;
+      }
+
+      if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
+        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+        return;
+      }  
+
       await mutation.mutateAsync(updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
       navigate("/");
