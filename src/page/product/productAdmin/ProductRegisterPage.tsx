@@ -263,7 +263,7 @@ const ProductRegisterPage = () => {
           <ToggleComponent label="기본정보" height={150}>
             <Box display="flex" flexDirection="column" gap={2}>
               <div className="text-field-container">
-                <div className="text-field-label" aria-label="상품명">
+                <div className="text-field-label" aria-label="상품명*">
                   상품명*
                 </div>
                 <TextField name="productName" className="text-field-input" size="small" />
@@ -401,7 +401,7 @@ const ProductRegisterPage = () => {
           </ToggleComponent>
           <ToggleComponent label="상세정보" height={300}>
             <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
-              <div className="text-field-label" aria-label="상세정보">
+              <div className="text-field-label" aria-label="상세정보*">
                 상세정보*
               </div>
               <TextField
