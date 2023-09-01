@@ -38,9 +38,9 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
     navigate("/myPage");
   };
 
-  // const goToCart = () => {
-  //   navigate("/cart");
-  // };
+  const goToCart = () => {
+    navigate("/cart");
+  };
 
   const userProfileImg = localStorage.getItem("encodedProfileImg");
   const userNickName = localStorage.getItem("encodedNickName");
@@ -121,7 +121,7 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
           </ListItemText>
         </MenuItem>
 
-        {/* <MenuItem
+        <MenuItem
           onClick={() => {
             goToCart();
             handleClose();
@@ -133,7 +133,7 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
           <ListItemText>
             <Typography>장바구니</Typography>
           </ListItemText>
-        </MenuItem> */}
+        </MenuItem>
 
         <Divider />
 
