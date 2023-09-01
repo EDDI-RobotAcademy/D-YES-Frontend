@@ -98,15 +98,6 @@ const ProductRegisterPage = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const mainFileToUpload = selectedMainImage
-      ? new File([selectedMainImage], selectedMainImage.name)
-      : "";
-    if (!mainFileToUpload) {
-      toast.success("메인 이미지를 등록해주세요");
-      return;
-    }
-    const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
-
     const detailImageUpload = selectedDetailImages.map(async (image) => {
       const detailFileToUpload = new File([image], image.name);
       return (await uploadFileAwsS3(detailFileToUpload)) || "";
@@ -173,6 +164,15 @@ const ProductRegisterPage = () => {
       value: option.value,
       unit: option.unit,
     }));
+
+    const mainFileToUpload = selectedMainImage
+      ? new File([selectedMainImage], selectedMainImage.name)
+      : "";
+    if (!mainFileToUpload) {
+      toast.success("메인 이미지를 등록해주세요");
+      return;
+    }
+    const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
     const partialProductMainImageRegisterRequest: Partial<ProductImg> = {
       mainImg: selectedMainImage
