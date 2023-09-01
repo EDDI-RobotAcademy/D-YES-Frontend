@@ -25,6 +25,7 @@ import FarmSearch from "./productOption/FarmSearch";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
+import { toast } from "react-toastify";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -56,7 +57,6 @@ const ProductRegisterPage = () => {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
-        // localStorage.setItem("mainImg", compressedImage.name);
       } catch (error) {
         console.error(error);
       }
@@ -72,10 +72,6 @@ const ProductRegisterPage = () => {
           })
         );
         setSelectedDetailImages(compressedImages);
-        // localStorage.setItem(
-        //   "detailImg",
-        //   JSON.stringify(compressedImages.map((detailImage) => detailImage.name))
-        // );
       } catch (error) {
         console.error(error);
       }
@@ -95,7 +91,6 @@ const ProductRegisterPage = () => {
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
       queryClient.setQueryData("product", data);
-      console.log("데이터확인", data);
       navigate("/");
     },
   });
@@ -107,7 +102,7 @@ const ProductRegisterPage = () => {
       ? new File([selectedMainImage], selectedMainImage.name)
       : "";
     if (!mainFileToUpload) {
-      alert("메인 이미지를 등록해주세요");
+      toast.success("메인 이미지를 등록해주세요");
       return;
     }
     const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
@@ -131,6 +126,50 @@ const ProductRegisterPage = () => {
 
     const { productName, productDescription, cultivationMethod, farmName } = target.elements;
 
+    if (
+      !productName.value ||
+      !productDescription.value ||
+      !cultivationMethod.value ||
+      !farmName.value
+    ) {
+      toast.success("필수 입력 항목을 모두 채워주세요.");
+      return;
+    }
+
+    if (useOptions.length === 1) {
+      const defaultOption = useOptions[0];
+      if (
+        !defaultOption.optionName ||
+        !defaultOption.optionPrice ||
+        !defaultOption.stock ||
+        !defaultOption.unit
+      ) {
+        toast.success("기본 옵션 정보를 모두 입력해주세요.");
+        return;
+      }
+    }
+
+    // some함수는 배열 요소 중 하나라도 조건을 만족하면 true를 반환
+    // some함수는 useOptions배열을 순회하면서 중복 여부를 확인
+    // 조건은 옵션명이 동일하고 옵션의 인덱스가 같이 않을 때 
+    // 중복한 옵션이 있다면 true를 반환
+    const isDuplicateOptionName = useOptions.some((option, index) =>
+      useOptions.some(
+        (otherOption, otherIndex) =>
+          option.optionName === otherOption.optionName && index !== otherIndex
+      )
+    );
+
+    if (isDuplicateOptionName) {
+      toast.error("이미 존재하는 옵션 이름입니다.");
+      return;
+    }
+
+    if (selectedDetailImages.length === 0) {
+      toast.error("상세 이미지를 추가해주세요.");
+      return;
+    }
+
     const optionObjects: Partial<useOptions>[] = useOptions.map((option) => ({
       optionName: option.optionName,
       optionPrice: option.optionPrice,
@@ -144,7 +183,7 @@ const ProductRegisterPage = () => {
         ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
         : "undefined main image",
     };
-    
+
     const detailImgsName = selectedDetailImages.map((image, idx) => {
       return image.name + "?versionId=" + s3DetailObjectVersion[idx];
     });
@@ -170,13 +209,13 @@ const ProductRegisterPage = () => {
       farmName: farmName.value,
     };
 
-    console.log("데이터가 가냐:", data);
     await mutation.mutateAsync({
       ...data,
       productRegisterRequest: productRegisterRequest as Product,
       productOptionRegisterRequest: optionObjects as useOptions[],
       productMainImageRegisterRequest: partialProductMainImageRegisterRequest as ProductImg,
-      productDetailImagesRegisterRequests: productDetailImagesRegisterRequests as ProductDetailImg[]
+      productDetailImagesRegisterRequests:
+        productDetailImagesRegisterRequests as ProductDetailImg[],
     });
   };
 
@@ -224,12 +263,12 @@ const ProductRegisterPage = () => {
             <Box display="flex" flexDirection="column" gap={2}>
               <div className="text-field-container">
                 <div className="text-field-label" aria-label="상품명">
-                  상품명
+                  상품명*
                 </div>
                 <TextField name="productName" className="text-field-input" size="small" />
               </div>
               <div className="text-field-container">
-                <div className="text-field-label">재배방식</div>
+                <div className="text-field-label">재배방식*</div>
                 <FormControl
                   sx={{
                     display: "flex",
@@ -257,7 +296,7 @@ const ProductRegisterPage = () => {
                 </FormControl>
               </div>
               <div className="text-field-container">
-                <div className="text-field-label">농가 이름</div>
+                <div className="text-field-label">농가 이름*</div>
                 <TextField
                   name="farmName"
                   className="text-field-input"
@@ -278,7 +317,7 @@ const ProductRegisterPage = () => {
             </Box>
           </ToggleComponent>
           <ToggleComponent label="이미지" height={850}>
-            <div className="text-field-label">메인 이미지</div>
+            <div className="text-field-label">메인 이미지*</div>
             <div
               style={{
                 display: "flex",
@@ -307,7 +346,7 @@ const ProductRegisterPage = () => {
               )}
             </div>
 
-            <div className="text-field-label">상세 이미지</div>
+            <div className="text-field-label">상세 이미지*</div>
             <div
               style={{
                 display: "flex",
@@ -344,7 +383,7 @@ const ProductRegisterPage = () => {
               )}
             </div>
           </ToggleComponent>
-          <ToggleComponent label="옵션정보" height={optionToggleHeight}>
+          <ToggleComponent label="옵션정보*" height={optionToggleHeight}>
             <Box display="flex" flexDirection="column" gap={2}>
               <OptionTable
                 optionRows={useOptions}
@@ -362,7 +401,7 @@ const ProductRegisterPage = () => {
           <ToggleComponent label="상세정보" height={300}>
             <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
               <div className="text-field-label" aria-label="상세정보">
-                상세정보
+                상세정보*
               </div>
               <TextField
                 name="productDescription"
