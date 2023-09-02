@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import { deleteProducts, fetchProductList, useProductListQuery } from "../api/ProductApi";
 import useProductStore from "../store/ProductStore";
 import { useQueryClient } from "react-query";
+import { v4 as uuidv4 } from 'uuid';
 import "./css/AdminProductList.css";
 
 interface AdminProductListProps {
@@ -140,14 +141,14 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
             </TableHead>
             <TableBody>
               {products?.length === 0 ? (
-                <TableRow>
+                <TableRow key={uuidv4()}>
                   <TableCell colSpan={9} align="center">
                     등록된 상품이 없습니다.
                   </TableCell>
                 </TableRow>
               ) : (
-                products?.map((product) => (
-                  <TableRow key={product.productId} style={{ cursor: "pointer" }}>
+                products?.map((product, index) => (
+                  <TableRow key={index} style={{ cursor: "pointer" }}>
                     <TableCell className="cellStyle">
                       <Checkbox
                         checked={selectedProducts.includes(product.productId)}
