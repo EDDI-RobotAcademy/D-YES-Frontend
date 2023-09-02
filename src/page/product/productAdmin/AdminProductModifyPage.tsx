@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchProduct, useProductQuery, useProductUpdateMutation } from "../api/ProductApi";
 import { Box, Button, Container, FormControl, MenuItem, Select, TextField } from "@mui/material";
+import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import ToggleComponent from "./productOption/ToggleComponent";
 import OptionTable from "./productOption/OptionTable";
 import OptionInput from "./productOption/OptionInput";
@@ -14,6 +15,7 @@ import { Product } from "../entity/Product";
 import { ProductImg } from "../entity/ProductMainImg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { ProductDetailImg } from "../entity/ProductDetailImg";
 
 const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
+  const [serverDetailImages, setServerDetailImages] = useState<ProductDetailImg[]>([]);
   const [productName, setProductName] = useState("");
   const [selectedCultivationMethod, setSelectedCultivationMethod] = useState("");
   const [selectedSaleStatus, setSelectedSaleStatus] = useState("");
@@ -40,6 +43,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         setUseOptions(data.optionResponseForAdmin || []);
         setProductDescription(data.productResponseForAdmin?.productDescription || "");
         setSelectedSaleStatus(data.productResponseForAdmin?.productSaleStatus || "AVAILABLE");
+        setServerDetailImages(data.detailImagesForAdmin || []);
       }
     };
     fetchProductData();
@@ -75,7 +79,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
             return await compressImg(file);
           })
         );
-        setSelectedDetailImages(compressedImages);
+        setSelectedDetailImages((prevImages) => [...prevImages, ...compressedImages]);
       } catch (error) {
         console.error(error);
       }
@@ -91,7 +95,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
     onDrop: onDetailImageDrop,
     maxFiles: 10,
   });
-
+  
   function calculateToggleHeight(options: Array<any>) {
     const minHeight = 100; // 최소 높이
     const optionHeight = 78; // 각 옵션 아이템의 높이
@@ -158,14 +162,27 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       const detailImageUploadPromises = selectedDetailImages.map(async (image, idx) => {
         const detailFileToUpload = new File([image], image.name);
         const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
-
+        const existingDetailImage = data?.detailImagesForAdmin?.[idx] || {
+          detailImageId: 0,
+        };
+      
         return {
-          detailImageId: data!.detailImagesForAdmin[idx]!.detailImageId,
+          detailImageId: existingDetailImage.detailImageId || 0,
           detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
         };
       });
-
+      
       const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
+      
+      // 만약 선택한 상세 이미지가 없다면, 기존 이미지 정보를 서버로 다시 보냅니다.
+      if (selectedDetailImages.length === 0) {
+        const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map((existingDetailImage) => ({
+          detailImageId: existingDetailImage.detailImageId || 0,
+          detailImgs: existingDetailImage.detailImgs || "undefined detail image",
+        }));
+      
+        productDetailImagesModifyRequest.push(...existingDetailImageRequests);
+      }
 
       const updatedData: ProductModify = {
         productId: parseInt(productId),
@@ -197,12 +214,13 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         return;
       }
 
-      if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
-        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
-        return;
-      }
+      // if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
+      //   toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+      //   return;
+      // }
 
       await mutation.mutateAsync(updatedData);
+      console.log("확인", updatedData)
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
       navigate("/");
     }
@@ -350,19 +368,20 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                           alt={`Selected ${idx}`}
                         />
                       ))
-                    : data.detailImagesForAdmin?.length > 0
-                    ? data.detailImagesForAdmin.map((detailImage, idx) => (
-                        <img
-                          key={idx}
-                          src={getImageUrl(detailImage.detailImgs)}
-                          style={{
-                            width: "calc(33.33% - 16px)",
-                            height: "auto",
-                            margin: "8px",
-                            cursor: "pointer",
-                          }}
-                          alt={`Selected ${idx}`}
-                        />
+                    : serverDetailImages.length > 0
+                    ? serverDetailImages.map((detailImage, idx) => (
+                        <div key={idx} style={{ position: "relative" }}>
+                          <img
+                            src={getImageUrl(detailImage.detailImgs)}
+                            style={{
+                              width: "calc(33.33% - 16px)",
+                              height: "auto",
+                              margin: "8px",
+                              cursor: "pointer",
+                            }}
+                            alt={`Selected ${idx}`}
+                          />
+                        </div>
                       ))
                     : null}
                 </div>
