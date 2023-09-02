@@ -25,6 +25,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
   const [serverDetailImages, setServerDetailImages] = useState<ProductDetailImg[]>([]);
+  const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
   const [productName, setProductName] = useState("");
   const [selectedCultivationMethod, setSelectedCultivationMethod] = useState("");
   const [selectedSaleStatus, setSelectedSaleStatus] = useState("");
@@ -95,7 +96,21 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
     onDrop: onDetailImageDrop,
     maxFiles: 10,
   });
+
+  const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
+    event.stopPropagation();
+
+      const updatedServerDetailImages = serverDetailImages.filter(
+      (detailImage) => detailImage.detailImageId !== imageIdToDelete
+    );
+
+    // 이미지를 제거한 후, 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
+    setServerDetailImages(updatedServerDetailImages);
   
+    // 이미지 삭제할 때 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
+    setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
+  };
+
   function calculateToggleHeight(options: Array<any>) {
     const minHeight = 100; // 최소 높이
     const optionHeight = 78; // 각 옵션 아이템의 높이
@@ -165,31 +180,36 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         const existingDetailImage = data?.detailImagesForAdmin?.[idx] || {
           detailImageId: 0,
         };
-      
+
         return {
           detailImageId: existingDetailImage.detailImageId || 0,
           detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
         };
       });
-      
+
       const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
-      
-      // 만약 선택한 상세 이미지가 없다면, 기존 이미지 정보를 서버로 다시 보냅니다.
+
       if (selectedDetailImages.length === 0) {
-        const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map((existingDetailImage) => ({
-          detailImageId: existingDetailImage.detailImageId || 0,
-          detailImgs: existingDetailImage.detailImgs || "undefined detail image",
-        }));
-      
+        const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
+          (existingDetailImage) => ({
+            detailImageId: existingDetailImage.detailImageId || 0,
+            detailImgs: existingDetailImage.detailImgs || "undefined detail image",
+          })
+        );
+
         productDetailImagesModifyRequest.push(...existingDetailImageRequests);
       }
 
+      const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
+        (detailImage) => !deletedImageIndexes.includes(detailImage.detailImageId)
+      );
+      
       const updatedData: ProductModify = {
         productId: parseInt(productId),
         productModifyRequest: productModifyRequestData,
         productOptionModifyRequest: useOptions,
         productMainImageModifyRequest: productMainImageModifyRequest,
-        productDetailImagesModifyRequest: productDetailImagesModifyRequest,
+        productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
         userToken: userToken || "",
       };
 
@@ -220,7 +240,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       // }
 
       await mutation.mutateAsync(updatedData);
-      console.log("확인", updatedData)
+      console.log("확인", updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId)]);
       navigate("/");
     }
@@ -378,9 +398,20 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                               height: "auto",
                               margin: "8px",
                               cursor: "pointer",
+                              position: "relative",
                             }}
-                            alt={`Selected ${idx}`}
-                          />
+                            alt={`Selected ${detailImage.detailImageId}`}
+                            />
+                          <RemoveCircleOutlineSharpIcon
+                            style={{
+                              position: "absolute",
+                              top: "5px",
+                              right: "5px",
+                              cursor: "pointer",
+                              zIndex: 1,
+                            }}
+                            onClick={(event) => handleDeleteDetailImage(event, detailImage.detailImageId)}
+                            />
                         </div>
                       ))
                     : null}
