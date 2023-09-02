@@ -97,9 +97,13 @@ const FarmRegister = () => {
 
   const mutation = useMutation(farmRegister, {
     onSuccess: (data) => {
-      queryClient.setQueryData("farm", data);
-      console.log("확인", data);
-      toast.success("등록되었습니다.");
+      if (typeof data === "boolean" && data === true) {
+        queryClient.setQueryData("farm", data);
+        console.log("확인", data);
+        toast.success("등록되었습니다.");
+      } else {
+        toast.error("등록이 불가능합니다.");
+      }
     },
   });
 

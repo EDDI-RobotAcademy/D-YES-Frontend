@@ -25,6 +25,7 @@ import FarmSearch from "./productOption/FarmSearch";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
+import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { toast } from "react-toastify";
 
 const ProductRegisterPage = () => {
@@ -71,7 +72,8 @@ const ProductRegisterPage = () => {
             return await compressImg(file);
           })
         );
-        setSelectedDetailImages(compressedImages);
+        const updatedImages = [...selectedDetailImages, ...compressedImages];
+        setSelectedDetailImages(updatedImages);
       } catch (error) {
         console.error(error);
       }
@@ -87,6 +89,14 @@ const ProductRegisterPage = () => {
     onDrop: onDetailImageDrop,
     maxFiles: 10,
   });
+
+  const handleRemoveDetailImage = (event: React.MouseEvent, index: number) => {
+    // 이미지를 삭제할 때 이미지 불러오기 방지
+    event.stopPropagation();
+    const updatedImages = [...selectedDetailImages];
+    updatedImages.splice(index, 1);
+    setSelectedDetailImages(updatedImages);
+  };
 
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
@@ -156,7 +166,7 @@ const ProductRegisterPage = () => {
       toast.error("상세 이미지를 추가해주세요.");
       return;
     }
-    
+
     if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
       toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
       return;
@@ -346,7 +356,6 @@ const ProductRegisterPage = () => {
                 </div>
               )}
             </div>
-
             <div className="text-field-label">상세 이미지*</div>
             <div
               style={{
@@ -363,17 +372,32 @@ const ProductRegisterPage = () => {
             >
               {selectedDetailImages.length > 0 ? (
                 selectedDetailImages.map((image, idx) => (
-                  <img
+                  <div
                     key={idx}
-                    src={URL.createObjectURL(image)}
                     style={{
                       width: "calc(33.33% - 16px)",
                       height: "auto",
                       margin: "8px",
                       cursor: "pointer",
+                      position: "relative", // 상대 위치 설정
                     }}
-                    alt={`Selected ${idx}`}
-                  />
+                  >
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt={`Selected ${idx}`}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                    <RemoveCircleOutlineSharpIcon
+                      style={{
+                        position: "absolute",
+                        top: "5px",
+                        right: "5px",
+                        cursor: "pointer",
+                        zIndex: 1,
+                      }}
+                      onClick={(event) => handleRemoveDetailImage(event, idx)}
+                    />
+                  </div>
                 ))
               ) : (
                 <div style={{ textAlign: "center", width: "100%" }}>
