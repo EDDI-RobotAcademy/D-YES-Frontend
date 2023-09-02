@@ -28,9 +28,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // url에서 userToken추출
     const urlSearchParams = new URLSearchParams(window.location.search);
     const userToken = urlSearchParams.get("userToken");
+    const encodedProfileImg = urlSearchParams.get("profileImg");
+    const encodedNickName = urlSearchParams.get("nickName");
 
-    if (userToken) {
+    if (encodedProfileImg && encodedNickName && userToken) {
+      const decodedProfileImg = decodeURIComponent(encodedProfileImg);
+      const decodedNickName = decodeURIComponent(encodedNickName);
+
       localStorage.setItem("userToken", userToken);
+      localStorage.setItem("encodedProfileImg", decodedProfileImg);
+      localStorage.setItem("encodedNickName", decodedNickName);
+
       setIsLoggedIn(true);
 
       // 로그인 성공 후 홈페이지로 리다이렉트
@@ -45,7 +53,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [checkAuthorization, saveTokenFromUrl]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, checkAuthorization, checkAdminAuthorization }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, setIsLoggedIn, checkAuthorization, checkAdminAuthorization }}
+    >
       {children}
     </AuthContext.Provider>
   );
