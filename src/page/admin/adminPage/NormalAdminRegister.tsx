@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { adminRegister } from "../api/AdminApi";
 import { Container, Box, Grid, TextField, Typography, Button } from "@mui/material";
 import "./css/AdminPage.css";
-import "./css/NormalAdminRegister.css"
+import "./css/NormalAdminRegister.css";
 import { toast } from "react-toastify";
 
 const NormalAdminRegister = () => {
@@ -51,10 +51,16 @@ const NormalAdminRegister = () => {
         >
           <div className="normal-admin-register-form">
             <Container maxWidth="xs">
-              <Typography gutterBottom sx={{ fontSize: "28px", fontFamily: "SUIT-ExtraBold", marginBottom: "0px"}}>
+              <Typography
+                gutterBottom
+                sx={{ fontSize: "28px", fontFamily: "SUIT-ExtraBold", marginBottom: "0px" }}
+              >
                 관리자 등록
               </Typography>
-              <Typography gutterBottom sx={{ fontSize: "14px", fontFamily: "SUIT-Light", paddingBottom: "20px"}}>
+              <Typography
+                gutterBottom
+                sx={{ fontSize: "14px", fontFamily: "SUIT-Light", paddingBottom: "20px" }}
+              >
                 관리자의 이름과 가입된 ID를 입력하세요
               </Typography>
               <form onSubmit={handleSubmit}>
@@ -69,9 +75,6 @@ const NormalAdminRegister = () => {
                         margin="normal"
                         className="custom-input"
                         InputLabelProps={{ shrink: true }}
-                        InputProps={{
-                          disableUnderline: true,
-                        }}
                       />
                     </div>
                   </Grid>
@@ -85,7 +88,6 @@ const NormalAdminRegister = () => {
                         margin="normal"
                         className="custom-input"
                         InputLabelProps={{ shrink: true }}
-                        InputProps={{ disableUnderline: true }}
                       />
                     </div>
                   </Grid>
@@ -96,9 +98,12 @@ const NormalAdminRegister = () => {
                       style={{ backgroundColor: "#252525", color: "white", height: "60px" }}
                       fullWidth
                     >
-                    <Typography gutterBottom sx={{ fontSize: "16px", fontFamily: "SUIT-Regular"}}>
-                      등록
-                    </Typography>
+                      <Typography
+                        gutterBottom
+                        sx={{ fontSize: "16px", fontFamily: "SUIT-Regular" }}
+                      >
+                        등록
+                      </Typography>
                     </Button>
                   </Grid>
                 </Grid>
