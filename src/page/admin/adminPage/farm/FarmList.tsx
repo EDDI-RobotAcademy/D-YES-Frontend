@@ -7,12 +7,17 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  IconButton,
 } from "@mui/material";
-import { getFarmList } from "page/admin/api/AdminApi";
+import { deleteFarm, getFarmList } from "page/admin/api/AdminApi";
 import { Farm } from "page/farm/entity/Farm";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     fetchFarmList();
@@ -25,6 +30,12 @@ const FarmList = () => {
     } catch (error) {
       console.error("농가 리스트 불러오기 실패:", error);
     }
+  };
+
+  const handleDeleteClick = async (farmId: string) => {
+    await deleteFarm(farmId || "");
+    queryClient.invalidateQueries("farmList");
+    console.log("확인", farmId);
   };
 
   return (
@@ -110,7 +121,7 @@ const FarmList = () => {
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "350px",
+                      width: "300px",
                       padding: "8px 16px",
                       textAlign: "center",
                       color: "#252525",
@@ -129,6 +140,17 @@ const FarmList = () => {
                     }}
                   >
                     농가 주소
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      width: "50px",
+                      padding: "18px 16px",
+                      textAlign: "center",
+                      color: "#252525",
+                      fontFamily: "SUIT-Medium",
+                    }}
+                  >
+                    삭제
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -150,6 +172,21 @@ const FarmList = () => {
                     >
                       {farm.farmAddress.address} {farm.farmAddress.addressDetail} (
                       {farm.farmAddress.zipCode})
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        padding: "8px 16px",
+                        textAlign: "center",
+                        fontFamily: "SUIT-Light",
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => handleDeleteClick(farm.farmId.toString())}
+                        color="default"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
