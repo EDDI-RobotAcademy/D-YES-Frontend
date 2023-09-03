@@ -77,10 +77,17 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       try {
         const compressedImages = await Promise.all(
           acceptedFiles.map(async (file) => {
-            return await compressImg(file);
+            return {
+              image: await compressImg(file),
+              detailImageId: 0,
+            };
           })
         );
-        setSelectedDetailImages((prevImages) => [...prevImages, ...compressedImages]);
+
+        setSelectedDetailImages((prevImages: File[]) => [
+          ...prevImages,
+          ...compressedImages.map((item) => item.image),
+        ]);
       } catch (error) {
         console.error(error);
       }
@@ -100,15 +107,23 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
     event.stopPropagation();
 
-      const updatedServerDetailImages = serverDetailImages.filter(
+    const updatedServerDetailImages = serverDetailImages.filter(
       (detailImage) => detailImage.detailImageId !== imageIdToDelete
     );
 
     // 이미지를 제거한 후, 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
     setServerDetailImages(updatedServerDetailImages);
-  
+
     // 이미지 삭제할 때 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
     setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
+  };
+
+  const handleRemoveDetailImage = (event: React.MouseEvent, index: number) => {
+    // 이미지를 삭제할 때 이미지 불러오기 방지
+    event.stopPropagation();
+    const updatedImages = [...selectedDetailImages];
+    updatedImages.splice(index, 1);
+    setSelectedDetailImages(updatedImages);
   };
 
   function calculateToggleHeight(options: Array<any>) {
@@ -177,19 +192,16 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       const detailImageUploadPromises = selectedDetailImages.map(async (image, idx) => {
         const detailFileToUpload = new File([image], image.name);
         const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
-        const existingDetailImage = data?.detailImagesForAdmin?.[idx] || {
-          detailImageId: 0,
-        };
 
         return {
-          detailImageId: existingDetailImage.detailImageId || 0,
+          detailImageId: 0,
           detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
         };
       });
 
       const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
 
-      if (selectedDetailImages.length === 0) {
+      if (selectedDetailImages.length === 0 || selectedDetailImages.length !== 0) {
         const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
           (existingDetailImage) => ({
             detailImageId: existingDetailImage.detailImageId || 0,
@@ -203,7 +215,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
         (detailImage) => !deletedImageIndexes.includes(detailImage.detailImageId)
       );
-      
+
       const updatedData: ProductModify = {
         productId: parseInt(productId),
         productModifyRequest: productModifyRequestData,
@@ -234,10 +246,12 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
         return;
       }
 
-      // if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
-      //   toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
-      //   return;
-      // }
+      const totalDetailImages = [...selectedDetailImages, ...(data?.detailImagesForAdmin || [])];
+
+      if (totalDetailImages.length < 6 || totalDetailImages.length > 10) {
+        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+        return;
+      }
 
       await mutation.mutateAsync(updatedData);
       console.log("확인", updatedData);
@@ -374,47 +388,66 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                   }}
                   {...detailImageRootProps()}
                 >
-                  {selectedDetailImages.length > 0
-                    ? selectedDetailImages.map((selectedImage, idx) => (
+                  {(selectedDetailImages.length > 0 || serverDetailImages.length > 0) &&
+                    selectedDetailImages.map((selectedImage, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          width: "calc(33.33% - 16px)",
+                          height: "auto",
+                          margin: "8px",
+                          cursor: "pointer",
+                          position: "relative",
+                        }}
+                      >
                         <img
-                          key={idx}
                           src={URL.createObjectURL(selectedImage)}
-                          style={{
-                            width: "calc(33.33% - 16px)",
-                            height: "auto",
-                            margin: "8px",
-                            cursor: "pointer",
-                          }}
+                          style={{ width: "100%", height: "100%" }}
                           alt={`Selected ${idx}`}
                         />
-                      ))
-                    : serverDetailImages.length > 0
-                    ? serverDetailImages.map((detailImage, idx) => (
-                        <div key={idx} style={{ position: "relative" }}>
-                          <img
-                            src={getImageUrl(detailImage.detailImgs)}
-                            style={{
-                              width: "calc(33.33% - 16px)",
-                              height: "auto",
-                              margin: "8px",
-                              cursor: "pointer",
-                              position: "relative",
-                            }}
-                            alt={`Selected ${detailImage.detailImageId}`}
-                            />
-                          <RemoveCircleOutlineSharpIcon
-                            style={{
-                              position: "absolute",
-                              top: "5px",
-                              right: "5px",
-                              cursor: "pointer",
-                              zIndex: 1,
-                            }}
-                            onClick={(event) => handleDeleteDetailImage(event, detailImage.detailImageId)}
-                            />
-                        </div>
-                      ))
-                    : null}
+                        <RemoveCircleOutlineSharpIcon
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            cursor: "pointer",
+                            zIndex: 1,
+                          }}
+                          onClick={(event) => handleRemoveDetailImage(event, idx)}
+                        />
+                      </div>
+                    ))}
+                  {serverDetailImages.length > 0 &&
+                    serverDetailImages.map((detailImage, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          width: "calc(33.33% - 16px)",
+                          height: "auto",
+                          margin: "8px",
+                          cursor: "pointer",
+                          position: "relative",
+                        }}
+                      >
+                        <img
+                          src={getImageUrl(detailImage.detailImgs)}
+                          style={{ width: "100%", height: "100%" }}
+                          alt={`Selected ${detailImage.detailImageId}`}
+                        />
+                        <RemoveCircleOutlineSharpIcon
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            cursor: "pointer",
+                            zIndex: 1,
+                          }}
+                          onClick={(event) =>
+                            handleDeleteDetailImage(event, detailImage.detailImageId)
+                          }
+                        />
+                      </div>
+                    ))}
                 </div>
               </ToggleComponent>
               {data.optionResponseForAdmin ? (
