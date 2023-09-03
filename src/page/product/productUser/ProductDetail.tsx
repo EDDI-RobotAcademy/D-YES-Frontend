@@ -16,6 +16,10 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { getProductDetail, useProductDetailQuery } from "../api/ProductApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";
+import { toast } from "react-toastify";
+import { sendCartContainRequest } from "page/cart/api/CartApi";
+import { Cart } from "page/cart/entity/Cart";
+import Swal from "sweetalert2";
 
 import "./css/ProductDetail.css";
 
@@ -56,6 +60,32 @@ const ProductDetailPage = () => {
 
   const handleIncreaseQuantity = () => {
     setProductQuantity(productQuantity + 1);
+  };
+
+  const addCart = async () => {
+    const requestData: Cart = {
+      productOptionId: selectedOption?.optionId!,
+      optionCount: productQuantity,
+    };
+    try {
+      await sendCartContainRequest(requestData);
+      Swal.fire({
+        title: "상품을 장바구니에 담았습니다",
+        text: "장바구니에서 상품을 확인하실 수 있어요",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "장바구니로 이동",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/cart");
+        }
+      });
+    } catch (error) {
+      toast.error("장바구니 추가 실패");
+    }
   };
 
   const mainImage: ImageObject = { id: 0, url: getImageUrl(data?.mainImage.mainImg!) };
@@ -188,6 +218,7 @@ const ProductDetailPage = () => {
                     style={{ fontFamily: "SUIT-Bold", fontSize: "large" }}
                     className="confirm-button"
                     variant="outlined"
+                    onClick={addCart}
                   >
                     장바구니에 담기
                   </Button>
