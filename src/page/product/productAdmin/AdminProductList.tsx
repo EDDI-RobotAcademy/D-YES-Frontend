@@ -15,8 +15,9 @@ import React, { useEffect, useState } from "react";
 import { deleteProducts, fetchProductList, useProductListQuery } from "../api/ProductApi";
 import useProductStore from "../store/ProductStore";
 import { useQueryClient } from "react-query";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import "./css/AdminProductList.css";
+import ReadPopup from "./productOption/ReadPopup";
 
 interface AdminProductListProps {
   setShowProductSection: React.Dispatch<React.SetStateAction<string>>;
@@ -28,6 +29,8 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const { data: products } = useProductListQuery();
   const queryClient = useQueryClient();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -64,6 +67,23 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
 
   const handleEditClick = (productId: number) => {
     setShowProductSection(`productModify/${productId}`);
+  };
+
+  const handleRowClick = (productId: number) => {
+    setSelectedProduct(productId);
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setSelectedProduct(null);
+    setIsPopupOpen(false);
+  };
+
+  const handleDeleteProduct = (productId: number) => {
+    if (products) {
+      const updatedProducts = products.filter((product) => product.productId !== productId);
+      setProducts(updatedProducts);
+    }
   };
 
   return (
@@ -148,7 +168,11 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
                 </TableRow>
               ) : (
                 products?.map((product, index) => (
-                  <TableRow key={index} style={{ cursor: "pointer" }}>
+                  <TableRow
+                    onClick={() => handleRowClick(product.productId)}
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                  >
                     <TableCell className="cellStyle">
                       <Checkbox
                         checked={selectedProducts.includes(product.productId)}
@@ -202,6 +226,9 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
                               key={index}
                               value={option.optionName}
                               style={{ fontFamily: "SUIT-Regular", fontSize: "14px" }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
                             >
                               {option.optionName}
                             </MenuItem>
@@ -253,6 +280,14 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
             삭제
           </Button>
         </TableContainer>
+        {isPopupOpen && selectedProduct && (
+          <ReadPopup
+            open={isPopupOpen}
+            productId={selectedProduct}
+            onClose={closePopup}
+            onDeleteProduct={handleDeleteProduct}
+          />
+        )}
       </div>
     </div>
   );
