@@ -1,39 +1,83 @@
-import Slider, { Settings } from "react-slick";
+import React, { Component } from "react";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import "./css/ProductCarousel.css";
-import { Image } from "./entity/Image";
-import { useEffect, useRef } from "react";
 
-interface CarouselProps {
-  images: Image[];
-  settings: Settings;
-  initialImageIndex?: number;
+interface ImageObject {
+  id: number;
+  url: string;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ images, settings, initialImageIndex }) => {
-  const sliderRef = useRef<Slider>(null);
+interface ProductCarouselProps {
+  images: ImageObject[];
+}
 
-  useEffect(() => {
-    if (sliderRef.current && initialImageIndex !== undefined) {
-      sliderRef.current.slickGoTo(initialImageIndex);
-    }
-  }, [initialImageIndex]);
+interface ProductCarouselState {
+  nav1: Slider | undefined;
+  nav2: Slider | undefined;
+}
 
-  return (
-    <div>
-      <Slider ref={sliderRef} className="product-slider" {...settings}>
-        {images.map((image) => {
-          return (
-            <div className="product-slide-container" key={image.id}>
-              <img className="product-slide-image" src={image.url} />
+export default class ProductCarousel extends Component<ProductCarouselProps, ProductCarouselState> {
+  private mainSlider: Slider | undefined = undefined;
+  private detailSlider: Slider | undefined = undefined;
+
+  constructor(props: ProductCarouselProps) {
+    super(props);
+    this.state = {
+      nav1: undefined,
+      nav2: undefined,
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      nav1: this.mainSlider,
+      nav2: this.detailSlider,
+    });
+  }
+
+  render() {
+    const { images } = this.props;
+
+    const mainImgSettings = {
+      asNavFor: this.state.nav2,
+      ref: (slider: Slider) => (this.mainSlider = slider),
+    };
+
+    const detailImgSettings = {
+      asNavFor: this.state.nav1,
+      ref: (slider: Slider) => (this.detailSlider = slider),
+      slidesToShow: 5,
+      focusOnSelect: true,
+      swipeToSlide: true,
+      centerMode: true,
+    };
+
+    return (
+      <div>
+        <Slider className="main-slider" {...mainImgSettings}>
+          {images.map((image) => (
+            <div key={image.id}>
+              <img className="product-slide-image" src={image.url} alt={`mainImage ${image.id}`} />
             </div>
-          );
-        })}
-      </Slider>
-    </div>
-  );
-};
-
-export default Carousel;
+          ))}
+        </Slider>
+        <Slider className="detail-slider" {...detailImgSettings}>
+          {images.map((image) => (
+            <div key={image.id}>
+              <div className="product-slide-image-margin">
+                <img
+                  className="product-slide-image"
+                  src={image.url}
+                  style={{ cursor: "pointer" }}
+                  alt={`detailImage ${image.id}`}
+                />
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
+    );
+  }
+}

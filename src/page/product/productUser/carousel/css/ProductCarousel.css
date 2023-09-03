@@ -8,13 +8,9 @@
   object-fit: cover;
 }
 
-.product-slide-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  width: 100%;
-  height: 100%;
+.product-slide-image-margin {
+  margin: 0 1px;
 }
+/* .detail-slider .slick-slide {
+  margin: 0 1px;
+} */
