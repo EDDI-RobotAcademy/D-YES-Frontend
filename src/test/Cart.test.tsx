@@ -99,4 +99,16 @@ it("장바구니 상품 목록", async () => {
       expect(CartApi.deleteCartItems).toHaveBeenCalledTimes(cartList.length);
     });
   });
+
+  (CartApi.deleteCartItems as jest.Mock).mockResolvedValue(true);
+
+  await act(async () => {
+    await waitFor(() => {
+      const deleteAllButton = screen.getByText("장바구니 비우기");
+      fireEvent.click(deleteAllButton);
+      for (const item of cartList) {
+        expect(CartApi.deleteCartItems).toHaveBeenCalledWith(item.optionId);
+      }
+    });
+  });
 });

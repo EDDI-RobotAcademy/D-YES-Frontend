@@ -147,12 +147,27 @@ export default function CartList() {
     }
   };
 
+  const deleteAllItems = async () => {
+    try {
+      for (const item of loadedItems) {
+        await deleteCartItems(item.optionId);
+      }
+      const updatedCartItems = await getCartItemList();
+      setLoadedItems(updatedCartItems);
+      setSelectedItems([]);
+
+      toast.success("장바구니를 비웠습니다");
+    } catch (error) {
+      toast.error("상품 삭제에 실패했습니다");
+    }
+  };
+
   return (
     <div className="cart-container">
       <div className="cart-grid">
         <div className="cart-page-name">장바구니</div>
         <hr />
-        {loadedItems && isLoading ? (
+        {loadedItems.length != 0 && isLoading ? (
           <div className="cart-components">
             <div>
               <div className="cart-controll">
@@ -168,7 +183,9 @@ export default function CartList() {
                   >
                     선택한 상품 삭제
                   </Button>
-                  <Button variant="contained">장바구니 비우기</Button>
+                  <Button onClick={deleteAllItems} variant="contained">
+                    장바구니 비우기
+                  </Button>
                 </div>
               </div>
               <TableContainer>
