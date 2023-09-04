@@ -132,6 +132,21 @@ export default function CartList() {
     }
   };
 
+  const deleteSelectedItems = async () => {
+    try {
+      for (const optionId of selectedItems) {
+        await deleteCartItems(optionId);
+      }
+      const updatedCartItems = await getCartItemList();
+      setLoadedItems(updatedCartItems);
+      setSelectedItems([]);
+
+      toast.success("선택한 상품이 삭제되었습니다");
+    } catch (error) {
+      toast.error("상품 삭제에 실패했습니다");
+    }
+  };
+
   return (
     <div className="cart-container">
       <div className="cart-grid">
@@ -146,7 +161,11 @@ export default function CartList() {
                   전체 선택
                 </div>
                 <div className="cart-delete-buttons">
-                  <Button variant="contained" disabled={selectedItems.length === 0}>
+                  <Button
+                    onClick={deleteSelectedItems}
+                    variant="contained"
+                    disabled={selectedItems.length === 0}
+                  >
                     선택한 상품 삭제
                   </Button>
                   <Button variant="contained">장바구니 비우기</Button>
@@ -159,6 +178,7 @@ export default function CartList() {
                       <TableRow key={item.optionId}>
                         <TableCell>
                           <input
+                            data-testid={`cart-select-test-id-${item.optionId}`}
                             type="checkbox"
                             // selectedItems 배열에 optionId 추가
                             checked={selectedItems.includes(item.optionId)}
