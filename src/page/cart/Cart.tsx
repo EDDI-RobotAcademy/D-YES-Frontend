@@ -91,6 +91,13 @@ export default function CartList() {
         ...prevQuantity,
         [optionId]: updatedOptionCount.changeProductCount,
       }));
+      const updatedItemPrice = loadedItems.map((item) => {
+        if (item.optionId === optionId) {
+          item.optionCount = updatedQuantity;
+        }
+        return item;
+      });
+      setLoadedItems(updatedItemPrice);
     } catch (error) {
       toast.error("수량 업데이트에 실패했습니다");
     }
@@ -119,7 +126,7 @@ export default function CartList() {
 
   const deleteItem = async (optionId: number) => {
     try {
-      await deleteCartItems(optionId);
+      await deleteCartItems([optionId]);
 
       const updatedCartItems = await getCartItemList();
       setLoadedItems(updatedCartItems);
@@ -132,9 +139,9 @@ export default function CartList() {
 
   const deleteSelectedItems = async () => {
     try {
-      for (const optionId of selectedItems) {
-        await deleteCartItems(optionId);
-      }
+      const selectedOptionIds: number[] = selectedItems.map((optionId) => optionId);
+      await deleteCartItems(selectedOptionIds);
+
       const updatedCartItems = await getCartItemList();
       setLoadedItems(updatedCartItems);
       setSelectedItems([]);
@@ -147,9 +154,9 @@ export default function CartList() {
 
   const deleteAllItems = async () => {
     try {
-      for (const item of loadedItems) {
-        await deleteCartItems(item.optionId);
-      }
+      const allOptionIds = loadedItems.map((item) => item.optionId);
+      await deleteCartItems(allOptionIds);
+
       const updatedCartItems = await getCartItemList();
       setLoadedItems(updatedCartItems);
       setSelectedItems([]);

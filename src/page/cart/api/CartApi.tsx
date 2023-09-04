@@ -35,11 +35,18 @@ export const changeCartItemCount = async (requestData: Cart) => {
 };
 
 // 장바구니 상품 삭제
-export const deleteCartItems = async (optionId: number) => {
-  const data = {
-    userToken: userToken,
-    productOptionId: optionId,
-  };
-  await axiosInstance.springAxiosInst.delete("/cart/delete", { data: data });
-  console.log("상품 삭제요청 전송 성공");
+export const deleteCartItems = async (optionIds: number[]) => {
+  try {
+    const requestData = optionIds.map((optionId) => ({
+      userToken: userToken,
+      productOptionId: optionId,
+    }));
+
+    await axiosInstance.springAxiosInst.delete("/cart/delete", {
+      data: requestData,
+    });
+    console.log("장바구니 상품 삭제 요청 성공");
+  } catch (error) {
+    console.error("상품 삭제 요청 실패", error);
+  }
 };

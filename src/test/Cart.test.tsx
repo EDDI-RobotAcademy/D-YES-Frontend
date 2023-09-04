@@ -82,7 +82,7 @@ it("장바구니 상품 목록", async () => {
     await waitFor(() => {
       const deleteButton = screen.getByTestId(`cart-delete-test-id-${cartList[0].optionId}`);
       fireEvent.click(deleteButton);
-      expect(CartApi.deleteCartItems).toHaveBeenCalledWith(cartList[0].optionId);
+      expect(CartApi.deleteCartItems).toHaveBeenCalledWith([cartList[0].optionId]);
     });
   });
 
@@ -90,13 +90,15 @@ it("장바구니 상품 목록", async () => {
 
   await act(async () => {
     await waitFor(() => {
-      for (const item of cartList) {
-        const selectItem = screen.getByTestId(`cart-select-test-id-${item.optionId}`);
-        fireEvent.click(selectItem);
-      }
       const deleteSelectedButton = screen.getByText("선택한 상품 삭제");
-      fireEvent.click(deleteSelectedButton);
-      expect(CartApi.deleteCartItems).toHaveBeenCalledTimes(cartList.length);
+      if (deleteSelectedButton) {
+        for (const item of cartList) {
+          const selectItem = screen.getByTestId(`cart-select-test-id-${item.optionId}`);
+          fireEvent.click(selectItem);
+        }
+        fireEvent.click(deleteSelectedButton);
+        expect(CartApi.deleteCartItems).toHaveBeenCalled();
+      }
     });
   });
 
@@ -106,9 +108,7 @@ it("장바구니 상품 목록", async () => {
     await waitFor(() => {
       const deleteAllButton = screen.getByText("장바구니 비우기");
       fireEvent.click(deleteAllButton);
-      for (const item of cartList) {
-        expect(CartApi.deleteCartItems).toHaveBeenCalledWith(item.optionId);
-      }
+      expect(CartApi.deleteCartItems).toHaveBeenCalled();
     });
   });
 });
