@@ -4,6 +4,7 @@ export interface CartItems {
   productName: string;
   optionPrice: number;
   optionCount: number;
+  optionStock: number;
   value: string;
   unit: string;
 }

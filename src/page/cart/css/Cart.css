@@ -29,6 +29,22 @@
   display: flex;
   gap: 4px;
 }
+.cart-counter-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-content: flex-end;
+  width: 80px;
+}
+.cart-counter-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.2rem;
+  background-color: aliceblue;
+  cursor: pointer;
+}
 .cart-empty-container {
   display: flex;
   justify-content: center;
