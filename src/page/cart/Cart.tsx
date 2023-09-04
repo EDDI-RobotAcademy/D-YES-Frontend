@@ -86,12 +86,10 @@ export default function CartList() {
       optionCount: updatedQuantity,
     };
     try {
-      await changeCartItemCount(requestData);
-      const updatedCartItems = await getCartItemList();
-      setLoadedItems(updatedCartItems);
+      const updatedOptionCount = await changeCartItemCount(requestData);
       setQuantity((prevQuantity) => ({
         ...prevQuantity,
-        [optionId]: updatedQuantity,
+        [optionId]: updatedOptionCount.changeProductCount,
       }));
     } catch (error) {
       toast.error("수량 업데이트에 실패했습니다");

@@ -29,8 +29,9 @@ export const changeCartItemCount = async (requestData: Cart) => {
     userToken: userToken,
     request: requestData,
   };
-  await axiosInstance.springAxiosInst.put("/cart/change", data);
-  console.log("장바구니에 데이터 전송 성공");
+  const response = await axiosInstance.springAxiosInst.put("/cart/change", data);
+  console.log("장바구니에 데이터 전송 성공", response.data);
+  return response.data;
 };
 
 // 장바구니 상품 삭제
