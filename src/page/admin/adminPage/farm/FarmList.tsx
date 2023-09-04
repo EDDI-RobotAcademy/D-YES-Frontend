@@ -14,6 +14,7 @@ import { Farm } from "page/farm/entity/Farm";
 import { useQueryClient } from "react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
+import { fetchProductList } from "page/product/api/ProductApi";
 
 const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
@@ -33,25 +34,41 @@ const FarmList = () => {
   };
 
   const handleDeleteClick = async (farmId: string) => {
-    const result = await Swal.fire({
-      title: "삭제하시겠습니까?",
-      text: "삭제하면 복구할 수 없습니다.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "예, 삭제합니다",
-    });
+    try {
+      const farmList = await getFarmList();
+      const farm = farmList.find((farm: Farm) => farm.farmId.toString() === farmId);
 
-    if (result.isConfirmed) {
-      try {
-        await deleteFarm(farmId || "");
-        queryClient.invalidateQueries("farmList");
+      if (farm) {
+        const products = await fetchProductList();
+        const hasRelatedProducts = products.some((product) => product.farmName === farm.farmName);
 
-        Swal.fire("삭제되었습니다!", "항목이 삭제되었습니다.", "success");
-      } catch (error) {
-        Swal.fire("오류!", "삭제 작업을 수행하는 중 오류가 발생했습니다.", "error");
+        if (hasRelatedProducts) {
+          Swal.fire("경고", "농가에 등록된 상품이 있으므로 삭제할 수 없습니다.", "warning");
+        } else {
+          const result = await Swal.fire({
+            title: "삭제하시겠습니까?",
+            text: "삭제하면 복구할 수 없습니다.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "예, 삭제합니다",
+          });
+
+          if (result.isConfirmed) {
+            await deleteFarm(farmId);
+            queryClient.invalidateQueries("farmList");
+            await fetchFarmList();
+
+            Swal.fire("삭제되었습니다!", "항목이 삭제되었습니다.", "success");
+          }
+        }
+      } else {
+        Swal.fire("오류!", "해당 농가를 찾을 수 없습니다.", "error");
       }
+    } catch (error) {
+      console.error("데이터 불러오기 실패:", error);
+      Swal.fire("오류!", "데이터를 불러오는 중 오류가 발생했습니다.", "error");
     }
   };
 
