@@ -10,6 +10,7 @@ import { act } from "react-dom/test-utils";
 jest.mock("page/cart/api/CartApi", () => ({
   getCartItemList: jest.fn(),
   changeCartItemCount: jest.fn(),
+  deleteCartItems: jest.fn(),
 }));
 
 it("장바구니 상품 목록", async () => {
@@ -63,6 +64,16 @@ it("장바구니 상품 목록", async () => {
           optionCount: 4,
         })
       );
+    });
+  });
+
+  (CartApi.deleteCartItems as jest.Mock).mockResolvedValue(true);
+
+  await act(async () => {
+    await waitFor(() => {
+      const deleteButton = screen.getByTestId(`cart-delete-test-id-${cartList[0].optionId}`);
+      fireEvent.click(deleteButton);
+      expect(CartApi.deleteCartItems).toHaveBeenCalledWith(cartList[0].optionId);
     });
   });
 });

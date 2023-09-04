@@ -32,3 +32,13 @@ export const changeCartItemCount = async (requestData: Cart) => {
   await axiosInstance.springAxiosInst.put("/cart/change", data);
   console.log("장바구니에 데이터 전송 성공");
 };
+
+// 장바구니 상품 삭제
+export const deleteCartItems = async (optionId: number) => {
+  const data = {
+    userToken: userToken,
+    productOptionId: optionId,
+  };
+  await axiosInstance.springAxiosInst.delete("/cart/delete", { data: data });
+  console.log("상품 삭제요청 전송 성공");
+};

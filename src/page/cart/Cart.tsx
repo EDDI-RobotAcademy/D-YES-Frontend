@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { changeCartItemCount, getCartItemList } from "./api/CartApi";
+import { changeCartItemCount, deleteCartItems, getCartItemList } from "./api/CartApi";
 import { toast } from "react-toastify";
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { CartItems } from "./entity/CartItems";
@@ -119,6 +119,19 @@ export default function CartList() {
     }
   };
 
+  const deleteItem = async (optionId: number) => {
+    try {
+      await deleteCartItems(optionId);
+
+      const updatedCartItems = await getCartItemList();
+      setLoadedItems(updatedCartItems);
+
+      toast.success("상품이 장바구니에서 삭제되었습니다");
+    } catch (error) {
+      toast.error("상품 삭제에 실패했습니다");
+    }
+  };
+
   return (
     <div className="cart-container">
       <div className="cart-grid">
@@ -190,7 +203,10 @@ export default function CartList() {
                         <TableCell>{won(item.optionPrice * item.optionCount)}</TableCell>
                         <TableCell>
                           <Tooltip title="삭제">
-                            <IconButton>
+                            <IconButton
+                              data-testid={`cart-delete-test-id-${item.optionId}`}
+                              onClick={() => deleteItem(item.optionId)}
+                            >
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
