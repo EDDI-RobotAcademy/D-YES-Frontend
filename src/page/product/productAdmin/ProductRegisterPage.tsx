@@ -27,6 +27,7 @@ import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { toast } from "react-toastify";
+import TextQuill from "utility/quill/TextQuill";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ const ProductRegisterPage = () => {
   const [selectedFarm, setSelectedFarm] = useState<null | Farm>(null);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
+  const [productDescription, setProductDescription] = useState("");
 
   const handleOpenFarmSearch = () => {
     setOpenFarmSearch(true);
@@ -125,15 +127,15 @@ const ProductRegisterPage = () => {
       };
     };
 
-    const { productName, productDescription, cultivationMethod, farmName } = target.elements;
+    const { productName, cultivationMethod, farmName } = target.elements;
 
-    if (
-      !productName.value ||
-      !productDescription.value ||
-      !cultivationMethod.value ||
-      !farmName.value
-    ) {
+    if (!productName.value || !cultivationMethod.value || !farmName.value) {
       toast.success("필수 입력 항목을 모두 채워주세요.");
+      return;
+    }
+
+    if (!productDescription) {
+      toast.success("상세정보를 입력해주세요."); // 상세정보가 비어 있을 때 메시지를 변경
       return;
     }
 
@@ -207,7 +209,7 @@ const ProductRegisterPage = () => {
 
     const productRegisterRequest: Partial<Product> = {
       productName: productName.value,
-      productDescription: productDescription.value,
+      productDescription: productDescription,
       cultivationMethod: cultivationMethod.value,
     };
 
@@ -423,17 +425,19 @@ const ProductRegisterPage = () => {
               <OptionInput onAddOption={handleAddOption} />
             </Box>
           </ToggleComponent>
-          <ToggleComponent label="상세정보" height={300}>
-            <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
-              <div className="text-field-label" aria-label="상세정보*">
-                상세정보*
-              </div>
-              <TextField
+          <ToggleComponent label="상세정보" height={500}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              gap={2}
+              aria-label="상세정보*"
+            >
+              <TextQuill
                 name="productDescription"
-                className="text-field-input"
-                multiline
-                minRows={10}
-                maxRows={20}
+                value={productDescription}
+                setValue={setProductDescription}
+                isDisable={false}
               />
             </Box>
           </ToggleComponent>
@@ -443,5 +447,4 @@ const ProductRegisterPage = () => {
     </Container>
   );
 };
-
 export default ProductRegisterPage;
