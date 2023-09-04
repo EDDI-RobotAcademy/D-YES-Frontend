@@ -1,0 +1,79 @@
+.cart-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.cart-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.cart-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.cart-controll {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 16px;
+}
+.cart-select-all {
+  display: flex;
+  align-items: center;
+}
+.cart-delete-buttons {
+  display: flex;
+  gap: 4px;
+}
+.cart-empty-container {
+  display: flex;
+  justify-content: center;
+  min-height: 50vh;
+  align-items: center;
+}
+.cart-empty {
+  font-family: "SUIT-Bold";
+  font-size: x-large;
+  margin-bottom: 16px;
+}
+.cart-empty-button {
+  display: flex;
+  justify-content: center;
+}
+.cart-components {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.cart-info {
+  margin-top: 5vh;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+}
+.cart-price-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.cart-total-price {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+}
+.cart-payment {
+  display: flex;
+  justify-content: center;
+}
+.cart-payment-button {
+  width: 100%;
+  font-size: large;
+}
+.hr1 {
+  border: 0;
+  height: 1px;
+  background: #ccc;
+}
