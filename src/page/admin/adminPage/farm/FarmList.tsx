@@ -12,8 +12,8 @@ import {
 import { deleteFarm, getFarmList } from "page/admin/api/AdminApi";
 import { Farm } from "page/farm/entity/Farm";
 import { useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
 
 const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
@@ -33,9 +33,26 @@ const FarmList = () => {
   };
 
   const handleDeleteClick = async (farmId: string) => {
-    await deleteFarm(farmId || "");
-    queryClient.invalidateQueries("farmList");
-    console.log("확인", farmId);
+    const result = await Swal.fire({
+      title: "삭제하시겠습니까?",
+      text: "삭제하면 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "예, 삭제합니다",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteFarm(farmId || "");
+        queryClient.invalidateQueries("farmList");
+
+        Swal.fire("삭제되었습니다!", "항목이 삭제되었습니다.", "success");
+      } catch (error) {
+        Swal.fire("오류!", "삭제 작업을 수행하는 중 오류가 발생했습니다.", "error");
+      }
+    }
   };
 
   return (
