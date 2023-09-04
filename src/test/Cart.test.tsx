@@ -1,5 +1,5 @@
 import React from "react";
-import { render, waitFor, screen } from "@testing-library/react";
+import { render, waitFor, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
@@ -9,6 +9,7 @@ import { act } from "react-dom/test-utils";
 
 jest.mock("page/cart/api/CartApi", () => ({
   getCartItemList: jest.fn(),
+  changeCartItemCount: jest.fn(),
 }));
 
 it("장바구니 상품 목록", async () => {
@@ -17,42 +18,6 @@ it("장바구니 상품 목록", async () => {
       optionId: 1,
       productMainImage: "sampleImg1.jpg",
       productName: "장바구니 테스트1",
-      optionPrice: 1000000,
-      optionCount: 5,
-      value: "10",
-      unit: "KG",
-    },
-    {
-      optionId: 2,
-      productMainImage: "sampleImg2.jpg",
-      productName: "장바구니 테스트2",
-      optionPrice: 1000000,
-      optionCount: 5,
-      value: "10",
-      unit: "KG",
-    },
-    {
-      optionId: 5,
-      productMainImage: "sampleImg3.jpg",
-      productName: "장바구니 테스트3",
-      optionPrice: 1000000,
-      optionCount: 5,
-      value: "10",
-      unit: "KG",
-    },
-    {
-      optionId: 142,
-      productMainImage: "sampleImg4.jpg",
-      productName: "장바구니 테스트4",
-      optionPrice: 1000000,
-      optionCount: 5,
-      value: "10",
-      unit: "KG",
-    },
-    {
-      optionId: 32,
-      productMainImage: "sampleImg5.jpg",
-      productName: "장바구니 테스트5",
       optionPrice: 1000000,
       optionCount: 5,
       value: "10",
@@ -74,6 +39,30 @@ it("장바구니 상품 목록", async () => {
     await waitFor(() => {
       const testElement = screen.getByText("장바구니");
       expect(testElement).toBeInTheDocument();
+    });
+  });
+
+  (CartApi.changeCartItemCount as jest.Mock).mockResolvedValue(cartList);
+
+  await act(async () => {
+    await waitFor(() => {
+      const increaseButton = screen.getByTestId(`cart-increase-test-id-${cartList[0].optionId}`);
+      fireEvent.click(increaseButton);
+      expect(CartApi.changeCartItemCount).toHaveBeenCalledWith(
+        expect.objectContaining({
+          productOptionId: 1,
+          optionCount: 6,
+        })
+      );
+
+      const decreaseButton = screen.getByTestId(`cart-decrease-test-id-${cartList[0].optionId}`);
+      fireEvent.click(decreaseButton);
+      expect(CartApi.changeCartItemCount).toHaveBeenCalledWith(
+        expect.objectContaining({
+          productOptionId: 1,
+          optionCount: 4,
+        })
+      );
     });
   });
 });

@@ -22,3 +22,13 @@ export const getCartItemList = async () => {
   console.log("장바구니 리스트 데이터", response.data);
   return response.data;
 };
+
+// 장바구니 상품 수량 조절
+export const changeCartItemCount = async (requestData: Cart) => {
+  const data = {
+    userToken: userToken,
+    request: requestData,
+  };
+  await axiosInstance.springAxiosInst.put("/cart/change", data);
+  console.log("장바구니에 데이터 전송 성공");
+};

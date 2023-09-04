@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCartItemList } from "./api/CartApi";
+import { changeCartItemCount, getCartItemList } from "./api/CartApi";
 import { toast } from "react-toastify";
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { CartItems } from "./entity/CartItems";
+import { Cart } from "./entity/Cart";
 import { won } from "utility/filters/wonFilter";
 import { getImageUrl } from "utility/s3/awsS3";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -15,10 +18,26 @@ import "./css/Cart.css";
 export default function CartList() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadedItems, setLoadedItems] = useState<CartItems[]>([]);
+  const [quantity, setQuantity] = useState<{ [key: number]: number }>(() => {
+    const productCount: { [key: number]: number } = {};
+    loadedItems.forEach((item) => {
+      productCount[item.optionId] = item.optionCount;
+    });
+    return productCount;
+  });
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
+
+  const calculateTotalPrice = useCallback(() => {
+    let totalPrice = 0;
+    for (const item of loadedItems) {
+      const itemQuantity = quantity[item.optionId] || item.optionCount;
+      totalPrice += item.optionPrice * itemQuantity;
+    }
+    return totalPrice;
+  }, [loadedItems, quantity]);
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -33,11 +52,50 @@ export default function CartList() {
     fetchCartData();
   }, []);
 
+  useEffect(() => {
+    const calculatedTotalPrice = calculateTotalPrice();
+    setTotalPrice(calculatedTotalPrice);
+  }, [calculateTotalPrice]);
+
   let discount = 0;
   let deliveryFee = 0;
 
   const showProductDetail = (optionId: number) => {
     navigate(`/productDetail/${optionId}`);
+  };
+
+  const increaseQuantity = async (optionId: number) => {
+    const item = loadedItems.find((item) => item.optionId === optionId);
+    if (item) {
+      const updatedQuantity = (quantity[optionId] || item.optionCount) + 1;
+      updateQuantity(optionId, updatedQuantity);
+    }
+  };
+
+  const decreaseQuantity = async (optionId: number) => {
+    const item = loadedItems.find((item) => item.optionId === optionId);
+    if (item && quantity[optionId] != 1) {
+      const updatedQuantity = (quantity[optionId] || item.optionCount) - 1;
+      updateQuantity(optionId, updatedQuantity);
+    }
+  };
+
+  const updateQuantity = async (optionId: number, updatedQuantity: number) => {
+    const requestData: Cart = {
+      productOptionId: optionId,
+      optionCount: updatedQuantity,
+    };
+    try {
+      await changeCartItemCount(requestData);
+      const updatedCartItems = await getCartItemList();
+      setLoadedItems(updatedCartItems);
+      setQuantity((prevQuantity) => ({
+        ...prevQuantity,
+        [optionId]: updatedQuantity,
+      }));
+    } catch (error) {
+      toast.error("수량 업데이트에 실패했습니다");
+    }
   };
 
   const selectAllItems = () => {
@@ -66,7 +124,7 @@ export default function CartList() {
       <div className="cart-grid">
         <div className="cart-page-name">장바구니</div>
         <hr />
-        {loadedItems.length && isLoading ? (
+        {loadedItems && isLoading ? (
           <div className="cart-components">
             <div>
               <div className="cart-controll">
@@ -111,9 +169,23 @@ export default function CartList() {
                           {item.unit}
                         </TableCell>
                         <TableCell>
-                          <Button>-</Button>
-                          {item.optionCount}
-                          <Button>+</Button>
+                          <div className="cart-counter-buttons">
+                            <div
+                              data-testid={`cart-decrease-test-id-${item.optionId}`}
+                              className="cart-counter-button"
+                              onClick={() => decreaseQuantity(item.optionId)}
+                            >
+                              <RemoveIcon />
+                            </div>
+                            {quantity[item.optionId] || item.optionCount}
+                            <div
+                              data-testid={`cart-increase-test-id-${item.optionId}`}
+                              className="cart-counter-button"
+                              onClick={() => increaseQuantity(item.optionId)}
+                            >
+                              <AddIcon />
+                            </div>
+                          </div>
                         </TableCell>
                         <TableCell>{won(item.optionPrice * item.optionCount)}</TableCell>
                         <TableCell>
