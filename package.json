@@ -26,6 +26,7 @@
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.45.4",
     "react-query": "^3.39.3",
+    "react-quill": "^2.0.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
     "react-sweetalert2": "^0.6.0",

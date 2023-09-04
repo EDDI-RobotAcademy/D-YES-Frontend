@@ -16,6 +16,7 @@ import { ProductImg } from "../entity/ProductMainImg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ProductDetailImg } from "../entity/ProductDetailImg";
+import TextQuill from "utility/quill/TextQuill";
 
 const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const navigate = useNavigate();
@@ -467,19 +468,19 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                   </Box>
                 </ToggleComponent>
               ) : null}
-              <ToggleComponent label="상세정보" height={300}>
-                <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
-                  <div className="text-field-label" aria-label="상세정보">
-                    상세정보
-                  </div>
-                  <TextField
+              <ToggleComponent label="상세정보" height={500}>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  alignItems="center"
+                  gap={2}
+                  aria-label="상세정보"
+                >
+                  <TextQuill
                     name="productDescription"
-                    className="text-field-input"
-                    multiline
-                    minRows={10}
-                    maxRows={20}
                     value={productDescription}
-                    onChange={(e) => setProductDescription(e.target.value)}
+                    setValue={setProductDescription}
+                    isDisable={false}
                   />
                 </Box>
               </ToggleComponent>
