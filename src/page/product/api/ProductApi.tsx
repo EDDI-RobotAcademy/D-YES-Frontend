@@ -140,3 +140,10 @@ export const useProductDetailQuery = (
 ): UseQueryResult<ProductDetail | null, unknown> => {
   return useQuery(["productRead", productId], () => getProductDetail(productId));
 };
+
+// 상품 삭제
+export const deleteProduct = async (productId: string): Promise<void> => {
+  await axiosInstance.springAxiosInst.delete("product/delete", {
+    data: { productId, userToken: localStorage.getItem("userToken") },
+  });
+};
