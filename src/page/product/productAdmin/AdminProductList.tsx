@@ -177,6 +177,9 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
                       <Checkbox
                         checked={selectedProducts.includes(product.productId)}
                         onChange={() => handleCheckboxChange(product.productId)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                       />
                     </TableCell>
                     <TableCell className="cellStyle">
