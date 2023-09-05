@@ -6,10 +6,10 @@ import "./css/Carousel.css";
 import { Image } from "./entity/Image";
 
 const images: Image[] = [
-  { id: 1, url: "img/sampleImg1.jpg" },
+  { id: 1, url: "img/sampleImg4.jpg" },
   { id: 2, url: "img/sampleImg2.jpg" },
   { id: 3, url: "img/sampleImg3.jpg" },
-  { id: 4, url: "img/sampleImg4.jpg" },
+  { id: 4, url: "img/sampleImg1.jpg" },
   { id: 5, url: "img/sampleImg5.jpg" },
 ];
 
@@ -32,16 +32,62 @@ const Carousel: React.FC = () => {
           return (
             <div className="slide-container" key={image.id}>
             <img className="slide-image" src={image.url} />
-            {image.id === 1 ? (
-              <p className="text-uo">
-                Seize Your Shopping Choices<br />
-                Discover Today, Twoweeks!
-              </p>
-            ) : (
-              <p>
-              </p>
-            )}
-          </div>
+              {image.id === 1 && (
+              <div>
+                <p className="text-common-img">
+                  지금 바로 수확한 토마토<br></br>
+                  맛있누 냠냠
+                </p>
+                <p className="text-common-detail">
+                  토마토마 특가 이벤트 2023.09.18까지
+                </p>
+              </div>
+              )}
+              {image.id === 2 && (
+                <div>
+                  <p className="text-common-img">
+                    두번째 이미지에 대한 내용<br></br>
+                    두번째
+                  </p>
+                  <p className="text-common-detail">
+                    두번째 특가 이벤트 2023.09.18까지
+                  </p>
+                </div>
+              )}
+              {image.id === 3 && (
+                <div>
+                  <p className="text-common-img">
+                    세번째 이미지에 대한 내용<br></br>
+                    세번째
+                  </p>
+                  <p className="text-common-detail">
+                    세번째 특가 이벤트 2023.09.18까지
+                  </p>
+                </div>
+              )}
+              {image.id === 4 && (
+                <div>
+                  <p className="text-common-img">
+                    네번째 이미지에 대한 내용<br></br>
+                    네번째
+                  </p>
+                  <p className="text-common-detail">
+                    네번째 특가 이벤트 2023.09.18까지
+                  </p>
+                </div>
+              )}
+              {image.id === 5 && (
+                <div>
+                  <p className="text-common-img">
+                    다섯번째 이미지에 대한 내용<br></br>
+                    다섯번째
+                  </p>
+                  <p className="text-common-detail">
+                    다섯번째 특가 이벤트 2023.09.18까지
+                  </p>
+                </div>
+              )}
+            </div>
           );
         })}
       </Slider>
