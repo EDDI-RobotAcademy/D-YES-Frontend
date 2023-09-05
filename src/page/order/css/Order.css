@@ -1,0 +1,99 @@
+.order-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.order-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.order-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.order-components {
+  display: flex;
+  justify-content: space-between;
+}
+.order-list {
+  min-width: 350px;
+  width: 600px;
+}
+.order-product-info-container,
+.order-user-info-container {
+  padding: 6px 16px;
+  margin: 0 10px;
+}
+.order-detail-container {
+  display: flex;
+}
+.order-info-title {
+  font-family: "SUIT-ExtraBold";
+  font-size: large;
+  margin: 20px 30px 10px 30px;
+}
+.order-product-image {
+  display: flex;
+}
+.order-info-container {
+  margin: 0 20px;
+}
+.order-product-name {
+  font-family: "SUIT-Bold";
+}
+.order-product-count {
+  font-family: "SUIT-Light";
+}
+.order-product-price {
+  font-family: "SUIT-Bold";
+}
+.order-info {
+  min-width: 400px;
+}
+.order-price-info-container {
+  margin-top: 5vh;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.order-price-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.order-total-price {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+}
+.order-payment {
+  display: flex;
+  justify-content: center;
+}
+.order-payment-button {
+  width: 100%;
+  font-size: large;
+}
+.order-checkbox {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
+  font-size: small;
+}
+.margin-1 {
+  margin: 10px 0;
+}
+.br-2 {
+  margin: 30px 0;
+}
+.asterisk {
+  color: orangered;
+}

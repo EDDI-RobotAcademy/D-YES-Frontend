@@ -63,9 +63,9 @@ export default function CartList() {
   let deliveryFee = 0;
 
   const showProductDetail = (optionId: number) => {
-    if(optionId === 0) {
-      alert("존재하지 않는 상품입니다.")
-      navigate('/productList');
+    if (optionId === 0) {
+      alert("존재하지 않는 상품입니다.");
+      navigate("/productList");
     } else {
       navigate(`/productDetail/${optionId}`);
     }
@@ -174,6 +174,10 @@ export default function CartList() {
     }
   };
 
+  const goToOrderPage = () => {
+    navigate("/order");
+  };
+
   return (
     <div className="cart-container">
       <div className="cart-grid">
@@ -205,63 +209,63 @@ export default function CartList() {
                   <TableBody>
                     {loadedItems.map((item) => (
                       <TableRow key={item.optionId}>
-                          <>
-                            <TableCell>
-                              <input
-                                data-testid={`cart-select-test-id-${item.optionId}`}
-                                type="checkbox"
-                                // selectedItems 배열에 optionId 추가
-                                checked={selectedItems.includes(item.optionId)}
-                                onChange={() => itemSelection(item.optionId)}
-                              />
-                            </TableCell>
-                            <TableCell
-                              style={{ cursor: "pointer" }}
-                              onClick={() => showProductDetail(item.optionId)}
-                            >
-                              <img
-                                src={getImageUrl(item.productMainImage)}
-                                style={{ width: "100px", height: "100px" }}
-                              />
-                            </TableCell>
-                            <TableCell
-                              style={{ cursor: "pointer" }}
-                              onClick={() => showProductDetail(item.optionId)}
-                            >
-                              {item.productName}&nbsp;<br></br>
-                              {item.optionName}
-                            </TableCell>
-                            <TableCell>
-                              <div className="cart-counter-buttons">
-                                <div
-                                  data-testid={`cart-decrease-test-id-${item.optionId}`}
-                                  className="cart-counter-button"
-                                  onClick={() => decreaseQuantity(item.optionId)}
-                                >
-                                  <RemoveIcon />
-                                </div>
-                                {quantity[item.optionId] || item.optionCount}
-                                <div
-                                  data-testid={`cart-increase-test-id-${item.optionId}`}
-                                  className="cart-counter-button"
-                                  onClick={() => increaseQuantity(item.optionId)}
-                                >
-                                  <AddIcon />
-                                </div>
+                        <>
+                          <TableCell>
+                            <input
+                              data-testid={`cart-select-test-id-${item.optionId}`}
+                              type="checkbox"
+                              // selectedItems 배열에 optionId 추가
+                              checked={selectedItems.includes(item.optionId)}
+                              onChange={() => itemSelection(item.optionId)}
+                            />
+                          </TableCell>
+                          <TableCell
+                            style={{ cursor: "pointer" }}
+                            onClick={() => showProductDetail(item.optionId)}
+                          >
+                            <img
+                              src={getImageUrl(item.productMainImage)}
+                              style={{ width: "100px", height: "100px" }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            style={{ cursor: "pointer" }}
+                            onClick={() => showProductDetail(item.optionId)}
+                          >
+                            {item.productName}&nbsp;<br></br>
+                            {item.optionName}
+                          </TableCell>
+                          <TableCell>
+                            <div className="cart-counter-buttons">
+                              <div
+                                data-testid={`cart-decrease-test-id-${item.optionId}`}
+                                className="cart-counter-button"
+                                onClick={() => decreaseQuantity(item.optionId)}
+                              >
+                                <RemoveIcon />
                               </div>
-                            </TableCell>
-                            <TableCell>{won(item.optionPrice * item.optionCount)}</TableCell>
-                            <TableCell>
-                              <Tooltip title="삭제">
-                                <IconButton
-                                  data-testid={`cart-delete-test-id-${item.optionId}`}
-                                  onClick={() => deleteItem(item.optionId)}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </TableCell>
-                          </>
+                              {quantity[item.optionId] || item.optionCount}
+                              <div
+                                data-testid={`cart-increase-test-id-${item.optionId}`}
+                                className="cart-counter-button"
+                                onClick={() => increaseQuantity(item.optionId)}
+                              >
+                                <AddIcon />
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>{won(item.optionPrice * item.optionCount)}</TableCell>
+                          <TableCell>
+                            <Tooltip title="삭제">
+                              <IconButton
+                                data-testid={`cart-delete-test-id-${item.optionId}`}
+                                onClick={() => deleteItem(item.optionId)}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -288,8 +292,8 @@ export default function CartList() {
               </div>
               <br />
               <div className="cart-payment">
-                <Button className="cart-payment-button" variant="outlined">
-                  결제하기
+                <Button className="cart-payment-button" variant="outlined" onClick={goToOrderPage}>
+                  주문하기
                 </Button>
               </div>
             </div>

@@ -22,6 +22,7 @@ import AdminProductModifyPage from "page/product/productAdmin/AdminProductModify
 import ProductDetailPage from "page/product/productUser/ProductDetail";
 import Cart from "page/cart/Cart";
 import { createTheme, ThemeProvider } from "@mui/material";
+import Order from "page/order/Order";
 
 const theme = createTheme({
   typography: {
@@ -56,6 +57,7 @@ const App: React.FC = () => {
             <Route path="/adminRegister" element={<NormalAdminRegister />} />
             <Route path="/farmRegister" element={<FarmRegisterPage />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/order" element={<Order />} />
           </Routes>
           {showFooter && <Footer />}
         </BrowserRouter>

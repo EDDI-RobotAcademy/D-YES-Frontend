@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { sendCartContainRequest } from "page/cart/api/CartApi";
 import { Cart } from "page/cart/entity/Cart";
 import Swal from "sweetalert2";
+import parse from "html-react-parser";
 
 import "./css/ProductDetail.css";
 
@@ -52,6 +53,8 @@ const ProductDetailPage = () => {
     fetchProductData();
   }, []);
 
+  const parsedHTML = parse(data?.productResponse.productDescription || "");
+
   const handleDecreaseQuantity = () => {
     if (productQuantity > 1) {
       setProductQuantity(productQuantity - 1);
@@ -75,9 +78,9 @@ const ProductDetailPage = () => {
         icon: "success",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        cancelButtonColor: "#aaaaaa",
         confirmButtonText: "장바구니로 이동",
-        cancelButtonText: "취소",
+        cancelButtonText: "계속해서 쇼핑하기",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/cart");
@@ -287,7 +290,10 @@ const ProductDetailPage = () => {
                           </TableBody>
                         </Table>
                       </TableContainer>
-                      <div className="product-description">상품 설명:</div>
+                      <div className="product-description">
+                        <div>상품 설명</div>
+                        <div>{parsedHTML}</div>
+                      </div>
                     </div>
                   </div>
                 </>
