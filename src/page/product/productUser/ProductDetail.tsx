@@ -78,9 +78,9 @@ const ProductDetailPage = () => {
         icon: "success",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        cancelButtonColor: "#aaaaaa",
         confirmButtonText: "장바구니로 이동",
-        cancelButtonText: "취소",
+        cancelButtonText: "계속해서 쇼핑하기",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/cart");
