@@ -2,7 +2,14 @@ import axiosInstance from "utility/axiosInstance";
 import { Admin } from "../entity/Admin";
 import { Farm } from "page/farm/entity/Farm";
 import { FarmRead } from "page/farm/entity/FarmRead";
-import { UseQueryResult, useQuery } from "react-query";
+import {
+  UseMutationResult,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
+import { FarmModify } from "page/farm/entity/FarmModify";
 
 export const adminRegister = async (data: {
   id: string;
@@ -51,12 +58,41 @@ export const deleteFarm = async (farmId: string): Promise<void> => {
 // 농가 정보 읽기
 export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
   const response = await axiosInstance.springAxiosInst.get(`farm/read/${farmId}`);
-  console.log("읽기정보", response.data)
+  console.log("읽기정보", response.data);
   return response.data;
 };
 
 export const useFarmQuery = (farmId: string): UseQueryResult<FarmRead | null, unknown> => {
   return useQuery(["FarmRead", farmId], () => fetchFarm(farmId), {
     refetchOnWindowFocus: false,
-  })
-}
+  });
+};
+
+// 농가 수정
+export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> => {
+  const {
+    farmId,
+    csContactNumber,
+    mainImage,
+    introduction,
+    produceTypes,
+    userToken = localStorage.getItem("userToken"),
+  } = updatedData;
+  const response = await axiosInstance.springAxiosInst.put<FarmModify>(`farm/modify/${farmId}`, {
+    userToken,
+    csContactNumber,
+    mainImage,
+    introduction,
+    produceTypes,
+  });
+  return response.data;
+};
+
+export const useFarmUpdateMutation = (): UseMutationResult<FarmModify, unknown, FarmModify> => {
+  const queryClient = useQueryClient();
+  return useMutation(updateFarm, {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["farmModify", data.farmId], data);
+    },
+  });
+};

@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
 import FarmRegister from "page/admin/adminPage/farm/FarmRegister";
 import { Business } from "page/farm/entity/Business";
-import { FarmModify } from "page/farm/entity/FarmModify";
+import { FarmInfoRead } from "page/farm/entity/FarmInfoRead";
 
 jest.mock("page/admin/api/AdminApi", () => ({
   farmRegister: jest.fn().mockResolvedValue({ success: true }),
@@ -16,15 +16,14 @@ const mockSetShowProductSection = jest.fn();
 
 const mockFarmRead = {
   farmOperationInfoResponseForm: {} as Business,
-  farmInfoResponseForm: {} as FarmModify,
+  farmInfoResponseForm: {} as FarmInfoRead,
 };
 
 it("농가 등록 테스트", async () => {
-  
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
-      <FarmRegister selectedFarm={mockFarmRead} setSelectedFarm={mockSetShowProductSection} />
+        <FarmRegister selectedFarm={mockFarmRead} setSelectedFarm={mockSetShowProductSection} />
       </QueryClientProvider>
     </BrowserRouter>
   );
@@ -39,7 +38,7 @@ it("농가 등록 테스트", async () => {
     const address = screen.getByLabelText("주소*");
     const zipCode = screen.getByLabelText("우편번호*");
     const addressDetail = screen.getByLabelText("상세주소*");
-    const produceTypes = screen.getByLabelText("농가 한 줄 소개");
+    const produceTypes = screen.getByLabelText("농가 한 줄 소개*");
     const submitButton = screen.getByText("판매할 품목을 선택해주세요 (필수)");
 
     fireEvent.change(businessName, { target: "상호" });

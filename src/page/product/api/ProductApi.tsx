@@ -14,6 +14,7 @@ import useProductStore from "../store/ProductStore";
 import { ProductRead } from "../entity/ProductRead";
 import { ProductModify } from "../entity/ProductModify";
 import { ProductDetail } from "../entity/ProductDetail";
+import { ProductPopupRead } from "../entity/ProductPopupRead";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -141,7 +142,7 @@ export const useProductDetailQuery = (
   return useQuery(["productRead", productId], () => getProductDetail(productId));
 };
 
-// 상품 삭제
+// 관리자용 상품 삭제
 export const deleteProduct = async (productId: string): Promise<void> => {
   await axiosInstance.springAxiosInst.delete("product/delete", {
     data: { productId, userToken: localStorage.getItem("userToken") },
@@ -153,4 +154,18 @@ export const getRandomProductList = async () => {
   const response = await axiosInstance.springAxiosInst.get("/product/user/random-list");
   console.log("랜덤 상품 리스트 데이터", response.data);
   return response.data;
+};
+
+// 관리자용 상품 요약정보 확인
+export const fetchPopupProduct = async (productId: string): Promise<ProductPopupRead | null> => {
+  const response = await axiosInstance.springAxiosInst.get<ProductPopupRead>(
+    `/product/admin/read-summary/${productId}`
+  );
+  return response.data;
+};
+
+export const usePopupProductQuery = (productId: string): UseQueryResult<ProductPopupRead | null, unknown> => {
+  return useQuery(["productPopupRead", productId], () => fetchPopupProduct(productId), {
+    refetchOnWindowFocus: false,
+  });
 };

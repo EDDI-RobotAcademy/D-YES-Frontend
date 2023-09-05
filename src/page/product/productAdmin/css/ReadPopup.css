@@ -1,0 +1,8 @@
+.read-custom-cell {
+  background-color: lightgray; /* 배경색 설정 */
+  width: 200px; /* 너비를 원하는 크기로 설정 */
+}
+
+.custom-swal-container {
+  z-index: 9999 !important; /* 원하는 z-index 값으로 설정 */
+}

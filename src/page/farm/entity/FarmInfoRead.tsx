@@ -1,6 +1,10 @@
-export interface FarmModify {
+import { FarmAddress } from "./FarmAddress";
+
+export interface FarmInfoRead {
   farmId: string;
+  farmName: string;
   csContactNumber: string;
+  farmAddress: FarmAddress;
   mainImage: string;
   introduction: string;
   produceTypes: string[];
