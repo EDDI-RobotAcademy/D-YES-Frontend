@@ -11,7 +11,7 @@ import {
   MenuItem,
   FormControl,
 } from "@mui/material";
-import { farmRegister } from "page/admin/api/AdminApi";
+import { farmRegister, updateFarm } from "page/admin/api/AdminApi";
 import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
 import { FarmRead } from "page/farm/entity/FarmRead";
+import { FarmModify } from "page/farm/entity/FarmModify";
 
 declare global {
   interface Window {
@@ -82,6 +83,36 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
       );
     }
   }, [selectedFarm]);
+
+  const modifyMutation = useMutation(updateFarm, {
+    onSuccess: (data) => {
+      queryClient.setQueryData("farmModify", data);
+      console.log("수정확인", data);
+      toast.success("수정되었습니다.");
+    },
+  });
+
+  // 수정
+  const handleEditFinishClick = async () => {
+    if (businessInfo.csContactNumber && businessInfo.introduction && selectedOptions.length > 0) {
+      const farmId = selectedFarm?.farmInfoResponseForm.farmId;
+      const userToken = localStorage.getItem("userToken") || "";
+      const mainImageName = selectedMainImage ? selectedMainImage.name : "";
+      const s3MainObjectVersion = (await uploadFileAwsS3(selectedMainImage as File)) || "";
+
+      const updateData: FarmModify = {
+        farmId: farmId || "",
+        userToken,
+        csContactNumber: businessInfo.csContactNumber,
+        introduction: businessInfo.introduction,
+        produceTypes: selectedOptions,
+        mainImage: mainImageName + (s3MainObjectVersion ? `?versionId=${s3MainObjectVersion}` : ""),
+      };
+
+      await modifyMutation.mutateAsync(updateData);
+      queryClient.invalidateQueries(["farm", farmId]);
+    }
+  };
 
   const handleRegistrationComplete = () => {
     setBusinessInfo({
@@ -372,6 +403,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                       businessName: e.target.value,
                     }))
                   }
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -387,6 +419,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                   InputLabelProps={{ shrink: true }}
                   value={businessInfo.businessNumber}
                   onChange={handleBusinessNumberChange}
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -407,6 +440,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                       representativeName: e.target.value,
                     }))
                   }
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -422,6 +456,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                   InputLabelProps={{ shrink: true }}
                   value={businessInfo.representativeContactNumber}
                   onChange={handleContactNumberChange("representativeContactNumber")}
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -469,6 +504,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                       farmName: e.target.value,
                     }))
                   }
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -498,6 +534,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                 className="custom-input"
                 InputLabelProps={{ shrink: true }}
                 value={addressInfo.address}
+                disabled={!!selectedFarm}
               />
               <Button
                 className="mapage-btn"
@@ -512,6 +549,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                   backgroundColor: "#4F72CA",
                   color: "white",
                 }}
+                disabled={!!selectedFarm}
               >
                 검색
               </Button>
@@ -528,6 +566,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                   className="custom-input"
                   InputLabelProps={{ shrink: true }}
                   value={addressInfo.zipCode}
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -548,6 +587,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                       addressDetail: e.target.value,
                     }))
                   }
+                  disabled={!!selectedFarm}
                 />
               </div>
             </Grid>
@@ -602,7 +642,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
             <Grid item xs={12}>
               <div style={{ position: "relative" }}>
                 <TextField
-                  label="농가 한 줄 소개"
+                  label="농가 한 줄 소개*"
                   name="introduction"
                   fullWidth
                   variant="outlined"
@@ -670,6 +710,22 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
               >
                 등록
               </Button>
+              {selectedFarm && (
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#DF726D",
+                    color: "white",
+                    fontFamily: "SUIT-Regular",
+                    fontSize: "14px",
+                    marginTop: "12px",
+                  }}
+                  fullWidth
+                  onClick={handleEditFinishClick}
+                >
+                  수정 완료
+                </Button>
+              )}
             </Grid>
           </form>
         </Container>

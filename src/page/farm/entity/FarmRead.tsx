@@ -1,7 +1,7 @@
 import { Business } from "./Business";
-import { FarmModify } from "./FarmModify";
+import { FarmInfoRead } from "./FarmInfoRead";
 
 export interface FarmRead {
   farmOperationInfoResponseForm: Business;
-  farmInfoResponseForm: FarmModify;
+  farmInfoResponseForm: FarmInfoRead;
 }
