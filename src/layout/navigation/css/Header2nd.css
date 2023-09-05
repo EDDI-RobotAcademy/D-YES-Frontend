@@ -1,0 +1,56 @@
+.second-header-fontstyle {
+  font-family: "SUIT-Bold";
+  font-size: 18px;
+}
+
+.second-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  width: 400px;
+  background-color: rgb(255, 255, 255);
+  width: auto;
+  margin-left: 450px;
+  margin-right: 450px;
+  position: relative;
+  z-index: 50;
+}
+
+.top-bar-left {
+  width: 20%;
+}
+
+.top-bar-right {
+  width: 60%;
+  right: 0;
+  text-align: right;
+  min-width: 400px;
+}
+
+.go-to-catagory {
+  text-decoration: none;
+  color: #252525;
+  min-width: 200px;
+}
+
+.go-to-new {
+  text-decoration: none;
+  color: #252525;
+  margin-left: 80px;
+}
+
+.go-to-best {
+  text-decoration: none;
+  color: #252525;
+  margin-left: 80px;
+  /* background-color: green; */
+}
+
+.go-to-event {
+  text-decoration: none;
+  color: #252525;
+  margin-left: 80px;
+  margin-right: 0px;
+  /* background-color: yellow; */
+}

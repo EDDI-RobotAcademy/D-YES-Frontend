@@ -57,6 +57,7 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
+            style={{ marginLeft: "6px" }}
           >
             <Avatar
               alt="userImage"
@@ -65,7 +66,7 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
                   ? userProfileImg
                   : getImageUrl(userProfileImg || "")
               }
-              sx={{ width: 40, height: 40 }}
+              sx={{ width: 30, height: 30 }}
             />
           </IconButton>
         </Tooltip>

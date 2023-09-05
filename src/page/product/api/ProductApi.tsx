@@ -142,13 +142,21 @@ export const useProductDetailQuery = (
   return useQuery(["productRead", productId], () => getProductDetail(productId));
 };
 
-// 상품 삭제
+// 관리자용 상품 삭제
 export const deleteProduct = async (productId: string): Promise<void> => {
   await axiosInstance.springAxiosInst.delete("product/delete", {
     data: { productId, userToken: localStorage.getItem("userToken") },
   });
 };
 
+// 사용자용 랜덤 상품 리스트 확인
+export const getRandomProductList = async () => {
+  const response = await axiosInstance.springAxiosInst.get("/product/user/random-list");
+  console.log("랜덤 상품 리스트 데이터", response.data);
+  return response.data;
+};
+
+// 관리자용 상품 요약정보 확인
 export const fetchPopupProduct = async (productId: string): Promise<ProductPopupRead | null> => {
   const response = await axiosInstance.springAxiosInst.get<ProductPopupRead>(
     `/product/admin/read-summary/${productId}`

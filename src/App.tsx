@@ -1,6 +1,7 @@
 import Footer from "layout/footer/Footer";
 import { AuthProvider } from "layout/navigation/AuthConText";
 import Header from "layout/navigation/Header";
+import Header2nd from "layout/navigation/Header2nd";
 import LoginPage from "oauth/LoginPage";
 import MainPage from "page/MainPage";
 import MyPage from "page/user/myPage/MyPage";
@@ -21,6 +22,7 @@ import AdminProductModifyPage from "page/product/productAdmin/AdminProductModify
 import ProductDetailPage from "page/product/productUser/ProductDetail";
 import Cart from "page/cart/Cart";
 import { createTheme, ThemeProvider } from "@mui/material";
+import Order from "page/order/Order";
 
 const theme = createTheme({
   typography: {
@@ -37,6 +39,7 @@ const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           {showHeader && <Header />}
+          {showHeader && <Header2nd />}
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -54,6 +57,7 @@ const App: React.FC = () => {
             <Route path="/adminRegister" element={<NormalAdminRegister />} />
             <Route path="/farmRegister" element={<FarmRegisterPage />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/order" element={<Order />} />
           </Routes>
           {showFooter && <Footer />}
         </BrowserRouter>
