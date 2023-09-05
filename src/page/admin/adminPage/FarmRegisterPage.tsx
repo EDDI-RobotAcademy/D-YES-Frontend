@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import FarmRegister from "./farm/FarmRegister";
 import FarmList from "./farm/FarmList";
 
 import "./css/FarmRegister.css";
+import { FarmRead } from "page/farm/entity/FarmRead";
 
 const FarmRegisterPage = () => {
+  const [selectedFarm, setSelectedFarm] = useState<FarmRead | null>(null);
+
   return (
     <div className="farm-register-container">
       <div className="farm-register-box">
         <div style={{ display: "flex", backgroundColor: "#f0f0f0" }}>
           <div className="farm-register">
-            <FarmRegister />
+          <FarmRegister selectedFarm={selectedFarm} setSelectedFarm={setSelectedFarm} />
           </div>
           <div className="farm-list">
-            <FarmList />
+          <FarmList setSelectedFarm={setSelectedFarm} />
           </div>
         </div>
       </div>

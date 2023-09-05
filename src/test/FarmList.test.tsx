@@ -23,13 +23,15 @@ it("농가 목록", async () => {
       },
     },
   ];
+  
+  const mockSetShowProductSection = jest.fn();
 
   (AdminApi.getFarmList as jest.Mock).mockResolvedValue(farmList);
 
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
-        <FarmList />
+      <FarmList setSelectedFarm={mockSetShowProductSection} />
       </QueryClientProvider>
     </BrowserRouter>
   );

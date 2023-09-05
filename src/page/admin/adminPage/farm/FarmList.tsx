@@ -9,14 +9,19 @@ import {
   TableCell,
   IconButton,
 } from "@mui/material";
-import { deleteFarm, getFarmList } from "page/admin/api/AdminApi";
+import { deleteFarm, fetchFarm, getFarmList } from "page/admin/api/AdminApi";
 import { Farm } from "page/farm/entity/Farm";
 import { useQueryClient } from "react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { fetchProductList } from "page/product/api/ProductApi";
+import { FarmRead } from "page/farm/entity/FarmRead";
 
-const FarmList = () => {
+interface FarmListProps {
+  setSelectedFarm: (farm: FarmRead | null) => void;
+}
+
+const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
   const [farmList, setFarmList] = useState([] as Farm[]);
   const queryClient = useQueryClient();
 
@@ -69,6 +74,15 @@ const FarmList = () => {
     } catch (error) {
       console.error("데이터 불러오기 실패:", error);
       Swal.fire("오류!", "데이터를 불러오는 중 오류가 발생했습니다.", "error");
+    }
+  };
+
+  const handleFarmClick = async (farmId: string) => {
+    try {
+      const farmInfo = await fetchFarm(farmId);
+      setSelectedFarm(farmInfo);
+    } catch (error) {
+      console.error("농가 정보를 가져오는 중 오류 발생:", error);
     }
   };
 
@@ -190,7 +204,7 @@ const FarmList = () => {
               </TableHead>
               <tbody>
                 {farmList.map((farm) => (
-                  <TableRow key={farm.farmId}>
+                  <TableRow key={farm.farmId} onClick={() => handleFarmClick(farm.farmId.toString())}>
                     <TableCell
                       style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                     >

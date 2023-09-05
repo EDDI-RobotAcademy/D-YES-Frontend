@@ -12,13 +12,14 @@ import {
   FormControl,
 } from "@mui/material";
 import { farmRegister } from "page/admin/api/AdminApi";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import "./css/FarmRegister.css";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
-import { uploadFileAwsS3 } from "utility/s3/awsS3";
+import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
+import { FarmRead } from "page/farm/entity/FarmRead";
 
 declare global {
   interface Window {
@@ -31,7 +32,12 @@ interface IAddr {
   zonecode: string;
 }
 
-const FarmRegister = () => {
+interface FarmReadInfoProps {
+  selectedFarm: FarmRead | null;
+  setSelectedFarm: (farm: FarmRead | null) => void;
+}
+
+const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -39,7 +45,6 @@ const FarmRegister = () => {
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
   const initialAddressInfo = { address: "", zipCode: "" };
-  const [businessNumber, setBusinessNumber] = useState("");
   const [businessInfo, setBusinessInfo] = useState({
     businessName: "",
     businessNumber: "",
@@ -50,6 +55,33 @@ const FarmRegister = () => {
     addressDetail: "",
     introduction: "",
   });
+
+  // 이미지 읽어오기
+  useEffect(() => {
+    console.log("받아오니", selectedFarm);
+    if (selectedFarm) {
+      setBusinessInfo({
+        businessName: selectedFarm.farmOperationInfoResponseForm?.businessName || "",
+        businessNumber: selectedFarm.farmOperationInfoResponseForm?.businessNumber || "",
+        representativeName: selectedFarm.farmOperationInfoResponseForm?.representativeName || "",
+        representativeContactNumber:
+          selectedFarm.farmOperationInfoResponseForm?.representativeContactNumber || "",
+        farmName: selectedFarm.farmInfoResponseForm?.farmName || "",
+        csContactNumber: selectedFarm.farmInfoResponseForm?.csContactNumber || "",
+        addressDetail: selectedFarm.farmInfoResponseForm?.farmAddress?.addressDetail || "",
+        introduction: selectedFarm.farmInfoResponseForm?.introduction || "",
+      });
+      setAddressInfo({
+        address: selectedFarm.farmInfoResponseForm?.farmAddress?.address || "",
+        zipCode: selectedFarm.farmInfoResponseForm?.farmAddress?.zipCode || "",
+      });
+      setSelectedOptions(
+        Array.isArray(selectedFarm.farmInfoResponseForm?.produceTypes)
+          ? selectedFarm.farmInfoResponseForm.produceTypes
+          : []
+      );
+    }
+  }, [selectedFarm]);
 
   const handleRegistrationComplete = () => {
     setBusinessInfo({
@@ -544,6 +576,14 @@ const FarmRegister = () => {
                       }}
                       alt="Selected"
                     />
+                  ) : selectedFarm?.farmInfoResponseForm?.mainImage ? (
+                    <div>
+                      <img
+                        src={getImageUrl(selectedFarm.farmInfoResponseForm.mainImage)}
+                        style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
+                        alt="Selected"
+                      />
+                    </div>
                   ) : (
                     <div style={{ textAlign: "center", fontFamily: "SUIT-Light" }}>
                       <img
