@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { sendCartContainRequest } from "page/cart/api/CartApi";
 import { Cart } from "page/cart/entity/Cart";
 import Swal from "sweetalert2";
+import parse from "html-react-parser";
 
 import "./css/ProductDetail.css";
 
@@ -51,6 +52,8 @@ const ProductDetailPage = () => {
     };
     fetchProductData();
   }, []);
+
+  const parsedHTML = parse(data?.productResponse.productDescription || "");
 
   const handleDecreaseQuantity = () => {
     if (productQuantity > 1) {
@@ -287,7 +290,10 @@ const ProductDetailPage = () => {
                           </TableBody>
                         </Table>
                       </TableContainer>
-                      <div className="product-description">상품 설명:</div>
+                      <div className="product-description">
+                        <div>상품 설명</div>
+                        <div>{parsedHTML}</div>
+                      </div>
                     </div>
                   </div>
                 </>
