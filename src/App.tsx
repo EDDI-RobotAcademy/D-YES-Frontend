@@ -23,6 +23,7 @@ import ProductDetailPage from "page/product/productUser/ProductDetail";
 import Cart from "page/cart/Cart";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Order from "page/order/Order";
+import ScrollToTop from "utility/ScrollToTop";
 
 const theme = createTheme({
   typography: {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
         <BrowserRouter>
           {showHeader && <Header />}
           {showHeader && <Header2nd />}
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />
