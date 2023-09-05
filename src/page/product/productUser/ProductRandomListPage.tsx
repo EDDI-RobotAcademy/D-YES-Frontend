@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { CardActionArea } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { ProductList } from "../entity/ProductList";
+import { RandomProductList } from "../entity/RandomProductList";
 import { getImageUrl } from "utility/s3/awsS3";
 import { getRandomProductList } from "../api/ProductApi";
 import { won } from "utility/filters/wonFilter";
@@ -20,7 +20,7 @@ import "./css/ProductRandomList.css";
 
 const ProductRandomListPage = () => {
   const [loading, setLoading] = useState(true);
-  const [loadedProducts, setLoadedProducts] = useState<ProductList[]>([]);
+  const [loadedProducts, setLoadedProducts] = useState<RandomProductList[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,8 +94,6 @@ const ProductRandomListPage = () => {
                     marginBottom: 2,
                     boxShadow: "none",
                     position: "relative",
-                    opacity: product.isSoldOut ? 0.5 : 1,
-                    pointerEvents: product.isSoldOut ? "none" : "auto",
                   }}
                 >
                   <CardActionArea onClick={() => handleProductClick(product.productId)}>
