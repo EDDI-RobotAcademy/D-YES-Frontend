@@ -147,3 +147,10 @@ export const deleteProduct = async (productId: string): Promise<void> => {
     data: { productId, userToken: localStorage.getItem("userToken") },
   });
 };
+
+// 사용자용 랜덤 상품 리스트 확인
+export const getRandomProductList = async () => {
+  const response = await axiosInstance.springAxiosInst.get("/product/user/random-list");
+  console.log("랜덤 상품 리스트 데이터", response.data);
+  return response.data;
+};
