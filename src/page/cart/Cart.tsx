@@ -63,7 +63,12 @@ export default function CartList() {
   let deliveryFee = 0;
 
   const showProductDetail = (optionId: number) => {
-    navigate(`/productDetail/${optionId}`);
+    if(optionId === 0) {
+      alert("존재하지 않는 상품입니다.")
+      navigate('/productList');
+    } else {
+      navigate(`/productDetail/${optionId}`);
+    }
   };
 
   const increaseQuantity = async (optionId: number) => {
@@ -200,33 +205,6 @@ export default function CartList() {
                   <TableBody>
                     {loadedItems.map((item) => (
                       <TableRow key={item.optionId}>
-                        {item.optionId === 0 ? (
-                          <>
-                            <TableCell>
-                              <input type="checkbox" disabled />
-                            </TableCell>
-                            <TableCell>
-                              <img
-                                src="img/noproduct1.png"
-                                style={{ width: "100px", height: "100px" }}
-                              />
-                            </TableCell>
-                            <TableCell>존재하지 않는 상품입니다</TableCell>
-                            <TableCell>
-                              <div className="cart-counter-buttons">
-                                <RemoveIcon />
-                                0
-                                <AddIcon />
-                              </div>
-                            </TableCell>
-                            <TableCell>0 원</TableCell>
-                            <TableCell>
-                              <IconButton disabled>
-                                <DeleteIcon />
-                              </IconButton>
-                            </TableCell>
-                          </>
-                        ) : (
                           <>
                             <TableCell>
                               <input
@@ -250,8 +228,8 @@ export default function CartList() {
                               style={{ cursor: "pointer" }}
                               onClick={() => showProductDetail(item.optionId)}
                             >
-                              {item.productName}&nbsp;&nbsp;{item.value}
-                              {item.unit}
+                              {item.productName}&nbsp;<br></br>
+                              {item.optionName}
                             </TableCell>
                             <TableCell>
                               <div className="cart-counter-buttons">
@@ -284,7 +262,6 @@ export default function CartList() {
                               </Tooltip>
                             </TableCell>
                           </>
-                        )}
                       </TableRow>
                     ))}
                   </TableBody>
