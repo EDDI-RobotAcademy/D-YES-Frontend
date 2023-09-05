@@ -1,6 +1,7 @@
 import Footer from "layout/footer/Footer";
 import { AuthProvider } from "layout/navigation/AuthConText";
 import Header from "layout/navigation/Header";
+import Header2nd from "layout/navigation/Header2nd";
 import LoginPage from "oauth/LoginPage";
 import MainPage from "page/MainPage";
 import MyPage from "page/user/myPage/MyPage";
@@ -37,6 +38,7 @@ const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           {showHeader && <Header />}
+          {showHeader && <Header2nd />}
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />

@@ -1,15 +1,17 @@
 .header-fontstyle {
-  font-family: "SUIT-ExtraBold";
+  font-family: "SUIT-Medium";
+  font-size: 14px;
 }
+
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
-  background-color: white;
+  height: 80px;
   width: auto;
-  margin-left: 50px;
-  margin-right: 50px;
+  background-color: white;
+  margin-left: 450px;
+  margin-right: 450px;
   position: relative;
   z-index: 50;
 }
@@ -37,9 +39,8 @@
 
 .Home {
   color: black;
-  margin: 8px;
   text-decoration: none;
-  margin-left: 10px;
+  margin-top: 6px;
 }
 
 .Login img {
