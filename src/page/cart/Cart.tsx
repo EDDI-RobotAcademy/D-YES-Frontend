@@ -62,12 +62,12 @@ export default function CartList() {
   let discount = 0;
   let deliveryFee = 0;
 
-  const showProductDetail = (optionId: number) => {
+  const showProductDetail = (optionId: number, productId: number) => {
     if (optionId === 0) {
       alert("존재하지 않는 상품입니다.");
       navigate("/productList");
     } else {
-      navigate(`/productDetail/${optionId}`);
+      navigate(`/productDetail/${productId}`);
     }
   };
 
@@ -221,7 +221,7 @@ export default function CartList() {
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}
-                            onClick={() => showProductDetail(item.optionId)}
+                            onClick={() => showProductDetail(item.optionId, item.productId)}
                           >
                             <img
                               src={getImageUrl(item.productMainImage)}
@@ -230,7 +230,7 @@ export default function CartList() {
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}
-                            onClick={() => showProductDetail(item.optionId)}
+                            onClick={() => showProductDetail(item.optionId, item.productId)}
                           >
                             {item.productName}&nbsp;<br></br>
                             {item.optionName}

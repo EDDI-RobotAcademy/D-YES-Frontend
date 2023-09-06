@@ -8,4 +8,5 @@ export interface CartItems {
   optionStock: number;
   value: string;
   unit: string;
+  productId: number;
 }
