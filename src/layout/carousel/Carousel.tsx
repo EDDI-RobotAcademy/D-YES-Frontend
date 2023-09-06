@@ -6,11 +6,11 @@ import "./css/Carousel.css";
 import { Image } from "./entity/Image";
 
 const images: Image[] = [
-  { id: 1, url: "img/sampleImg4.jpg" },
-  { id: 2, url: "img/sampleImg2.jpg" },
-  { id: 3, url: "img/sampleImg3.jpg" },
-  { id: 4, url: "img/sampleImg1.jpg" },
-  { id: 5, url: "img/sampleImg5.jpg" },
+  { id: 1, url: "img/main_carousel_img1.jpg" },
+  { id: 2, url: "img/main_carousel_img4.jpg" },
+  { id: 3, url: "img/main_carousel_img3.jpg" },
+  { id: 4, url: "img/main_carousel_img2.jpg" },
+  { id: 5, url: "img/main_carousel_img5.jpg" },
 ];
 
 const Carousel: React.FC = () => {
@@ -35,55 +35,55 @@ const Carousel: React.FC = () => {
               {image.id === 1 && (
               <div>
                 <p className="text-common-img">
-                  지금 바로 수확한 토마토<br></br>
-                  맛있누 냠냠
+                  나만의 특별 레시피 공유하기<br></br>
+                  나만 아는 꿀조합!
                 </p>
                 <p className="text-common-detail">
-                  토마토마 특가 이벤트 2023.09.18까지
+                  레시피 공유 이벤트 2023.10.12까지
                 </p>
               </div>
               )}
               {image.id === 2 && (
-                <div>
-                  <p className="text-common-img">
-                    두번째 이미지에 대한 내용<br></br>
-                    두번째
-                  </p>
-                  <p className="text-common-detail">
-                    두번째 특가 이벤트 2023.09.18까지
-                  </p>
-                </div>
+              <div>
+                <p className="text-common-img">
+                  구황작물의 계절이 돌아왔어요<br></br>
+                  건강한 포만감
+                </p>
+                <p className="text-common-detail">
+                  감자&고구마 골라담기
+                </p>
+              </div>
               )}
               {image.id === 3 && (
                 <div>
                   <p className="text-common-img">
-                    세번째 이미지에 대한 내용<br></br>
-                    세번째
+                    매일 아침, 우리 가족을 위한<br></br>
+                    건강한 당근 주스
                   </p>
                   <p className="text-common-detail">
-                    세번째 특가 이벤트 2023.09.18까지
+                    당근 구매시 착즙 주스 포함
                   </p>
                 </div>
               )}
               {image.id === 4 && (
                 <div>
                   <p className="text-common-img">
-                    네번째 이미지에 대한 내용<br></br>
-                    네번째
+                    달달함 UP! 건강한 단 맛<br></br>
+                    스테비아 토마토
                   </p>
                   <p className="text-common-detail">
-                    네번째 특가 이벤트 2023.09.18까지
+                    산지의 신선함 그대로
                   </p>
                 </div>
               )}
               {image.id === 5 && (
                 <div>
                   <p className="text-common-img">
-                    다섯번째 이미지에 대한 내용<br></br>
-                    다섯번째
+                    할로윈 호박을 찾아주세요<br></br>
+                    최대 2만원 할인
                   </p>
                   <p className="text-common-detail">
-                    다섯번째 특가 이벤트 2023.09.18까지
+                    사이트 곳곳에 있는 할로윈 호박을 클릭!
                   </p>
                 </div>
               )}
