@@ -4,7 +4,7 @@ export interface useFarmInfo {
   farmAddress: addressCode;
   mainImage: string;
   introduction: string;
-  produceTypes: string;
+  produceTypes: [];
 }
 
 export interface addressCode {

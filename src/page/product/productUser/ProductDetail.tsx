@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Chip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -243,7 +244,7 @@ const ProductDetailPage = () => {
           )}
         </div>
 
-        <div className="product-description-container">
+        <div className="product-detail-container">
           <div className="sticky-header-container">
             <div className="sticky-header">
               <div className="sticky-header-elements">
@@ -259,55 +260,96 @@ const ProductDetailPage = () => {
               </div>
             </div>
           </div>
+
           <div className="example1" ref={yDetail}>
             <div className="example-container">
-              상세 정보
               {data && isLoading ? (
                 <>
                   <div>
-                    {/* 여기에 상세 정보 작성하세요 */}
-                    <div className="product-details">
-                      <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="farm-info table">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>상호명</TableCell>
-                              <TableCell>전화</TableCell>
-                              <TableCell>주소</TableCell>
-                              <TableCell>소개</TableCell>
-                              <TableCell>분류</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            <TableRow key={data?.farmInfoResponse.farmName}>
-                              <TableCell>{data?.farmInfoResponse.farmName}</TableCell>
-                              <TableCell>{data?.farmInfoResponse.csContactNumber}</TableCell>
-                              {/* 임시로 주소만 표기 */}
-                              <TableCell>{data?.farmInfoResponse.farmAddress.address}</TableCell>
-                              <TableCell>{data?.farmInfoResponse.introduction}</TableCell>
-                              <TableCell>{data?.farmInfoResponse.produceTypes}</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <div className="product-description">
-                        <div>상품 설명</div>
-                        <div>{parsedHTML}</div>
-                      </div>
+                    <div className="product-description-container">
+                      <div className="product-detail-header-name">상품정보</div>
+                      <div>{parsedHTML}</div>
                     </div>
+                    <hr className="hr2-style" />
+                    {/* 여기에 상세 정보 작성하세요 */}
+                    <div className="farm-details">
+                      <div className="product-detail-header-name">판매자정보</div>
+
+                      <div className="farm-profile-container">
+                        <div className="farm-profile">
+                          <img
+                            src={getImageUrl(data?.farmInfoResponse.mainImage)}
+                            width={80}
+                            height={80}
+                            style={{ paddingTop: "14px", paddingBottom: "8px", borderRadius: "50%"}}
+                            alt="사진"
+                          />
+                          <div className="farm-name">
+                            <span>{data?.farmInfoResponse.farmName}</span>
+                          </div>
+                        </div>
+                        <div className="farm-introduce">
+                          {data?.farmInfoResponse.introduction}
+                        </div>
+                      </div>
+
+                        <TableContainer component={Paper}>
+                          <Table sx={{ minWidth: 650 }} aria-label="farm-info table">
+                            <TableHead style={{ backgroundColor: "#FAFAFA" }}>
+                              <TableRow>
+                                <TableCell className="farm-info-cell" style={{ width: "20%", textAlign: "center" }}>전화</TableCell>
+                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>주소</TableCell>
+                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>생산품목</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow key={data?.farmInfoResponse.farmName}>
+                                <TableCell className="farm-info-cell" style={{ width: "20%", textAlign: "center" }}>{data?.farmInfoResponse.csContactNumber}</TableCell>
+                                {/* 임시로 주소만 표기 */}
+                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>{data?.farmInfoResponse.farmAddress.address}</TableCell>
+                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>
+                                  {data?.farmInfoResponse.produceTypes.map((produceType, index) => (
+                                    <Chip 
+                                      size="small" 
+                                      style={{color: "#252525", backgroundColor: "#EEEEEE", marginLeft: "3px" }}
+                                      key={index} 
+                                      label={
+                                        produceType === "POTATO" ? "감자" : 
+                                        produceType === "SWEET_POTATO" ? "고구마" : 
+                                        produceType === "CABBAGE" ? "양배추" : 
+                                        produceType === "KIMCHI_CABBAGE" ? "배추" : 
+                                        produceType === "LEAF_LETTUCE" ? "양상추" : 
+                                        produceType === "ROMAINE_LETTUCE" ? "로메인 상추" : 
+                                        produceType === "PEPPER" ? "고추" : 
+                                        produceType === "GARLIC" ? "마늘" : 
+                                        produceType === "TOMATO" ? "토마토" : 
+                                        produceType === "CUCUMBER" ? "오이" : 
+                                        produceType === "CARROT" ? "당근" : 
+                                        produceType === "EGGPLANT" ? "가지" : 
+                                        produceType} />
+                                  ))}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </div>
                   </div>
                 </>
               ) : (
                 <p>상품 상세 정보 불러오는 중</p>
               )}
             </div>
+            <hr className="hr2-style" />
           </div>
 
           <div className="example2" ref={yReview}>
             {data && isLoading ? (
               <>
                 {/* 여기에 리뷰 작성하세요 */}
-                <div>여기부터 리뷰</div>
+                <div className="example-container">
+                  <div className="product-detail-header-name">상품후기</div>
+                </div>
               </>
             ) : (
               <p>리뷰 정보 불러오는 중</p>
