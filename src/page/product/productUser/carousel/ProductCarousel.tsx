@@ -59,7 +59,7 @@ export default class ProductCarousel extends Component<ProductCarouselProps, Pro
         <Slider className="main-slider" {...mainImgSettings}>
           {images.map((image) => (
             <div key={image.id}>
-              <img className="product-slide-image" src={image.url} alt={`mainImage ${image.id}`} />
+              <img className="product-slide-main-image" src={image.url} alt={`mainImage ${image.id}`} />
             </div>
           ))}
         </Slider>
@@ -68,7 +68,7 @@ export default class ProductCarousel extends Component<ProductCarouselProps, Pro
             <div key={image.id}>
               <div className="product-slide-image-margin">
                 <img
-                  className="product-slide-image"
+                  className="product-slide-detail-image"
                   src={image.url}
                   style={{ cursor: "pointer" }}
                   alt={`detailImage ${image.id}`}

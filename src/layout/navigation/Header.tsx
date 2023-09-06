@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     <div className="header-fontstyle">
       <div className="top-bar">
         <Link className="Home" to={"/"}>
-          <img alt="로고" src="img/text_logo.png" style={{ width: "100px" }}/>
+          <img alt="로고" src="/img/text_logo.png" style={{ width: "100px" }}/>
         </Link>
         {isLoggedIn ? (
           <>
