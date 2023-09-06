@@ -1,13 +1,19 @@
 .product-slider {
   width: 100%;
 }
-
-.product-slide-image {
-  width: 100%;
-  height: auto;
+.main-slider {
+  width: 500px;
+}
+.product-slide-main-image {
+  width: 500px;
+  height: 500px;
   object-fit: cover;
 }
-
+.product-slide-detail-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
 .product-slide-image-margin {
   margin: 0 1px;
 }
