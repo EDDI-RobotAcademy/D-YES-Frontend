@@ -57,7 +57,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
     introduction: "",
   });
 
-  // 이미지 읽어오기
+  // 농가 정보 읽어오기
   useEffect(() => {
     console.log("받아오니", selectedFarm);
     if (selectedFarm) {
@@ -84,6 +84,8 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
     }
   }, [selectedFarm]);
 
+
+  // 수정 정보 API로 전달 
   const modifyMutation = useMutation(updateFarm, {
     onSuccess: (data) => {
       queryClient.setQueryData("farmModify", data);
@@ -97,8 +99,15 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
     if (businessInfo.csContactNumber && businessInfo.introduction && selectedOptions.length > 0) {
       const farmId = selectedFarm?.farmInfoResponseForm.farmId;
       const userToken = localStorage.getItem("userToken") || "";
-      const mainImageName = selectedMainImage ? selectedMainImage.name : "";
-      const s3MainObjectVersion = (await uploadFileAwsS3(selectedMainImage as File)) || "";
+      let mainImageName = "";
+      let s3MainObjectVersion = "";
+
+      if (selectedMainImage) {
+        mainImageName = selectedMainImage.name;
+        s3MainObjectVersion = (await uploadFileAwsS3(selectedMainImage as File)) || "";
+      } else {
+        mainImageName = selectedFarm?.farmInfoResponseForm?.mainImage || "";
+      }
 
       const updateData: FarmModify = {
         farmId: farmId || "",
@@ -109,6 +118,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
         mainImage: mainImageName + (s3MainObjectVersion ? `?versionId=${s3MainObjectVersion}` : ""),
       };
 
+      console.log("수정정보전송", updateData)
       await modifyMutation.mutateAsync(updateData);
       queryClient.invalidateQueries(["farm", farmId]);
     }
