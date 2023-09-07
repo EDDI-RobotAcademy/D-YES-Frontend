@@ -1,6 +1,7 @@
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useRef, useMemo, useState } from "react";
+import { ImageResize } from "quill-image-resize-module-ts";
 
 
 interface TextQuillProps {
@@ -10,6 +11,7 @@ interface TextQuillProps {
   isDisable: boolean;
 }
 
+Quill.register("modules/ImageResize", ImageResize);
 export default function TextQuill({ name, value, setValue, isDisable }: TextQuillProps) {
   const quillRef = useRef<ReactQuill | null>(null);
   const [imageData, setImageData] = useState<string | null>(null); // 이미지 데이터를 저장
@@ -60,6 +62,10 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
       clipboard: {
         matchVisual: false,
       },
+      ImageResize: {
+        parchment: Quill.import("parchment"),
+        modules: ["Resize", "DisplaySize"],
+      },
     }),
     []
   );
@@ -87,7 +93,7 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
       ref={quillRef}
       modules={modules}
       formats={formats}
-      value={value}
+      value={value || ""}
       onChange={(content, _, source, editor) => setValue(editor.getHTML())}
       style={{ width: "100%", height: "450px" }}
       readOnly={isDisable}
