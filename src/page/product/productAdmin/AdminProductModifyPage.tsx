@@ -98,11 +98,13 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   const { getRootProps: mainImageRootProps } = useDropzone({
     onDrop: onMainImageDrop,
     maxFiles: 1,
+    noClick: false,
   });
 
   const { getRootProps: detailImageRootProps } = useDropzone({
     onDrop: onDetailImageDrop,
     maxFiles: 10,
+    noClick: false,
   });
 
   const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
