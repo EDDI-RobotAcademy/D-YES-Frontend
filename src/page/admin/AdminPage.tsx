@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import AdminProductList from "page/product/productAdmin/AdminProductList";
 import FarmRegisterPage from "./adminPage/FarmRegisterPage";
 import AdminProductModifyPage from "page/product/productAdmin/AdminProductModifyPage";
+import UserListPage from "./adminPage/UserListPage";
 
 interface ProductPageProps {
   setShowHeader: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,12 +42,7 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
           {/* 회원 관련 */}
           <div className={`product-management ${showProductSection ? "active" : ""}`}>
             <p className="menu-name">
-              <img
-                className="menu-icon"
-                alt="회원"
-                src="img/account-icon.png"
-                width={20}
-              />
+              <img className="menu-icon" alt="회원" src="img/account-icon.png" width={20} />
               Account
             </p>
             <div className={`sub-menu ${showProductSection ? "show" : ""}`}>
@@ -67,9 +63,7 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
                       }
                     }}
                   >
-                    <p className="account-menu">
-                      Admin
-                    </p>
+                    <p className="account-menu">Admin</p>
                   </Link>
                 </div>
                 <div className="account-menu">
@@ -78,18 +72,16 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
                     className="list-button"
                     onClick={() => setShowProductSection("farmRegister")}
                   >
-                    <p className="account-menu">
-                      Farms
-                    </p>
+                    <p className="account-menu">Farms</p>
                   </Link>
                 </div>
                 <div className="account-menu">
                   <Link
-                    to="/adminPage"
+                    to="#"
+                    className="list-button"
+                    onClick={() => setShowProductSection("userList")}
                   >
-                    <p className="account-menu">
-                      Users
-                    </p>
+                    <p className="account-menu">Users</p>
                   </Link>
                 </div>
               </div>
@@ -99,31 +91,26 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
           {/* 상품 관련 */}
           <div className={`product-management ${showProductSection ? "active" : ""}`}>
             <p className="menu-name">
-              <img
-                className="menu-icon"
-                alt="상품"
-                src="img/farm-icon.png"
-                width={20}
-              />
+              <img className="menu-icon" alt="상품" src="img/farm-icon.png" width={20} />
               Product
             </p>
             <div className={`sub-menu ${showProductSection ? "show" : ""}`}>
               <div>
-              <div className="product-menu">
-                <Link to="#" onClick={() => setShowProductSection("register")}>
-                  <p className="product-menu">
-                    Product Register
-                  </p>
-                </Link>
+                <div className="product-menu">
+                  <Link to="#" onClick={() => setShowProductSection("register")}>
+                    <p className="product-menu">Product Register</p>
+                  </Link>
+                </div>
+                <div className="product-menu">
+                  <Link
+                    to="#"
+                    className="list-button"
+                    onClick={() => setShowProductSection("list")}
+                  >
+                    <p className="product-menu">Product List</p>
+                  </Link>
+                </div>
               </div>
-              <div className="product-menu">
-                <Link to="#" className="list-button" onClick={() => setShowProductSection("list")}>
-                  <p className="product-menu">
-                    Product List
-                  </p>
-                </Link>
-              </div>
-            </div>
             </div>
           </div>
         </div>
@@ -149,6 +136,9 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
             {showProductSection.startsWith("productModify/") && (
               <AdminProductModifyPage productId={showProductSection.substring(14)} />
             )}
+          </div>
+          <div className="user-inner">
+            {showProductSection === "userList" && <UserListPage />}
           </div>
         </div>
       </div>

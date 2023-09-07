@@ -96,3 +96,14 @@ export const useFarmUpdateMutation = (): UseMutationResult<FarmModify, unknown, 
     },
   });
 };
+
+// 유저 목록
+export const getUserList = async () => {
+  const response = await axiosInstance.springAxiosInst.get("/user/list", {
+    params: {
+      userToken: localStorage.getItem("userToken"),
+    },
+  });
+  console.log("사용자리스트정보", response.data);
+  return response.data;
+};
