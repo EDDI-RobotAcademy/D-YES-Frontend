@@ -139,7 +139,9 @@ export const getProductDetail = async (productId: string): Promise<ProductDetail
 export const useProductDetailQuery = (
   productId: string
 ): UseQueryResult<ProductDetail | null, unknown> => {
-  return useQuery(["productRead", productId], () => getProductDetail(productId));
+  return useQuery(["productRead", productId], () => getProductDetail(productId), {
+    refetchOnWindowFocus: false,
+  });
 };
 
 // 관리자용 상품 삭제
@@ -164,7 +166,9 @@ export const fetchPopupProduct = async (productId: string): Promise<ProductPopup
   return response.data;
 };
 
-export const usePopupProductQuery = (productId: string): UseQueryResult<ProductPopupRead | null, unknown> => {
+export const usePopupProductQuery = (
+  productId: string
+): UseQueryResult<ProductPopupRead | null, unknown> => {
   return useQuery(["productPopupRead", productId], () => fetchPopupProduct(productId), {
     refetchOnWindowFocus: false,
   });

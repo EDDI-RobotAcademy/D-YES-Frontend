@@ -10,6 +10,17 @@ jest.mock("page/product/api/ProductApi", () => ({
   registerProduct: jest.fn().mockResolvedValue({ success: true }),
 }));
 
+
+beforeAll(() => {
+  document.execCommand = jest.fn();
+});
+
+const originalExecCommand = document.execCommand;
+
+afterAll(() => {
+  document.execCommand = originalExecCommand;
+});
+
 it("상품 등록 정보 테스트", async () => {
   render(
     <BrowserRouter>

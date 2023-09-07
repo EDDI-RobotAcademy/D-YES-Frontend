@@ -35,7 +35,7 @@ interface RouteParams {
   [key: string]: string;
 }
 
-const ProductDetailPage = () => {
+const ProductDetail = () => {
   const navigate = useNavigate();
   const { productId } = useParams<RouteParams>();
   const { data } = useProductDetailQuery(productId || "");
@@ -54,7 +54,9 @@ const ProductDetailPage = () => {
     fetchProductData();
   }, []);
 
-  const parsedHTML = parse(data?.productResponse.productDescription || "");
+  const productResponse = data?.productResponse;
+  const productDescription = productResponse?.productDescription || "";
+  const parsedHTML = parse(productDescription);
 
   const handleDecreaseQuantity = () => {
     if (productQuantity > 1) {
@@ -92,7 +94,7 @@ const ProductDetailPage = () => {
     }
   };
 
-  const mainImage: ImageObject = { id: 0, url: getImageUrl(data?.mainImage.mainImg!) };
+  const mainImage: ImageObject = { id: 0, url: getImageUrl(data?.mainImage?.mainImg || "") };
   const detailImages: ImageObject[] =
     data?.detailImagesList?.map((detail, index) => ({
       id: index + 1,
@@ -109,7 +111,9 @@ const ProductDetailPage = () => {
   };
 
   const selectedOption =
-    data && data.optionList.find((option) => option.optionId === selectedOptionId);
+    data && data.optionList
+      ? data.optionList.find((option) => option.optionId === selectedOptionId)
+      : null;
 
   const yDetail = useRef<HTMLDivElement>(null);
   const yReview = useRef<HTMLDivElement>(null);
@@ -281,59 +285,107 @@ const ProductDetailPage = () => {
                             src={getImageUrl(data?.farmInfoResponse.mainImage)}
                             width={80}
                             height={80}
-                            style={{ paddingTop: "14px", paddingBottom: "8px", borderRadius: "50%"}}
+                            style={{
+                              paddingTop: "14px",
+                              paddingBottom: "8px",
+                              borderRadius: "50%",
+                            }}
                             alt="사진"
                           />
                           <div className="farm-name">
                             <span>{data?.farmInfoResponse.farmName}</span>
                           </div>
                         </div>
-                        <div className="farm-introduce">
-                          {data?.farmInfoResponse.introduction}
-                        </div>
+                        <div className="farm-introduce">{data?.farmInfoResponse.introduction}</div>
                       </div>
 
-                        <TableContainer component={Paper}>
-                          <Table sx={{ minWidth: 650 }} aria-label="farm-info table">
-                            <TableHead style={{ backgroundColor: "#FAFAFA" }}>
-                              <TableRow>
-                                <TableCell className="farm-info-cell" style={{ width: "20%", textAlign: "center" }}>전화</TableCell>
-                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>주소</TableCell>
-                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>생산품목</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              <TableRow key={data?.farmInfoResponse.farmName}>
-                                <TableCell className="farm-info-cell" style={{ width: "20%", textAlign: "center" }}>{data?.farmInfoResponse.csContactNumber}</TableCell>
-                                {/* 임시로 주소만 표기 */}
-                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>{data?.farmInfoResponse.farmAddress.address}</TableCell>
-                                <TableCell className="farm-info-cell" style={{ width: "40%", textAlign: "center" }}>
-                                  {data?.farmInfoResponse.produceTypes.map((produceType, index) => (
-                                    <Chip 
-                                      size="small" 
-                                      style={{color: "#252525", backgroundColor: "#EEEEEE", marginLeft: "3px" }}
-                                      key={index} 
-                                      label={
-                                        produceType === "POTATO" ? "감자" : 
-                                        produceType === "SWEET_POTATO" ? "고구마" : 
-                                        produceType === "CABBAGE" ? "양배추" : 
-                                        produceType === "KIMCHI_CABBAGE" ? "배추" : 
-                                        produceType === "LEAF_LETTUCE" ? "양상추" : 
-                                        produceType === "ROMAINE_LETTUCE" ? "로메인 상추" : 
-                                        produceType === "PEPPER" ? "고추" : 
-                                        produceType === "GARLIC" ? "마늘" : 
-                                        produceType === "TOMATO" ? "토마토" : 
-                                        produceType === "CUCUMBER" ? "오이" : 
-                                        produceType === "CARROT" ? "당근" : 
-                                        produceType === "EGGPLANT" ? "가지" : 
-                                        produceType} />
-                                  ))}
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="farm-info table">
+                          <TableHead style={{ backgroundColor: "#FAFAFA" }}>
+                            <TableRow>
+                              <TableCell
+                                className="farm-info-cell"
+                                style={{ width: "20%", textAlign: "center" }}
+                              >
+                                전화
+                              </TableCell>
+                              <TableCell
+                                className="farm-info-cell"
+                                style={{ width: "40%", textAlign: "center" }}
+                              >
+                                주소
+                              </TableCell>
+                              <TableCell
+                                className="farm-info-cell"
+                                style={{ width: "40%", textAlign: "center" }}
+                              >
+                                생산품목
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow key={data?.farmInfoResponse.farmName}>
+                              <TableCell
+                                className="farm-info-cell"
+                                style={{ width: "20%", textAlign: "center" }}
+                              >
+                                {data?.farmInfoResponse.csContactNumber}
+                              </TableCell>
+                              {/* 임시로 주소만 표기 */}
+                              <TableCell
+                                className="farm-info-cell"
+                                style={{ width: "40%", textAlign: "center" }}
+                              >
+                                {data?.farmInfoResponse.farmAddress.address}
+                              </TableCell>
+                              <TableCell
+                                className="farm-info-cell"
+                                style={{ width: "40%", textAlign: "center" }}
+                              >
+                                {data?.farmInfoResponse.produceTypes.map((produceType, index) => (
+                                  <Chip
+                                    size="small"
+                                    style={{
+                                      color: "#252525",
+                                      backgroundColor: "#EEEEEE",
+                                      marginLeft: "3px",
+                                    }}
+                                    key={index}
+                                    label={
+                                      produceType === "POTATO"
+                                        ? "감자"
+                                        : produceType === "SWEET_POTATO"
+                                        ? "고구마"
+                                        : produceType === "CABBAGE"
+                                        ? "양배추"
+                                        : produceType === "KIMCHI_CABBAGE"
+                                        ? "배추"
+                                        : produceType === "LEAF_LETTUCE"
+                                        ? "양상추"
+                                        : produceType === "ROMAINE_LETTUCE"
+                                        ? "로메인 상추"
+                                        : produceType === "PEPPER"
+                                        ? "고추"
+                                        : produceType === "GARLIC"
+                                        ? "마늘"
+                                        : produceType === "TOMATO"
+                                        ? "토마토"
+                                        : produceType === "CUCUMBER"
+                                        ? "오이"
+                                        : produceType === "CARROT"
+                                        ? "당근"
+                                        : produceType === "EGGPLANT"
+                                        ? "가지"
+                                        : produceType
+                                    }
+                                  />
+                                ))}
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -361,4 +413,4 @@ const ProductDetailPage = () => {
   );
 };
 
-export default ProductDetailPage;
+export default ProductDetail;

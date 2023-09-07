@@ -14,6 +14,16 @@ jest.mock("page/product/api/ProductApi", () => ({
   useProductUpdateMutation: jest.fn(),
 }));
 
+beforeAll(() => {
+  document.execCommand = jest.fn();
+});
+
+const originalExecCommand = document.execCommand;
+
+afterAll(() => {
+  document.execCommand = originalExecCommand;
+});
+
 it("상품 수정 테스트", async () => {
   const fakeUserData = {
     productName: "상품1",
@@ -43,7 +53,7 @@ it("상품 수정 테스트", async () => {
         <AdminProductModifyPage productId="1" />
       </QueryClientProvider>
     </BrowserRouter>
-  );
+  ); 
 
   await act(async () => {
     const productName = screen.getByLabelText("상품명");
