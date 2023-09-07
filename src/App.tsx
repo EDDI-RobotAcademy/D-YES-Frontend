@@ -19,7 +19,7 @@ import AdminProductList from "page/product/productAdmin/AdminProductList";
 import FarmRegisterPage from "./page/admin/adminPage/FarmRegisterPage";
 import TopButton from "utility/TopButton";
 import AdminProductModifyPage from "page/product/productAdmin/AdminProductModifyPage";
-import ProductDetailPage from "page/product/productUser/ProductDetail";
+import ProductDetail from "page/product/productUser/ProductDetail";
 import Cart from "page/cart/Cart";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Order from "page/order/Order";
@@ -50,7 +50,7 @@ const App: React.FC = () => {
             <Route path="/withdrawal" element={<WithdrawalPage />} />
             <Route path="/exit" element={<WithdrawalComplete />} />
             <Route path="/productList" element={<ProductListPage />} />
-            <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
+            <Route path="/productDetail/:productId" element={<ProductDetail />} />
             <Route
               path="/adminPage"
               element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
