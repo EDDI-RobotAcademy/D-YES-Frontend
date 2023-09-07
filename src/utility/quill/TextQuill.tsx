@@ -3,7 +3,6 @@ import "react-quill/dist/quill.snow.css";
 import { useRef, useMemo, useState } from "react";
 import { ImageResize } from "quill-image-resize-module-ts";
 
-
 interface TextQuillProps {
   name: string;
   value: string;
@@ -83,6 +82,8 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
     "bullet",
     "align",
     "image",
+    "color",
+    "background",
   ];
 
   return (
