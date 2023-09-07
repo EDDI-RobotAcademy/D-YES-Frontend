@@ -46,6 +46,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
   const initialAddressInfo = { address: "", zipCode: "" };
+  const [showEditButton, setShowEditButton] = useState(true);
   const [businessInfo, setBusinessInfo] = useState({
     businessName: "",
     businessNumber: "",
@@ -81,11 +82,11 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
           ? selectedFarm.farmInfoResponseForm.produceTypes
           : []
       );
+      setShowEditButton(true);
     }
   }, [selectedFarm]);
 
-
-  // 수정 정보 API로 전달 
+  // 수정 정보 API로 전달
   const modifyMutation = useMutation(updateFarm, {
     onSuccess: (data) => {
       queryClient.setQueryData("farmModify", data);
@@ -118,9 +119,18 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
         mainImage: mainImageName + (s3MainObjectVersion ? `?versionId=${s3MainObjectVersion}` : ""),
       };
 
-      console.log("수정정보전송", updateData)
+      console.log("수정정보전송", updateData);
       await modifyMutation.mutateAsync(updateData);
       queryClient.invalidateQueries(["farm", farmId]);
+
+      setShowEditButton(false);
+
+      handleRegistrationComplete();
+      const updatedSelectedFarm = { ...selectedFarm };
+
+      if (updatedSelectedFarm.farmInfoResponseForm) {
+        updatedSelectedFarm.farmInfoResponseForm.mainImage = "";
+      }
     }
   };
 
@@ -720,7 +730,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
               >
                 등록
               </Button>
-              {selectedFarm && (
+              {selectedFarm && showEditButton && (
                 <Button
                   variant="contained"
                   style={{
