@@ -1,0 +1,26 @@
+.third-header-container {
+  position: relative;
+  margin: 0 auto;
+  padding: 0 60px;
+  float: left;
+}
+.third-header-fontstyle {
+  font-family: "SUIT-Bold";
+  font-size: 18px;
+}
+.third-header-grid {
+  display: flex;
+  float: left;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  width: auto;
+  position: relative;
+}
+.third-header-options {
+  justify-self: baseline;
+}
+.third-header-categoryname {
+  display: flex;
+  justify-content: flex-start;
+}
