@@ -49,7 +49,8 @@ const App: React.FC = () => {
             <Route path="/updateInfo" element={<MyPageUpdate />} />
             <Route path="/withdrawal" element={<WithdrawalPage />} />
             <Route path="/exit" element={<WithdrawalComplete />} />
-            <Route path="/productList" element={<ProductListPage />} />
+            <Route path="/productList/all" element={<ProductListPage />} />
+            <Route path="/productList/:categoryName/:elementName" element={<ProductListPage />} />
             <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
             <Route
               path="/adminPage"

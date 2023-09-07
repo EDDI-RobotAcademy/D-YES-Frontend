@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { CategoryType } from "./entity/CategoryType";
 
@@ -35,7 +35,13 @@ const CategoryComponent = ({ category }: { category: CategoryType }) => {
       <div>{category.categoryName.name}</div>
       <ul>
         {Object.keys(category.categoryElements).map((key) => (
-          <li key={key}>{category.categoryElements[key].name}</li>
+          <li key={key}>
+            <Link
+              to={`/productList/${category.categoryName.categoryName}/${category.categoryElements[key].elementName}`}
+            >
+              {category.categoryElements[key].name}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>

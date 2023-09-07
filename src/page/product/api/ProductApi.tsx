@@ -30,8 +30,12 @@ export const registerProduct = async (data: {
 };
 
 // 사용자용 상품 리스트 확인
-export const getProductList = async () => {
-  const response = await axiosInstance.springAxiosInst.get("/product/user/list");
+export const getProductList = async (categoryName: string, elementName: string) => {
+  const endpoint =
+    categoryName || elementName
+      ? `/product/user/list/${categoryName}/${elementName}`
+      : "/product/user/list/all";
+  const response = await axiosInstance.springAxiosInst.get(endpoint);
   console.log("상품 리스트 데이터", response.data);
   return response.data;
 };
@@ -164,7 +168,9 @@ export const fetchPopupProduct = async (productId: string): Promise<ProductPopup
   return response.data;
 };
 
-export const usePopupProductQuery = (productId: string): UseQueryResult<ProductPopupRead | null, unknown> => {
+export const usePopupProductQuery = (
+  productId: string
+): UseQueryResult<ProductPopupRead | null, unknown> => {
   return useQuery(["productPopupRead", productId], () => fetchPopupProduct(productId), {
     refetchOnWindowFocus: false,
   });
