@@ -51,7 +51,7 @@ const App: React.FC = () => {
             <Route path="/exit" element={<WithdrawalComplete />} />
             <Route path="/productList/all" element={<ProductListPage />} />
             <Route path="/productList/:categoryName/:elementName" element={<ProductListPage />} />
-            <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
+            <Route path="/productDetail/:productId" element={<ProductDetail />} />
             <Route
               path="/adminPage"
               element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
