@@ -268,7 +268,9 @@ const ProductRegisterPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2em" }}>
+    <Container
+      sx={{ maxWidth: "1200px", marginTop: "2em", backgroundColor: "white", marginBottom: "2em" }}
+    >
       <form onSubmit={handleSubmit} onClick={handleFormClick}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 등록</h1>
