@@ -66,7 +66,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
             <TableCell className="cell" style={{ width: "15%", textAlign: "center" }}>
               재고
             </TableCell>
-            <TableCell className="cell" style={{ textAlign: "center" }}>
+            <TableCell className="cell" style={{ width: "20%", textAlign: "center" }}>
               단위
             </TableCell>
             {isEditMode && (
@@ -74,7 +74,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
               옵션 판매여부
             </TableCell>
             )}
-            <TableCell style={{ textAlign: "center" }}>삭제</TableCell>
+            <TableCell style={{  width: "5%", textAlign: "center" }}>삭제</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
