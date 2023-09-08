@@ -1,5 +1,6 @@
 import axiosInstance from "utility/axiosInstance";
 import { OrderInfo } from "../entity/OrderInfo";
+import { UserAddress } from "../entity/UserAddress";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -11,5 +12,17 @@ export const getOrderInfo = async () => {
     },
   });
   console.log("주문 확인 데이터", response.data);
+  return response.data;
+};
+
+// 사용자 주소 정보 수정
+export const updateAddressInfo = async (updatedData: UserAddress) => {
+  const { address, zipCode, addressDetail } = updatedData;
+  const response = await axiosInstance.springAxiosInst.put("/order/updateInfo", {
+    userToken: userToken,
+    address,
+    zipCode,
+    addressDetail,
+  });
   return response.data;
 };

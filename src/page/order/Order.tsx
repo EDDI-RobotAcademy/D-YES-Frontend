@@ -4,9 +4,10 @@ import { won } from "utility/filters/wonFilter";
 import { OrderInfo } from "./entity/OrderInfo";
 import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
-import { getOrderInfo } from "./api/OrderApi";
+import { getOrderInfo, updateAddressInfo } from "./api/OrderApi";
 import { Grid, Button, Checkbox, Paper, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { UserAddress } from "./entity/UserAddress";
 
 import "./css/Order.css";
 
@@ -21,6 +22,7 @@ const Order = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadedItems, setLoadedItems] = useState<OrderInfo>();
   const [defaultAddress, setDefaultAddress] = useState(false);
+
   let discount = 0;
   let deliveryFee = 0;
 
@@ -41,6 +43,7 @@ const Order = () => {
         const data = await getOrderInfo();
         setLoadedItems(data);
         setIsLoading(true);
+        localStorage.setItem("addressDetail", data?.userResponse.addressDetail);
       } catch (error) {
         toast.error("서버와의 통신에 실패했습니다");
       }
@@ -60,10 +63,49 @@ const Order = () => {
           address: data.address,
           zipCode: data.zonecode,
         });
-        document.getElementById("addrDetail")?.focus();
+        // 주소 고르고 난 뒤 addressDetail이라는 이름을 가진 요소 focus
+        document.getElementById("addressDetail")?.focus();
       },
     }).open();
   };
+
+  const handlePayment = async () => {
+    if (defaultAddress) {
+      const userAddressInfo: UserAddress = {
+        address:
+          addressInfo.address === ""
+            ? loadedItems?.userResponse.address
+              ? loadedItems?.userResponse?.address
+              : ""
+            : addressInfo.address,
+
+        zipCode:
+          addressInfo.zipCode === ""
+            ? loadedItems?.userResponse.zipCode
+              ? loadedItems?.userResponse?.zipCode
+              : ""
+            : addressInfo.zipCode,
+
+        addressDetail: localStorage.getItem("addressDetail") || "",
+      };
+      try {
+        await updateAddressInfo(userAddressInfo);
+        toast.success("배송지 정보가 업데이트되었습니다");
+      } catch {
+        toast.error("배송지 정보 업데이트에 실패했습니다");
+      }
+    }
+  };
+
+  const removeLocalStorageAddr = () => {
+    localStorage.removeItem("addressDetail");
+  };
+
+  useEffect(() => {
+    return () => {
+      removeLocalStorageAddr();
+    };
+  }, []);
 
   return (
     <div className="order-container">
@@ -129,7 +171,7 @@ const Order = () => {
                       margin="normal"
                       className="custom-input"
                       placeholder="연락처"
-                      value={loadedItems?.userResponse?.contactNumber || ""}
+                      defaultValue={loadedItems?.userResponse?.contactNumber || ""}
                     />
                     <div>이메일</div>
                     <TextField
@@ -140,7 +182,7 @@ const Order = () => {
                       margin="normal"
                       className="custom-input"
                       placeholder="이메일"
-                      value={loadedItems?.userResponse?.email || ""}
+                      defaultValue={loadedItems?.userResponse?.email || ""}
                     />
                     <div className="order-checkbox">
                       <span className="asterisk">*</span>&nbsp;표시는 필수입력 사항입니다.
@@ -162,7 +204,15 @@ const Order = () => {
                     variant="outlined"
                     margin="normal"
                     className="custom-input"
-                    value={loadedItems?.userResponse?.address || ""}
+                    value={
+                      addressInfo.address === ""
+                        ? [
+                            loadedItems?.userResponse.address
+                              ? loadedItems?.userResponse?.address
+                              : "",
+                          ]
+                        : addressInfo.address
+                    }
                     aria-readonly
                     placeholder="주소 검색"
                     onClick={onClickAddr}
@@ -180,7 +230,15 @@ const Order = () => {
                         margin="normal"
                         className="custom-input"
                         placeholder="우편번호"
-                        value={loadedItems?.userResponse?.zipCode || ""}
+                        value={
+                          addressInfo.zipCode === ""
+                            ? [
+                                loadedItems?.userResponse.zipCode
+                                  ? loadedItems?.userResponse?.zipCode
+                                  : "",
+                              ]
+                            : addressInfo.zipCode
+                        }
                         disabled
                       />
                     </Tooltip>
@@ -197,7 +255,10 @@ const Order = () => {
                       margin="normal"
                       className="custom-input"
                       placeholder="상세주소 입력"
-                      value={loadedItems?.userResponse?.addressDetail || ""}
+                      defaultValue={localStorage.getItem("addressDetail")}
+                      onChange={(event) => {
+                        localStorage.setItem("addressDetail", event.target.value);
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -206,8 +267,11 @@ const Order = () => {
                     </div>
                     <div className="order-checkbox">
                       <br />
-                      <Checkbox onChange={() => setDefaultAddress(true)} />
-                      기본 배송지로 등록&nbsp;&nbsp;
+                      <Checkbox
+                        data-testid="order-checkbox-testid"
+                        onChange={() => setDefaultAddress(true)}
+                      />
+                      기본 배송지로 등록
                       <Tooltip title="입력한 정보가 사용자 프로필 정보에 저장됩니다">
                         <HelpOutlineIcon fontSize="small" />
                       </Tooltip>
@@ -246,7 +310,11 @@ const Order = () => {
                   </div>
                   <br />
                   <div className="order-payment">
-                    <Button className="order-payment-button" variant="outlined">
+                    <Button
+                      className="order-payment-button"
+                      variant="outlined"
+                      onClick={handlePayment}
+                    >
                       결제하기
                     </Button>
                   </div>
