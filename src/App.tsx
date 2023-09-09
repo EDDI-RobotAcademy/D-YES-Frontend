@@ -44,7 +44,8 @@ const App: React.FC = () => {
               <Route path="/withdrawal" element={<WithdrawalPage />} />
               <Route path="/exit" element={<WithdrawalComplete />} />
               <Route path="/productList/all" element={<ProductListPage />} />
-              <Route path="/productList/:categoryName/:elementName" element={<ProductListPage />} />
+              <Route path="/productList/category/:categoryName" element={<ProductListPage />} />
+              <Route path="/productList/region/:region" element={<ProductListPage />} />
               <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/order" element={<Order />} />
