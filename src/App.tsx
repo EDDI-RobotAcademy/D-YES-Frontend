@@ -21,7 +21,8 @@ import ProductRegisterPage from "page/admin/adminPage/product/ProductRegisterPag
 import SnackBar from "layout/snackBar/SnackBar";
 import TopButton from "utility/TopButton";
 import { AdminLayout, UserLayout } from "Layout";
-import AdminProductList from "page/admin/adminPage/product/AdminProductList";
+import AdminProductList from "page/admin/adminPage/product/AdminProductListPage";
+import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
 
 const theme = createTheme({
   typography: {
@@ -57,7 +58,11 @@ const App: React.FC = () => {
               <Route path="/farmRegisterPage" element={<FarmRegisterPage />} />
               <Route path="/userListPage" element={<UserListPage />} />
               <Route path="/productRegisterPage" element={<ProductRegisterPage />} />
-              {/* <Route path="/adminProductListPage" element={<AdminProductList />} /> */}
+              <Route path="/adminProductListPage" element={<AdminProductList />} />
+              <Route
+                path="/adminProductModifyPage/:productId"
+                element={<AdminProductModifyPage />}
+              />
             </Route>
           </Routes>
         </BrowserRouter>

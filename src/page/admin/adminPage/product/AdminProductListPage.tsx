@@ -18,12 +18,9 @@ import "./css/AdminProductList.css";
 import ReadPopup from "./productOption/ReadPopup";
 import useProductStore from "store/product/ProductStore";
 import { deleteProducts, fetchProductList, useProductListQuery } from "page/product/api/ProductApi";
+import { useNavigate } from "react-router-dom";
 
-interface AdminProductListProps {
-  setShowProductSection: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSection }) => {
+const AdminProductList: React.FC = () => {
   const setProducts = useProductStore((state) => state.setProducts);
   const [selectedOptions, setSelectedOptions] = useState<{ [productId: number]: string }>({});
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
@@ -31,6 +28,7 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
   const queryClient = useQueryClient();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -66,7 +64,7 @@ const AdminProductList: React.FC<AdminProductListProps> = ({ setShowProductSecti
   };
 
   const handleEditClick = (productId: number) => {
-    setShowProductSection(`productModify/${productId}`);
+    navigate(`../adminProductModifyPage/${productId}`);
   };
 
   const handleRowClick = (productId: number) => {
