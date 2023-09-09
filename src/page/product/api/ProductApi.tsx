@@ -31,10 +31,14 @@ export const registerProduct = async (data: {
 
 // 사용자용 상품 리스트 확인
 export const getProductList = async (categoryName: string, elementName: string) => {
-  const endpoint =
-    categoryName || elementName
-      ? `/product/user/list/${categoryName}/${elementName}`
-      : "/product/user/list/all";
+  let endpoint = "/product/user/list/all";
+
+  if (categoryName) {
+    endpoint = `/product/user/list/${categoryName}`;
+  } else if (elementName) {
+    endpoint = `/product/user/list/${elementName}`;
+  }
+
   const response = await axiosInstance.springAxiosInst.get(endpoint);
   console.log("상품 리스트 데이터", response.data);
   return response.data;
