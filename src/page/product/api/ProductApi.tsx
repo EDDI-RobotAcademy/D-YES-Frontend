@@ -30,11 +30,19 @@ export const registerProduct = async (data: {
 };
 
 // 사용자용 상품 리스트 확인
-export const getProductList = async (categoryName: string, elementName: string) => {
-  const endpoint =
-    categoryName || elementName
-      ? `/product/user/list/${categoryName}/${elementName}`
-      : "/product/user/list/all";
+export const getProductList = async (currentPath: string) => {
+  let endpoint = "/product/user/list/all";
+
+  const selectedName = currentPath.substring(currentPath.lastIndexOf("/") + 1);
+  const isCategoryPath = currentPath.startsWith("/productList/category/");
+  const isRegionPath = currentPath.startsWith("/productList/region/");
+
+  if (isCategoryPath) {
+    endpoint = `/product/user/list/category/${selectedName}`;
+  } else if (isRegionPath) {
+    endpoint = `/product/user/list/region/${selectedName}`;
+  }
+  
   const response = await axiosInstance.springAxiosInst.get(endpoint);
   console.log("상품 리스트 데이터", response.data);
   return response.data;
