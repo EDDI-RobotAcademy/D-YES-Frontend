@@ -264,7 +264,9 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2em" }}>
+    <Container
+      sx={{ maxWidth: "1200px", marginTop: "2em", backgroundColor: "white", marginBottom: "2em" }}
+    >
       <form onClick={handleFormClick}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 수정</h1>
@@ -297,7 +299,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                       <Select
                         name="cultivationMethod"
                         value={selectedCultivationMethod}
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%", height: "40px" }}
                         onChange={(e) => setSelectedCultivationMethod(e.target.value)}
                       >
                         <MenuItem value="" disabled>
@@ -333,7 +335,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
                       <Select
                         name="saleStatus"
                         value={selectedSaleStatus}
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%", height: "40px" }}
                         onChange={(e) => setSelectedSaleStatus(e.target.value)}
                       >
                         <MenuItem value="" disabled>
@@ -491,7 +493,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
             <p>Loading product data...</p>
           )}
         </Box>
-        <Button variant="outlined" onClick={handleEditFinishClick}>
+        <Button variant="outlined" onClick={handleEditFinishClick} sx={{ marginBottom: "30px" }}>
           수정 완료
         </Button>
       </form>
