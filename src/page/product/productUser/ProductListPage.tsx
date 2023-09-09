@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProductList } from "../entity/ProductList";
 import RotatingIconButton from "./RotatingIconButton";
 import ToggleComponent from "../productAdmin/productOption/ToggleComponent";
@@ -67,13 +67,12 @@ const ProductListPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadedProducts, setLoadedProducts] = useState<ProductList[]>([]);
   const navigate = useNavigate();
-  const location = useLocation();
-  const currentPath = location.pathname;
+  const { categoryName, elementName } = useParams();
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await getProductList(currentPath!);
+        const response = await getProductList(categoryName!, elementName!);
         setLoadedProducts(response);
         setLoading(false);
       } catch (error) {
