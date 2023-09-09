@@ -1,11 +1,8 @@
-import Footer from "layout/footer/Footer";
 import { AuthProvider } from "layout/navigation/AuthConText";
-import Header from "layout/navigation/Header";
-import Header2nd from "layout/navigation/Header2nd";
 import LoginPage from "oauth/LoginPage";
 import MainPage from "page/MainPage";
 import MyPage from "page/user/myPage/MyPage";
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SnackBar from "layout/snackBar/SnackBar";
 import MyPageUpdate from "page/user/myPage/MyPageUpdate";
@@ -15,15 +12,14 @@ import AdminPage from "page/admin/AdminPage";
 import NormalAdminRegister from "page/admin/adminPage/NormalAdminRegister";
 import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
 import ProductListPage from "page/product/productUser/ProductListPage";
-import AdminProductList from "page/product/productAdmin/AdminProductList";
 import FarmRegisterPage from "./page/admin/adminPage/FarmRegisterPage";
 import TopButton from "utility/TopButton";
-import AdminProductModifyPage from "page/product/productAdmin/AdminProductModifyPage";
 import ProductDetail from "page/product/productUser/ProductDetail";
 import Cart from "page/cart/Cart";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Order from "page/order/Order";
 import ScrollToTop from "utility/ScrollToTop";
+import Layout from "Layout";
 
 const theme = createTheme({
   typography: {
@@ -32,36 +28,33 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
-  const [showHeader, setShowHeader] = useState(true);
-  const [showFooter, setShowFooter] = useState(true);
-
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
-          {showHeader && <Header />}
-          {showHeader && <Header2nd />}
           <ScrollToTop />
           <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/myPage" element={<MyPage />} />
-            <Route path="/updateInfo" element={<MyPageUpdate />} />
-            <Route path="/withdrawal" element={<WithdrawalPage />} />
-            <Route path="/exit" element={<WithdrawalComplete />} />
-            <Route path="/productList" element={<ProductListPage />} />
-            <Route path="/productDetail/:productId" element={<ProductDetail />} />
-            <Route
-              path="/adminPage"
-              element={<AdminPage setShowHeader={setShowHeader} setShowFooter={setShowFooter} />}
-            />
-            <Route path="/productRegister" element={<ProductRegisterPage />} />
-            <Route path="/adminRegister" element={<NormalAdminRegister />} />
-            <Route path="/farmRegister" element={<FarmRegisterPage />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/order" element={<Order />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/myPage" element={<MyPage />} />
+              <Route path="/updateInfo" element={<MyPageUpdate />} />
+              <Route path="/withdrawal" element={<WithdrawalPage />} />
+              <Route path="/exit" element={<WithdrawalComplete />} />
+              <Route path="/productList/all" element={<ProductListPage />} />
+              <Route path="/productList/:categoryName/:elementName" element={<ProductListPage />} />
+              <Route path="/productDetail/:productId" element={<ProductDetail />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/order" element={<Order />} />
+            </Route>
+
+            <Route>
+              <Route path="/adminPage" element={<AdminPage />} />
+              <Route path="/productRegister" element={<ProductRegisterPage />} />
+              <Route path="/adminRegister" element={<NormalAdminRegister />} />
+              <Route path="/farmRegister" element={<FarmRegisterPage />} />
+            </Route>
           </Routes>
-          {showFooter && <Footer />}
         </BrowserRouter>
         <SnackBar />
         <TopButton />

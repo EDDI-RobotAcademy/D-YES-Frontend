@@ -1,56 +1,53 @@
+.second-header-container {
+  position: relative;
+  margin: 0 auto;
+  padding: 0 60px;
+}
 .second-header-fontstyle {
   font-family: "SUIT-Bold";
   font-size: 18px;
 }
-
-.second-top-bar {
+.second-header-top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  width: 400px;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   width: auto;
-  margin-left: 450px;
-  margin-right: 450px;
+  z-index: 5;
   position: relative;
-  z-index: 50;
 }
-
-.top-bar-left {
-  width: 20%;
+.second-header-btn-container {
+  display: flex;
+  gap: 50px;
 }
-
-.top-bar-right {
-  width: 60%;
-  right: 0;
-  text-align: right;
-  min-width: 400px;
-}
-
-.go-to-catagory {
+.second-header-link {
+  align-items: center;
+  display: flex;
   text-decoration: none;
   color: #252525;
-  min-width: 200px;
+  gap: 5px;
 }
-
-.go-to-new {
-  text-decoration: none;
-  color: #252525;
-  margin-left: 80px;
+.second-header-drawer {
+  position: absolute;
+  top: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  width: 100%;
+  background-color: white;
+  margin-left: 0;
+  margin-right: 0;
+  z-index: 55;
 }
-
-.go-to-best {
-  text-decoration: none;
-  color: #252525;
-  margin-left: 80px;
-  /* background-color: green; */
+.second-header-top-bar:hover .second-header-drawer {
+  display: flex;
 }
-
-.go-to-event {
-  text-decoration: none;
-  color: #252525;
-  margin-left: 80px;
-  margin-right: 0px;
-  /* background-color: yellow; */
-}
+/* .second-header-top-bar .second-header-drawer {
+  display: flex;
+} */
+/* .drawer-open {
+  background-color: rgb(221, 238, 232);
+} */

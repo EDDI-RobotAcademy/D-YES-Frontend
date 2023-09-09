@@ -10,26 +10,9 @@ import FarmRegisterPage from "./adminPage/FarmRegisterPage";
 import AdminProductModifyPage from "page/product/productAdmin/AdminProductModifyPage";
 import UserListPage from "./adminPage/UserListPage";
 
-interface ProductPageProps {
-  setShowHeader: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowFooter: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter }) => {
+const AdminPage: React.FC = () => {
   const [showProductSection, setShowProductSection] = useState("register");
   const auth = useAuth();
-
-  useEffect(() => {
-    // 마운트되었을 때 Header를 숨기도록 설정
-    setShowHeader(false);
-    setShowFooter(false);
-
-    return () => {
-      // 컴포넌트 언마운트 시에 Header를 다시 보이도록 설정
-      setShowHeader(true);
-      setShowFooter(true);
-    };
-  }, [setShowHeader, setShowFooter]);
 
   return (
     <div className="product-page">
@@ -137,9 +120,7 @@ const AdminPage: React.FC<ProductPageProps> = ({ setShowHeader, setShowFooter })
               <AdminProductModifyPage productId={showProductSection.substring(14)} />
             )}
           </div>
-          <div className="user-inner">
-            {showProductSection === "userList" && <UserListPage />}
-          </div>
+          <div className="user-inner">{showProductSection === "userList" && <UserListPage />}</div>
         </div>
       </div>
     </div>

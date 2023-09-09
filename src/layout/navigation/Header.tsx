@@ -51,29 +51,31 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   };
 
   return (
-    <div className="header-fontstyle">
-      <div className="top-bar">
-        <Link className="Home" to={"/"}>
-          <img alt="로고" src="/img/text_logo.png" style={{ width: "100px" }}/>
-        </Link>
-        {isLoggedIn ? (
-          <>
-            {checkAdminAuthorization() ? (
-              <Link className="register" to={"/adminPage"}>
-                <p>관리자 페이지</p>
+    <div className="header-container">
+      <div className="header-fontstyle">
+        <div className="header-top-bar">
+          <Link className="Home" to={"/"}>
+            <img alt="로고" src="/img/text_logo.png" style={{ width: "100px" }} />
+          </Link>
+          {isLoggedIn ? (
+            <>
+              {checkAdminAuthorization() ? (
+                <Link className="register" to={"/adminPage"}>
+                  <p>관리자 페이지</p>
+                </Link>
+              ) : null}
+              <AccountMenu handleLogout={handleLogout} />
+            </>
+          ) : (
+            <>
+              <Link className="Login" to={"/login"}>
+                <p>로그인</p>
               </Link>
-            ) : null}
-            <AccountMenu handleLogout={handleLogout} />
-          </>
-        ) : (
-          <>
-            <Link className="Login" to={"/login"}>
-              <p>로그인</p>
-            </Link>
-          </>
-        )}
+            </>
+          )}
+        </div>
+        {children}
       </div>
-      {children}
     </div>
   );
 };

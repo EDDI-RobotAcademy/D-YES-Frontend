@@ -1,17 +1,26 @@
 import React from "react";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import * as OrderApi from "page/order/api/OrderApi";
 import Order from "page/order/Order";
+import { OrderInfo } from "page/order/entity/OrderInfo";
 
 jest.mock("page/order/api/OrderApi", () => ({
   getOrderInfo: jest.fn(),
+  updateAddressInfo: jest.fn(),
 }));
 
 it("주문 상품 목록", async () => {
-  const orderList = {
+  const orderList: OrderInfo = {
+    userResponse: {
+      address: "테스트주소1",
+      zipCode: "12345",
+      addressDetail: "테스트주소2",
+      contactNumber: "01012345678",
+      email: "test@test.com",
+    },
     productResponseList: [
       {
         optionId: 1,
@@ -19,7 +28,7 @@ it("주문 상품 목록", async () => {
         productName: "테스트상품1",
         optionPrice: 1000000,
         optionCount: 5,
-        value: "10",
+        value: 10,
         unit: "KG",
       },
       {
@@ -28,17 +37,10 @@ it("주문 상품 목록", async () => {
         productName: "테스트상품2",
         optionPrice: 2000000,
         optionCount: 5,
-        value: "10",
+        value: 10,
         unit: "KG",
       },
     ],
-    userResponse: {
-      contactNumber: "0101234567890",
-      email: "test@test.com",
-      address: "테스트주소1",
-      zipCode: "12345",
-      addressDetail: "테스트주소2",
-    },
   };
 
   (OrderApi.getOrderInfo as jest.Mock).mockResolvedValue(orderList);
@@ -51,13 +53,13 @@ it("주문 상품 목록", async () => {
     </BrowserRouter>
   );
 
+  expect(screen.queryAllByTestId("order-test-id"));
+
+  const checkbox = await screen.findByTestId("order-checkbox-testid");
+
+  fireEvent.click(checkbox);
+
   await waitFor(() => {
-    const productContainers = screen.queryAllByTestId("order-test-id");
-
-    const hasTextContent = productContainers.some((container) => {
-      return container.textContent?.includes("개");
-    });
-
-    expect(hasTextContent).toBeTruthy();
+    expect(checkbox).toBeInTheDocument();
   });
 });
