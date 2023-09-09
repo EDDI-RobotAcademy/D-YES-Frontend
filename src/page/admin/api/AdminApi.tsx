@@ -1,7 +1,4 @@
 import axiosInstance from "utility/axiosInstance";
-import { Admin } from "../entity/Admin";
-import { Farm } from "page/farm/entity/Farm";
-import { FarmRead } from "page/farm/entity/FarmRead";
 import {
   UseMutationResult,
   UseQueryResult,
@@ -9,7 +6,10 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { FarmModify } from "page/farm/entity/FarmModify";
+import { Farm } from "entity/farm/Farm";
+import { FarmRead } from "entity/farm/FarmRead";
+import { FarmModify } from "entity/farm/FarmModify";
+import { Admin } from "entity/admin/Admin";
 
 export const adminRegister = async (data: {
   id: string;

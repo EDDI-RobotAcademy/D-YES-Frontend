@@ -1,6 +1,6 @@
+import { OrderInfo } from "entity/order/OrderInfo";
+import { UserAddress } from "entity/order/UserAddress";
 import axiosInstance from "utility/axiosInstance";
-import { OrderInfo } from "../entity/OrderInfo";
-import { UserAddress } from "../entity/UserAddress";
 
 const userToken = localStorage.getItem("userToken");
 

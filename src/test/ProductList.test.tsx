@@ -3,8 +3,8 @@ import { render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
-import ProductListPage from "page/product/productUser/ProductListPage";
 import { Typography } from "@mui/material";
+import ProductListPage from "page/product/ProductListPage";
 
 jest.mock("page/product/api/ProductApi", () => ({
   getProductList: jest.fn().mockResolvedValue([

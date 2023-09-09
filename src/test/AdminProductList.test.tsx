@@ -3,8 +3,8 @@ import { render, waitFor, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
-import AdminProductList from "page/product/productAdmin/AdminProductList";
 import { useProductListQuery } from "page/product/api/ProductApi";
+import AdminProductList from "page/admin/adminPage/product/AdminProductList";
 
 jest.mock("page/product/api/ProductApi", () => ({
   useProductListQuery: jest.fn(),

@@ -1,5 +1,5 @@
 import Carousel from "layout/carousel/Carousel";
-import ProductRandomListPage from "page/product/productUser/ProductRandomListPage"
+import ProductRandomListPage from "page/product/ProductRandomListPage";
 import React from "react";
 
 import "./css/MainPage.css";

@@ -6,7 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { User } from "../entity/User";
+import { User } from "entity/user/User";
 
 const userToken = localStorage.getItem("userToken");
 

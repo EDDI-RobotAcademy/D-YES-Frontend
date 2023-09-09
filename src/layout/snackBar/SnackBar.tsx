@@ -1,7 +1,7 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import './SnackBar.css'
+import "react-toastify/dist/ReactToastify.css";
+import "./css/SnackBar.css";
 
 const SnackBar: React.FC = () => {
   return (

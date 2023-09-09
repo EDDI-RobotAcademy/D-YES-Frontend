@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           {isLoggedIn ? (
             <>
               {checkAdminAuthorization() ? (
-                <Link className="register" to={"/adminPage"}>
+                <Link className="register" to="/adminMainPage">
                   <p>관리자 페이지</p>
                 </Link>
               ) : null}
