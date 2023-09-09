@@ -50,7 +50,7 @@ it("상품 수정 테스트", async () => {
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
-        <AdminProductModifyPage productId="1" />
+        <AdminProductModifyPage />
       </QueryClientProvider>
     </BrowserRouter>
   );

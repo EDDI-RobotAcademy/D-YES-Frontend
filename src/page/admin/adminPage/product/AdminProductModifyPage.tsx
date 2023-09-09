@@ -8,7 +8,7 @@ import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
 import { useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import TextQuill from "utility/quill/TextQuill";
 import {
@@ -22,8 +22,14 @@ import { Product } from "entity/product/Product";
 import { ProductImg } from "entity/product/ProductMainImg";
 import { ProductModify } from "entity/product/ProductModify";
 
-const AdminProductModifyPage = ({ productId }: { productId: string }) => {
+interface RouteParams {
+  productId: string;
+  [key: string]: string;
+}
+
+const AdminProductModifyPage = () => {
   const navigate = useNavigate();
+  const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
@@ -224,7 +230,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
       );
 
       const updatedData: ProductModify = {
-        productId: parseInt(productId),
+        productId: parseInt(productId || ""),
         productModifyRequest: productModifyRequestData,
         productOptionModifyRequest: useOptions,
         productMainImageModifyRequest: productMainImageModifyRequest,
@@ -262,7 +268,7 @@ const AdminProductModifyPage = ({ productId }: { productId: string }) => {
 
       await mutation.mutateAsync(updatedData);
       console.log("확인", updatedData);
-      queryClient.invalidateQueries(["productModify", parseInt(productId)]);
+      queryClient.invalidateQueries(["productModify", parseInt(productId || "")]);
       navigate("/");
     }
   };

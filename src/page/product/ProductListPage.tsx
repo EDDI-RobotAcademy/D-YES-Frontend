@@ -81,7 +81,7 @@ const ProductListPage = () => {
       }
     };
     loadProducts();
-  }, []);
+  }, [currentPath]);
 
   const handleProductClick = (productId: number) => {
     navigate(`/productDetail/${productId}`);

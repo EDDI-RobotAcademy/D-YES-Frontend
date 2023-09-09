@@ -4,13 +4,11 @@ import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { useProductListQuery } from "page/product/api/ProductApi";
-import AdminProductList from "page/admin/adminPage/product/AdminProductList";
+import AdminProductList from "page/admin/adminPage/product/AdminProductListPage";
 
 jest.mock("page/product/api/ProductApi", () => ({
   useProductListQuery: jest.fn(),
 }));
-
-const mockSetShowProductSection = jest.fn();
 
 it("관리자 상품 리스트 페이지 랜더링 테스트", async () => {
   const products = [
@@ -27,7 +25,7 @@ it("관리자 상품 리스트 페이지 랜더링 테스트", async () => {
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
-        <AdminProductList setShowProductSection={mockSetShowProductSection} />
+        <AdminProductList />
       </QueryClientProvider>
     </BrowserRouter>
   );
