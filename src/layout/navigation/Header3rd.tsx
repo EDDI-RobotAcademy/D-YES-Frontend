@@ -37,7 +37,13 @@ const CategoryComponent = ({ category }: { category: CategoryType }) => {
         {Object.keys(category.categoryElements).map((key) => (
           <li key={key}>
             <Link
-              to={`/productList/${category.categoryName.categoryName}/${category.categoryElements[key].elementName}`}
+              to={
+                category.categoryId === 1
+                  ? `/productList/category/${category.categoryElements[key].elementName}`
+                  : category.categoryId === 2
+                  ? `/productList/region/${category.categoryElements[key].elementName}`
+                  : "/"
+              }
             >
               {category.categoryElements[key].name}
             </Link>
