@@ -19,8 +19,8 @@ import "./css/FarmRegister.css";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
-import { FarmRead } from "page/farm/entity/FarmRead";
-import { FarmModify } from "page/farm/entity/FarmModify";
+import { FarmModify } from "entity/farm/FarmModify";
+import { FarmRead } from "entity/farm/FarmRead";
 
 declare global {
   interface Window {

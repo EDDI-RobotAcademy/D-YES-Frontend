@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { changeCartItemCount, deleteCartItems, getCartItemList } from "./api/CartApi";
 import { toast } from "react-toastify";
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import { CartItems } from "./entity/CartItems";
-import { Cart } from "./entity/Cart";
 import { won } from "utility/filters/wonFilter";
 import { getImageUrl } from "utility/s3/awsS3";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -14,6 +12,8 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
 import "./css/Cart.css";
+import { CartItems } from "entity/cart/CartItems";
+import { Cart } from "entity/cart/Cart";
 
 export default function CartList() {
   const [isLoading, setIsLoading] = useState(false);

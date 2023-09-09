@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import * as OrderApi from "page/order/api/OrderApi";
 import Order from "page/order/Order";
-import { OrderInfo } from "page/order/entity/OrderInfo";
+import { OrderInfo } from "entity/order/OrderInfo";
 
 jest.mock("page/order/api/OrderApi", () => ({
   getOrderInfo: jest.fn(),

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, InputLabel, OutlinedInput, colors } from "@mui/material";
+import { Box, Button, Container, InputLabel, OutlinedInput } from "@mui/material";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
-import { User } from "../entity/User";
 import { getImageUrl } from "utility/s3/awsS3";
+import { User } from "entity/user/User";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -104,7 +104,6 @@ const MyPage = () => {
           name="email"
           readOnly
           value={user?.email || ""}
-
         />
         <InputLabel className="input-font-size" htmlFor="nickName">
           닉네임
@@ -113,9 +112,9 @@ const MyPage = () => {
           className="output-style no-border"
           id="nickName"
           name="nickName"
-          readOnly 
+          readOnly
           value={user?.nickName || ""}
-          />
+        />
         <InputLabel className="input-font-size" htmlFor="contactNumber">
           휴대폰 번호
         </InputLabel>

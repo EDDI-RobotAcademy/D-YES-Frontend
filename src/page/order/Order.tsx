@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
-import { OrderInfo } from "./entity/OrderInfo";
 import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
 import { getOrderInfo, updateAddressInfo } from "./api/OrderApi";
 import { Grid, Button, Checkbox, Paper, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { UserAddress } from "./entity/UserAddress";
 
 import "./css/Order.css";
+import { UserAddress } from "entity/order/UserAddress";
+import { OrderInfo } from "entity/order/OrderInfo";
 
 interface IAddr {
   address: string;

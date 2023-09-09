@@ -1,8 +1,4 @@
 import axiosInstance from "utility/axiosInstance";
-import { Product } from "../entity/Product";
-import { useOptions } from "../entity/useOptions";
-import { ProductImg } from "../entity/ProductMainImg";
-import { ProductDetailImg } from "../entity/ProductDetailImg";
 import {
   UseMutationResult,
   UseQueryResult,
@@ -10,11 +6,15 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import useProductStore from "../store/ProductStore";
-import { ProductRead } from "../entity/ProductRead";
-import { ProductModify } from "../entity/ProductModify";
-import { ProductDetail } from "../entity/ProductDetail";
-import { ProductPopupRead } from "../entity/ProductPopupRead";
+import { Product } from "entity/product/Product";
+import { useOptions } from "entity/product/useOptions";
+import { ProductImg } from "entity/product/ProductMainImg";
+import { ProductDetailImg } from "entity/product/ProductDetailImg";
+import useProductStore from "store/product/ProductStore";
+import { ProductRead } from "entity/product/ProductRead";
+import { ProductModify } from "entity/product/ProductModify";
+import { ProductDetail } from "entity/product/ProductDetail";
+import { ProductPopupRead } from "entity/product/ProductPopupRead";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {

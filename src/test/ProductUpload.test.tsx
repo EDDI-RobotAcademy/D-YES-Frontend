@@ -4,12 +4,11 @@ import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
-import ProductRegisterPage from "page/product/productAdmin/ProductRegisterPage";
+import ProductRegisterPage from "page/admin/adminPage/product/ProductRegisterPage";
 
 jest.mock("page/product/api/ProductApi", () => ({
   registerProduct: jest.fn().mockResolvedValue({ success: true }),
 }));
-
 
 beforeAll(() => {
   document.execCommand = jest.fn();

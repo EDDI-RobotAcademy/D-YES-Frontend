@@ -10,12 +10,12 @@ import {
   IconButton,
 } from "@mui/material";
 import { deleteFarm, fetchFarm, getFarmList } from "page/admin/api/AdminApi";
-import { Farm } from "page/farm/entity/Farm";
 import { useQueryClient } from "react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { fetchProductList } from "page/product/api/ProductApi";
-import { FarmRead } from "page/farm/entity/FarmRead";
+import { FarmRead } from "entity/farm/FarmRead";
+import { Farm } from "entity/farm/Farm";
 
 interface FarmListProps {
   setSelectedFarm: (farm: FarmRead | null) => void;
@@ -204,7 +204,10 @@ const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
               </TableHead>
               <tbody>
                 {farmList.map((farm) => (
-                  <TableRow key={farm.farmId} onClick={() => handleFarmClick(farm.farmId.toString())}>
+                  <TableRow
+                    key={farm.farmId}
+                    onClick={() => handleFarmClick(farm.farmId.toString())}
+                  >
                     <TableCell
                       style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                     >
