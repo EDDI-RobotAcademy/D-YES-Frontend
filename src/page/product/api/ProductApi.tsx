@@ -42,7 +42,7 @@ export const getProductList = async (currentPath: string) => {
   } else if (isRegionPath) {
     endpoint = `/product/user/list/region/${selectedName}`;
   }
-  
+
   const response = await axiosInstance.springAxiosInst.get(endpoint);
   console.log("상품 리스트 데이터", response.data);
   return response.data;
@@ -85,7 +85,7 @@ export const deleteProducts = async (productIds: string[]): Promise<any> => {
   const response = await axiosInstance.springAxiosInst.delete("/product/deleteList", {
     data: deleteForm,
   });
-
+  console.log("상품삭제", response.data)
   return response.data;
 };
 

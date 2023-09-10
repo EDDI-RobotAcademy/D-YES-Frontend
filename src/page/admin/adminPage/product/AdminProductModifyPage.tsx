@@ -488,12 +488,12 @@ const AdminProductModifyPage = () => {
                   gap={2}
                   aria-label="상세정보"
                 >
-                  <TextQuill
+                  {/* <TextQuill
                     name="productDescription"
                     value={productDescription}
                     setValue={setProductDescription}
                     isDisable={false}
-                  />
+                  /> */}
                 </Box>
               </ToggleComponent>
             </>
