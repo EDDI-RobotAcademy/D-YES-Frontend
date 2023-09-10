@@ -51,7 +51,7 @@ const AdminProductModifyPage = () => {
       if (data) {
         // 수정 데이터 업데이트
         setProductName(data.productResponseForAdmin?.productName || "");
-        setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
+        // setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
         setUseOptions(data.optionResponseForAdmin || []);
         setProductDescription(data.productResponseForAdmin?.productDescription || "");
         setSelectedSaleStatus(data.productResponseForAdmin?.productSaleStatus || "AVAILABLE");
@@ -177,7 +177,7 @@ const AdminProductModifyPage = () => {
     if (productName && selectedCultivationMethod && productDescription && selectedSaleStatus) {
       const productModifyRequestData: Partial<Product> = {
         productName: productName,
-        cultivationMethod: selectedCultivationMethod,
+        // cultivationMethod: selectedCultivationMethod,
         productDescription: productDescription,
         productSaleStatus: selectedSaleStatus,
       };
@@ -488,12 +488,12 @@ const AdminProductModifyPage = () => {
                   gap={2}
                   aria-label="상세정보"
                 >
-                  <TextQuill
+                  {/* <TextQuill
                     name="productDescription"
                     value={productDescription}
                     setValue={setProductDescription}
                     isDisable={false}
-                  />
+                  /> */}
                 </Box>
               </ToggleComponent>
             </>
