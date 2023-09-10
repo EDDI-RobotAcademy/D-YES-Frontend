@@ -14,48 +14,15 @@ import { useOptions } from "entity/product/useOptions";
 import { ProductImg } from "entity/product/ProductMainImg";
 import { ProductDetailImg } from "entity/product/ProductDetailImg";
 import ProductDetailRegister from "./Register/ProductDetailRegister";
+import useProductRegisterStore from "store/product/ProductRegisterStore";
+import useProductImageStore from "store/product/ProductImageStore";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
-  const [productDescription, setProductDescription] = useState("");
-  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
-  const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
-  const [options, setOptions] = useState<useOptions[]>([]);
-  const [productDetailInfo, setProductDetailInfo] = useState({
-    productName: "",
-    cultivationMethod: "",
-    farmName: "",
-  });
-
-  const handleProductDetailInfoChange = (updatedInfo: any) => {
-    setProductDetailInfo((prevProductDetailInfo) => ({
-      ...prevProductDetailInfo,
-      ...updatedInfo,
-    }));
-    console.log("기본정보", updatedInfo)
-  };
-
-  const handleProductDescriptionChange = (description: string) => {
-    setProductDescription(description);
-    console.log("상세정보", description);
-  };
-
-  const handleOptionsChange = (updatedOptions: useOptions[]) => {
-    setOptions(updatedOptions);
-    console.log("옵션정보", updatedOptions)
-  };
-
-  const handleMainImageChange = (newImage: File | null) => {
-    setSelectedMainImage(newImage);
-    console.log("메인이미지", newImage)
-  };
-
-  const handleDetailImagesChange = (newImages: File[]) => {
-    setSelectedDetailImages(newImages);
-    console.log("상세이미지", newImages)
-  };
+  const { products } = useProductRegisterStore();
+  const { productImgs, productDetailImgs } = useProductImageStore();
 
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
@@ -66,13 +33,14 @@ const ProductRegisterPage = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    console.log(products);
 
-    if (!productDetailInfo) {
+    if (!products.productName && !products.farmName) {
       toast.success("필수 입력 항목을 모두 채워주세요.");
       return;
     }
 
-    if (!productDescription) {
+    if (!products.productDescription) {
       toast.success("상세정보를 입력해주세요.");
       return;
     }
@@ -81,8 +49,8 @@ const ProductRegisterPage = () => {
     // some함수는 useOptions배열을 순회하면서 중복 여부를 확인
     // 조건은 옵션명이 동일하고 옵션의 인덱스가 같이 않을 때
     // 중복한 옵션이 있다면 true를 반환
-    const isDuplicateOptionName = options.some((option, index) =>
-      options.some(
+    const isDuplicateOptionName = products.productOptionListResponse.some((option, index) =>
+      products.productOptionListResponse.some(
         (otherOption, otherIndex) =>
           option.optionName === otherOption.optionName && index !== otherIndex
       )
@@ -93,7 +61,7 @@ const ProductRegisterPage = () => {
       return;
     }
 
-    const hasIncompleteOption = options.some((option) => {
+    const hasIncompleteOption = products.productOptionListResponse.some((option) => {
       return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
     });
 
@@ -102,27 +70,36 @@ const ProductRegisterPage = () => {
       return;
     }
 
-    if (selectedDetailImages.length === 0) {
+    if (productDetailImgs.length === 0) {
       toast.error("상세 이미지를 추가해주세요.");
       return;
     }
 
-    if (selectedDetailImages.length < 6 || selectedDetailImages.length > 10) {
+    if (productDetailImgs.length < 6 || productDetailImgs.length > 10) {
       toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
       return;
     }
 
-    const mainFileToUpload = selectedMainImage
-      ? new File([selectedMainImage], selectedMainImage.name)
-      : "";
+    const mainFileToUpload =
+      productImgs instanceof Blob
+        ? (() => {
+            const blobWithProperties = productImgs as Blob & { name: string };
+            return new File([productImgs], blobWithProperties.name);
+          })()
+        : null;
+
     if (!mainFileToUpload) {
       toast.success("메인 이미지를 등록해주세요");
       return;
     }
 
-    const detailImageUpload = selectedDetailImages.map(async (image) => {
-      const detailFileToUpload = new File([image], image.name);
-      return (await uploadFileAwsS3(detailFileToUpload)) || "";
+    const detailImageUpload = productDetailImgs.map(async (image) => {
+      if (image instanceof Blob) {
+        const blobWithProperties = image as Blob & { name: string };
+        // 이미지 Blob을 File로 변환하여 원래 이미지 파일의 이름을 사용
+        const detailFileToUpload = new File([blobWithProperties], blobWithProperties.name);
+        return (await uploadFileAwsS3(detailFileToUpload)) || "";
+      }
     });
 
     const s3DetailObjectVersion = await Promise.all(detailImageUpload);
@@ -130,13 +107,16 @@ const ProductRegisterPage = () => {
     const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
     const partialProductMainImageRegisterRequest: Partial<ProductImg> = {
-      mainImg: selectedMainImage
-        ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
+      mainImg: mainFileToUpload
+        ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
         : "undefined main image",
     };
 
-    const detailImgsName = selectedDetailImages.map((image, idx) => {
-      return image.name + "?versionId=" + s3DetailObjectVersion[idx];
+    const detailImgsName = productDetailImgs.map((image, idx) => {
+      if (image instanceof Blob) {
+        const blobWithProperties = image as Blob & { name: string };
+        return blobWithProperties.name + "?versionId=" + s3DetailObjectVersion[idx];
+      }
     });
 
     const productDetailImagesRegisterRequests: Partial<ProductDetailImg>[] = detailImgsName.map(
@@ -145,18 +125,20 @@ const ProductRegisterPage = () => {
       })
     );
 
-    const optionObjects: Partial<useOptions>[] = options.map((option) => ({
-      optionName: option.optionName,
-      optionPrice: option.optionPrice,
-      stock: option.stock,
-      value: option.value,
-      unit: option.unit,
-    }));
+    const optionObjects: Partial<useOptions>[] = products.productOptionListResponse.map(
+      (option) => ({
+        optionName: option.optionName,
+        optionPrice: option.optionPrice,
+        stock: option.stock,
+        value: option.value,
+        unit: option.unit,
+      })
+    );
 
     const productRegisterRequest: Partial<Product> = {
-      productName: productDetailInfo.productName,
-      productDescription: productDescription,
-      cultivationMethod: productDetailInfo.cultivationMethod,
+      productName: products.productName,
+      productDescription: products.productDescription,
+      cultivationMethod: products.cultivationMethod,
     };
 
     const data = {
@@ -165,7 +147,7 @@ const ProductRegisterPage = () => {
       productMainImageRegisterRequest: partialProductMainImageRegisterRequest,
       productDetailImagesRegisterRequests: productDetailImagesRegisterRequests,
       userToken: userToken || "",
-      farmName: productDetailInfo.farmName,
+      farmName: products.farmName,
     };
 
     await mutation.mutateAsync({
@@ -192,13 +174,10 @@ const ProductRegisterPage = () => {
         <form onSubmit={handleSubmit} onClick={() => handleFormClick}>
           <Box display="flex" flexDirection="column" gap={2} p={2}>
             <h1>상품 등록</h1>
-            <ProductDetailRegister onProductDetailInfoChange={handleProductDetailInfoChange} />
-            <ProductImageRegister
-              onMainImageChange={handleMainImageChange}
-              onDetailImagesChange={handleDetailImagesChange}
-            />
-            <ProductOptionsRegister onOptionsChange={handleOptionsChange} />
-            <ProductDescription onProductDescriptionChange={handleProductDescriptionChange} />
+            <ProductDetailRegister />
+            <ProductImageRegister />
+            <ProductOptionsRegister />
+            <ProductDescription />
           </Box>
           <Button type="submit">등록</Button>
         </form>

@@ -4,14 +4,12 @@ import ToggleComponent from "../productOption/ToggleComponent";
 import { useOptions } from "entity/product/useOptions";
 import OptionTable from "../productOption/OptionTable";
 import OptionInput from "../productOption/OptionInput";
+import useProductRegisterStore from "store/product/ProductRegisterStore";
 
-const ProductOptionsRegister = ({
-  onOptionsChange,
-}: {
-  onOptionsChange: (updatedOptions: useOptions[]) => void;
-}) => {
+const ProductOptionsRegister = () => {
   const [optionToggleHeight, setOptionToggleHeight] = useState(200);
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
+  const { products, setProducts } = useProductRegisterStore();
 
   // 옵션 추가
   const handleAddOption = (newOption: useOptions) => {
@@ -29,6 +27,10 @@ const ProductOptionsRegister = ({
     setUseOptions(newOptions);
   };
 
+  const handleProductOptionChange = (newOption: useOptions[]) => {
+    setProducts({ ...products, productOptionListResponse: newOption });
+  };
+
   return (
     <div className="product-register-container">
       <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
@@ -42,7 +44,7 @@ const ProductOptionsRegister = ({
                     const newOptions = [...useOptions];
                     newOptions[index] = updatedOption;
                     setUseOptions(newOptions);
-                    onOptionsChange(newOptions);
+                    handleProductOptionChange(newOptions);
                   }}
                   onDeleteOption={handleDeleteOption}
                   isEditMode={false}

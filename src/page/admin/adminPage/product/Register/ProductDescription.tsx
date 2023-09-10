@@ -1,23 +1,13 @@
-import React, { useState } from "react";
 import ToggleComponent from "../productOption/ToggleComponent";
 import TextQuill from "utility/quill/TextQuill";
 import { Box, Container } from "@mui/material";
+import useProductRegisterStore from "store/product/ProductRegisterStore";
 
-const ProductDescription = ({
-  onProductDescriptionChange,
-}: {
-  onProductDescriptionChange: (description: string) => void;
-}) => {
-  const [productDescription, setProductDescription] = useState("");
+const ProductDescription = () => {
+  const { products, setProducts } = useProductRegisterStore();
 
-  // productDescription이 변경될 때 호출되는 함수
-  const handleProductDescriptionChange = (description: string) => {
-    setProductDescription(description);
-  };
-
-  // 입력 필드에서 포커스가 빠져나갈 때 정보를 전달
-  const handleBlur = () => {
-    onProductDescriptionChange(productDescription);
+  const handleProductDescriptionChange = (newDescription: string) => {
+    setProducts({ ...products, productDescription: newDescription });
   };
 
   return (
@@ -35,9 +25,8 @@ const ProductDescription = ({
               >
                 <TextQuill
                   name="productDescription"
-                  value={productDescription}
+                  value={products.productDescription}
                   setValue={handleProductDescriptionChange}
-                  onBlur={handleBlur}
                   isDisable={false}
                 />
               </Box>

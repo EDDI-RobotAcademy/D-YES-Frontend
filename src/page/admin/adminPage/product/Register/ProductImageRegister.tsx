@@ -4,25 +4,20 @@ import ToggleComponent from "../productOption/ToggleComponent";
 import { compressImg } from "utility/s3/imageCompression";
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { useDropzone } from "react-dropzone";
+import useProductImageStore from "store/product/ProductImageStore";
 
-interface ProductImageRegisterProps {
-  onMainImageChange: (image: File | null) => void;
-  onDetailImagesChange: (images: File[]) => void;
-}
-
-const ProductImageRegister: React.FC<ProductImageRegisterProps> = ({
-  onMainImageChange,
-  onDetailImagesChange,
-}) => {
+const ProductImageRegister = () => {
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
+  const { setProductImgs, setProductDetailImgs } = useProductImageStore();
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length) {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
-        onMainImageChange(compressedImage);
+        setProductImgs(compressedImage);
+        console.log("메인", compressedImage)
       } catch (error) {
         console.error(error);
       }
@@ -39,7 +34,8 @@ const ProductImageRegister: React.FC<ProductImageRegisterProps> = ({
         );
         const updatedImages = [...selectedDetailImages, ...compressedImages];
         setSelectedDetailImages(updatedImages);
-        onDetailImagesChange(updatedImages);
+        setProductDetailImgs(updatedImages);
+        console.log("상세", updatedImages)
       } catch (error) {
         console.error(error);
       }
@@ -62,7 +58,7 @@ const ProductImageRegister: React.FC<ProductImageRegisterProps> = ({
     const updatedImages = [...selectedDetailImages];
     updatedImages.splice(index, 1);
     setSelectedDetailImages(updatedImages);
-    onDetailImagesChange(updatedImages);
+    setProductDetailImgs(updatedImages);
   };
 
   return (

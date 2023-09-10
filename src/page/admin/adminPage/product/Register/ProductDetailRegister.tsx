@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -13,29 +13,23 @@ import ToggleComponent from "../productOption/ToggleComponent";
 import FarmSearch from "../productOption/FarmSearch";
 import { Farm } from "entity/farm/Farm";
 import "../css/ProductPage.css";
+import useProductRegisterStore from "store/product/ProductRegisterStore";
 
-const ProductDetailRegister = ({
-  onProductDetailInfoChange,
-}: {
-  onProductDetailInfoChange: (updatedInfo: any) => void;
-}) => {
-  const [selectedFarmName, setSelectedFarmName] = useState("");
-  const [openFarmSearch, setOpenFarmSearch] = useState(false); // 팝업 오픈 상태
-  const [productName, setProductName] = useState(""); // productName 상태 추가
-  const [selectedFarm, setSelectedFarm] = useState<null | Farm>(null);
-  const [selectedOption, setSelectedOption] = useState<
-    "" | { value: string; label: string } | undefined
-  >("");
+const ProductDetailRegister = () => {
+  // Zustand 스토어로부터 필요한 상태와 함수를 가져옴
+  const { products, setProducts } = useProductRegisterStore();
+  const [selectedFarmName, setSelectedFarmName] = React.useState("");
+  const [openFarmSearch, setOpenFarmSearch] = React.useState(false);
 
   const handleOpenFarmSearch = () => {
     setOpenFarmSearch(true);
   };
 
-  // 농가 선택 후 처리 함수
   const handleFarmSelect = (selectedFarm: Farm) => {
-    setSelectedFarm(selectedFarm);
-    setOpenFarmSearch(false); // 팝업 닫기
-    onProductDetailInfoChange({ farmName: selectedFarm.farmName });
+    const newFarmName = selectedFarm.farmName;
+    setSelectedFarmName(newFarmName);
+    setOpenFarmSearch(false);
+    setProducts({ ...products, farmName: newFarmName });
   };
 
   const options = [
@@ -44,22 +38,15 @@ const ProductDetailRegister = ({
     { value: "ORGANIC", label: "유기농" },
   ];
 
-  // 설렉트 박스
   const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
-    setSelectedOption(event.target.value as "" | { value: string; label: string });
-    onProductDetailInfoChange({ cultivationMethod: event.target.value });
+    setProducts({ ...products, cultivationMethod: event.target.value.toString() });
   };
 
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedProductName = event.target.value;
-    setProductName(updatedProductName);
+    const newProductName = event.target.value;
+    setProducts({ ...products, productName: newProductName });
   };
 
-  const handleProductNameBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    const updatedProductName = event.target.value;
-    onProductDetailInfoChange({ productName: updatedProductName }); 
-  };
-  
   return (
     <div className="product-register-container">
       <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
@@ -74,9 +61,8 @@ const ProductDetailRegister = ({
                   name="productName"
                   className="text-field-input"
                   size="small"
-                  value={productName}
+                  value={products.productName}
                   onChange={handleProductNameChange}
-                  onBlur={handleProductNameBlur}
                 />
               </div>
               <div className="text-field-container">
@@ -91,7 +77,7 @@ const ProductDetailRegister = ({
                 >
                   <Select
                     name="cultivationMethod"
-                    value={selectedOption}
+                    value={products.cultivationMethod as "" | { value: string; label: string }|| ""}
                     onChange={handleOptionChange}
                     className="text-field"
                     sx={{
@@ -113,10 +99,9 @@ const ProductDetailRegister = ({
                   name="farmName"
                   className="text-field-input"
                   size="small"
-                  value={selectedFarmName}
+                  value={products.farmName}
                   onChange={(event) => {
                     setSelectedFarmName(event.target.value);
-                    onProductDetailInfoChange({ farmName: event.target.value });
                   }}
                 />
                 <Button onClick={handleOpenFarmSearch}>조회</Button>
@@ -124,10 +109,7 @@ const ProductDetailRegister = ({
                   open={openFarmSearch}
                   onClose={() => setOpenFarmSearch(false)}
                   onSelectFarmName={setSelectedFarmName}
-                  onSelectFarm={(selectedFarm) => {
-                    setSelectedFarmName(selectedFarm.farmName);
-                    handleFarmSelect(selectedFarm);
-                  }}
+                  onSelectFarm={handleFarmSelect}
                 />
               </div>
             </Box>

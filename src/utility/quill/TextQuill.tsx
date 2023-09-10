@@ -8,17 +8,12 @@ interface TextQuillProps {
   value: string;
   setValue: (value: string) => void;
   isDisable: boolean;
-  onBlur: () => void; 
 }
 
 Quill.register("modules/ImageResize", ImageResize);
-export default function TextQuill({ name, value, setValue, isDisable, onBlur }: TextQuillProps) {
+export default function TextQuill({ name, value, setValue, isDisable }: TextQuillProps) {
   const quillRef = useRef<ReactQuill | null>(null);
   const [imageData, setImageData] = useState<string | null>(null); // 이미지 데이터를 저장
-
-    const handleBlur = () => {
-    onBlur(); // 컴포넌트 내에서 onBlur 이벤트가 발생할 때 부모 컴포넌트로 전달
-  };
 
   const imageHandler = () => {
     const input = document.createElement("input");
@@ -101,7 +96,6 @@ export default function TextQuill({ name, value, setValue, isDisable, onBlur }: 
       formats={formats}
       value={value || ""}
       onChange={(content, _, source, editor) => setValue(editor.getHTML())}
-      onBlur={handleBlur}
       style={{ width: "100%", height: "450px" }}
       readOnly={isDisable}
     />
