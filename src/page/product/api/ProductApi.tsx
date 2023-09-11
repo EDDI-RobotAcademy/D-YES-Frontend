@@ -24,7 +24,7 @@ export const registerProduct = async (data: {
   productDetailImagesRegisterRequests: ProductDetailImg[];
   farmName: string;
 }): Promise<Product> => {
-  const response = await axiosInstance.springAxiosInst.post<Product>("/product/register", data);
+  const response = await axiosInstance.springAxiosInst.post<Product>("/product/admin/register", data);
   console.log("api데이터 확인", response.data);
   return response.data;
 };

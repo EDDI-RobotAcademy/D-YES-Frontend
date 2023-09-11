@@ -21,6 +21,10 @@ import { ProductDetailImg } from "entity/product/ProductDetailImg";
 import { Product } from "entity/product/Product";
 import { ProductImg } from "entity/product/ProductMainImg";
 import { ProductModify } from "entity/product/ProductModify";
+import ProductDetailModify from "./modify/ProductDetailModify";
+import ProductImageModify from "./modify/ProductImageModify";
+import ProductOptionModify from "./modify/ProductOptionModify";
+import ProductDescriptionModify from "./modify/ProductDescriptionModify";
 
 interface RouteParams {
   productId: string;
@@ -32,10 +36,8 @@ const AdminProductModifyPage = () => {
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
-  const [optionToggleHeight, setOptionToggleHeight] = useState(0);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
-  const [serverDetailImages, setServerDetailImages] = useState<ProductDetailImg[]>([]);
   const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
   const [productName, setProductName] = useState("");
   const [selectedCultivationMethod, setSelectedCultivationMethod] = useState("");
@@ -45,126 +47,21 @@ const AdminProductModifyPage = () => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
 
-  useEffect(() => {
-    const fetchProductData = async () => {
-      const data = await fetchProduct(productId || "");
-      if (data) {
-        // 수정 데이터 업데이트
-        setProductName(data.productResponseForAdmin?.productName || "");
-        // setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
-        setUseOptions(data.optionResponseForAdmin || []);
-        setProductDescription(data.productResponseForAdmin?.productDescription || "");
-        setSelectedSaleStatus(data.productResponseForAdmin?.productSaleStatus || "AVAILABLE");
-        setServerDetailImages(data.detailImagesForAdmin || []);
-      }
-    };
-    fetchProductData();
-  }, []);
-
-  const options = [
-    { value: "PESTICIDE_FREE", label: "무농약" },
-    { value: "ENVIRONMENT_FRIENDLY", label: "친환경" },
-    { value: "ORGANIC", label: "유기농" },
-  ];
-
-  const saleStatus = [
-    { value: "AVAILABLE", label: "판매중" },
-    { value: "UNAVAILABLE", label: "판매중지" },
-  ];
-
-  const onMainImageDrop = async (acceptedFile: File[]) => {
-    if (acceptedFile.length) {
-      try {
-        const compressedImage = await compressImg(acceptedFile[0]);
-        setSelectedMainImage(compressedImage);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  const onDetailImageDrop = async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      try {
-        const compressedImages = await Promise.all(
-          acceptedFiles.map(async (file) => {
-            return {
-              image: await compressImg(file),
-              detailImageId: 0,
-            };
-          })
-        );
-
-        setSelectedDetailImages((prevImages: File[]) => [
-          ...prevImages,
-          ...compressedImages.map((item) => item.image),
-        ]);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  const { getRootProps: mainImageRootProps } = useDropzone({
-    onDrop: onMainImageDrop,
-    maxFiles: 1,
-    noClick: false,
-  });
-
-  const { getRootProps: detailImageRootProps } = useDropzone({
-    onDrop: onDetailImageDrop,
-    maxFiles: 10,
-    noClick: false,
-  });
-
-  const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
-    event.stopPropagation();
-
-    const updatedServerDetailImages = serverDetailImages.filter(
-      (detailImage) => detailImage.detailImageId !== imageIdToDelete
-    );
-
-    // 이미지를 제거한 후, 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
-    setServerDetailImages(updatedServerDetailImages);
-
-    // 이미지 삭제할 때 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
-    setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
-  };
-
-  const handleRemoveDetailImage = (event: React.MouseEvent, index: number) => {
-    // 이미지를 삭제할 때 이미지 불러오기 방지
-    event.stopPropagation();
-    const updatedImages = [...selectedDetailImages];
-    updatedImages.splice(index, 1);
-    setSelectedDetailImages(updatedImages);
-  };
-
-  function calculateToggleHeight(options: Array<any>) {
-    const minHeight = 100; // 최소 높이
-    const optionHeight = 78; // 각 옵션 아이템의 높이
-    const optionsCount = options?.length || 0; // 옵션 개수
-
-    // 최소 높이와 각 옵션 아이템 높이를 고려하여 토글 높이 계산
-    const calculatedHeight = minHeight + optionHeight * optionsCount;
-
-    return calculatedHeight;
-  }
-
-  // 옵션 추가
-  const handleAddOption = (newOption: useOptions) => {
-    setUseOptions((prevOptions) => [...prevOptions, newOption]);
-    // 옵션정보에서 추가버튼을 누르면 토글 높이 증가
-    setOptionToggleHeight(optionToggleHeight + 78);
-  };
-
-  // 옵션 삭제
-  const handleDeleteOption = (index: number) => {
-    const newOptions = [...useOptions];
-    newOptions.splice(index, 1);
-    // 옵션정보에서 삭제버튼을 누르면 토글 높이 감소
-    setOptionToggleHeight(optionToggleHeight - 78);
-    setUseOptions(newOptions);
-  };
+  // useEffect(() => {
+  //   const fetchProductData = async () => {
+  //     const data = await fetchProduct(productId || "");
+  //     if (data) {
+  //       // 수정 데이터 업데이트
+  //       setProductName(data.productResponseForAdmin?.productName || "");
+  //       // setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
+  //       setUseOptions(data.optionResponseForAdmin || []);
+  //       setProductDescription(data.productResponseForAdmin?.productDescription || "");
+  //       setSelectedSaleStatus(data.productResponseForAdmin?.productSaleStatus || "AVAILABLE");
+  //       setServerDetailImages(data.detailImagesForAdmin || []);
+  //     }
+  //   };
+  //   fetchProductData();
+  // }, []);
 
   const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
     const target = event.target as HTMLElement;
@@ -278,228 +175,10 @@ const AdminProductModifyPage = () => {
       <form onClick={handleFormClick}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 수정</h1>
-          {data ? (
-            <>
-              <ToggleComponent label="기본정보" height={220}>
-                <Box display="flex" flexDirection="column" gap={2}>
-                  <div className="text-field-container">
-                    <div className="text-field-label" aria-label="상품명">
-                      상품명
-                    </div>
-                    <TextField
-                      name="productName"
-                      className="text-field-input"
-                      size="small"
-                      value={productName}
-                      onChange={(e) => setProductName(e.target.value)}
-                    />
-                  </div>
-                  <div className="text-field-container">
-                    <div className="text-field-label">재배방식</div>
-                    <FormControl
-                      sx={{
-                        display: "flex",
-                        flexGrow: 1,
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Select
-                        name="cultivationMethod"
-                        value={selectedCultivationMethod}
-                        sx={{ width: "100%" }}
-                        onChange={(e) => setSelectedCultivationMethod(e.target.value)}
-                      >
-                        <MenuItem value="" disabled>
-                          옵션을 선택해주세요
-                        </MenuItem>
-                        {options.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </div>
-                  <div className="text-field-container">
-                    <div className="text-field-label">농가 이름</div>
-                    <TextField
-                      name="farmName"
-                      className="text-field-input"
-                      size="small"
-                      value={data.farmInfoResponseForAdmin?.farmName}
-                    />
-                  </div>
-                  <div className="text-field-container">
-                    <div className="text-field-label">판매 상태</div>
-                    <FormControl
-                      sx={{
-                        display: "flex",
-                        flexGrow: 1,
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Select
-                        name="saleStatus"
-                        value={selectedSaleStatus}
-                        sx={{ width: "100%" }}
-                        onChange={(e) => setSelectedSaleStatus(e.target.value)}
-                      >
-                        <MenuItem value="" disabled>
-                          판매 상태를 선택해주세요
-                        </MenuItem>
-                        {saleStatus.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </div>
-                </Box>
-              </ToggleComponent>
-              <ToggleComponent label="이미지" height={850}>
-                <div className="text-field-label">메인 이미지</div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "400px",
-                    backgroundColor: "#e4e4e4",
-                    cursor: "pointer",
-                  }}
-                  {...mainImageRootProps()}
-                >
-                  {selectedMainImage ? (
-                    <img
-                      src={URL.createObjectURL(selectedMainImage)}
-                      style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
-                      alt="Selected"
-                    />
-                  ) : data.mainImageResponseForAdmin?.mainImg ? (
-                    <img
-                      src={getImageUrl(data.mainImageResponseForAdmin.mainImg)}
-                      style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
-                      alt="Selected"
-                    />
-                  ) : null}
-                </div>
-                <div className="text-field-label">상세 이미지</div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "400px",
-                    backgroundColor: "#e4e4e4",
-                    cursor: "pointer",
-                    flexWrap: "wrap",
-                  }}
-                  {...detailImageRootProps()}
-                >
-                  {(selectedDetailImages.length > 0 || serverDetailImages.length > 0) &&
-                    selectedDetailImages.map((selectedImage, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          width: "calc(33.33% - 16px)",
-                          height: "auto",
-                          margin: "8px",
-                          cursor: "pointer",
-                          position: "relative",
-                        }}
-                      >
-                        <img
-                          src={URL.createObjectURL(selectedImage)}
-                          style={{ width: "100%", height: "100%" }}
-                          alt={`Selected ${idx}`}
-                        />
-                        <RemoveCircleOutlineSharpIcon
-                          style={{
-                            position: "absolute",
-                            top: "5px",
-                            right: "5px",
-                            cursor: "pointer",
-                            zIndex: 1,
-                          }}
-                          onClick={(event) => handleRemoveDetailImage(event, idx)}
-                        />
-                      </div>
-                    ))}
-                  {serverDetailImages.length > 0 &&
-                    serverDetailImages.map((detailImage, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          width: "calc(33.33% - 16px)",
-                          height: "auto",
-                          margin: "8px",
-                          cursor: "pointer",
-                          position: "relative",
-                        }}
-                      >
-                        <img
-                          src={getImageUrl(detailImage.detailImgs)}
-                          style={{ width: "100%", height: "100%" }}
-                          alt={`Selected ${detailImage.detailImageId}`}
-                        />
-                        <RemoveCircleOutlineSharpIcon
-                          style={{
-                            position: "absolute",
-                            top: "5px",
-                            right: "5px",
-                            cursor: "pointer",
-                            zIndex: 1,
-                          }}
-                          onClick={(event) =>
-                            handleDeleteDetailImage(event, detailImage.detailImageId)
-                          }
-                        />
-                      </div>
-                    ))}
-                </div>
-              </ToggleComponent>
-              {data.optionResponseForAdmin ? (
-                <ToggleComponent label="옵션정보" height={calculateToggleHeight(useOptions)}>
-                  <Box display="flex" flexDirection="column" gap={2}>
-                    <OptionTable
-                      optionRows={useOptions || []}
-                      onChangeOption={(index, updatedOption) => {
-                        const newOptions = [...useOptions];
-                        newOptions[index] = updatedOption;
-                        setUseOptions(newOptions);
-                      }}
-                      onDeleteOption={handleDeleteOption}
-                      isEditMode={true}
-                    />
-                    <OptionInput onAddOption={handleAddOption} />
-                  </Box>
-                </ToggleComponent>
-              ) : null}
-              <ToggleComponent label="상세정보" height={500}>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  alignItems="center"
-                  gap={2}
-                  aria-label="상세정보"
-                >
-                  {/* <TextQuill
-                    name="productDescription"
-                    value={productDescription}
-                    setValue={setProductDescription}
-                    isDisable={false}
-                  /> */}
-                </Box>
-              </ToggleComponent>
-            </>
-          ) : (
-            <p>Loading product data...</p>
-          )}
+          <ProductDetailModify />
+          <ProductImageModify />
+          <ProductOptionModify />
+          <ProductDescriptionModify />
         </Box>
         <Button variant="outlined" onClick={handleEditFinishClick}>
           수정 완료
