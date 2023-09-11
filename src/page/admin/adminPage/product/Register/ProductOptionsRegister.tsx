@@ -28,7 +28,7 @@ const ProductOptionsRegister = () => {
   };
 
   const handleProductOptionChange = (newOption: useOptions[]) => {
-    setProducts({ ...products, productOptionListResponse: newOption });
+    setProducts({ ...products, productOptionList: newOption });
   };
 
   return (
