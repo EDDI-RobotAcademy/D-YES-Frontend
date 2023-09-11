@@ -202,8 +202,8 @@ const AdminProductList: React.FC = () => {
                     </TableCell>
                     <TableCell className="cellStyle">{product.farmName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.productOptionListResponse &&
-                      product.productOptionListResponse.length > 0 ? (
+                      {product.productOptionList &&
+                      product.productOptionList.length > 0 ? (
                         <Select
                           className="noOutline"
                           variant="outlined"
@@ -222,7 +222,7 @@ const AdminProductList: React.FC = () => {
                             fontSize: "14px",
                           }}
                         >
-                          {product.productOptionListResponse.map((option, index) => (
+                          {product.productOptionList.map((option, index) => (
                             <MenuItem
                               key={index}
                               value={option.optionName}
@@ -238,22 +238,22 @@ const AdminProductList: React.FC = () => {
                       ) : null}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] && product.productOptionListResponse
-                        ? product.productOptionListResponse.find(
+                      {selectedOptions[product.productId] && product.productOptionList
+                        ? product.productOptionList.find(
                             (option) => option.optionName === selectedOptions[product.productId]
                           )?.optionPrice
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] && product.productOptionListResponse
-                        ? product.productOptionListResponse.find(
+                      {selectedOptions[product.productId] && product.productOptionList
+                        ? product.productOptionList.find(
                             (option) => option.optionName === selectedOptions[product.productId]
                           )?.stock
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] && product.productOptionListResponse
-                        ? product.productOptionListResponse.find(
+                      {selectedOptions[product.productId] && product.productOptionList
+                        ? product.productOptionList.find(
                             (option) => option.optionName === selectedOptions[product.productId]
                           )?.optionSaleStatus === "AVAILABLE"
                           ? "판매중"
