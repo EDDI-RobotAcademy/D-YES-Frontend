@@ -24,7 +24,7 @@ export const registerProduct = async (data: {
   productDetailImagesRegisterRequests: ProductDetailImg[];
   farmName: string;
 }): Promise<Product> => {
-  const response = await axiosInstance.springAxiosInst.post<Product>("/product/register", data);
+  const response = await axiosInstance.springAxiosInst.post<Product>("/product/admin/register", data);
   console.log("api데이터 확인", response.data);
   return response.data;
 };
@@ -82,7 +82,7 @@ export const deleteProducts = async (productIds: string[]): Promise<any> => {
     productIdList: productIds.map((id) => parseInt(id)),
   };
 
-  const response = await axiosInstance.springAxiosInst.delete("/product/deleteList", {
+  const response = await axiosInstance.springAxiosInst.delete("/product/admin/deleteList", {
     data: deleteForm,
   });
   console.log("상품삭제", response.data)
@@ -114,7 +114,7 @@ export const updateProduct = async (updatedData: ProductModify): Promise<Product
     userToken = localStorage.getItem("userToken"),
   } = updatedData;
   const response = await axiosInstance.springAxiosInst.put<ProductModify>(
-    `/product/modify/${productId}`,
+    `/product/admin/modify/${productId}`,
     {
       userToken,
       productModifyRequest,
@@ -158,7 +158,7 @@ export const useProductDetailQuery = (
 
 // 관리자용 상품 삭제
 export const deleteProduct = async (productId: string): Promise<void> => {
-  await axiosInstance.springAxiosInst.delete("product/delete", {
+  await axiosInstance.springAxiosInst.delete("product/admin/delete", {
     data: { productId, userToken: localStorage.getItem("userToken") },
   });
 };

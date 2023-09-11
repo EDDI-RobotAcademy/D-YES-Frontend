@@ -49,8 +49,8 @@ const ProductRegisterPage = () => {
     // some함수는 useOptions배열을 순회하면서 중복 여부를 확인
     // 조건은 옵션명이 동일하고 옵션의 인덱스가 같이 않을 때
     // 중복한 옵션이 있다면 true를 반환
-    const isDuplicateOptionName = products.productOptionListResponse.some((option, index) =>
-      products.productOptionListResponse.some(
+    const isDuplicateOptionName = products.productOptionList.some((option, index) =>
+      products.productOptionList.some(
         (otherOption, otherIndex) =>
           option.optionName === otherOption.optionName && index !== otherIndex
       )
@@ -61,7 +61,7 @@ const ProductRegisterPage = () => {
       return;
     }
 
-    const hasIncompleteOption = products.productOptionListResponse.some((option) => {
+    const hasIncompleteOption = products.productOptionList.some((option) => {
       return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
     });
 
@@ -125,7 +125,7 @@ const ProductRegisterPage = () => {
       })
     );
 
-    const optionObjects: Partial<useOptions>[] = products.productOptionListResponse.map(
+    const optionObjects: Partial<useOptions>[] = products.productOptionList.map(
       (option) => ({
         optionName: option.optionName,
         optionPrice: option.optionPrice,
