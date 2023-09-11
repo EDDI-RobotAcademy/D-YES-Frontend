@@ -15,8 +15,8 @@ jest.mock("page/admin/api/AdminApi", () => ({
 const mockSetShowProductSection = jest.fn();
 
 const mockFarmRead = {
-  farmOperationInfoResponseForm: {} as Business,
-  farmInfoResponseForm: {} as FarmInfoRead,
+  farmOperationInfoResponseForAdmin: {} as Business,
+  farmInfoResponseForAdmin: {} as FarmInfoRead,
 };
 
 it("농가 등록 테스트", async () => {

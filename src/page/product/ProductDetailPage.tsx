@@ -47,14 +47,14 @@ const ProductDetail = () => {
     const fetchProductData = async () => {
       const data = await getProductDetail(productId || "");
       setIsLoading(true);
-      if (data?.optionList && data.optionList.length > 0) {
-        setSelectedOptionId(data.optionList[0].optionId!);
+      if (data?.optionResponseForUser && data.optionResponseForUser.length > 0) {
+        setSelectedOptionId(data.optionResponseForUser[0].optionId!);
       }
     };
     fetchProductData();
   }, []);
 
-  const productResponse = data?.productResponse;
+  const productResponse = data?.productResponseForUser;
   const productDescription = productResponse?.productDescription || "";
   const parsedHTML = parse(productDescription);
 
@@ -94,9 +94,9 @@ const ProductDetail = () => {
     }
   };
 
-  const mainImage: ImageObject = { id: 0, url: getImageUrl(data?.mainImage?.mainImg || "") };
+  const mainImage: ImageObject = { id: 0, url: getImageUrl(data?.mainImageResponseForUser?.mainImg || "") };
   const detailImages: ImageObject[] =
-    data?.detailImagesList?.map((detail, index) => ({
+    data?.detailImagesForUser?.map((detail, index) => ({
       id: index + 1,
       url: getImageUrl(detail.detailImgs),
     })) || [];
@@ -111,8 +111,8 @@ const ProductDetail = () => {
   };
 
   const selectedOption =
-    data && data.optionList
-      ? data.optionList.find((option) => option.optionId === selectedOptionId)
+    data && data.optionResponseForUser
+      ? data.optionResponseForUser.find((option) => option.optionId === selectedOptionId)
       : null;
 
   const yDetail = useRef<HTMLDivElement>(null);
@@ -139,14 +139,14 @@ const ProductDetail = () => {
               </div>
               <div>
                 <div>
-                  <div className="product-name">{data?.productResponse.productName}</div>
+                  <div className="product-name">{data?.productResponseForUser.productName}</div>
                   <div className="spacer-2" />
                   <div className="product-option-price">
                     {selectedOption ? won(selectedOption.optionPrice) : ""}
                   </div>
                   <div className="spacer-3" />
-                  {data?.productResponse.cultivationMethod &&
-                    data?.productResponse.cultivationMethod.length > 0 && (
+                  {data?.productResponseForUser.cultivationMethod &&
+                    data?.productResponseForUser.cultivationMethod.length > 0 && (
                       <div
                         style={{
                           display: "flex",
@@ -158,11 +158,11 @@ const ProductDetail = () => {
                         <div
                           data-testid="cultivation-method"
                           className={`${
-                            tagMapping[data?.productResponse.cultivationMethod]?.className
+                            tagMapping[data?.productResponseForUser.cultivationMethod]?.className
                           } tag-common`}
                         >
-                          {tagMapping[data?.productResponse.cultivationMethod]?.name ||
-                            data?.productResponse.cultivationMethod}
+                          {tagMapping[data?.productResponseForUser.cultivationMethod]?.name ||
+                            data?.productResponseForUser.cultivationMethod}
                         </div>
                       </div>
                     )}
@@ -176,7 +176,7 @@ const ProductDetail = () => {
                     onChange={(e) => setSelectedOptionId(parseInt(e.target.value))}
                     style={{ fontFamily: "SUIT-Medium" }}
                   >
-                    {data?.optionList.map((option, idx) => (
+                    {data?.optionResponseForUser.map((option, idx) => (
                       <MenuItem
                         key={idx}
                         value={option.optionId.toString()}
@@ -282,7 +282,7 @@ const ProductDetail = () => {
                       <div className="farm-profile-container">
                         <div className="farm-profile">
                           <img
-                            src={getImageUrl(data?.farmInfoResponse.mainImage)}
+                            src={getImageUrl(data?.farmInfoResponseForUser.mainImage)}
                             width={80}
                             height={80}
                             style={{
@@ -293,10 +293,10 @@ const ProductDetail = () => {
                             alt="사진"
                           />
                           <div className="farm-name">
-                            <span>{data?.farmInfoResponse.farmName}</span>
+                            <span>{data?.farmInfoResponseForUser.farmName}</span>
                           </div>
                         </div>
-                        <div className="farm-introduce">{data?.farmInfoResponse.introduction}</div>
+                        <div className="farm-introduce">{data?.farmInfoResponseForUser.introduction}</div>
                       </div>
 
                       <TableContainer component={Paper}>
@@ -324,25 +324,25 @@ const ProductDetail = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            <TableRow key={data?.farmInfoResponse.farmName}>
+                            <TableRow key={data?.farmInfoResponseForUser.farmName}>
                               <TableCell
                                 className="farm-info-cell"
                                 style={{ width: "20%", textAlign: "center" }}
                               >
-                                {data?.farmInfoResponse.csContactNumber}
+                                {data?.farmInfoResponseForUser.csContactNumber}
                               </TableCell>
                               {/* 임시로 주소만 표기 */}
                               <TableCell
                                 className="farm-info-cell"
                                 style={{ width: "40%", textAlign: "center" }}
                               >
-                                {data?.farmInfoResponse.farmAddress.address}
+                                {data?.farmInfoResponseForUser.farmAddress.address}
                               </TableCell>
                               <TableCell
                                 className="farm-info-cell"
                                 style={{ width: "40%", textAlign: "center" }}
                               >
-                                {data?.farmInfoResponse.produceTypes.map((produceType, index) => (
+                                {data?.farmInfoResponseForUser.produceTypes.map((produceType, index) => (
                                   <Chip
                                     size="small"
                                     style={{

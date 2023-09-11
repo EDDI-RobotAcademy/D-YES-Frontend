@@ -6,6 +6,6 @@ export interface Product {
   productSaleStatus: string;
   productDescription: string;
   cultivationMethod: string;
-  productOptionListResponse: useOptions[];
+  productOptionList: useOptions[];
   farmName: string;
 }
