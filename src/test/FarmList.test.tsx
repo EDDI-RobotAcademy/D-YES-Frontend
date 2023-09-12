@@ -3,9 +3,9 @@ import { render, waitFor, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
-import FarmList from "page/admin/adminPage/farm/FarmList";
 import * as AdminApi from "page/admin/api/AdminApi"; 
 import { act } from "react-dom/test-utils";
+import FarmList from "page/admin/adminPage/farm/FarmList";
 
 jest.mock("page/admin/api/AdminApi", () => ({
   getFarmList: jest.fn(),
@@ -24,14 +24,12 @@ it("농가 목록", async () => {
     },
   ];
   
-  const mockSetShowProductSection = jest.fn();
-
   (AdminApi.getFarmList as jest.Mock).mockResolvedValue(farmList);
 
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
-      <FarmList setSelectedFarm={mockSetShowProductSection} />
+      <FarmList />
       </QueryClientProvider>
     </BrowserRouter>
   );

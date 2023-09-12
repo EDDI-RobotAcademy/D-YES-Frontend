@@ -5,7 +5,7 @@ export interface Farm {
   farmName: string;
   farmAddress: FarmAddress;
   csContactNumber: string;
-  mainImages: string;
+  mainImage: string;
   introduction: string;
   produceTypes: string[];
 }

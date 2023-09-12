@@ -17,46 +17,12 @@ import FarmBusinessInfo from "./farmInfo/FarmBusinessInfo";
 import useFarmBusinessStore from "store/farm/FarmBusinessStore";
 import FarmInfo from "./farmInfo/FarmInfo";
 
-interface FarmReadInfoProps {
-  selectedFarm: FarmRead | null;
-  setSelectedFarm: (farm: FarmRead | null) => void;
-}
-
-const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
+const FarmRegister = () => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
   const [showEditButton, setShowEditButton] = useState(true);
   const { farms } = useFarmStore();
   const { business } = useFarmBusinessStore();
-
-  // 농가 정보 읽어오기
-  // useEffect(() => {
-  //   console.log("받아오니", selectedFarm);
-  //   if (selectedFarm) {
-  //     setBusinessInfo({
-  //       businessName: selectedFarm.farmOperationInfoResponseForAdmin?.businessName || "",
-  //       businessNumber: selectedFarm.farmOperationInfoResponseForAdmin?.businessNumber || "",
-  //       representativeName:
-  //         selectedFarm.farmOperationInfoResponseForAdmin?.representativeName || "",
-  //       representativeContactNumber:
-  //         selectedFarm.farmOperationInfoResponseForAdmin?.representativeContactNumber || "",
-  //       farmName: selectedFarm.farmInfoResponseForAdmin?.farmName || "",
-  //       csContactNumber: selectedFarm.farmInfoResponseForAdmin?.csContactNumber || "",
-  //       addressDetail: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.addressDetail || "",
-  //       introduction: selectedFarm.farmInfoResponseForAdmin?.introduction || "",
-  //     });
-  //     setAddressInfo({
-  //       address: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.address || "",
-  //       zipCode: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.zipCode || "",
-  //     });
-  //     setSelectedOptions(
-  //       Array.isArray(selectedFarm.farmInfoResponseForAdmin?.produceTypes)
-  //         ? selectedFarm.farmInfoResponseForAdmin.produceTypes
-  //         : []
-  //     );
-  //     setShowEditButton(true);
-  //   }
-  // }, [selectedFarm]);
 
   // 수정 정보 API로 전달
   // const modifyMutation = useMutation(updateFarm, {
@@ -138,10 +104,8 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("받아온 정보", farms);
-    console.log("받아온 정보", business);
 
-    const mainFileToUpload = farms.mainImages ? new File([farms.mainImages], farms.mainImages) : "";
+    const mainFileToUpload = farms.mainImage ? new File([farms.mainImage], farms.mainImage) : "";
     if (!mainFileToUpload) {
       toast.error("농가 이미지를 등록해주세요");
       return;
@@ -149,7 +113,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
 
     const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
-    const mainImages = mainFileToUpload
+    const mainImage = mainFileToUpload
       ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
       : "undefined main image";
 
@@ -163,7 +127,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
       address: farms.farmAddress?.address || "",
       zipCode: farms.farmAddress?.zipCode || "",
       addressDetail: farms.farmAddress?.addressDetail || "",
-      mainImage: mainImages,
+      mainImage: mainImage,
       introduction: farms.introduction,
       produceTypes: farms.produceTypes,
       userToken: userToken || "",
@@ -185,7 +149,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   return (
     <div>
       <div className="register-menu">
-        <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" />
+        {/* <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" /> */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Typography
             gutterBottom
