@@ -1,0 +1,8 @@
+.chart {
+  height: 600px;
+  width: 100%;
+  position: relative;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
