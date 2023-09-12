@@ -14,7 +14,7 @@
   height: 60px;
   background-color: white;
   width: auto;
-  z-index: 6;
+  z-index: 100;
   position: relative;
   margin-left: 450px;
   margin-right: 450px;
