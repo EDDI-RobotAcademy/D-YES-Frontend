@@ -1,29 +1,22 @@
 import { Container, Box } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import ToggleComponent from "../productOption/ToggleComponent";
 import OptionTable from "../productOption/OptionTable";
 import OptionInput from "../productOption/OptionInput";
 import useProductModifyStore from "store/product/ProductModifyStore";
 import { useOptions } from "entity/product/useOptions";
-import { useParams } from "react-router-dom";
-import { useProductQuery } from "page/product/api/ProductApi";
-
-interface RouteParams {
-  productId: string;
-  [key: string]: string;
-}
 
 const ProductOptionModify = () => {
-  const { productId } = useParams<RouteParams>();
-  const { data } = useProductQuery(productId || "");
   const { products, setProducts } = useProductModifyStore();
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
 
   function calculateToggleHeight() {
-    const minHeight = 100; // 최소 높이
-    const optionHeight = 78; // 각 옵션 아이템의 높이
-    const optionsCount = data?.optionResponseForAdmin?.length || 0; // 옵션 개수
+    const minHeight = 100;
+    const optionHeight = 78;
+    const optionsCount = Array.isArray(products.productOptionList)
+      ? products.productOptionList.length
+      : 0; // 옵션 개수
     const calculatedHeight = minHeight + optionHeight * optionsCount;
 
     return calculatedHeight;
@@ -32,18 +25,41 @@ const ProductOptionModify = () => {
   // 옵션 추가
   const handleAddOption = (newOption: useOptions) => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
-    // 옵션정보에서 추가버튼을 누르면 토글 높이 증가
     setOptionToggleHeight(optionToggleHeight + 78);
+
+    // products.productOptionList에도 추가
+    setProducts({
+      ...products,
+      productOptionList: [...products.productOptionList, newOption],
+    });
   };
 
   // 옵션 삭제
   const handleDeleteOption = (index: number) => {
     const newOptions = [...useOptions];
     newOptions.splice(index, 1);
-    // 옵션정보에서 삭제버튼을 누르면 토글 높이 감소
     setOptionToggleHeight(optionToggleHeight - 78);
     setUseOptions(newOptions);
+
+    // products.productOptionList에서도 삭제
+    const newProductOptionList = [...products.productOptionList];
+    newProductOptionList.splice(index, 1);
+    setProducts({
+      ...products,
+      productOptionList: newProductOptionList,
+    });
   };
+
+  const handleProductOptionChange = (newOption: useOptions[]) => {
+    setUseOptions(newOption);
+
+    // products.productOptionList에도 수정
+    setProducts({
+      ...products,
+      productOptionList: newOption,
+    });
+  };
+
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
       <div>
@@ -51,13 +67,14 @@ const ProductOptionModify = () => {
           <ToggleComponent label="옵션정보" height={calculateToggleHeight()}>
             <Box display="flex" flexDirection="column" gap={2}>
               <OptionTable
-                optionRows={data?.optionResponseForAdmin || []}
+                optionRows={products.productOptionList || []}
                 onChangeOption={(index, updatedOption) => {
-                  const newOptions = [...useOptions];
-                  newOptions[index] = updatedOption;
-                  setUseOptions(newOptions);
+                  const newProductOptionList = [...products.productOptionList];
+                  newProductOptionList[index] = updatedOption;
+                  handleProductOptionChange(newProductOptionList);
                 }}
                 onDeleteOption={handleDeleteOption}
+                // 옵션 판매 상태
                 isEditMode={true}
               />
               <OptionInput onAddOption={handleAddOption} />

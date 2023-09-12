@@ -8,6 +8,6 @@ export interface ProductModify {
   productModifyRequest: Partial<Product>;
   productOptionModifyRequest: useOptions[];
   productMainImageModifyRequest: ProductImg;
-  productDetailImagesModifyRequest: ProductDetailImg[];
+  // productDetailImagesModifyRequest: ProductDetailImg[];
   userToken: string;
 }

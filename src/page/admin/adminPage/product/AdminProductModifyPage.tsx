@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Container, FormControl, MenuItem, Select, TextField } from "@mui/material";
-import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
-import ToggleComponent from "./productOption/ToggleComponent";
-import OptionTable from "./productOption/OptionTable";
-import OptionInput from "./productOption/OptionInput";
-import { compressImg } from "utility/s3/imageCompression";
-import { useDropzone } from "react-dropzone";
 import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import TextQuill from "utility/quill/TextQuill";
-import {
-  fetchProduct,
-  useProductQuery,
-  useProductUpdateMutation,
-} from "page/product/api/ProductApi";
-import { useOptions } from "entity/product/useOptions";
-import { ProductDetailImg } from "entity/product/ProductDetailImg";
+import { useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
 import { Product } from "entity/product/Product";
 import { ProductImg } from "entity/product/ProductMainImg";
 import { ProductModify } from "entity/product/ProductModify";
@@ -25,6 +13,8 @@ import ProductDetailModify from "./modify/ProductDetailModify";
 import ProductImageModify from "./modify/ProductImageModify";
 import ProductOptionModify from "./modify/ProductOptionModify";
 import ProductDescriptionModify from "./modify/ProductDescriptionModify";
+import useProductModifyStore from "store/product/ProductModifyStore";
+import useProductImageStore from "store/product/ProductImageStore";
 
 interface RouteParams {
   productId: string;
@@ -35,33 +25,38 @@ const AdminProductModifyPage = () => {
   const navigate = useNavigate();
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
-  const [useOptions, setUseOptions] = useState<useOptions[]>([]);
-  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
-  const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
-  const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
-  const [productName, setProductName] = useState("");
-  const [selectedCultivationMethod, setSelectedCultivationMethod] = useState("");
-  const [selectedSaleStatus, setSelectedSaleStatus] = useState("");
-  const [productDescription, setProductDescription] = useState("");
   const mutation = useProductUpdateMutation();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
+  const { products, setProducts } = useProductModifyStore();
+  const { productImgs, setProductImgs, productDetailImgs, setProductDetailImgs } =
+  useProductImageStore();
 
-  // useEffect(() => {
-  //   const fetchProductData = async () => {
-  //     const data = await fetchProduct(productId || "");
-  //     if (data) {
-  //       // 수정 데이터 업데이트
-  //       setProductName(data.productResponseForAdmin?.productName || "");
-  //       // setSelectedCultivationMethod(data.productResponseForAdmin?.cultivationMethod || "");
-  //       setUseOptions(data.optionResponseForAdmin || []);
-  //       setProductDescription(data.productResponseForAdmin?.productDescription || "");
-  //       setSelectedSaleStatus(data.productResponseForAdmin?.productSaleStatus || "AVAILABLE");
-  //       setServerDetailImages(data.detailImagesForAdmin || []);
-  //     }
-  //   };
-  //   fetchProductData();
-  // }, []);
+  useEffect(() => {
+    const newProductName = data?.productResponseForAdmin.productName || "";
+    const newCultivationMethod = data?.productResponseForAdmin.cultivationMethod || "";
+    const newProductSaleStatus = data?.productResponseForAdmin.productSaleStatus || "";
+    const newProductDescription = data?.productResponseForAdmin.productDescription || "";
+    const newOptions = data?.optionResponseForAdmin || [];
+    const newMainImages = data?.mainImageResponseForAdmin || "";
+    const newDetailImages = data?.detailImagesForAdmin || [];
+
+    setProducts({
+      ...products,
+      productName: newProductName,
+      cultivationMethod: newCultivationMethod,
+      productSaleStatus: newProductSaleStatus,
+      productDescription: newProductDescription,
+      productOptionList: newOptions,
+    });
+
+    setProductImgs({
+      ...productImgs,
+      mainImg: newMainImages as string,
+    });
+
+    setProductDetailImgs([...newDetailImages]);
+  }, [data, setProducts]);
 
   const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
     const target = event.target as HTMLElement;
@@ -71,102 +66,108 @@ const AdminProductModifyPage = () => {
   };
 
   const handleEditFinishClick = async () => {
-    if (productName && selectedCultivationMethod && productDescription && selectedSaleStatus) {
+    if (
+      products.productName &&
+      products.cultivationMethod &&
+      products.productDescription &&
+      products.productSaleStatus
+    ) {
       const productModifyRequestData: Partial<Product> = {
-        productName: productName,
-        // cultivationMethod: selectedCultivationMethod,
-        productDescription: productDescription,
-        productSaleStatus: selectedSaleStatus,
+        productName: products.productName,
+        cultivationMethod: products.cultivationMethod,
+        productDescription: products.productDescription,
+        productSaleStatus: products.productSaleStatus,
       };
+      console.log("받은 데이터 확인", products);
 
-      const existingMainImageUrl = data?.mainImageResponseForAdmin?.mainImg;
-
-      const mainFileToUpload = selectedMainImage
-        ? new File([selectedMainImage], selectedMainImage.name)
-        : undefined;
+      const mainFileToUpload =
+        productImgs instanceof Blob
+          ? (() => {
+              const blobWithProperties = productImgs as Blob & { name: string };
+              return new File([productImgs], blobWithProperties.name);
+            })()
+          : null;
 
       let s3MainObjectVersion = "";
       if (mainFileToUpload) {
         s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
       }
 
+      const existingMainImageUrl = data?.mainImageResponseForAdmin?.mainImg;
+
       const productMainImageModifyRequest: ProductImg = {
         mainImageId: data!.mainImageResponseForAdmin!.mainImageId,
         mainImg: mainFileToUpload
-          ? selectedMainImage
-            ? selectedMainImage.name + "?versionId=" + s3MainObjectVersion
-            : "undefined main image"
-          : existingMainImageUrl || "undefined main image",
+          ? ((mainFileToUpload
+              ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
+              : "undefined main image") as string)
+          : ((existingMainImageUrl || "undefined main image") as string),
       };
+      console.log("확인1", productMainImageModifyRequest)
 
-      const detailImageUploadPromises = selectedDetailImages.map(async (image, idx) => {
-        const detailFileToUpload = new File([image], image.name);
-        const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
-
-        return {
-          detailImageId: 0,
-          detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
-        };
-      });
-
-      const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
-
-      if (selectedDetailImages.length === 0 || selectedDetailImages.length !== 0) {
-        const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
-          (existingDetailImage) => ({
-            detailImageId: existingDetailImage.detailImageId || 0,
-            detailImgs: existingDetailImage.detailImgs || "undefined detail image",
-          })
-        );
-
-        productDetailImagesModifyRequest.push(...existingDetailImageRequests);
-      }
-
-      const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
-        (detailImage) => !deletedImageIndexes.includes(detailImage.detailImageId)
-      );
+      // const detailImageUploadPromises = productDetailImgs.map(async (image, idx) => {
+      //   const detailFileToUpload = new File([image], image.name);
+      //   const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
+      //   return {
+      //     detailImageId: 0,
+      //     detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
+      //   };
+      // });
+      // const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
+      // if (productDetailImgs.length === 0 || productDetailImgs.length !== 0) {
+      //   const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
+      //     (existingDetailImage) => ({
+      //       detailImageId: existingDetailImage.detailImageId || 0,
+      //       detailImgs: existingDetailImage.detailImgs || "undefined detail image",
+      //     })
+      //   );
+      //   productDetailImagesModifyRequest.push(...existingDetailImageRequests);
+      // }
+      // const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
+      //   (detailImage) => !productDetailImgs.includes(detailImage.detailImageId)
+      // );
 
       const updatedData: ProductModify = {
         productId: parseInt(productId || ""),
         productModifyRequest: productModifyRequestData,
-        productOptionModifyRequest: useOptions,
+        productOptionModifyRequest: products.productOptionList,
         productMainImageModifyRequest: productMainImageModifyRequest,
-        productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
+        // productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
         userToken: userToken || "",
       };
 
-      const isDuplicateOptionName = useOptions.some((option, index) =>
-        useOptions.some(
-          (otherOption, otherIndex) =>
-            option.optionName === otherOption.optionName && index !== otherIndex
-        )
-      );
+      // const isDuplicateOptionName = useOptions.some((option, index) =>
+      //   useOptions.some(
+      //     (otherOption, otherIndex) =>
+      //       option.optionName === otherOption.optionName && index !== otherIndex
+      //   )
+      // );
 
-      if (isDuplicateOptionName) {
-        toast.error("이미 존재하는 옵션 이름입니다.");
-        return;
-      }
+      // if (isDuplicateOptionName) {
+      //   toast.error("이미 존재하는 옵션 이름입니다.");
+      //   return;
+      // }
 
-      const hasIncompleteOption = useOptions.some((option) => {
-        return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
-      });
+      // const hasIncompleteOption = useOptions.some((option) => {
+      //   return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
+      // });
 
-      if (hasIncompleteOption) {
-        toast.error("옵션 정보를 모두 입력해주세요.");
-        return;
-      }
+      // if (hasIncompleteOption) {
+      //   toast.error("옵션 정보를 모두 입력해주세요.");
+      //   return;
+      // }
 
-      const totalDetailImages = [...selectedDetailImages, ...(data?.detailImagesForAdmin || [])];
+      // const totalDetailImages = [...selectedDetailImages, ...(data?.detailImagesForAdmin || [])];
 
-      if (totalDetailImages.length < 6 || totalDetailImages.length > 10) {
-        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
-        return;
-      }
+      // if (totalDetailImages.length < 6 || totalDetailImages.length > 10) {
+      //   toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+      //   return;
+      // }
 
       await mutation.mutateAsync(updatedData);
-      console.log("확인", updatedData);
+      console.log("수정확인", updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId || "")]);
-      navigate("/");
+      navigate("/adminProductListPage");
     }
   };
 

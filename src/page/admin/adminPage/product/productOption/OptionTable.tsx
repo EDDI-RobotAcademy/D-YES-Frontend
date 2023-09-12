@@ -78,105 +78,110 @@ const OptionTable: React.FC<OptionTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {optionRows.map((option, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <TextField
-                  name="optionName"
-                  size="small"
-                  value={option.optionName}
-                  fullWidth
-                  onChange={(event) => {
-                    const updatedOption = { ...option, optionName: event.target.value };
-                    onChangeOption(index, updatedOption);
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  name="optionPrice"
-                  size="small"
-                  value={option.optionPrice || 0}
-                  fullWidth
-                  onChange={(event) => {
-                    const updatedOption = { ...option, optionPrice: parseInt(event.target.value) };
-                    onChangeOption(index, updatedOption);
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  name="stock"
-                  size="small"
-                  value={option.stock || 0}
-                  fullWidth
-                  onChange={(event) => {
-                    const updatedOption = { ...option, stock: parseInt(event.target.value) };
-                    onChangeOption(index, updatedOption);
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                <div style={{ display: "flex", alignItems: "center" }}>
+          {optionRows.map((option, index) =>
+            option ? (
+              <TableRow key={index}>
+                <TableCell>
                   <TextField
-                    name="value"
+                    name="optionName"
                     size="small"
-                    value={option.value || 0}
+                    value={option.optionName}
                     fullWidth
                     onChange={(event) => {
-                      const updatedOption = { ...option, value: parseInt(event.target.value) };
+                      const updatedOption = { ...option, optionName: event.target.value };
                       onChangeOption(index, updatedOption);
                     }}
                   />
-                  <Select
-                    name="unit"
-                    size="small"
-                    value={option.unit}
-                    onChange={(event) => {
-                      const updatedOption = { ...option, unit: event.target.value };
-                      onChangeOption(index, updatedOption);
-                    }}
-                    sx={{ minWidth: "70px" }}
-                  >
-                    {unitOption.map((unit, unitIndex) => (
-                      <MenuItem key={unitIndex} value={unit.value}>
-                        {unit.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
-              </TableCell>
-              {isEditMode && (
-                <TableCell>
-                  <Select
-                    name="optionSaleStatus"
-                    size="small"
-                    value={option.optionSaleStatus}
-                    onChange={(event) => {
-                      const updatedOption = { ...option, optionSaleStatus: event.target.value };
-                      onChangeOption(index, updatedOption);
-                    }}
-                    sx={{ minWidth: "100px" }}
-                  >
-                    {saleStatus.map((status, statusIndex) => (
-                      <MenuItem key={statusIndex} value={status.value}>
-                        {status.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
                 </TableCell>
-              )}
-              <TableCell>
-                <IconButton
-                  onClick={() => onDeleteOption(index)}
-                  color="default"
-                  aria-label="delete option"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell>
+                  <TextField
+                    name="optionPrice"
+                    size="small"
+                    value={option.optionPrice || 0}
+                    fullWidth
+                    onChange={(event) => {
+                      const updatedOption = {
+                        ...option,
+                        optionPrice: parseInt(event.target.value),
+                      };
+                      onChangeOption(index, updatedOption);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    name="stock"
+                    size="small"
+                    value={option.stock || 0}
+                    fullWidth
+                    onChange={(event) => {
+                      const updatedOption = { ...option, stock: parseInt(event.target.value) };
+                      onChangeOption(index, updatedOption);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <TextField
+                      name="value"
+                      size="small"
+                      value={option.value || 0}
+                      fullWidth
+                      onChange={(event) => {
+                        const updatedOption = { ...option, value: parseInt(event.target.value) };
+                        onChangeOption(index, updatedOption);
+                      }}
+                    />
+                    <Select
+                      name="unit"
+                      size="small"
+                      value={option.unit}
+                      onChange={(event) => {
+                        const updatedOption = { ...option, unit: event.target.value };
+                        onChangeOption(index, updatedOption);
+                      }}
+                      sx={{ minWidth: "70px" }}
+                    >
+                      {unitOption.map((unit, unitIndex) => (
+                        <MenuItem key={unitIndex} value={unit.value}>
+                          {unit.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
+                </TableCell>
+                {isEditMode && (
+                  <TableCell>
+                    <Select
+                      name="optionSaleStatus"
+                      size="small"
+                      value={option.optionSaleStatus}
+                      onChange={(event) => {
+                        const updatedOption = { ...option, optionSaleStatus: event.target.value };
+                        onChangeOption(index, updatedOption);
+                      }}
+                      sx={{ minWidth: "100px" }}
+                    >
+                      {saleStatus.map((status, statusIndex) => (
+                        <MenuItem key={statusIndex} value={status.value}>
+                          {status.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                )}
+                <TableCell>
+                  <IconButton
+                    onClick={() => onDeleteOption(index)}
+                    color="default"
+                    aria-label="delete option"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ) : null
+          )}
         </TableBody>
       </table>
     </TableContainer>

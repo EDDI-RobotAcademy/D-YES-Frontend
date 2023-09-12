@@ -2,20 +2,9 @@ import { Box, Container } from "@mui/material";
 import ToggleComponent from "../productOption/ToggleComponent";
 import TextQuill from "utility/quill/TextQuill";
 import useProductModifyStore from "store/product/ProductModifyStore";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useProductQuery } from "page/product/api/ProductApi";
-
-interface RouteParams {
-  productId: string;
-  [key: string]: string;
-}
 
 const ProductDescriptionModify = () => {
-  const { productId } = useParams<RouteParams>();
-  const { data } = useProductQuery(productId || "");
   const { products, setProducts } = useProductModifyStore();
-  const [productDescription, setProductDescription] = useState("");
 
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
@@ -31,8 +20,8 @@ const ProductDescriptionModify = () => {
             >
               <TextQuill
                 name="productDescription"
-                value={data?.productResponseForAdmin.productDescription || ""}
-                setValue={setProductDescription}
+                value={products.productDescription || ""}
+                setValue={(newValue) => setProducts({ ...products, productDescription: newValue })}
                 isDisable={false}
               />
             </Box>

@@ -17,7 +17,7 @@ const ProductImageRegister = () => {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
         setProductImgs(compressedImage);
-        console.log("메인", compressedImage)
+        console.log("메인", compressedImage);
       } catch (error) {
         console.error(error);
       }
@@ -35,7 +35,7 @@ const ProductImageRegister = () => {
         const updatedImages = [...selectedDetailImages, ...compressedImages];
         setSelectedDetailImages(updatedImages);
         setProductDetailImgs(updatedImages);
-        console.log("상세", updatedImages)
+        console.log("상세", updatedImages);
       } catch (error) {
         console.error(error);
       }

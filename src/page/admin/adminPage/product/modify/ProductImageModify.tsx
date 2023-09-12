@@ -6,9 +6,9 @@ import { ProductDetailImg } from "entity/product/ProductDetailImg";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl } from "utility/s3/awsS3";
-import useProductModifyStore from "store/product/ProductModifyStore";
 import { useParams } from "react-router-dom";
 import { useProductQuery } from "page/product/api/ProductApi";
+import useProductImageStore from "store/product/ProductImageStore";
 
 interface RouteParams {
   productId: string;
@@ -18,17 +18,17 @@ interface RouteParams {
 const ProductImageModify = () => {
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
-  const { products, setProducts } = useProductModifyStore();
-  const [serverDetailImages, setServerDetailImages] = useState<ProductDetailImg[]>([]);
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
+  const { setProductImgs, productDetailImgs, setProductDetailImgs } = useProductImageStore();
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length) {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
+        setProductImgs(compressedImage);
       } catch (error) {
         console.error(error);
       }
@@ -46,7 +46,7 @@ const ProductImageModify = () => {
             };
           })
         );
-
+        setProductDetailImgs([...selectedDetailImages, ...productDetailImgs]);
         setSelectedDetailImages((prevImages: File[]) => [
           ...prevImages,
           ...compressedImages.map((item) => item.image),
@@ -72,14 +72,14 @@ const ProductImageModify = () => {
   const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
     event.stopPropagation();
 
-    const updatedServerDetailImages = serverDetailImages.filter(
-      (detailImage) => detailImage.detailImageId !== imageIdToDelete
-    );
+    const updatedProductDetailImages = productDetailImgs.filter((detailImage) => {
+      if ("detailImageId" in detailImage) {
+        return detailImage.detailImageId !== imageIdToDelete;
+      }
+      return true;
+    });
 
-    // 이미지를 제거한 후, 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
-    setServerDetailImages(updatedServerDetailImages);
-
-    // 이미지 삭제할 때 해당 이미지의 인덱스를 deletedImageIndexes 배열에 추가
+    setProductDetailImgs(updatedProductDetailImages);
     setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
   };
 
@@ -89,6 +89,7 @@ const ProductImageModify = () => {
     const updatedImages = [...selectedDetailImages];
     updatedImages.splice(index, 1);
     setSelectedDetailImages(updatedImages);
+    setProductDetailImgs(updatedImages);
   };
 
   return (
@@ -137,7 +138,7 @@ const ProductImageModify = () => {
               }}
               {...detailImageRootProps()}
             >
-              {(selectedDetailImages.length > 0 || serverDetailImages.length > 0) &&
+              {(selectedDetailImages.length > 0 || productDetailImgs.length > 0) &&
                 selectedDetailImages.map((selectedImage, idx) => (
                   <div
                     key={idx}
@@ -166,9 +167,9 @@ const ProductImageModify = () => {
                     />
                   </div>
                 ))}
-              {data?.detailImagesForAdmin &&
-                data.detailImagesForAdmin.length > 0 &&
-                data.detailImagesForAdmin.map((detailImage, idx) => (
+              {productDetailImgs &&
+                productDetailImgs.length > 0 &&
+                productDetailImgs.map((detailImage, idx) => (
                   <div
                     key={idx}
                     style={{
@@ -179,21 +180,30 @@ const ProductImageModify = () => {
                       position: "relative",
                     }}
                   >
-                    <img
-                      src={getImageUrl(detailImage.detailImgs)}
-                      style={{ width: "100%", height: "100%" }}
-                      alt={`Selected ${detailImage.detailImageId}`}
-                    />
-                    <RemoveCircleOutlineSharpIcon
-                      style={{
-                        position: "absolute",
-                        top: "5px",
-                        right: "5px",
-                        cursor: "pointer",
-                        zIndex: 1,
-                      }}
-                      onClick={(event) => handleDeleteDetailImage(event, detailImage.detailImageId)}
-                    />
+                    {"detailImgs" in detailImage && detailImage.detailImgs && (
+                      <>
+                        <img
+                          src={getImageUrl(detailImage.detailImgs)}
+                          style={{ width: "100%", height: "100%" }}
+                          alt={`Selected ${(detailImage as ProductDetailImg).detailImageId}`} // 타입 단언 사용
+                        />
+                        <RemoveCircleOutlineSharpIcon
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            cursor: "pointer",
+                            zIndex: 1,
+                          }}
+                          onClick={(event) =>
+                            handleDeleteDetailImage(
+                              event,
+                              (detailImage as ProductDetailImg).detailImageId
+                            )
+                          } // 타입 단언 사용
+                        />
+                      </>
+                    )}
                   </div>
                 ))}
             </div>

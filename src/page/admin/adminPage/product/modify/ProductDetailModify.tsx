@@ -1,8 +1,17 @@
-import { Box, Container, FormControl, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Box,
+  Container,
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
+  SelectChangeEvent,
+} from "@mui/material";
 import useProductModifyStore from "store/product/ProductModifyStore";
 import ToggleComponent from "../productOption/ToggleComponent";
 import { useProductQuery } from "page/product/api/ProductApi";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 interface RouteParams {
   productId: string;
@@ -13,8 +22,7 @@ const ProductDetailModify = () => {
   const { products, setProducts } = useProductModifyStore();
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
-  
-  console.log("받아오는 데이터", data)
+
   const options = [
     { value: "PESTICIDE_FREE", label: "무농약" },
     { value: "ENVIRONMENT_FRIENDLY", label: "친환경" },
@@ -25,6 +33,21 @@ const ProductDetailModify = () => {
     { value: "AVAILABLE", label: "판매중" },
     { value: "UNAVAILABLE", label: "판매중지" },
   ];
+  
+  const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newProductName = event.target.value;
+    setProducts({ ...products, productName: newProductName });
+  };
+
+  const handleOptionChange = (event: SelectChangeEvent<string>) => {
+    const newCultivationMethod = event.target.value;
+    setProducts({ ...products, cultivationMethod: newCultivationMethod });
+  };
+
+  const handleSaleStatusChange = (event: SelectChangeEvent<string>) => {
+    const newProductSaleStatus = event.target.value;
+    setProducts({ ...products, productSaleStatus: newProductSaleStatus });
+  };
 
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
@@ -40,8 +63,8 @@ const ProductDetailModify = () => {
                   name="productName"
                   className="text-field-input"
                   size="small"
-                  value={data?.productResponseForAdmin.productName}
-                  //   onChange={(e) => setProductName(e.target.value)}
+                  value={products.productName || ""}
+                  onChange={handleProductNameChange}
                 />
               </div>
               <div className="text-field-container">
@@ -56,9 +79,9 @@ const ProductDetailModify = () => {
                 >
                   <Select
                     name="cultivationMethod"
-                    value={data?.productResponseForAdmin.cultivationMethod || ""}
+                    value={products.cultivationMethod || ""}
                     sx={{ width: "100%" }}
-                    // onChange={(e) => setSelectedCultivationMethod(e.target.value)}
+                    onChange={handleOptionChange}
                   >
                     <MenuItem value="" disabled>
                       옵션을 선택해주세요
@@ -92,9 +115,9 @@ const ProductDetailModify = () => {
                 >
                   <Select
                     name="saleStatus"
-                    value={data?.productResponseForAdmin.productSaleStatus || ""}
+                    value={products.productSaleStatus || ""}
                     sx={{ width: "100%" }}
-                    // onChange={(e) => setSelectedSaleStatus(e.target.value)}
+                    onChange={handleSaleStatusChange}
                   >
                     <MenuItem value="" disabled>
                       판매 상태를 선택해주세요
