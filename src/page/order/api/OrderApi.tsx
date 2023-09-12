@@ -1,5 +1,8 @@
 import { OrderInfo } from "entity/order/OrderInfo";
+import { OrderRequset } from "entity/order/OrderRequset";
 import { UserAddress } from "entity/order/UserAddress";
+import { UseQueryResult, useQuery } from "react-query";
+import { useOrderUserInfoState } from "store/order/OrderStore";
 import axiosInstance from "utility/axiosInstance";
 
 const userToken = localStorage.getItem("userToken");
@@ -15,6 +18,19 @@ export const getOrderInfo = async () => {
   return response.data;
 };
 
+export const useOrderInfoQuery = (): UseQueryResult<OrderInfo, unknown> => {
+  const setOrderInfo = useOrderUserInfoState((state) => state.setOrderUserInfo);
+  const queryResult: UseQueryResult<OrderInfo, unknown> = useQuery("orderUserInfo", getOrderInfo, {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      setOrderInfo(data);
+    },
+  });
+
+  console.log(queryResult);
+  return queryResult;
+};
+
 // 사용자 주소 정보 수정
 export const updateAddressInfo = async (updatedData: UserAddress) => {
   const { address, zipCode, addressDetail } = updatedData;
@@ -24,5 +40,17 @@ export const updateAddressInfo = async (updatedData: UserAddress) => {
     zipCode,
     addressDetail,
   });
+  return response.data;
+};
+
+export const orderRequestInCart = async (requsetData: OrderRequset) => {
+  const data = {
+    userToken: userToken,
+    orderedPurchaserProfileRequest: requsetData.orderedUserInfo,
+    orderedProductOptionRequestList: requsetData.orderedProductInfo,
+    totalAmount: requsetData.totalAmount,
+  };
+  const response = await axiosInstance.springAxiosInst.post("/order/in-cart", data);
+  console.log("주문 데이터 전송 성공");
   return response.data;
 };
