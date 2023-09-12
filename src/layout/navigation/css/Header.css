@@ -16,6 +16,8 @@
   width: auto;
   z-index: 6;
   position: relative;
+  margin-left: 450px;
+  margin-right: 450px;
 }
 .Menu {
   color: black;
