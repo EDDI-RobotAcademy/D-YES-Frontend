@@ -23,6 +23,7 @@ import TopButton from "utility/TopButton";
 import { AdminLayout, UserLayout } from "Layout";
 import AdminProductList from "page/admin/adminPage/product/AdminProductListPage";
 import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
+import MyOrderPage from "page/user/myOrder/MyOrderPage";
 
 const theme = createTheme({
   typography: {
@@ -50,6 +51,7 @@ const App: React.FC = () => {
               <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/order" element={<Order />} />
+              <Route path="/myOrder" element={<MyOrderPage />} />
             </Route>
 
             <Route element={<AdminLayout />}>
