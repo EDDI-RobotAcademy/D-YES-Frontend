@@ -16,14 +16,15 @@ import Swal from "sweetalert2";
 import { fetchProductList } from "page/product/api/ProductApi";
 import { FarmRead } from "entity/farm/FarmRead";
 import { Farm } from "entity/farm/Farm";
+import useFarmStore from "store/farm/FarmStore";
+import useFarmBusinessStore from "store/farm/FarmBusinessStore";
+import { Business } from "entity/farm/Business";
 
-interface FarmListProps {
-  setSelectedFarm: (farm: FarmRead | null) => void;
-}
-
-const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
+const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
   const queryClient = useQueryClient();
+  const { setFarms } = useFarmStore();
+  const { setBusiness } = useFarmBusinessStore();
 
   useEffect(() => {
     fetchFarmList();
@@ -80,7 +81,12 @@ const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
   const handleFarmClick = async (farmId: string) => {
     try {
       const farmInfo = await fetchFarm(farmId);
-      setSelectedFarm(farmInfo);
+      if (farmInfo !== null) {
+        setFarms(farmInfo.farmInfoResponseForAdmin as Farm);
+        setBusiness(farmInfo.farmOperationInfoResponseForAdmin as Business);
+      } else {
+        console.error("농가 정보를 가져오는 데 실패했습니다.");
+      }
     } catch (error) {
       console.error("농가 정보를 가져오는 중 오류 발생:", error);
     }
@@ -89,7 +95,7 @@ const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
   return (
     <div>
       <div className="list-menu">
-        <img className="farm-list-icon" alt="농가 목록" src="img/farm-list-icon.png" />
+        {/* <img className="farm-list-icon" alt="농가 목록" src="img/farm-list-icon.png" /> */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Typography
             gutterBottom

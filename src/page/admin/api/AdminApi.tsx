@@ -58,7 +58,6 @@ export const deleteFarm = async (farmId: string): Promise<void> => {
 // 농가 정보 읽기
 export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
   const response = await axiosInstance.springAxiosInst.get(`farm/read/${farmId}`);
-  console.log("읽기정보", response.data);
   return response.data;
 };
 

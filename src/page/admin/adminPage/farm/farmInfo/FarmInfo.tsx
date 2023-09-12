@@ -85,7 +85,7 @@ const FarmInfo = () => {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
-        setFarms({ ...farms, mainImages: compressedImage.name });
+        setFarms({ ...farms, mainImage: compressedImage.name });
       } catch (error) {
         console.error(error);
       }
@@ -277,10 +277,10 @@ const FarmInfo = () => {
                 }}
                 alt="Selected"
               />
-            ) : farms.mainImages ? (
+            ) : farms.mainImage ? (
               <div>
                 <img
-                  src={getImageUrl(farms.mainImages)}
+                  src={getImageUrl(farms.mainImage.replace(/\?versionId=.+$/, ''))}
                   style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
                   alt="Selected"
                 />
@@ -331,7 +331,7 @@ const FarmInfo = () => {
               name="produceTypes"
               fullWidth
               multiple
-              value={selectedOptions}
+              value={farms.produceTypes || []}
               open={isSelectOpen}
               onClose={handleSelectClose}
               onOpen={handleSelectOpen}
