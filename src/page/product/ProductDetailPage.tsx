@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { won } from "utility/filters/wonFilter";
-import { Button, FormControl, MenuItem, Select } from "@mui/material";
+import { Button, FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import {
   Table,
   TableBody,
@@ -21,7 +21,9 @@ import Swal from "sweetalert2";
 import parse from "html-react-parser";
 import { getProductDetail, useProductDetailQuery } from "./api/ProductApi";
 import ProductCarousel from "./carousel/ProductCarousel";
-import { Cart } from "entity/cart/Cart";
+import ProductOptionStore from "store/product/ProductOptionStore";
+import { useOptions } from "entity/product/useOptions";
+import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 
 import "./css/ProductDetailPage.css";
 
@@ -39,42 +41,91 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { productId } = useParams<RouteParams>();
   const { data } = useProductDetailQuery(productId || "");
-  const [productQuantity, setProductQuantity] = useState(1);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
+  const [selectedOptionList, setSelectedOptionList] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const optionList: useOptions[] = ProductOptionStore((state) => state.optionList);
+  const [optionQuantities, setOptionQuantities] = useState<{ [key: number]: number }>({});
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   useEffect(() => {
     const fetchProductData = async () => {
-      const data = await getProductDetail(productId || "");
+      await getProductDetail(productId || "");
       setIsLoading(true);
-      if (data?.optionResponseForUser && data.optionResponseForUser.length > 0) {
-        setSelectedOptionId(data.optionResponseForUser[0].optionId!);
-      }
     };
     fetchProductData();
   }, []);
+
+  useEffect(() => {
+    updateTotalPrice();
+  }, [selectedOptionList, optionQuantities]);
 
   const productResponse = data?.productResponseForUser;
   const productDescription = productResponse?.productDescription || "";
   const parsedHTML = parse(productDescription);
 
-  const handleDecreaseQuantity = () => {
-    if (productQuantity > 1) {
-      setProductQuantity(productQuantity - 1);
+  const handleDecreaseQuantity = (optionId: number) => {
+    if (optionQuantities[optionId] > 1) {
+      setOptionQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [optionId]: prevQuantities[optionId] - 1,
+      }));
     }
   };
 
-  const handleIncreaseQuantity = () => {
-    setProductQuantity(productQuantity + 1);
+  const handleIncreaseQuantity = (optionId: number) => {
+    setOptionQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [optionId]: (prevQuantities[optionId] || 0) + 1,
+    }));
+  };
+
+  const handleOptionDelete = (optionId: number) => {
+    const selectedOptionToDelete = getSelectedOption(optionId.toString());
+
+    if (selectedOptionToDelete) {
+      const updatedOptionQuantities = { ...optionQuantities };
+      delete updatedOptionQuantities[optionId];
+
+      setSelectedOptionList((prevList) =>
+        prevList.filter((selectedValue) => {
+          const option = getSelectedOption(selectedValue);
+          return option ? option.optionId !== optionId : false;
+        })
+      );
+      setOptionQuantities(updatedOptionQuantities);
+    }
+  };
+
+  const handleAddOption = (event: SelectChangeEvent<string>) => {
+    const selectedValue = event.target.value;
+    if (selectedOptionList.includes(selectedValue)) {
+      toast.warning("이미 선택한 옵션입니다");
+      return;
+    }
+    setSelectedOptionList((prev) => [...prev, selectedValue]);
+    setOptionQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [selectedValue]: 1,
+    }));
+  };
+
+  const getSelectedOption = (selectedValue: string): useOptions | undefined => {
+    return optionList.find((option) => option.optionId.toString() === selectedValue);
   };
 
   const addCart = async () => {
-    const requestData: Cart = {
-      productOptionId: selectedOption?.optionId!,
-      optionCount: productQuantity,
-    };
+    const cartItems = Object.keys(optionQuantities).map((optionId) => ({
+      productOptionId: parseInt(optionId),
+      optionCount: optionQuantities[parseInt(optionId)],
+    }));
+    console.log(cartItems);
     try {
-      await sendCartContainRequest(requestData);
+      if (selectedOptionList.length == 0) {
+        toast.warning("옵션을 선택해주세요");
+        return;
+      }
+      await sendCartContainRequest(cartItems);
       Swal.fire({
         title: "상품을 장바구니에 담았습니다",
         text: "장바구니에서 상품을 확인하실 수 있어요",
@@ -94,7 +145,10 @@ const ProductDetail = () => {
     }
   };
 
-  const mainImage: ImageObject = { id: 0, url: getImageUrl(data?.mainImageResponseForUser?.mainImg || "") };
+  const mainImage: ImageObject = {
+    id: 0,
+    url: getImageUrl(data?.mainImageResponseForUser?.mainImg || ""),
+  };
   const detailImages: ImageObject[] =
     data?.detailImagesForUser?.map((detail, index) => ({
       id: index + 1,
@@ -110,10 +164,17 @@ const ProductDetail = () => {
     ENVIRONMENT_FRIENDLY: { className: "tag-environment-friendly", name: "친환경" },
   };
 
-  const selectedOption =
-    data && data.optionResponseForUser
-      ? data.optionResponseForUser.find((option) => option.optionId === selectedOptionId)
-      : null;
+  const updateTotalPrice = () => {
+    let totalPrice = 0;
+    selectedOptionList.forEach((selectedValue) => {
+      const selectedOption = getSelectedOption(selectedValue);
+      const optionId = selectedOption?.optionId;
+      if (optionId) {
+        totalPrice += (selectedOption.optionPrice || 0) * (optionQuantities[optionId] || 0);
+      }
+    });
+    setTotalPrice(totalPrice);
+  };
 
   const yDetail = useRef<HTMLDivElement>(null);
   const yReview = useRef<HTMLDivElement>(null);
@@ -142,7 +203,7 @@ const ProductDetail = () => {
                   <div className="product-name">{data?.productResponseForUser.productName}</div>
                   <div className="spacer-2" />
                   <div className="product-option-price">
-                    {selectedOption ? won(selectedOption.optionPrice) : ""}
+                    {won(data?.optionResponseForUser[0].optionPrice)}
                   </div>
                   <div className="spacer-3" />
                   {data?.productResponseForUser.cultivationMethod &&
@@ -173,9 +234,16 @@ const ProductDetail = () => {
                   <div className="choose-option">옵션을 선택해주세요</div>
                   <Select
                     value={selectedOptionId !== null ? selectedOptionId.toString() : ""}
-                    onChange={(e) => setSelectedOptionId(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      setSelectedOptionId(parseInt(e.target.value));
+                      handleAddOption(e);
+                    }}
                     style={{ fontFamily: "SUIT-Medium" }}
+                    displayEmpty
                   >
+                    <MenuItem value="" disabled>
+                      옵션을 선택해주세요
+                    </MenuItem>
                     {data?.optionResponseForUser.map((option, idx) => (
                       <MenuItem
                         key={idx}
@@ -203,22 +271,63 @@ const ProductDetail = () => {
                     ))}
                   </Select>
                 </FormControl>
+                <div>
+                  {selectedOptionList.map((selectedValue, index) => {
+                    const selectedOption = getSelectedOption(selectedValue);
+                    return (
+                      <div className="selected-options-container" key={index}>
+                        {selectedOption ? (
+                          <div className="selected-options-style">
+                            <div className="options-style">
+                              {selectedOption.optionName +
+                                " / " +
+                                selectedOption.value +
+                                selectedOption.unit}
+                            </div>
+                            <div className="selected-option-count">
+                              <div className="product-counter-button">
+                                <div
+                                  className="product-button"
+                                  onClick={() => handleDecreaseQuantity(selectedOption.optionId)}
+                                >
+                                  <RemoveIcon />
+                                </div>
+                                <span className="product-counter">
+                                  {optionQuantities[selectedOption.optionId] || 0}
+                                </span>
+                                <div
+                                  className="product-button"
+                                  onClick={() => handleIncreaseQuantity(selectedOption.optionId)}
+                                >
+                                  <AddIcon />
+                                </div>
+                              </div>
+                              <div className="selected-option-price">
+                                {won(
+                                  selectedOption.optionPrice *
+                                    (optionQuantities[selectedOption.optionId] || 0)
+                                )}
+                                <div
+                                  className="product-option-delete"
+                                  onClick={() => handleOptionDelete(selectedOption.optionId)}
+                                >
+                                  <DisabledByDefaultIcon />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div>옵션을 찾을 수 없습니다</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
                 <div className="spacer-3" />
                 <div className="product-quantity">
                   총 상품 가격
                   <span className="product-price-sum">
-                    <div className="product-counter-button">
-                      <div className="product-button" onClick={handleDecreaseQuantity}>
-                        <RemoveIcon />
-                      </div>
-                      <span className="product-counter">{productQuantity}</span>
-                      <div className="product-button" onClick={handleIncreaseQuantity}>
-                        <AddIcon />
-                      </div>
-                    </div>
-                    <div className="price-sum">
-                      {selectedOption ? won(selectedOption.optionPrice * productQuantity) : 0}
-                    </div>
+                    <div className="price-sum">{won(totalPrice)}</div>
                   </span>
                 </div>
                 <div>
@@ -296,7 +405,9 @@ const ProductDetail = () => {
                             <span>{data?.farmInfoResponseForUser.farmName}</span>
                           </div>
                         </div>
-                        <div className="farm-introduce">{data?.farmInfoResponseForUser.introduction}</div>
+                        <div className="farm-introduce">
+                          {data?.farmInfoResponseForUser.introduction}
+                        </div>
                       </div>
 
                       <TableContainer component={Paper}>
@@ -342,44 +453,46 @@ const ProductDetail = () => {
                                 className="farm-info-cell"
                                 style={{ width: "40%", textAlign: "center" }}
                               >
-                                {data?.farmInfoResponseForUser.produceTypes.map((produceType, index) => (
-                                  <Chip
-                                    size="small"
-                                    style={{
-                                      color: "#252525",
-                                      backgroundColor: "#EEEEEE",
-                                      marginLeft: "3px",
-                                    }}
-                                    key={index}
-                                    label={
-                                      produceType === "POTATO"
-                                        ? "감자"
-                                        : produceType === "SWEET_POTATO"
-                                        ? "고구마"
-                                        : produceType === "CABBAGE"
-                                        ? "양배추"
-                                        : produceType === "KIMCHI_CABBAGE"
-                                        ? "배추"
-                                        : produceType === "LEAF_LETTUCE"
-                                        ? "양상추"
-                                        : produceType === "ROMAINE_LETTUCE"
-                                        ? "로메인 상추"
-                                        : produceType === "PEPPER"
-                                        ? "고추"
-                                        : produceType === "GARLIC"
-                                        ? "마늘"
-                                        : produceType === "TOMATO"
-                                        ? "토마토"
-                                        : produceType === "CUCUMBER"
-                                        ? "오이"
-                                        : produceType === "CARROT"
-                                        ? "당근"
-                                        : produceType === "EGGPLANT"
-                                        ? "가지"
-                                        : produceType
-                                    }
-                                  />
-                                ))}
+                                {data?.farmInfoResponseForUser.produceTypes.map(
+                                  (produceType, index) => (
+                                    <Chip
+                                      size="small"
+                                      style={{
+                                        color: "#252525",
+                                        backgroundColor: "#EEEEEE",
+                                        marginLeft: "3px",
+                                      }}
+                                      key={index}
+                                      label={
+                                        produceType === "POTATO"
+                                          ? "감자"
+                                          : produceType === "SWEET_POTATO"
+                                          ? "고구마"
+                                          : produceType === "CABBAGE"
+                                          ? "양배추"
+                                          : produceType === "KIMCHI_CABBAGE"
+                                          ? "배추"
+                                          : produceType === "LEAF_LETTUCE"
+                                          ? "양상추"
+                                          : produceType === "ROMAINE_LETTUCE"
+                                          ? "로메인 상추"
+                                          : produceType === "PEPPER"
+                                          ? "고추"
+                                          : produceType === "GARLIC"
+                                          ? "마늘"
+                                          : produceType === "TOMATO"
+                                          ? "토마토"
+                                          : produceType === "CUCUMBER"
+                                          ? "오이"
+                                          : produceType === "CARROT"
+                                          ? "당근"
+                                          : produceType === "EGGPLANT"
+                                          ? "가지"
+                                          : produceType
+                                      }
+                                    />
+                                  )
+                                )}
                               </TableCell>
                             </TableRow>
                           </TableBody>

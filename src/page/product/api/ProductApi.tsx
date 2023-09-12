@@ -15,6 +15,7 @@ import { ProductRead } from "entity/product/ProductRead";
 import { ProductModify } from "entity/product/ProductModify";
 import { ProductDetail } from "entity/product/ProductDetail";
 import { ProductPopupRead } from "entity/product/ProductPopupRead";
+import ProductOptionStore from "store/product/ProductOptionStore";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -24,7 +25,10 @@ export const registerProduct = async (data: {
   productDetailImagesRegisterRequests: ProductDetailImg[];
   farmName: string;
 }): Promise<Product> => {
-  const response = await axiosInstance.springAxiosInst.post<Product>("/product/admin/register", data);
+  const response = await axiosInstance.springAxiosInst.post<Product>(
+    "/product/admin/register",
+    data
+  );
   console.log("api데이터 확인", response.data);
   return response.data;
 };
@@ -85,7 +89,7 @@ export const deleteProducts = async (productIds: string[]): Promise<any> => {
   const response = await axiosInstance.springAxiosInst.delete("/product/admin/deleteList", {
     data: deleteForm,
   });
-  console.log("상품삭제", response.data)
+  console.log("상품삭제", response.data);
   return response.data;
 };
 
@@ -144,7 +148,15 @@ export const getProductDetail = async (productId: string): Promise<ProductDetail
   const response = await axiosInstance.springAxiosInst.get<ProductDetail>(
     `/product/user/read/${productId}`
   );
-  console.log("확인", response.data);
+
+  const optionList: useOptions[] = response.data.optionResponseForUser;
+  const extendedOptionList = optionList.map((option) => ({
+    ...option,
+    optionCount: 1,
+  }));
+
+  ProductOptionStore.setState({ optionList: extendedOptionList });
+  console.log(response.data);
   return response.data;
 };
 

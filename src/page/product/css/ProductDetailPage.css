@@ -75,8 +75,8 @@
 .product-counter-button {
   display: flex;
   justify-content: space-between;
-  align-content: flex-end;
   width: 80px;
+  padding: 10px 0 0 5px;
 }
 .product-counter {
   margin-left: 5px;
@@ -229,4 +229,27 @@
   border-radius: 15px;
   margin-bottom: 12px;
   color: #252525;
+}
+.selected-options-container {
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  border-bottom: 0.25px solid;
+}
+.selected-options-style {
+  width: 95%;
+}
+.selected-option-count {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.selected-option-price {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.product-option-delete {
+  cursor: pointer;
+  display: flex;
 }

@@ -5,11 +5,12 @@ import axiosInstance from "utility/axiosInstance";
 const userToken: string = localStorage.getItem("userToken") || "";
 
 // 장바구니에 상품 추가
-export const sendCartContainRequest = async (requestData: Cart) => {
+export const sendCartContainRequest = async (requestData: Cart[]) => {
   const data = {
     userToken: userToken,
-    request: requestData,
+    requestList: requestData,
   };
+  // console.log("장바구니에 보내는 데이터 확인: ", data);
   await axiosInstance.springAxiosInst.post("/cart/contain", data);
   console.log("장바구니에 데이터 전송 성공");
 };
