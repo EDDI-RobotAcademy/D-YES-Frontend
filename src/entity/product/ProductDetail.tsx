@@ -5,9 +5,9 @@ import { useOptions } from "./useOptions";
 import { useProductInfo } from "./useProductInfo";
 
 export interface ProductDetail {
-  productResponse: useProductInfo;
-  optionList: Array<useOptions>;
-  mainImage: ProductImg;
-  detailImagesList: Array<ProductDetailImg>;
-  farmInfoResponse: useFarmInfo;
+  productResponseForUser: useProductInfo;
+  optionResponseForUser: Array<useOptions>;
+  mainImageResponseForUser: ProductImg;
+  detailImagesForUser: Array<ProductDetailImg>;
+  farmInfoResponseForUser: useFarmInfo;
 }

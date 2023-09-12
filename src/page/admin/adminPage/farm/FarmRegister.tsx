@@ -63,23 +63,23 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
     console.log("받아오니", selectedFarm);
     if (selectedFarm) {
       setBusinessInfo({
-        businessName: selectedFarm.farmOperationInfoResponseForm?.businessName || "",
-        businessNumber: selectedFarm.farmOperationInfoResponseForm?.businessNumber || "",
-        representativeName: selectedFarm.farmOperationInfoResponseForm?.representativeName || "",
+        businessName: selectedFarm.farmOperationInfoResponseForAdmin?.businessName || "",
+        businessNumber: selectedFarm.farmOperationInfoResponseForAdmin?.businessNumber || "",
+        representativeName: selectedFarm.farmOperationInfoResponseForAdmin?.representativeName || "",
         representativeContactNumber:
-          selectedFarm.farmOperationInfoResponseForm?.representativeContactNumber || "",
-        farmName: selectedFarm.farmInfoResponseForm?.farmName || "",
-        csContactNumber: selectedFarm.farmInfoResponseForm?.csContactNumber || "",
-        addressDetail: selectedFarm.farmInfoResponseForm?.farmAddress?.addressDetail || "",
-        introduction: selectedFarm.farmInfoResponseForm?.introduction || "",
+          selectedFarm.farmOperationInfoResponseForAdmin?.representativeContactNumber || "",
+        farmName: selectedFarm.farmInfoResponseForAdmin?.farmName || "",
+        csContactNumber: selectedFarm.farmInfoResponseForAdmin?.csContactNumber || "",
+        addressDetail: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.addressDetail || "",
+        introduction: selectedFarm.farmInfoResponseForAdmin?.introduction || "",
       });
       setAddressInfo({
-        address: selectedFarm.farmInfoResponseForm?.farmAddress?.address || "",
-        zipCode: selectedFarm.farmInfoResponseForm?.farmAddress?.zipCode || "",
+        address: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.address || "",
+        zipCode: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.zipCode || "",
       });
       setSelectedOptions(
-        Array.isArray(selectedFarm.farmInfoResponseForm?.produceTypes)
-          ? selectedFarm.farmInfoResponseForm.produceTypes
+        Array.isArray(selectedFarm.farmInfoResponseForAdmin?.produceTypes)
+          ? selectedFarm.farmInfoResponseForAdmin.produceTypes
           : []
       );
       setShowEditButton(true);
@@ -98,7 +98,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   // 수정
   const handleEditFinishClick = async () => {
     if (businessInfo.csContactNumber && businessInfo.introduction && selectedOptions.length > 0) {
-      const farmId = selectedFarm?.farmInfoResponseForm.farmId;
+      const farmId = selectedFarm?.farmInfoResponseForAdmin.farmId;
       const userToken = localStorage.getItem("userToken") || "";
       let mainImageName = "";
       let s3MainObjectVersion = "";
@@ -107,7 +107,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
         mainImageName = selectedMainImage.name;
         s3MainObjectVersion = (await uploadFileAwsS3(selectedMainImage as File)) || "";
       } else {
-        mainImageName = selectedFarm?.farmInfoResponseForm?.mainImage || "";
+        mainImageName = selectedFarm?.farmInfoResponseForAdmin?.mainImage || "";
       }
 
       const updateData: FarmModify = {
@@ -128,8 +128,8 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
       handleRegistrationComplete();
       const updatedSelectedFarm = { ...selectedFarm };
 
-      if (updatedSelectedFarm.farmInfoResponseForm) {
-        updatedSelectedFarm.farmInfoResponseForm.mainImage = "";
+      if (updatedSelectedFarm.farmInfoResponseForAdmin) {
+        updatedSelectedFarm.farmInfoResponseForAdmin.mainImage = "";
       }
     }
   };
@@ -636,10 +636,10 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                       }}
                       alt="Selected"
                     />
-                  ) : selectedFarm?.farmInfoResponseForm?.mainImage ? (
+                  ) : selectedFarm?.farmInfoResponseForAdmin?.mainImage ? (
                     <div>
                       <img
-                        src={getImageUrl(selectedFarm.farmInfoResponseForm.mainImage)}
+                        src={getImageUrl(selectedFarm.farmInfoResponseForAdmin.mainImage)}
                         style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
                         alt="Selected"
                       />
