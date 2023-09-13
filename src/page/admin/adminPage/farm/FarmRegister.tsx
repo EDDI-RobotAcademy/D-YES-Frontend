@@ -1,6 +1,6 @@
 import { Container, Box, Typography, Grid, Button } from "@mui/material";
 import { farmRegister, updateFarm } from "page/admin/api/AdminApi";
-import React, { useState } from "react";
+import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
@@ -15,7 +15,6 @@ import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 const FarmRegister = () => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
-  const [showEditButton, setShowEditButton] = useState(true);
   const { farms, setFarms } = useFarmStore();
   const { business, setBusiness } = useFarmBusinessStore();
   const { farmReads, setFarmRead } = useFarmReadStore();
@@ -41,18 +40,13 @@ const FarmRegister = () => {
       const farmId = farmReads?.farmId;
       const userToken = localStorage.getItem("userToken") || "";
 
-      const mainFileToUpload = farms.mainImage ? farms.mainImage : "";
-      console.log("확인", mainFileToUpload);
-      if (!mainFileToUpload) {
-        toast.error("농가 이미지를 등록해주세요");
-        return;
+      let mainImage = farmReads?.mainImage || "";
+
+      // farms.mainImage가 존재하면 새 이미지 업로드
+      if (farms.mainImage) {
+        const s3MainObjectVersion = (await uploadFileAwsS3(farms.mainImage)) || "";
+        mainImage = farms.mainImage.name + "?versionId=" + s3MainObjectVersion;
       }
-
-      const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
-
-      const mainImage = mainFileToUpload
-        ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
-        : "undefined main image";
 
       const updateData: FarmModify = {
         farmId: (farmId || "").toString(),
@@ -66,8 +60,6 @@ const FarmRegister = () => {
       console.log("수정정보전송", updateData);
       await modifyMutation.mutateAsync(updateData);
       queryClient.invalidateQueries(["farm", farmId]);
-
-      setShowEditButton(false);
 
       handleRegistrationComplete();
     }
@@ -89,7 +81,7 @@ const FarmRegister = () => {
         zipCode: "",
         addressDetail: "",
       },
-      mainImage: new File([], ""),
+      mainImage: null as unknown as File,
       introduction: "",
       produceTypes: [],
     });
@@ -213,21 +205,22 @@ const FarmRegister = () => {
             <FarmBusinessInfo />
             <FarmInfo />
             <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                style={{
-                  backgroundColor: "#DF726D",
-                  color: "white",
-                  fontFamily: "SUIT-Regular",
-                  fontSize: "14px",
-                  marginTop: "12px",
-                }}
-                fullWidth
-              >
-                등록
-              </Button>
-              {farmReads.farmId !== 0 && showEditButton && (
+              {!farmReads.farmId ? (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#DF726D",
+                    color: "white",
+                    fontFamily: "SUIT-Regular",
+                    fontSize: "14px",
+                    marginTop: "12px",
+                  }}
+                  fullWidth
+                >
+                  등록
+                </Button>
+              ) : (
                 <Button
                   variant="contained"
                   style={{
@@ -240,7 +233,7 @@ const FarmRegister = () => {
                   fullWidth
                   onClick={handleEditFinishClick}
                 >
-                  수정 완료
+                  수정
                 </Button>
               )}
             </Grid>

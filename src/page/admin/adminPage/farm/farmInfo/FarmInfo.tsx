@@ -32,7 +32,6 @@ const FarmInfo = () => {
   const { farms, setFarms } = useFarmStore();
   const { farmReads, setFarmRead } = useFarmReadStore();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const handlerFarmNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +87,6 @@ const FarmInfo = () => {
     if (acceptedFile.length) {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
-        setSelectedMainImage(compressedImage);
         setFarms({ ...farms, mainImage: compressedImage });
         setFarmRead({ ...farmReads, mainImage: compressedImage.name });
       } catch (error) {
@@ -284,9 +282,9 @@ const FarmInfo = () => {
           }}
           {...mainImageRootProps()}
         >
-          {selectedMainImage ? (
+          {farms.mainImage ? (
             <img
-              src={URL.createObjectURL(selectedMainImage)}
+              src={URL.createObjectURL(farms.mainImage)}
               style={{
                 maxWidth: "100%",
                 maxHeight: "100%",
