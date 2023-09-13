@@ -11,7 +11,7 @@ import { UserAddress } from "entity/order/UserAddress";
 import { OrderRequset } from "entity/order/OrderRequset";
 import { useNavigate } from "react-router-dom";
 import { OrderdProduct } from "entity/order/OrderedProduct";
-import { useOrderUserInfoState } from "store/order/OrderStore";
+import { useOrderUserInfoStore } from "store/order/OrderStore";
 
 import "./css/Order.css";
 
@@ -24,7 +24,7 @@ const Order = () => {
   const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { orderUserInfo, setOrderUserInfo } = useOrderUserInfoState();
+  const { orderUserInfo, setOrderUserInfo } = useOrderUserInfoStore();
   const [userName, setUserName] = useState<string>("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
