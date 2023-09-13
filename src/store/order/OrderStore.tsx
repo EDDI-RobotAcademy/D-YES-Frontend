@@ -6,7 +6,7 @@ interface OrderUserInfoState {
   setOrderUserInfo: (orderUserInfo: OrderInfo) => void;
 }
 
-export const useOrderUserInfoState = create<OrderUserInfoState>((set) => ({
+export const useOrderUserInfoStore = create<OrderUserInfoState>((set) => ({
   orderUserInfo: {} as OrderInfo,
   setOrderUserInfo: (orderUserInfo) => set({ orderUserInfo }),
 }));

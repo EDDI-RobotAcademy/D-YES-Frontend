@@ -14,7 +14,7 @@
   height: 60px;
   background-color: white;
   width: auto;
-  z-index: 5;
+  z-index: 500;
   position: relative;
   margin-left: 450px;
   margin-right: 450px;
@@ -42,7 +42,6 @@
   background-color: white;
   margin-left: 0;
   margin-right: 0;
-  z-index: 55;
 }
 .second-header-top-bar:hover .second-header-drawer {
   display: flex;

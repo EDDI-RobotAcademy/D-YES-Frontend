@@ -3,14 +3,15 @@ import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
 import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
-import { getOrderInfo, orderRequestInCart, updateAddressInfo } from "./api/OrderApi";
+import { getOrderInfo, orderRequestInCart } from "./api/OrderApi";
+import { updateAddressInfo } from "page/user/api/UserApi";
 import { Grid, Button, Checkbox, Paper, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { UserAddress } from "entity/order/UserAddress";
 import { OrderRequset } from "entity/order/OrderRequset";
 import { useNavigate } from "react-router-dom";
 import { OrderdProduct } from "entity/order/OrderedProduct";
-import { useOrderUserInfoState } from "store/order/OrderStore";
+import { useOrderUserInfoStore } from "store/order/OrderStore";
 
 import "./css/Order.css";
 
@@ -23,7 +24,7 @@ const Order = () => {
   const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { orderUserInfo, setOrderUserInfo } = useOrderUserInfoState();
+  const { orderUserInfo, setOrderUserInfo } = useOrderUserInfoStore();
   const [userName, setUserName] = useState<string>("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
