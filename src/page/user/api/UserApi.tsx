@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from "react-query";
 import { User } from "entity/user/User";
+import { UserAddress } from "entity/order/UserAddress";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -95,6 +96,18 @@ export const deleteInfo = async () => {
     params: {
       userToken: userToken,
     },
+  });
+  return response.data;
+};
+
+// 사용자 주소 정보 수정
+export const updateAddressInfo = async (updatedData: UserAddress) => {
+  const { address, zipCode, addressDetail } = updatedData;
+  const response = await axiosInstance.springAxiosInst.put("/user/update-address", {
+    userToken: userToken,
+    address,
+    zipCode,
+    addressDetail,
   });
   return response.data;
 };

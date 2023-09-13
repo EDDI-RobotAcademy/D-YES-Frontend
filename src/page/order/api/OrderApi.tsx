@@ -31,18 +31,6 @@ export const useOrderInfoQuery = (): UseQueryResult<OrderInfo, unknown> => {
   return queryResult;
 };
 
-// 사용자 주소 정보 수정
-export const updateAddressInfo = async (updatedData: UserAddress) => {
-  const { address, zipCode, addressDetail } = updatedData;
-  const response = await axiosInstance.springAxiosInst.put("/order/updateInfo", {
-    userToken: userToken,
-    address,
-    zipCode,
-    addressDetail,
-  });
-  return response.data;
-};
-
 export const orderRequestInCart = async (requsetData: OrderRequset) => {
   const data = {
     userToken: userToken,
