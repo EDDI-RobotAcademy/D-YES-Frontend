@@ -23,6 +23,7 @@ import TopButton from "utility/TopButton";
 import { AdminLayout, UserLayout } from "Layout";
 import AdminProductList from "page/admin/adminPage/product/AdminProductListPage";
 import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
+import AdminOrderListPage from "page/admin/adminPage/order/AdminOrderListPage";
 import MyOrderPage from "page/user/myOrder/MyOrderPage";
 
 const theme = createTheme({
@@ -65,6 +66,7 @@ const App: React.FC = () => {
                 path="/adminProductModifyPage/:productId"
                 element={<AdminProductModifyPage />}
               />
+              <Route path="/adminOrderListPage" element={<AdminOrderListPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

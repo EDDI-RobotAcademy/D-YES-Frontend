@@ -93,6 +93,25 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
               </div>
             </div>
           </div>
+
+          <div className="order-management">
+            <p className="menu-name">
+              <img className="menu-icon" alt="상품" src="img/farm-icon.png" width={20} />
+              Order
+            </p>
+            <div className="sub-menu">
+              <div>
+                <p
+                  className="order-menu"
+                  onClick={() => {
+                    navigate("/adminOrderListPage");
+                  }}
+                >
+                  Order List
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="content-container">

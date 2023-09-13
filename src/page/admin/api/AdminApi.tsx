@@ -17,7 +17,6 @@ export const adminRegister = async (data: {
   userToken: string;
 }): Promise<Admin> => {
   const response = await axiosInstance.springAxiosInst.post<Admin>("/admin/register", data);
-  console.log("api확인", response.data);
   return response.data;
 };
 
@@ -61,11 +60,11 @@ export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
   return response.data;
 };
 
-export const useFarmQuery = (farmId: string): UseQueryResult<FarmRead | null, unknown> => {
-  return useQuery(["FarmRead", farmId], () => fetchFarm(farmId), {
-    refetchOnWindowFocus: false,
-  });
-};
+// export const useFarmQuery = (farmId: string): UseQueryResult<FarmRead | null, unknown> => {
+//   return useQuery(["FarmRead", farmId], () => fetchFarm(farmId), {
+//     refetchOnWindowFocus: false,
+//   });
+// };
 
 // 농가 수정
 export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> => {
@@ -103,6 +102,16 @@ export const getUserList = async () => {
       userToken: localStorage.getItem("userToken"),
     },
   });
-  console.log("사용자리스트정보", response.data);
   return response.data;
 };
+
+export const getOrderList = async () => {
+  const response = await axiosInstance.springAxiosInst.get("/order/admin/list", {
+    params: {
+      userToken: localStorage.getItem("userToken"),
+    },
+  });
+  console.log("주문 목록 정보", response.data);
+  return response.data;
+};
+
