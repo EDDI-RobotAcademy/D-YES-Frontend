@@ -1,9 +1,11 @@
 import { Container, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
+import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 import useFarmBusinessStore from "store/farm/FarmBusinessStore";
 
 const FarmBusinessInfo = () => {
   const { business, setBusiness } = useFarmBusinessStore();
+  const { businessRead } = useFarmBusinessReadStore();
 
   const handlerBusinessNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newBusinessNameChange = event.target.value;
@@ -32,6 +34,7 @@ const FarmBusinessInfo = () => {
       setBusiness({ ...business, representativeContactNumber: formattedValue });
     }
   };
+
 
   return (
     <Container maxWidth="sm">
@@ -72,9 +75,9 @@ const FarmBusinessInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={business.businessName}
+            value={businessRead.businessName ? businessRead.businessName : business.businessName}
             onChange={handlerBusinessNameChange}
-            //   disabled={!!selectedFarm}
+            disabled={!!businessRead.businessName}
           />
         </div>
       </Grid>
@@ -88,9 +91,11 @@ const FarmBusinessInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={business.businessNumber}
+            value={
+              businessRead.businessNumber ? businessRead.businessNumber : business.businessNumber
+            }
             onChange={handleBusinessNumberChange}
-            //   disabled={!!selectedFarm}
+            disabled={!!businessRead.businessNumber}
           />
         </div>
       </Grid>
@@ -104,9 +109,13 @@ const FarmBusinessInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={business.representativeName}
+            value={
+              businessRead.representativeName
+                ? businessRead.representativeName
+                : business.representativeName
+            }
             onChange={handlerRepresentativeNameChange}
-            //   disabled={!!selectedFarm}
+            disabled={!!businessRead.representativeName}
           />
         </div>
       </Grid>
@@ -120,9 +129,13 @@ const FarmBusinessInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={business.representativeContactNumber}
+            value={
+              businessRead.representativeContactNumber
+                ? businessRead.representativeContactNumber
+                : business.representativeContactNumber
+            }
             onChange={handleContactNumberChange}
-            //   disabled={!!selectedFarm}
+            disabled={!!businessRead.representativeContactNumber}
           />
         </div>
       </Grid>

@@ -14,17 +14,17 @@ import { useQueryClient } from "react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { fetchProductList } from "page/product/api/ProductApi";
-import { FarmRead } from "entity/farm/FarmRead";
 import { Farm } from "entity/farm/Farm";
-import useFarmStore from "store/farm/FarmStore";
-import useFarmBusinessStore from "store/farm/FarmBusinessStore";
-import { Business } from "entity/farm/Business";
+import { FarmInfoRead } from "entity/farm/FarmInfoRead";
+import { FarmBusinessRead } from "entity/farm/FarmBusinessRead";
+import useFarmReadStore from "store/farm/FarmReadStore";
+import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 
 const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
   const queryClient = useQueryClient();
-  const { setFarms } = useFarmStore();
-  const { setBusiness } = useFarmBusinessStore();
+  const { setFarmRead } = useFarmReadStore();
+  const { setBusinessRead } = useFarmBusinessReadStore();
 
   useEffect(() => {
     fetchFarmList();
@@ -82,8 +82,8 @@ const FarmList = () => {
     try {
       const farmInfo = await fetchFarm(farmId);
       if (farmInfo !== null) {
-        setFarms(farmInfo.farmInfoResponseForAdmin as Farm);
-        setBusiness(farmInfo.farmOperationInfoResponseForAdmin as Business);
+        setFarmRead(farmInfo.farmInfoResponseForAdmin as unknown as FarmInfoRead);
+        setBusinessRead(farmInfo.farmOperationInfoResponseForAdmin as FarmBusinessRead);
       } else {
         console.error("농가 정보를 가져오는 데 실패했습니다.");
       }
