@@ -10,8 +10,9 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { CartItems } from "entity/cart/CartItems";
-import { Cart } from "entity/cart/Cart";
+import "./css/Cart.css";
+import { CartItems } from "./entity/CartItems";
+import { Cart } from "./entity/Cart";
 
 import "./css/Cart.css";
 

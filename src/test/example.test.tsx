@@ -5,9 +5,9 @@ import "matchmedia-polyfill/matchMedia.addListener";
 import { render, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import MainPage from "../page/MainPage";
-import * as FarmProduceApi from "page/farmProduce/api/FarmProduceApi";
+import * as FarmProduceApi from "page/farm/api/FarmProduceApi";
 
-jest.mock("../page/farmProduce/api/FarmProduceApi", () => ({
+jest.mock("../page/farm/api/FarmProduceApi", () => ({
   getFarmProducePriceList: jest.fn(),
 }));
 
@@ -27,9 +27,7 @@ it("메인페이지 테스트", async () => {
     },
   ];
 
-  (FarmProduceApi.getFarmProducePriceList as jest.Mock).mockResolvedValue(
-    farmProducePriceList
-  );
+  (FarmProduceApi.getFarmProducePriceList as jest.Mock).mockResolvedValue(farmProducePriceList);
   const { getByText } = render(
     <BrowserRouter>
       <MainPage />

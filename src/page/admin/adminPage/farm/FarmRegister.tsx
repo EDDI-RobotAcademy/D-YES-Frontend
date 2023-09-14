@@ -4,13 +4,13 @@ import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
-import { FarmModify } from "entity/farm/FarmModify";
-import useFarmStore from "store/farm/FarmStore";
-import FarmBusinessInfo from "./farmInfo/FarmBusinessInfo";
-import useFarmBusinessStore from "store/farm/FarmBusinessStore";
-import FarmInfo from "./farmInfo/FarmInfo";
-import useFarmReadStore from "store/farm/FarmReadStore";
-import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
+import { FarmModify } from "page/farm/entity/farm/FarmModify";
+import useFarmStore from "page/farm/store/FarmStore";
+import FarmBusinessInfo from "../../../farm/components/farmInfo/FarmBusinessInfo";
+import useFarmBusinessStore from "page/farm/store/FarmBusinessStore";
+import FarmInfo from "../../../farm/components/farmInfo/FarmInfo";
+import useFarmReadStore from "page/farm/store/FarmReadStore";
+import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadWtore";
 
 const FarmRegister = () => {
   const queryClient = useQueryClient();

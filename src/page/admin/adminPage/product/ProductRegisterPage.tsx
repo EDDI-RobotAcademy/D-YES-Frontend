@@ -2,20 +2,20 @@ import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Container } from "@mui/material";
-import "./css/ProductPage.css";
+import "../../../product/css/ProductPage.css";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { toast } from "react-toastify";
-import ProductOptionsRegister from "./Register/ProductOptionsRegister";
-import ProductDescription from "./Register/ProductDescription";
-import ProductImageRegister from "./Register/ProductImageRegister";
+import ProductOptionsRegister from "../../../product/components/Register/ProductOptionsRegister";
+import ProductDescription from "../../../product/components/Register/ProductDescription";
+import ProductImageRegister from "../../../product/components/Register/ProductImageRegister";
 import { registerProduct } from "page/product/api/ProductApi";
-import { Product } from "entity/product/Product";
-import { useOptions } from "entity/product/useOptions";
-import { ProductImg } from "entity/product/ProductMainImg";
-import { ProductDetailImg } from "entity/product/ProductDetailImg";
-import ProductDetailRegister from "./Register/ProductDetailRegister";
-import useProductRegisterStore from "store/product/ProductRegisterStore";
-import useProductImageStore from "store/product/ProductImageStore";
+import { Product } from "page/product/entity/Product";
+import { useOptions } from "page/product/entity/useOptions";
+import { ProductImg } from "page/product/entity/ProductMainImg";
+import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
+import ProductDetailRegister from "../../../product/components/Register/ProductDetailRegister";
+import useProductRegisterStore from "page/product/store/ProductRegisterStore";
+import useProductImageStore from "page/product/store/ProductImageStore";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -125,15 +125,13 @@ const ProductRegisterPage = () => {
       })
     );
 
-    const optionObjects: Partial<useOptions>[] = products.productOptionList.map(
-      (option) => ({
-        optionName: option.optionName,
-        optionPrice: option.optionPrice,
-        stock: option.stock,
-        value: option.value,
-        unit: option.unit,
-      })
-    );
+    const optionObjects: Partial<useOptions>[] = products.productOptionList.map((option) => ({
+      optionName: option.optionName,
+      optionPrice: option.optionPrice,
+      stock: option.stock,
+      value: option.value,
+      unit: option.unit,
+    }));
 
     const productRegisterRequest: Partial<Product> = {
       productName: products.productName,

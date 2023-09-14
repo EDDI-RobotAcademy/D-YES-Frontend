@@ -21,8 +21,8 @@ import Swal from "sweetalert2";
 import parse from "html-react-parser";
 import { getProductDetail, useProductDetailQuery } from "./api/ProductApi";
 import ProductCarousel from "./carousel/ProductCarousel";
-import ProductOptionStore from "store/product/ProductOptionStore";
-import { useOptions } from "entity/product/useOptions";
+import ProductOptionStore from "page/product/store/ProductOptionStore";
+import { useOptions } from "page/product/entity/useOptions";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 
 import "./css/ProductDetailPage.css";

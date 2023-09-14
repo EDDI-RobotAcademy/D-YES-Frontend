@@ -2,6 +2,7 @@
   position: relative;
   margin: 0 auto;
   padding: 0 60px;
+  min-width: 1200px
 }
 .header-fontstyle {
   font-family: "SUIT-Medium";
@@ -16,8 +17,15 @@
   width: auto;
   z-index: 100;
   position: relative;
-  margin-left: 450px;
-  margin-right: 450px;
+  width: 60%;
+  margin: auto;
+  /* margin-left: 360px;
+  margin-right: 360px; */
+}
+.header-top-bar-right {
+  min-width: 280px;
+  justify-content: flex-end;
+  display: flex;
 }
 .Menu {
   color: black;
@@ -41,6 +49,7 @@
   color: black;
   text-decoration: none;
   margin-top: 6px;
+  min-width: 140px;
 }
 .Login img {
   max-width: 90px;
@@ -51,11 +60,12 @@
 .register,
 .Login {
   margin-left: auto;
-  margin-right: 20px;
   text-decoration: none;
   color: black;
 }
 .register {
   color: rgb(255, 0, 0);
   text-decoration: none;
+  display: flex;
+  align-items: center;
 }
