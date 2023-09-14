@@ -68,9 +68,9 @@ const TableForm: React.FC<TableFormProps> = ({ priceList }) => {
           <Table>
             <TableHead style={{ backgroundColor: "#252525" }}>
               <TableRow>
-                <TableCell style={{ color: "white", textAlign: "center" }}>농산물</TableCell>
+                <TableCell style={{ color: "white", textAlign: "center", minWidth: "40px" }}>농산물</TableCell>
                 {dateList.map((date) => (
-                  <TableCell key={date} style={{ color: "white", textAlign: "center" }}>
+                  <TableCell key={date} style={{ color: "white", textAlign: "center", minWidth: "64px" }}>
                     {date.split("-").slice(1).join("/")}
                   </TableCell>
                 ))}

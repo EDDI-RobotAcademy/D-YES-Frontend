@@ -27,21 +27,21 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="second-header-btn-container">
+          <div className="second-header-btn-container-1">
             <Link className="second-header-link" to={"/productList/all"}>
               <MenuIcon />
-              <p>카테고리</p>
+              <div><p>카테고리</p></div>
             </Link>
           </div>
-          <div className="second-header-btn-container">
+          <div className="second-header-btn-container-2">
             <Link className="second-header-link" to={"/"}>
-              신상품
+            <div style={{ minWidth: "60px", textAlign: "center" }}><p>신상품</p></div>
             </Link>
             <Link className="second-header-link" to={"/"}>
-              베스트
+            <div style={{ minWidth: "60px", textAlign: "center" }}><p>베스트</p></div>
             </Link>
             <Link className="second-header-link" to={"/"}>
-              이벤트
+            <div style={{ minWidth: "60px", textAlign: "center" }}><p>이벤트</p></div>
             </Link>
           </div>
           <div className={`second-header-drawer ${isDrawerOpen ? "drawer-open" : ""}`}>
