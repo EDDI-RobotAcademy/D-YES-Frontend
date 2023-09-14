@@ -1,7 +1,7 @@
 import { TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { AdminOrderList } from "entity/order/AdminOrderList";
 import { getOrderList } from "page/admin/api/AdminApi";
+import { AdminOrderList } from "page/order/entity/AdminOrderList";
 import React, { useEffect, useState } from "react";
 
 const AdminOrderListPage = () => {

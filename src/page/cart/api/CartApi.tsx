@@ -1,6 +1,7 @@
-import { Cart } from "entity/cart/Cart";
-import { CartItems } from "entity/cart/CartItems";
+
 import axiosInstance from "utility/axiosInstance";
+import { Cart } from "../entity/Cart";
+import { CartItems } from "../entity/CartItems";
 
 const userToken: string = localStorage.getItem("userToken") || "";
 
