@@ -24,7 +24,7 @@
 }
 .header-top-bar-right {
   min-width: 280px;
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
 }
 .Menu {
