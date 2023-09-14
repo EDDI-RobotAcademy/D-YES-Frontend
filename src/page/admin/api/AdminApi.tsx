@@ -9,7 +9,7 @@ import {
 import { Farm } from "page/farm/entity/farm/Farm";
 import { FarmRead } from "page/farm/entity/farm/FarmRead";
 import { FarmModify } from "page/farm/entity/farm/FarmModify";
-import { Admin } from "entity/admin/Admin";
+import { Admin } from "../entity/Admin";
 
 export const adminRegister = async (data: {
   id: string;
