@@ -14,8 +14,6 @@ import "./css/Cart.css";
 import { CartItems } from "./entity/CartItems";
 import { Cart } from "./entity/Cart";
 
-import "./css/Cart.css";
-
 export default function CartList() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadedItems, setLoadedItems] = useState<CartItems[]>([]);

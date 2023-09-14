@@ -1,8 +1,8 @@
-import { OrderdProduct } from "./OrderedProduct";
+import { OrderedProduct } from "./OrderedProduct";
 import { OrderedUser } from "./OrderedUser";
 
 export interface OrderRequset {
   orderedUserInfo: OrderedUser;
-  orderedProductInfo: OrderdProduct[];
+  orderedProductInfo: OrderedProduct[];
   totalAmount: number;
 }

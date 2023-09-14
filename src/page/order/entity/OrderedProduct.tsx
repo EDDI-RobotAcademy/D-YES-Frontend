@@ -1,4 +1,4 @@
-export interface OrderdProduct {
+export interface OrderedProduct {
   productOptionId: number;
   productOptionCount: number;
 }
