@@ -40,13 +40,14 @@ const ProductImageModify = () => {
       try {
         const compressedImages = await Promise.all(
           acceptedFiles.map(async (file) => {
+            console.log("이미지 추가 중" + file.name)
             return {
               image: await compressImg(file),
               detailImageId: 0,
             };
           })
         );
-        setProductDetailImgs([...selectedDetailImages, ...productDetailImgs]);
+        setProductDetailImgs([...compressedImages.map((item) => item.image), ...productDetailImgs]);
         setSelectedDetailImages((prevImages: File[]) => [
           ...prevImages,
           ...compressedImages.map((item) => item.image),

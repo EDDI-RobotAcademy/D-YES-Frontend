@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Box, Button, Container, FormControl, MenuItem, Select, TextField } from "@mui/material";
-import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
+import React, { useEffect } from "react";
+import { Box, Button, Container } from "@mui/material";
+import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import TextQuill from "utility/quill/TextQuill";
 import { useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
 import { Product } from "entity/product/Product";
 import { ProductImg } from "entity/product/ProductMainImg";
@@ -56,6 +54,7 @@ const AdminProductModifyPage = () => {
     });
 
     setProductDetailImgs([...newDetailImages]);
+
   }, [data, setProducts]);
 
   const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
@@ -105,34 +104,50 @@ const AdminProductModifyPage = () => {
       };
       console.log("확인1", productMainImageModifyRequest)
 
-      // const detailImageUploadPromises = productDetailImgs.map(async (image, idx) => {
-      //   const detailFileToUpload = new File([image], image.name);
-      //   const s3DetailObjectVersion = await uploadFileAwsS3(detailFileToUpload);
-      //   return {
-      //     detailImageId: 0,
-      //     detailImgs: image.name + "?versionId=" + s3DetailObjectVersion,
-      //   };
-      // });
-      // const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
-      // if (productDetailImgs.length === 0 || productDetailImgs.length !== 0) {
-      //   const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
-      //     (existingDetailImage) => ({
-      //       detailImageId: existingDetailImage.detailImageId || 0,
-      //       detailImgs: existingDetailImage.detailImgs || "undefined detail image",
-      //     })
-      //   );
-      //   productDetailImagesModifyRequest.push(...existingDetailImageRequests);
-      // }
-      // const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
-      //   (detailImage) => !productDetailImgs.includes(detailImage.detailImageId)
-      // );
+      const detailImageUploadPromises = productDetailImgs.map(async (image, idx) => {
+        const detailFileToUpload =
+          image instanceof Blob
+            ? (() => {
+                const blobWithProperties = image as Blob & { name: string };
+                return new File([image], blobWithProperties.name);
+              })()
+            : null;
+
+        let s3DetailObjectVersion = "";
+        let name = "";
+        if (detailFileToUpload) {
+          s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
+          name = detailFileToUpload.name
+        }
+
+        return {
+          detailImageId: 0,
+          detailImgs: name + "?versionId=" + s3DetailObjectVersion,
+        };
+      });
+
+      const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
+
+      if (productDetailImgs.length !== 0) {
+        const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
+          (existingDetailImage) => ({
+            detailImageId: existingDetailImage.detailImageId || 0,
+            detailImgs: existingDetailImage.detailImgs || "undefined detail image",
+          })
+        );
+        productDetailImagesModifyRequest.push(...existingDetailImageRequests);
+      }
+
+      const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
+        (detailImage) => !productDetailImgs.includes(detailImage)
+      );
 
       const updatedData: ProductModify = {
         productId: parseInt(productId || ""),
         productModifyRequest: productModifyRequestData,
         productOptionModifyRequest: products.productOptionList,
         productMainImageModifyRequest: productMainImageModifyRequest,
-        // productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
+        productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
         userToken: userToken || "",
       };
 
@@ -163,7 +178,6 @@ const AdminProductModifyPage = () => {
       //   toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
       //   return;
       // }
-
       await mutation.mutateAsync(updatedData);
       console.log("수정확인", updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId || "")]);
