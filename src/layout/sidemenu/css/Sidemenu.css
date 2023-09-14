@@ -18,7 +18,8 @@
   display: flex;
 }
 .account-management,
-.product-management {
+.product-management,
+.order-management {
   padding: 10px; /* 버튼 간격 */
   margin-left: 20px;
 }
@@ -59,7 +60,8 @@
   padding-top: 10px;
 }
 .account-menu,
-.product-menu {
+.product-menu,
+.order-menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
