@@ -47,8 +47,8 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
 
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <div>{userNickName}님 안녕하세요</div>
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "end", marginRight: "0px" }}>
+        <div style={{ minWidth: "160px" }}>{userNickName}님 안녕하세요</div>
         <Tooltip title="내 정보">
           <IconButton
             onClick={handleClick}
