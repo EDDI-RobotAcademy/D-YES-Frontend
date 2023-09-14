@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { RandomProductList } from "entity/product/RandomProductList";
+import { RandomProductList } from "page/product/entity/RandomProductList";
 import { getImageUrl } from "utility/s3/awsS3";
 import { getRandomProductList } from "./api/ProductApi";
 import { won } from "utility/filters/wonFilter";

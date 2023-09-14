@@ -12,8 +12,8 @@ import {
 import ToggleComponent from "../productOption/ToggleComponent";
 import FarmSearch from "../productOption/FarmSearch";
 import { Farm } from "entity/farm/Farm";
-import "../css/ProductPage.css";
-import useProductRegisterStore from "store/product/ProductRegisterStore";
+import "../../css/ProductPage.css";
+import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 
 const ProductDetailRegister = () => {
   // Zustand 스토어로부터 필요한 상태와 함수를 가져옴
@@ -77,7 +77,9 @@ const ProductDetailRegister = () => {
                 >
                   <Select
                     name="cultivationMethod"
-                    value={products.cultivationMethod as "" | { value: string; label: string }|| ""}
+                    value={
+                      (products.cultivationMethod as "" | { value: string; label: string }) || ""
+                    }
                     onChange={handleOptionChange}
                     className="text-field"
                     sx={{

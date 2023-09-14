@@ -1,4 +1,4 @@
-import { Product } from "entity/product/Product";
+import { Product } from "page/product/entity/Product";
 import { create } from "zustand";
 
 interface ProductState {

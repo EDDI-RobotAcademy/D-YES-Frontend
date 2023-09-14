@@ -3,8 +3,8 @@ import { useState } from "react";
 import ToggleComponent from "../productOption/ToggleComponent";
 import OptionTable from "../productOption/OptionTable";
 import OptionInput from "../productOption/OptionInput";
-import useProductModifyStore from "store/product/ProductModifyStore";
-import { useOptions } from "entity/product/useOptions";
+import useProductModifyStore from "page/product/store/ProductModifyStore";
+import { useOptions } from "page/product/entity/useOptions";
 
 const ProductOptionModify = () => {
   const { products, setProducts } = useProductModifyStore();

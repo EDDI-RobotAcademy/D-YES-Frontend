@@ -4,7 +4,7 @@ import ToggleComponent from "../productOption/ToggleComponent";
 import { compressImg } from "utility/s3/imageCompression";
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { useDropzone } from "react-dropzone";
-import useProductImageStore from "store/product/ProductImageStore";
+import useProductImageStore from "page/product/store/ProductImageStore";
 
 const ProductImageRegister = () => {
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);

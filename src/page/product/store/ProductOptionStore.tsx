@@ -1,4 +1,4 @@
-import { useOptions } from "entity/product/useOptions";
+import { useOptions } from "page/product/entity/useOptions";
 import { create } from "zustand";
 
 type ProductOptionState = {

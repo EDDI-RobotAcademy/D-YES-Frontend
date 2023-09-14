@@ -15,8 +15,8 @@ import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { v4 as uuidv4 } from "uuid";
 import "./css/AdminProductList.css";
-import ReadPopup from "./productOption/ReadPopup";
-import useProductStore from "store/product/ProductStore";
+import ReadPopup from "../../../product/components/productOption/ReadPopup";
+import useProductStore from "page/product/store/ProductStore";
 import { deleteProducts, fetchProductList, useProductListQuery } from "page/product/api/ProductApi";
 import { useNavigate } from "react-router-dom";
 
@@ -202,8 +202,7 @@ const AdminProductList: React.FC = () => {
                     </TableCell>
                     <TableCell className="cellStyle">{product.farmName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.productOptionList &&
-                      product.productOptionList.length > 0 ? (
+                      {product.productOptionList && product.productOptionList.length > 0 ? (
                         <Select
                           className="noOutline"
                           variant="outlined"

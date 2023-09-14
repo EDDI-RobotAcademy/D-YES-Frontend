@@ -12,8 +12,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import "../css/ProductPage.css";
-import { useOptions } from "entity/product/useOptions";
+import "../../css/ProductPage.css";
+import { useOptions } from "page/product/entity/useOptions";
 
 interface OptionTableProps {
   optionRows: useOptions[];

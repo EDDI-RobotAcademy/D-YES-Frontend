@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../css/ProductPage.css";
+import "../../css/ProductPage.css";
 
 interface ToggleComponentProps {
   label: string;

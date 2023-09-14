@@ -7,7 +7,7 @@ import {
   TextField,
   SelectChangeEvent,
 } from "@mui/material";
-import useProductModifyStore from "store/product/ProductModifyStore";
+import useProductModifyStore from "page/product/store/ProductModifyStore";
 import ToggleComponent from "../productOption/ToggleComponent";
 import { useProductQuery } from "page/product/api/ProductApi";
 import { useParams } from "react-router-dom";
@@ -33,7 +33,7 @@ const ProductDetailModify = () => {
     { value: "AVAILABLE", label: "판매중" },
     { value: "UNAVAILABLE", label: "판매중지" },
   ];
-  
+
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newProductName = event.target.value;
     setProducts({ ...products, productName: newProductName });
