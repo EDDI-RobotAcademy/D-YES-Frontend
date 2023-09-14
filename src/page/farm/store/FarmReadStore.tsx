@@ -1,4 +1,4 @@
-import { FarmInfoRead } from "entity/farm/FarmInfoRead";
+import { FarmInfoRead } from "page/farm/entity/farm/FarmInfoRead";
 import { create } from "zustand";
 
 interface FarmReadState {

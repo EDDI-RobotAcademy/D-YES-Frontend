@@ -11,11 +11,11 @@ import {
   Button,
   SelectChangeEvent,
 } from "@mui/material";
-import useFarmStore from "store/farm/FarmStore";
+import useFarmStore from "page/farm/store/FarmStore";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl } from "utility/s3/awsS3";
-import useFarmReadStore from "store/farm/FarmReadStore";
+import useFarmReadStore from "page/farm/store/FarmReadStore";
 
 declare global {
   interface Window {

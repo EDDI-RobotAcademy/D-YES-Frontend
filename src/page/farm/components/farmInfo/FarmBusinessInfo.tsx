@@ -1,7 +1,7 @@
 import { Container, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
-import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
-import useFarmBusinessStore from "store/farm/FarmBusinessStore";
+import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadWtore";
+import useFarmBusinessStore from "page/farm/store/FarmBusinessStore";
 
 const FarmBusinessInfo = () => {
   const { business, setBusiness } = useFarmBusinessStore();
@@ -34,7 +34,6 @@ const FarmBusinessInfo = () => {
       setBusiness({ ...business, representativeContactNumber: formattedValue });
     }
   };
-
 
   return (
     <Container maxWidth="sm">

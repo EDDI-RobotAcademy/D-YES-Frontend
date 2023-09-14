@@ -14,7 +14,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Farm } from "entity/farm/Farm";
+import { Farm } from "page/farm/entity/farm/Farm";
 
 interface FarmSearchProps {
   open: boolean;
@@ -26,6 +26,7 @@ const FarmSearch: React.FC<FarmSearchProps> = ({ open, onClose, onSelectFarm }) 
   const [searchQuery, setSearchQuery] = useState("");
   const [farmList, setFarmList] = useState<Farm[]>([]);
   const [filteredFarmList, setFilteredFarmList] = useState<Farm[]>([]);
+
   useEffect(() => {
     fetchFarmList();
   }, []);
@@ -34,6 +35,8 @@ const FarmSearch: React.FC<FarmSearchProps> = ({ open, onClose, onSelectFarm }) 
     const filteredFarms = farmList.filter((farm) =>
       farm.farmName.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    console.log("확인", filteredFarms);
+
     setFilteredFarmList(filteredFarms);
   }, [searchQuery, farmList]);
 
