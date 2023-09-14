@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FarmProducePriceList } from "entity/farmProduce/FarmProducePriceList";
-import { getFarmProducePriceList } from "./api/FarmProduceApi";
+import { FarmProducePriceList } from "page/farm/entity/farmProduce/FarmProducePriceList";
+import { getFarmProducePriceList } from "../farm/api/FarmProduceApi";
 import { Switch, FormControlLabel } from "@mui/material";
 import LineChart from "./LineChart";
 import TableForm from "./TableForm";
@@ -9,9 +9,7 @@ import "./css/PriceListPage.css";
 
 const PriceListPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [loadedProducts, setLoadedProducts] = useState<FarmProducePriceList[]>(
-    []
-  );
+  const [loadedProducts, setLoadedProducts] = useState<FarmProducePriceList[]>([]);
 
   const [showTable, setShowTable] = useState(true);
 
@@ -37,13 +35,7 @@ const PriceListPage: React.FC = () => {
       <h1>오늘부터 2주 후까지 예측된 가격을 확인해보세요</h1>
       <div className="switch-container">
         <FormControlLabel
-          control={
-            <Switch
-              checked={showTable}
-              onChange={handleSwitchChange}
-              color="warning"
-            />
-          }
+          control={<Switch checked={showTable} onChange={handleSwitchChange} color="warning" />}
           label={showTable ? "테이블로 확인하기" : "차트로 확인하기"}
         />
       </div>

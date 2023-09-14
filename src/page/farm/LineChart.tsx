@@ -1,6 +1,6 @@
 import React from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { FarmProducePriceList } from "entity/farmProduce/FarmProducePriceList";
+import { FarmProducePriceList } from "page/farm/entity/farmProduce/FarmProducePriceList";
 
 import "./css/LineChart.css";
 

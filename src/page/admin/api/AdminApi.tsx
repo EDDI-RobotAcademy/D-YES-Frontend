@@ -6,9 +6,9 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { Farm } from "entity/farm/Farm";
-import { FarmRead } from "entity/farm/FarmRead";
-import { FarmModify } from "entity/farm/FarmModify";
+import { Farm } from "page/farm/entity/farm/Farm";
+import { FarmRead } from "page/farm/entity/farm/FarmRead";
+import { FarmModify } from "page/farm/entity/farm/FarmModify";
 import { Admin } from "entity/admin/Admin";
 
 export const adminRegister = async (data: {
@@ -114,4 +114,3 @@ export const getOrderList = async () => {
   console.log("주문 목록 정보", response.data);
   return response.data;
 };
-

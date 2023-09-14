@@ -14,7 +14,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Farm } from "entity/farm/Farm";
+import { Farm } from "page/farm/entity/farm/Farm";
 
 interface FarmSearchProps {
   open: boolean;
@@ -35,7 +35,7 @@ const FarmSearch: React.FC<FarmSearchProps> = ({ open, onClose, onSelectFarm }) 
     const filteredFarms = farmList.filter((farm) =>
       farm.farmName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    console.log("확인", filteredFarms)
+    console.log("확인", filteredFarms);
 
     setFilteredFarmList(filteredFarms);
   }, [searchQuery, farmList]);
@@ -53,7 +53,7 @@ const FarmSearch: React.FC<FarmSearchProps> = ({ open, onClose, onSelectFarm }) 
       console.error("농가 목록 불러오기 실패:", error);
     }
   };
-  
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogContent style={{ width: "500px" }}>

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import ToggleComponent from "../productOption/ToggleComponent";
 import FarmSearch from "../productOption/FarmSearch";
-import { Farm } from "entity/farm/Farm";
+import { Farm } from "page/farm/entity/farm/Farm";
 import "../../css/ProductPage.css";
 import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 

@@ -1,4 +1,4 @@
-import { Farm } from "entity/farm/Farm";
+import { Farm } from "page/farm/entity/farm/Farm";
 import { create } from "zustand";
 
 interface FarmState {
