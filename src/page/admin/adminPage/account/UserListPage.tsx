@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, TableHead, TableRow, TableCell } from "@mui/material";
 import { getUserList } from "page/admin/api/AdminApi";
-import { UserList } from "entity/user/UserList";
+import { UserList } from "page/user/entity/UserList";
 
 const UserListPage = () => {
   const [userList, setUserList] = useState([] as UserList[]);
