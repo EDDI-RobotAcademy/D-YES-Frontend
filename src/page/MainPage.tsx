@@ -6,6 +6,7 @@ import PriceListPage from "./farm/PriceListPage";
 const MainPage = () => {
   return (
     <div className="main-page">
+      <p>빌드</p>
       <Carousel />
       <ProductRandomListPage />
       <PriceListPage />
