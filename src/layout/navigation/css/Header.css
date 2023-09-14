@@ -2,7 +2,7 @@
   position: relative;
   margin: 0 auto;
   padding: 0 60px;
-  min-width: 1200px
+  min-width: 1200px;
 }
 .header-fontstyle {
   font-family: "SUIT-Medium";
@@ -24,7 +24,7 @@
 }
 .header-top-bar-right {
   min-width: 280px;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   display: flex;
 }
 .Menu {
