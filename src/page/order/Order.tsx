@@ -122,8 +122,8 @@ const Order = () => {
     }
     // 유효성검사 추가
     const extractedData: OrderdProduct[] = orderUserInfo!.productResponseList.map((item) => ({
-      productOptionId: item.optionId,
-      productOptionCount: item.optionCount.toString(),
+      productOptionId: item.optionId.toString(),
+      productOptionCount: item.optionCount,
     }));
 
     const orderedInfo: OrderRequset = {
