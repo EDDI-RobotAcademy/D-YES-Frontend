@@ -7,13 +7,12 @@ import { getOrderInfo, orderRequestInCart } from "./api/OrderApi";
 import { updateAddressInfo } from "page/user/api/UserApi";
 import { Grid, Button, Checkbox, Paper, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { UserAddress } from "entity/order/UserAddress";
-import { OrderRequset } from "entity/order/OrderRequset";
 import { useNavigate } from "react-router-dom";
-import { OrderdProduct } from "entity/order/OrderedProduct";
-import { useOrderUserInfoStore } from "store/order/OrderStore";
-
 import "./css/Order.css";
+import { useOrderUserInfoStore } from "./store/OrderStore";
+import { UserAddress } from "./entity/UserAddress";
+import { OrderdProduct } from "./entity/OrderedProduct";
+import { OrderRequset } from "./entity/OrderRequset";
 
 interface IAddr {
   address: string;
