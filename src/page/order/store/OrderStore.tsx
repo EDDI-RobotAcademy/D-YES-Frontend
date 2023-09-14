@@ -1,5 +1,5 @@
-import { OrderInfo } from "entity/order/OrderInfo";
 import { create } from "zustand";
+import { OrderInfo } from "../entity/OrderInfo";
 
 interface OrderUserInfoState {
   orderUserInfo: OrderInfo;

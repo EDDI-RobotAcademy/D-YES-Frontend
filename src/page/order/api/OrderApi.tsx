@@ -1,8 +1,9 @@
-import { OrderInfo } from "entity/order/OrderInfo";
-import { OrderRequset } from "entity/order/OrderRequset";
+
 import { UseQueryResult, useQuery } from "react-query";
-import { useOrderUserInfoStore } from "store/order/OrderStore";
 import axiosInstance from "utility/axiosInstance";
+import { useOrderUserInfoStore } from "../store/OrderStore";
+import { OrderInfo } from "../entity/OrderInfo";
+import { OrderRequset } from "../entity/OrderRequset";
 
 const userToken = localStorage.getItem("userToken");
 
