@@ -16,7 +16,7 @@ import {
 import { deleteProduct, fetchPopupProduct, usePopupProductQuery } from "page/product/api/ProductApi";
 import { useQueryClient } from "react-query";
 import Swal from "sweetalert2";
-import "../css/ReadPopup.css";
+import "../../css/ReadPopup.css";
 
 interface ReadPopupProps {
   open: boolean;

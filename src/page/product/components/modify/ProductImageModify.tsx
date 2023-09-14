@@ -2,13 +2,13 @@ import { Box, Container } from "@mui/material";
 import React, { useState } from "react";
 import ToggleComponent from "../productOption/ToggleComponent";
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
-import { ProductDetailImg } from "entity/product/ProductDetailImg";
+import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl } from "utility/s3/awsS3";
 import { useParams } from "react-router-dom";
 import { useProductQuery } from "page/product/api/ProductApi";
-import useProductImageStore from "store/product/ProductImageStore";
+import useProductImageStore from "page/product/store/ProductImageStore";
 
 interface RouteParams {
   productId: string;
@@ -40,7 +40,7 @@ const ProductImageModify = () => {
       try {
         const compressedImages = await Promise.all(
           acceptedFiles.map(async (file) => {
-            console.log("이미지 추가 중" + file.name)
+            console.log("이미지 추가 중" + file.name);
             return {
               image: await compressImg(file),
               detailImageId: 0,

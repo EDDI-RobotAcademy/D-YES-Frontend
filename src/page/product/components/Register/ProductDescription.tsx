@@ -1,7 +1,7 @@
 import ToggleComponent from "../productOption/ToggleComponent";
 import TextQuill from "utility/quill/TextQuill";
 import { Box, Container } from "@mui/material";
-import useProductRegisterStore from "store/product/ProductRegisterStore";
+import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 
 const ProductDescription = () => {
   const { products, setProducts } = useProductRegisterStore();

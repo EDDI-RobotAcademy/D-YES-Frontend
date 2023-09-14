@@ -4,15 +4,15 @@ import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
-import { Product } from "entity/product/Product";
-import { ProductImg } from "entity/product/ProductMainImg";
-import { ProductModify } from "entity/product/ProductModify";
-import ProductDetailModify from "./modify/ProductDetailModify";
-import ProductImageModify from "./modify/ProductImageModify";
-import ProductOptionModify from "./modify/ProductOptionModify";
-import ProductDescriptionModify from "./modify/ProductDescriptionModify";
-import useProductModifyStore from "store/product/ProductModifyStore";
-import useProductImageStore from "store/product/ProductImageStore";
+import { Product } from "page/product/entity/Product";
+import { ProductImg } from "page/product/entity/ProductMainImg";
+import { ProductModify } from "page/product/entity/ProductModify";
+import ProductDetailModify from "../../../product/components/modify/ProductDetailModify";
+import ProductImageModify from "../../../product/components/modify/ProductImageModify";
+import ProductOptionModify from "../../../product/components/modify/ProductOptionModify";
+import ProductDescriptionModify from "../../../product/components/modify/ProductDescriptionModify";
+import useProductModifyStore from "page/product/store/ProductModifyStore";
+import useProductImageStore from "page/product/store/ProductImageStore";
 
 interface RouteParams {
   productId: string;
@@ -28,7 +28,7 @@ const AdminProductModifyPage = () => {
   const userToken = localStorage.getItem("userToken");
   const { products, setProducts } = useProductModifyStore();
   const { productImgs, setProductImgs, productDetailImgs, setProductDetailImgs } =
-  useProductImageStore();
+    useProductImageStore();
 
   useEffect(() => {
     const newProductName = data?.productResponseForAdmin.productName || "";
@@ -54,7 +54,6 @@ const AdminProductModifyPage = () => {
     });
 
     setProductDetailImgs([...newDetailImages]);
-
   }, [data, setProducts]);
 
   const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
@@ -102,7 +101,7 @@ const AdminProductModifyPage = () => {
               : "undefined main image") as string)
           : ((existingMainImageUrl || "undefined main image") as string),
       };
-      console.log("확인1", productMainImageModifyRequest)
+      console.log("확인1", productMainImageModifyRequest);
 
       const detailImageUploadPromises = productDetailImgs.map(async (image, idx) => {
         const detailFileToUpload =
@@ -117,7 +116,7 @@ const AdminProductModifyPage = () => {
         let name = "";
         if (detailFileToUpload) {
           s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
-          name = detailFileToUpload.name
+          name = detailFileToUpload.name;
         }
 
         return {

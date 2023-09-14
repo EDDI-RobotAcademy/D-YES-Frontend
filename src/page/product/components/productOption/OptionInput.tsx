@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import { useOptions } from "entity/product/useOptions";
+import { useOptions } from "page/product/entity/useOptions";
 
 interface OptionInputProps {
   onAddOption: (option: useOptions) => void;

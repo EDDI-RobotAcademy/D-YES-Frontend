@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Box, Container } from "@mui/material";
 import ToggleComponent from "../productOption/ToggleComponent";
-import { useOptions } from "entity/product/useOptions";
+import { useOptions } from "page/product/entity/useOptions";
 import OptionTable from "../productOption/OptionTable";
 import OptionInput from "../productOption/OptionInput";
-import useProductRegisterStore from "store/product/ProductRegisterStore";
+import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 
 const ProductOptionsRegister = () => {
   const [optionToggleHeight, setOptionToggleHeight] = useState(200);

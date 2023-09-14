@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { ProductImg } from "entity/product/ProductMainImg";
-import { ProductDetailImg } from "entity/product/ProductDetailImg";
+import { ProductImg } from "page/product/entity/ProductMainImg";
+import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 
 interface ProductImageState {
-  productImgs: (ProductImg | Blob );
-  productDetailImgs: (ProductDetailImg | Blob )[];
-  setProductImgs: (productImgs: (ProductImg | Blob )) => void;
+  productImgs: ProductImg | Blob;
+  productDetailImgs: (ProductDetailImg | Blob)[];
+  setProductImgs: (productImgs: ProductImg | Blob) => void;
   setProductDetailImgs: (productDetailImgs: (ProductDetailImg | Blob)[]) => void;
 }
 

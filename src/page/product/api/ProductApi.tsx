@@ -6,16 +6,16 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { Product } from "entity/product/Product";
-import { useOptions } from "entity/product/useOptions";
-import { ProductImg } from "entity/product/ProductMainImg";
-import { ProductDetailImg } from "entity/product/ProductDetailImg";
-import useProductStore from "store/product/ProductStore";
-import { ProductRead } from "entity/product/ProductRead";
-import { ProductModify } from "entity/product/ProductModify";
-import { ProductDetail } from "entity/product/ProductDetail";
-import { ProductPopupRead } from "entity/product/ProductPopupRead";
-import ProductOptionStore from "store/product/ProductOptionStore";
+import { Product } from "page/product/entity/Product";
+import { useOptions } from "page/product/entity/useOptions";
+import { ProductImg } from "page/product/entity/ProductMainImg";
+import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
+import useProductStore from "page/product/store/ProductStore";
+import { ProductRead } from "page/product/entity/ProductRead";
+import { ProductModify } from "page/product/entity/ProductModify";
+import { ProductDetail } from "page/product/entity/ProductDetail";
+import { ProductPopupRead } from "page/product/entity/ProductPopupRead";
+import ProductOptionStore from "page/product/store/ProductOptionStore";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {

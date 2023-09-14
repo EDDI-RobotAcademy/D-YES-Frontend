@@ -1,5 +1,5 @@
-import { ProductModify } from "entity/product/ProductModify";
-import { ProductModifyResponse } from "entity/product/ProductModifyResponse";
+import { ProductModify } from "page/product/entity/ProductModify";
+import { ProductModifyResponse } from "page/product/entity/ProductModifyResponse";
 import { create } from "zustand";
 
 interface ProductModifyState {
