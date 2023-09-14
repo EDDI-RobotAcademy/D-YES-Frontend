@@ -15,8 +15,8 @@ import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
-import ToggleComponent from "page/admin/adminPage/product/productOption/ToggleComponent";
-import { ProductList } from "entity/product/ProductList";
+import ToggleComponent from "page/product/components/productOption/ToggleComponent";
+import { ProductList } from "page/product/entity/ProductList";
 import RotatingIconButton from "layout/button/RotatingIconButton";
 import { getProductList } from "./api/ProductApi";
 

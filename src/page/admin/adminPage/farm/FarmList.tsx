@@ -14,11 +14,11 @@ import { useQueryClient } from "react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { fetchProductList } from "page/product/api/ProductApi";
-import { Farm } from "entity/farm/Farm";
-import { FarmInfoRead } from "entity/farm/FarmInfoRead";
-import { FarmBusinessRead } from "entity/farm/FarmBusinessRead";
-import useFarmReadStore from "store/farm/FarmReadStore";
-import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
+import { Farm } from "page/farm/entity/farm/Farm";
+import { FarmInfoRead } from "page/farm/entity/farm/FarmInfoRead";
+import { FarmBusinessRead } from "page/farm/entity/farm/FarmBusinessRead";
+import useFarmReadStore from "page/farm/store/FarmReadStore";
+import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadWtore";
 
 const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);

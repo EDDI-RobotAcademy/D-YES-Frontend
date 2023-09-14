@@ -6,10 +6,11 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { Farm } from "entity/farm/Farm";
-import { FarmRead } from "entity/farm/FarmRead";
-import { FarmModify } from "entity/farm/FarmModify";
-import { Admin } from "entity/admin/Admin";
+import { Farm } from "page/farm/entity/farm/Farm";
+import { FarmRead } from "page/farm/entity/farm/FarmRead";
+import { FarmModify } from "page/farm/entity/farm/FarmModify";
+import { Admin } from "../entity/Admin";
+import { OrderDeliveryStatus } from "page/order/entity/OrderDeliveryStatus";
 
 export const adminRegister = async (data: {
   id: string;
@@ -86,14 +87,14 @@ export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> =
   return response.data;
 };
 
-export const useFarmUpdateMutation = (): UseMutationResult<FarmModify, unknown, FarmModify> => {
-  const queryClient = useQueryClient();
-  return useMutation(updateFarm, {
-    onSuccess: (data) => {
-      queryClient.setQueryData(["farmModify", data.farmId], data);
-    },
-  });
-};
+// export const useFarmUpdateMutation = (): UseMutationResult<FarmModify, unknown, FarmModify> => {
+//   const queryClient = useQueryClient();
+//   return useMutation(updateFarm, {
+//     onSuccess: (data) => {
+//       queryClient.setQueryData(["farmModify", data.farmId], data);
+//     },
+//   });
+// };
 
 // 유저 목록
 export const getUserList = async () => {
@@ -105,6 +106,7 @@ export const getUserList = async () => {
   return response.data;
 };
 
+// 주문 조회
 export const getOrderList = async () => {
   const response = await axiosInstance.springAxiosInst.get("/order/admin/list", {
     params: {
@@ -115,3 +117,17 @@ export const getOrderList = async () => {
   return response.data;
 };
 
+// 주문 상태 변경
+export const changeOrderStatus = async (data: {
+  productOrderId: string;
+  deliveryStatus: string;
+  deliveryDate: string;
+  userToken: string;
+}): Promise<OrderDeliveryStatus> => {
+  const response = await axiosInstance.springAxiosInst.post<OrderDeliveryStatus>(
+    "/delivery/change-status",
+    data
+  );
+  console.log("배송상태변경", response.data);
+  return response.data;
+};
