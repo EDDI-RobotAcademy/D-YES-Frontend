@@ -2,6 +2,7 @@
   position: relative;
   margin: 0 auto;
   padding: 0 60px;
+  min-width: 1200px
 }
 .second-header-fontstyle {
   font-family: "SUIT-Bold";
@@ -16,8 +17,8 @@
   width: auto;
   z-index: 500;
   position: relative;
-  margin-left: 450px;
-  margin-right: 450px;
+  width: 60%;
+  margin: auto;
 }
 .second-header-btn-container-1 {
   min-width: 140px;
