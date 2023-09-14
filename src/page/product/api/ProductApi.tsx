@@ -115,7 +115,7 @@ export const updateProduct = async (updatedData: ProductModify): Promise<Product
     productModifyRequest,
     productOptionModifyRequest,
     productMainImageModifyRequest,
-    // productDetailImagesModifyRequest,
+    productDetailImagesModifyRequest,
     userToken = localStorage.getItem("userToken"),
   } = updatedData;
   const response = await axiosInstance.springAxiosInst.put<ProductModify>(
@@ -125,7 +125,7 @@ export const updateProduct = async (updatedData: ProductModify): Promise<Product
       productModifyRequest,
       productOptionModifyRequest,
       productMainImageModifyRequest,
-      // productDetailImagesModifyRequest,
+      productDetailImagesModifyRequest,
     }
   );
   return response.data;
