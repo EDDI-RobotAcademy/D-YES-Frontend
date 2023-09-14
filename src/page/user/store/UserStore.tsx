@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User } from "entity/user/User";
+import { User } from "page/user/entity/User";
 
 interface UserState {
   user: User | null;
