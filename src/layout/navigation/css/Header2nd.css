@@ -19,7 +19,15 @@
   margin-left: 450px;
   margin-right: 450px;
 }
-.second-header-btn-container {
+.second-header-btn-container-1 {
+  min-width: 140px;
+  display: flex;
+  gap: 50px;
+}
+.second-header-btn-container-2 {
+  min-width: "220px";
+  align-items: end;
+  justify-content: end;
   display: flex;
   gap: 50px;
 }
