@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import MainPage from "../page/MainPage";
 import * as FarmProduceApi from "page/farm/api/FarmProduceApi";
 
-jest.mock("../page/farmProduce/api/FarmProduceApi", () => ({
+jest.mock("../page/farm/api/FarmProduceApi", () => ({
   getFarmProducePriceList: jest.fn(),
 }));
 
