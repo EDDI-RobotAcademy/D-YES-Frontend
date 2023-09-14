@@ -42,6 +42,13 @@ jobs:
         run: |
           npm cache clean --force
 
+      # node_modules 제거
+      - name: Remove node_modules
+        run: |
+          pwd
+          ls
+          rm -rf node_modules
+
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
