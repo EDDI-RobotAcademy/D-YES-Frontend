@@ -59,7 +59,8 @@ const TableForm: React.FC<TableFormProps> = ({ priceList }) => {
 
   const priceTable = () => {
     const dateList = Object.keys(transformedData);
-    const farmProduceNameList = Object.keys(transformedData[dateList[0]]);
+    const farmProduceNameList =
+      dateList.length > 0 ? Object.keys(transformedData[dateList[0]]) : [];
 
     return (
       <div className="table-form">
@@ -67,14 +68,9 @@ const TableForm: React.FC<TableFormProps> = ({ priceList }) => {
           <Table>
             <TableHead style={{ backgroundColor: "#252525" }}>
               <TableRow>
-                <TableCell style={{ color: "white", textAlign: "center" }}>
-                  농산물
-                </TableCell>
+                <TableCell style={{ color: "white", textAlign: "center", minWidth: "40px" }}>농산물</TableCell>
                 {dateList.map((date) => (
-                  <TableCell
-                    key={date}
-                    style={{ color: "white", textAlign: "center" }}
-                  >
+                  <TableCell key={date} style={{ color: "white", textAlign: "center", minWidth: "64px" }}>
                     {date.split("-").slice(1).join("/")}
                   </TableCell>
                 ))}
@@ -83,11 +79,7 @@ const TableForm: React.FC<TableFormProps> = ({ priceList }) => {
             <TableBody>
               {farmProduceNameList.map((farmProduceName) => (
                 <TableRow key={farmProduceName}>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ textAlign: "center" }}
-                  >
+                  <TableCell component="th" scope="row" style={{ textAlign: "center" }}>
                     {translateKorean[farmProduceName]}
                   </TableCell>
                   {dateList.map((date) => (

@@ -1,6 +1,7 @@
 .product-randon-list-container {
   /* background-color: red; */
   height: 560px;
+  min-width: 1200px
 }
 
 .product-randon-list-header {
