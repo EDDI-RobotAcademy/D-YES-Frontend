@@ -10,10 +10,10 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-
-import "./css/Cart.css";
 import { CartItems } from "entity/cart/CartItems";
 import { Cart } from "entity/cart/Cart";
+
+import "./css/Cart.css";
 
 export default function CartList() {
   const [isLoading, setIsLoading] = useState(false);
@@ -303,7 +303,7 @@ export default function CartList() {
             <div>
               <div className="cart-empty">장바구니가 비어있습니다</div>
               <div className="cart-empty-button">
-                <Button size="large" onClick={() => navigate("/productList")}>
+                <Button size="large" onClick={() => navigate("/productList/all")}>
                   쇼핑하러 가기
                 </Button>
               </div>
