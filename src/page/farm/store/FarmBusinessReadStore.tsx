@@ -1,4 +1,3 @@
-import { Business } from "page/farm/entity/farm/Business";
 import { FarmBusinessRead } from "page/farm/entity/farm/FarmBusinessRead";
 import { create } from "zustand";
 

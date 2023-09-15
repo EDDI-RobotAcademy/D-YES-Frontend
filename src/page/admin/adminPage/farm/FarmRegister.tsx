@@ -10,7 +10,7 @@ import FarmBusinessInfo from "../../../farm/components/farmInfo/FarmBusinessInfo
 import useFarmBusinessStore from "page/farm/store/FarmBusinessStore";
 import FarmInfo from "../../../farm/components/farmInfo/FarmInfo";
 import useFarmReadStore from "page/farm/store/FarmReadStore";
-import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadWtore";
+import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadStore";
 
 const FarmRegister = () => {
   const queryClient = useQueryClient();

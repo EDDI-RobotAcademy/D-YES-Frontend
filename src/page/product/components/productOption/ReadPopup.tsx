@@ -40,7 +40,7 @@ const ReadPopup: React.FC<ReadPopupProps & { productId: number | null }> = ({
       console.log(data);
     };
     fetchProductData();
-  }, []);
+  }, [productId]);
 
   const handleDeleteClick = async () => {
     if (productId !== null) {

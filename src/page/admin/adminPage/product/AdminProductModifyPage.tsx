@@ -54,7 +54,7 @@ const AdminProductModifyPage = () => {
     });
 
     setProductDetailImgs([...newDetailImages]);
-  }, [data, setProducts]);
+  }, [data, setProducts, productImgs, products, setProductDetailImgs, setProductImgs]);
 
   const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
     const target = event.target as HTMLElement;

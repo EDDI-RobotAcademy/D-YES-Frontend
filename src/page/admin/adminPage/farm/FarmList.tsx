@@ -18,7 +18,7 @@ import { Farm } from "page/farm/entity/farm/Farm";
 import { FarmInfoRead } from "page/farm/entity/farm/FarmInfoRead";
 import { FarmBusinessRead } from "page/farm/entity/farm/FarmBusinessRead";
 import useFarmReadStore from "page/farm/store/FarmReadStore";
-import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadWtore";
+import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadStore";
 
 const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);

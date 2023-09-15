@@ -48,7 +48,7 @@ const Order = () => {
       }
     };
     fetchCartData();
-  }, [setOrderUserInfo]);
+  }, [setOrderUserInfo, navigate]);
 
   const calculateTotalPrice = useCallback(() => {
     let totalPrice = 0;
@@ -175,7 +175,7 @@ const Order = () => {
                           <img
                             src={getImageUrl(product.productMainImage)}
                             style={{ width: "128px", height: "100px" }}
-                          />
+                            alt="" />
                         </div>
                         <div className="order-info-container">
                           <div className="order-product-name margin-1">
