@@ -72,6 +72,7 @@
     "@babel/preset-react": "^7.22.5",
     "@types/uuid": "^9.0.3",
     "babel-jest": "^29.6.4",
-    "react-router-dom": "^6.14.2"
+    "react-router-dom": "^6.14.2",
+    "source-map-loader": "^4.0.1"
   }
 }
