@@ -12,12 +12,7 @@ import FarmInfo from "./farmInfo/FarmInfo";
 import useFarmReadStore from "store/farm/FarmReadStore";
 import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 
-interface FarmReadInfoProps {
-  selectedFarm: FarmRead | null;
-  setSelectedFarm: (farm: FarmRead | null) => void;
-}
-
-const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
+const FarmRegister = () => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
   const [showEditButton, setShowEditButton] = useState(true);
@@ -25,35 +20,6 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   const { business, setBusiness } = useFarmBusinessStore();
   const { farmReads, setFarmRead } = useFarmReadStore();
   const { setBusinessRead } = useFarmBusinessReadStore();
-
-  // 농가 정보 읽어오기
-  // useEffect(() => {
-  //   console.log("받아오니", selectedFarm);
-  //   if (selectedFarm) {
-  //     setBusinessInfo({
-  //       businessName: selectedFarm.farmOperationInfoResponseForAdmin?.businessName || "",
-  //       businessNumber: selectedFarm.farmOperationInfoResponseForAdmin?.businessNumber || "",
-  //       representativeName:
-  //         selectedFarm.farmOperationInfoResponseForAdmin?.representativeName || "",
-  //       representativeContactNumber:
-  //         selectedFarm.farmOperationInfoResponseForAdmin?.representativeContactNumber || "",
-  //       farmName: selectedFarm.farmInfoResponseForAdmin?.farmName || "",
-  //       csContactNumber: selectedFarm.farmInfoResponseForAdmin?.csContactNumber || "",
-  //       addressDetail: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.addressDetail || "",
-  //       introduction: selectedFarm.farmInfoResponseForAdmin?.introduction || "",
-  //     });
-  //     setAddressInfo({
-  //       address: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.address || "",
-  //       zipCode: selectedFarm.farmInfoResponseForAdmin?.farmAddress?.zipCode || "",
-  //     });
-  //     setSelectedOptions(
-  //       Array.isArray(selectedFarm.farmInfoResponseForAdmin?.produceTypes)
-  //         ? selectedFarm.farmInfoResponseForAdmin.produceTypes
-  //         : []
-  //     );
-  //     setShowEditButton(true);
-  //   }
-  // }, [selectedFarm]);
 
   // 수정 정보 API로 전달
   const modifyMutation = useMutation(updateFarm, {
@@ -162,8 +128,6 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("받아온 정보", farms);
-    console.log("받아온 정보", business);
 
     const mainFileToUpload = farms.mainImage ? farms.mainImage : "";
     if (!mainFileToUpload) {

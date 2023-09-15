@@ -20,11 +20,7 @@ import { FarmBusinessRead } from "entity/farm/FarmBusinessRead";
 import useFarmReadStore from "store/farm/FarmReadStore";
 import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 
-interface FarmListProps {
-  setSelectedFarm: (farm: FarmRead | null) => void;
-}
-
-const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
+const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
   const queryClient = useQueryClient();
   const { setFarmRead } = useFarmReadStore();
