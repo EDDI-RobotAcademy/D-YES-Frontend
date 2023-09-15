@@ -1,8 +1,8 @@
 name: CI
 
-on:
-  push:
-    branches: ["inf-load-source-map-issue"]
+# on:
+#   push:
+#     branches: ["inf-load-source-map-issue"]
 
 jobs:
   build:
