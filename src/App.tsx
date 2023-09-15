@@ -15,7 +15,7 @@ import Cart from "page/cart/Cart";
 import Order from "page/order/Order";
 import AdminMainPage from "page/admin/AdminMainPage";
 import AdminRegisterPage from "page/admin/adminPage/account/AdminRegisterPage";
-import FarmRegisterPage from "page/admin/adminPage/account/FarmRegisterPage";
+import FarmRegisterPage from "page/admin/adminPage/farm/FarmRegisterPage";
 import UserListPage from "page/admin/adminPage/account/UserListPage";
 import ProductRegisterPage from "page/admin/adminPage/product/ProductRegisterPage";
 import SnackBar from "layout/snackBar/SnackBar";

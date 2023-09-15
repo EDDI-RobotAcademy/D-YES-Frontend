@@ -5,25 +5,16 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
 import FarmRegister from "page/admin/adminPage/farm/FarmRegister";
-import { Business } from "entity/farm/Business";
-import { FarmInfoRead } from "entity/farm/FarmInfoRead";
 
 jest.mock("page/admin/api/AdminApi", () => ({
   farmRegister: jest.fn().mockResolvedValue({ success: true }),
 }));
 
-const mockSetShowProductSection = jest.fn();
-
-const mockFarmRead = {
-  farmOperationInfoResponseForAdmin: {} as Business,
-  farmInfoResponseForAdmin: {} as FarmInfoRead,
-};
-
 it("농가 등록 테스트", async () => {
   render(
     <BrowserRouter>
       <QueryClientProvider client={new QueryClient()}>
-        <FarmRegister selectedFarm={mockFarmRead} setSelectedFarm={mockSetShowProductSection} />
+        <FarmRegister />
       </QueryClientProvider>
     </BrowserRouter>
   );
