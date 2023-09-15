@@ -15,6 +15,7 @@ import useFarmStore from "store/farm/FarmStore";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
 import { getImageUrl } from "utility/s3/awsS3";
+import useFarmReadStore from "store/farm/FarmReadStore";
 
 declare global {
   interface Window {
@@ -29,6 +30,7 @@ interface IAddr {
 
 const FarmInfo = () => {
   const { farms, setFarms } = useFarmStore();
+  const { farmReads, setFarmRead } = useFarmReadStore();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -44,6 +46,7 @@ const FarmInfo = () => {
     if (cleanedValue.length <= 11) {
       const formattedValue = cleanedValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
       setFarms({ ...farms, csContactNumber: formattedValue });
+      setFarmRead({ ...farmReads, csContactNumber: formattedValue });
     }
   };
 
@@ -78,6 +81,7 @@ const FarmInfo = () => {
   const handlerIntroductionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newIntroduction = event.target.value;
     setFarms({ ...farms, introduction: newIntroduction });
+    setFarmRead({ ...farmReads, introduction: newIntroduction });
   };
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
@@ -85,7 +89,8 @@ const FarmInfo = () => {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
-        setFarms({ ...farms, mainImages: compressedImage.name });
+        setFarms({ ...farms, mainImage: compressedImage });
+        setFarmRead({ ...farmReads, mainImage: compressedImage.name });
       } catch (error) {
         console.error(error);
       }
@@ -117,6 +122,7 @@ const FarmInfo = () => {
     setSelectedOptions(selectedValue);
     setIsSelectOpen(selectedValue.length === 0);
     setFarms({ ...farms, produceTypes: selectedValue });
+    setFarmRead({ ...farmReads, produceTypes: selectedValue });
   };
 
   const handleSelectOpen = () => {
@@ -166,9 +172,9 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farms.farmName}
+            value={farmReads.farmName ? farmReads.farmName : farms.farmName}
             onChange={handlerFarmNameChange}
-            // disabled={!!selectedFarm}
+            disabled={!!farmReads.farmName}
           />
         </div>
       </Grid>
@@ -182,8 +188,9 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farms.csContactNumber}
+            value={farmReads.csContactNumber ? farmReads.csContactNumber : farms.csContactNumber}
             onChange={handleContactNumberChange}
+            disabled={false}
           />
         </div>
       </Grid>
@@ -197,9 +204,13 @@ const FarmInfo = () => {
           margin="normal"
           className="custom-input"
           InputLabelProps={{ shrink: true }}
-          value={farms?.farmAddress?.address || ""}
+          value={
+            farmReads?.farmAddress?.address
+              ? farmReads?.farmAddress?.address
+              : farms?.farmAddress?.address || ""
+          }
           onChange={handlerAddressInfoChange}
-          //   disabled={!!selectedFarm}
+          disabled={!!farmReads?.farmAddress?.address}
         />
         <Button
           className="mapage-btn"
@@ -214,7 +225,7 @@ const FarmInfo = () => {
             backgroundColor: "#4F72CA",
             color: "white",
           }}
-          //   disabled={!!selectedFarm}
+          disabled={!!farmReads?.farmAddress?.address}
         >
           검색
         </Button>
@@ -230,9 +241,13 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farms?.farmAddress?.zipCode || ""}
+            value={
+              farmReads?.farmAddress?.zipCode
+                ? farmReads?.farmAddress?.zipCode
+                : farms?.farmAddress?.zipCode || ""
+            }
             onChange={handlerAddressInfoChange}
-            // disabled={!!selectedFarm}
+            disabled={!!farmReads?.farmAddress?.zipCode}
           />
         </div>
       </Grid>
@@ -246,58 +261,57 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farms?.farmAddress?.addressDetail}
+            value={
+              farmReads?.farmAddress?.addressDetail
+                ? farmReads?.farmAddress?.addressDetail
+                : farms?.farmAddress?.addressDetail || ""
+            }
             onChange={handlerAddressInfoChange}
-            // disabled={!!selectedFarm}
+            disabled={!!farmReads?.farmAddress?.addressDetail}
           />
         </div>
       </Grid>
       <Grid item xs={12}>
-        <div style={{ position: "relative" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              height: "400px",
-              backgroundColor: "#e4e4e4",
-              cursor: "pointer",
-            }}
-            {...mainImageRootProps()}
-          >
-            {selectedMainImage ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "400px",
+            backgroundColor: "#e4e4e4",
+            cursor: "pointer",
+          }}
+          {...mainImageRootProps()}
+        >
+          {selectedMainImage ? (
+            <img
+              src={URL.createObjectURL(selectedMainImage)}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                cursor: "pointer",
+              }}
+              alt="Selected"
+            />
+          ) : farmReads.mainImage ? (
+            <img
+              src={getImageUrl(farmReads.mainImage)}
+              style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
+              alt="Selected"
+            />
+          ) : (
+            <div style={{ textAlign: "center", fontFamily: "SUIT-Light" }}>
               <img
-                // 선택된 사진이 있으면 미리보기
-                src={URL.createObjectURL(selectedMainImage)}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  cursor: "pointer",
-                }}
-                alt="Selected"
+                className="upload-icon"
+                alt="이미지 업로드"
+                src="img/upload-icon.png"
+                width={40}
               />
-            ) : farms.mainImages ? (
-              <div>
-                <img
-                  src={getImageUrl(farms.mainImages)}
-                  style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
-                  alt="Selected"
-                />
-              </div>
-            ) : (
-              <div style={{ textAlign: "center", fontFamily: "SUIT-Light" }}>
-                <img
-                  className="upload-icon"
-                  alt="이미지 업로드"
-                  src="img/upload-icon.png"
-                  width={40}
-                />
-                <div>클릭하여 이미지를 추가해주세요</div>
-                <input {...mainImageInputProps()} />
-              </div>
-            )}
-          </div>
+              <div>클릭하여 이미지를 추가해주세요</div>
+              <input {...mainImageInputProps()} />
+            </div>
+          )}
         </div>
       </Grid>
       <Grid item xs={12}>
@@ -310,7 +324,7 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farms.introduction}
+            value={farmReads.introduction ? farmReads.introduction : farms.introduction}
             onChange={handlerIntroductionChange}
           />
         </div>
@@ -331,7 +345,7 @@ const FarmInfo = () => {
               name="produceTypes"
               fullWidth
               multiple
-              value={selectedOptions}
+              value={farmReads.produceTypes ? farmReads.produceTypes : farms.produceTypes || []}
               open={isSelectOpen}
               onClose={handleSelectClose}
               onOpen={handleSelectOpen}

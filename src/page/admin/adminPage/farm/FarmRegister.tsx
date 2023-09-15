@@ -1,21 +1,16 @@
-import {
-  Container,
-  Box,
-  Typography,
-  Grid,
-  Button,
-} from "@mui/material";
+import { Container, Box, Typography, Grid, Button } from "@mui/material";
 import { farmRegister, updateFarm } from "page/admin/api/AdminApi";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { getImageUrl, uploadFileAwsS3 } from "utility/s3/awsS3";
+import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { FarmModify } from "entity/farm/FarmModify";
-import { FarmRead } from "entity/farm/FarmRead";
 import useFarmStore from "store/farm/FarmStore";
 import FarmBusinessInfo from "./farmInfo/FarmBusinessInfo";
 import useFarmBusinessStore from "store/farm/FarmBusinessStore";
 import FarmInfo from "./farmInfo/FarmInfo";
+import useFarmReadStore from "store/farm/FarmReadStore";
+import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 
 interface FarmReadInfoProps {
   selectedFarm: FarmRead | null;
@@ -26,8 +21,10 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
   const [showEditButton, setShowEditButton] = useState(true);
-  const { farms } = useFarmStore();
-  const { business } = useFarmBusinessStore();
+  const { farms, setFarms } = useFarmStore();
+  const { business, setBusiness } = useFarmBusinessStore();
+  const { farmReads, setFarmRead } = useFarmReadStore();
+  const { setBusinessRead } = useFarmBusinessReadStore();
 
   // 농가 정보 읽어오기
   // useEffect(() => {
@@ -59,70 +56,97 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
   // }, [selectedFarm]);
 
   // 수정 정보 API로 전달
-  // const modifyMutation = useMutation(updateFarm, {
-  //   onSuccess: (data) => {
-  //     queryClient.setQueryData("farmModify", data);
-  //     console.log("수정확인", data);
-  //     toast.success("수정되었습니다.");
-  //   },
-  // });
+  const modifyMutation = useMutation(updateFarm, {
+    onSuccess: (data) => {
+      queryClient.setQueryData("farmModify", data);
+      console.log("수정확인", data);
+      toast.success("수정되었습니다.");
+    },
+  });
 
   // 수정
-  // const handleEditFinishClick = async () => {
-  //   if (businessInfo.csContactNumber && businessInfo.introduction && selectedOptions.length > 0) {
-  //     const farmId = selectedFarm?.farmInfoResponseForAdmin.farmId;
-  //     const userToken = localStorage.getItem("userToken") || "";
-  //     let mainImageName = "";
-  //     let s3MainObjectVersion = "";
+  const handleEditFinishClick = async () => {
+    if (
+      (farms.csContactNumber || farmReads?.csContactNumber) &&
+      (farms.introduction || farmReads?.introduction) &&
+      (farms.produceTypes?.length > 0 ||
+        (farmReads?.produceTypes && farmReads.produceTypes.length > 0))
+    ) {
+      const farmId = farmReads?.farmId;
+      const userToken = localStorage.getItem("userToken") || "";
 
-  //     if (selectedMainImage) {
-  //       mainImageName = selectedMainImage.name;
-  //       s3MainObjectVersion = (await uploadFileAwsS3(selectedMainImage as File)) || "";
-  //     } else {
-  //       mainImageName = selectedFarm?.farmInfoResponseForAdmin?.mainImage || "";
-  //     }
+      const mainFileToUpload = farms.mainImage ? farms.mainImage : "";
+      console.log("확인", mainFileToUpload);
+      if (!mainFileToUpload) {
+        toast.error("농가 이미지를 등록해주세요");
+        return;
+      }
 
-  //     const updateData: FarmModify = {
-  //       farmId: farmId || "",
-  //       userToken,
-  //       csContactNumber: businessInfo.csContactNumber,
-  //       introduction: businessInfo.introduction,
-  //       produceTypes: selectedOptions,
-  //       mainImage: mainImageName + (s3MainObjectVersion ? `?versionId=${s3MainObjectVersion}` : ""),
-  //     };
+      const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
-  //     console.log("수정정보전송", updateData);
-  //     await modifyMutation.mutateAsync(updateData);
-  //     queryClient.invalidateQueries(["farm", farmId]);
+      const mainImage = mainFileToUpload
+        ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
+        : "undefined main image";
 
-  //     setShowEditButton(false);
+      const updateData: FarmModify = {
+        farmId: (farmId || "").toString(),
+        userToken,
+        csContactNumber: farms.csContactNumber || farmReads?.csContactNumber || "",
+        introduction: farms.introduction || farmReads?.introduction || "",
+        produceTypes: farms.produceTypes || farmReads?.produceTypes || [],
+        mainImage: mainImage,
+      };
 
-  //     handleRegistrationComplete();
-  //     const updatedSelectedFarm = { ...selectedFarm };
+      console.log("수정정보전송", updateData);
+      await modifyMutation.mutateAsync(updateData);
+      queryClient.invalidateQueries(["farm", farmId]);
 
-  //     if (updatedSelectedFarm.farmInfoResponseForAdmin) {
-  //       updatedSelectedFarm.farmInfoResponseForAdmin.mainImage = "";
-  //     }
-  //   }
-  // };
+      setShowEditButton(false);
 
-  // const handleRegistrationComplete = () => {
-  //   setBusiness({
-  //     businessName: "",
-  //     businessNumber: "",
-  //     representativeName: "",
-  //     representativeContactNumber: "",
-  //   });
-  //   setFarms({
-  //     farmName: "",
-  //     csContactNumber: "",
-  //     addressDetail: "",
-  //     introduction: "",
-  //   });
-  //   setSelectedOptions([]);
-  //   setSelectedMainImage(null);
-  //   setAddressInfo(initialAddressInfo);
-  // };
+      handleRegistrationComplete();
+    }
+  };
+
+  const handleRegistrationComplete = () => {
+    setBusiness({
+      businessName: "",
+      businessNumber: "",
+      representativeName: "",
+      representativeContactNumber: "",
+    });
+    setFarms({
+      farmId: 0,
+      farmName: "",
+      csContactNumber: "",
+      farmAddress: {
+        address: "",
+        zipCode: "",
+        addressDetail: "",
+      },
+      mainImage: new File([], ""),
+      introduction: "",
+      produceTypes: [],
+    });
+    setFarmRead({
+      farmId: 0,
+      farmName: "",
+      csContactNumber: "",
+      farmAddress: {
+        address: "",
+        zipCode: "",
+        addressDetail: "",
+      },
+      mainImage: "",
+      introduction: "",
+      produceTypes: [],
+    });
+    setBusinessRead({
+      businessName: "",
+      businessNumber: "",
+      representativeName: "",
+      representativeContactNumber: "",
+    });
+  };
 
   const mutation = useMutation(farmRegister, {
     onSuccess: (data) => {
@@ -141,7 +165,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
     console.log("받아온 정보", farms);
     console.log("받아온 정보", business);
 
-    const mainFileToUpload = farms.mainImages ? new File([farms.mainImages], farms.mainImages) : "";
+    const mainFileToUpload = farms.mainImage ? farms.mainImage : "";
     if (!mainFileToUpload) {
       toast.error("농가 이미지를 등록해주세요");
       return;
@@ -169,17 +193,14 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
       userToken: userToken || "",
     };
 
-    // if (
-    //   !farms ||
-    //   !business
-    // ) {
-    //   toast.error("모든 필드를 입력해주세요.");
-    //   return;
-    // }
+    if (!farms || !business) {
+      toast.error("모든 필드를 입력해주세요.");
+      return;
+    }
 
     await mutation.mutateAsync(data);
 
-    // handleRegistrationComplete();
+    handleRegistrationComplete();
   };
 
   return (
@@ -242,7 +263,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
               >
                 등록
               </Button>
-              {/* {selectedFarm && showEditButton && (
+              {farmReads.farmId !== 0 && showEditButton && (
                 <Button
                   variant="contained"
                   style={{
@@ -257,7 +278,7 @@ const FarmRegister: React.FC<FarmReadInfoProps> = ({ selectedFarm }) => {
                 >
                   수정 완료
                 </Button>
-              )} */}
+              )}
             </Grid>
           </form>
         </Container>

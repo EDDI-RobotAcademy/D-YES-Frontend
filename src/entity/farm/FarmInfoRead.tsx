@@ -1,12 +1,11 @@
 import { FarmAddress } from "./FarmAddress";
 
 export interface FarmInfoRead {
-  farmId: string;
+  farmId: number;
   farmName: string;
-  csContactNumber: string;
   farmAddress: FarmAddress;
+  csContactNumber: string;
   mainImage: string;
   introduction: string;
   produceTypes: string[];
-  userToken: string;
 }

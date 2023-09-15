@@ -14,8 +14,11 @@ import { useQueryClient } from "react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { fetchProductList } from "page/product/api/ProductApi";
-import { FarmRead } from "entity/farm/FarmRead";
 import { Farm } from "entity/farm/Farm";
+import { FarmInfoRead } from "entity/farm/FarmInfoRead";
+import { FarmBusinessRead } from "entity/farm/FarmBusinessRead";
+import useFarmReadStore from "store/farm/FarmReadStore";
+import useFarmBusinessReadStore from "store/farm/FarmBusinessReadWtore";
 
 interface FarmListProps {
   setSelectedFarm: (farm: FarmRead | null) => void;
@@ -24,6 +27,8 @@ interface FarmListProps {
 const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
   const [farmList, setFarmList] = useState([] as Farm[]);
   const queryClient = useQueryClient();
+  const { setFarmRead } = useFarmReadStore();
+  const { setBusinessRead } = useFarmBusinessReadStore();
 
   useEffect(() => {
     fetchFarmList();
@@ -80,7 +85,12 @@ const FarmList: React.FC<FarmListProps> = ({ setSelectedFarm }) => {
   const handleFarmClick = async (farmId: string) => {
     try {
       const farmInfo = await fetchFarm(farmId);
-      setSelectedFarm(farmInfo);
+      if (farmInfo !== null) {
+        setFarmRead(farmInfo.farmInfoResponseForAdmin as unknown as FarmInfoRead);
+        setBusinessRead(farmInfo.farmOperationInfoResponseForAdmin as FarmBusinessRead);
+      } else {
+        console.error("농가 정보를 가져오는 데 실패했습니다.");
+      }
     } catch (error) {
       console.error("농가 정보를 가져오는 중 오류 발생:", error);
     }
