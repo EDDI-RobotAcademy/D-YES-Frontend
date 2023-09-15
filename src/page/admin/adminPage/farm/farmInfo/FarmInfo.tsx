@@ -89,7 +89,7 @@ const FarmInfo = () => {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
         setSelectedMainImage(compressedImage);
-        setFarms({ ...farms, mainImage: compressedImage });
+        setFarms({ ...farms, mainImages: compressedImage });
         setFarmRead({ ...farmReads, mainImage: compressedImage.name });
       } catch (error) {
         console.error(error);
