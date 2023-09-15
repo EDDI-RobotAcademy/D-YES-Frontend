@@ -18,6 +18,8 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const handleLogout = async () => {
     try {
       const result = await userLogout();
+      if (result === true) { console.log("참") }
+      else { console.log("거짓") }
       localStorage.removeItem("userToken");
       localStorage.removeItem("encodedProfileImg");
       localStorage.removeItem("encodedNickName");

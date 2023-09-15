@@ -56,8 +56,8 @@ const Footer: React.FC = () => {
         <div className="flex copyright-container">
           <div className="copyright-detail">
             <div className="service-btn">
-              <a className="mouseover">서비스 이용약관</a>
-              <a className="mouseover">개인정보 처리방침</a>
+              <span className="mouseover">서비스 이용약관</span>
+              <span  className="mouseover">개인정보 처리방침</span>
             </div>
           </div>
           <span className="copyright-content">

@@ -20,7 +20,7 @@ const ProductImageModify = () => {
   const { data } = useProductQuery(productId || "");
   const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
-  const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
+  // const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
   const { setProductImgs, productDetailImgs, setProductDetailImgs } = useProductImageStore();
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
@@ -81,7 +81,7 @@ const ProductImageModify = () => {
     });
 
     setProductDetailImgs(updatedProductDetailImages);
-    setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
+    // setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
   };
 
   const handleRemoveDetailImage = (event: React.MouseEvent, index: number) => {

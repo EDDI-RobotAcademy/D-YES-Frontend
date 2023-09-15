@@ -234,8 +234,8 @@ const MyPageUpdate = () => {
   };
 
   useEffect(() => {
-    setCheckedEmailDuplicated(email == user?.email || email === "");
-    setCheckedNickNameDuplicated(nickName == user?.nickName || nickName === "");
+    setCheckedEmailDuplicated(email === user?.email || email === "");
+    setCheckedNickNameDuplicated(nickName === user?.nickName || nickName === "");
   }, [email, nickName, user]);
 
   const handleEditFinishClick = async () => {
@@ -344,7 +344,7 @@ const MyPageUpdate = () => {
                     top: 0, // 이미지를 원안의 상단에 배치
                     left: 0, // 이미지를 원안의 왼쪽에 배치
                   }}
-                />
+                  alt="" />
               </div>
             )}
             <input {...getInputProps()} />
@@ -395,7 +395,7 @@ const MyPageUpdate = () => {
                 padding: "0 26px",
                 marginBottom: "16px",
               }}
-              disabled={email == user?.email && checkedEmailDuplicated}
+              disabled={email === user?.email && checkedEmailDuplicated}
             >
               중복확인
             </Button>
@@ -435,7 +435,7 @@ const MyPageUpdate = () => {
               variant="outlined"
               onClick={handleDuplicateNicknameCheck}
               style={{ fontSize: "14px", height: "56px", padding: "0 26px" }}
-              disabled={nickName == user?.nickName && checkedNickNameDuplicated}
+              disabled={nickName === user?.nickName && checkedNickNameDuplicated}
             >
               중복확인
             </Button>
