@@ -5,7 +5,7 @@ import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlin
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
-import { getImageUrl } from "utility/s3/awsS3";
+// import { getImageUrl } from "utility/s3/awsS3";
 import { useParams } from "react-router-dom";
 import { useProductQuery } from "page/product/api/ProductApi";
 import useProductImageStore from "page/product/store/ProductImageStore";
@@ -119,7 +119,8 @@ const ProductImageModify = () => {
                 />
               ) : data?.mainImageResponseForAdmin?.mainImg ? (
                 <img
-                  src={getImageUrl(data.mainImageResponseForAdmin.mainImg)}
+                  // src={getImageUrl(data.mainImageResponseForAdmin.mainImg)}
+                  src=""
                   style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
                   alt="Selected"
                 />
@@ -184,7 +185,8 @@ const ProductImageModify = () => {
                     {"detailImgs" in detailImage && detailImage.detailImgs && (
                       <>
                         <img
-                          src={getImageUrl(detailImage.detailImgs)}
+                          // src={getImageUrl(detailImage.detailImgs)}
+                          src=""
                           style={{ width: "100%", height: "100%" }}
                           alt={`Selected ${(detailImage as ProductDetailImg).detailImageId}`} // 타입 단언 사용
                         />

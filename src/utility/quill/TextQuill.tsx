@@ -1,7 +1,6 @@
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useRef, useMemo } from "react";
-// import { ImageResize } from "quill-image-resize-module-ts";
 
 interface TextQuillProps {
   name: string;
@@ -10,9 +9,14 @@ interface TextQuillProps {
   isDisable: boolean;
 }
 
-// Quill.register("modules/ImageResize", ImageResize);
-export default function TextQuill({ name, value, setValue, isDisable }: TextQuillProps) {
+export default function TextQuill({
+  name,
+  value,
+  setValue,
+  isDisable,
+}: TextQuillProps) {
   const quillRef = useRef<ReactQuill | null>(null);
+
   const imageHandler = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -32,7 +36,11 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
 
             if (editor) {
               const range = editor.getSelection() || { index: 0, length: 0 };
-              editor.insertEmbed(range.index, "image", `data:image/*;base64,${base64Data}`);
+              editor.insertEmbed(
+                range.index,
+                "image",
+                `data:image/*;base64,${base64Data}`
+              );
               editor.setSelection({ index: range.index + 1, length: 0 });
             }
           }
@@ -57,10 +65,6 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
       },
       clipboard: {
         matchVisual: false,
-      },
-      ImageResize: {
-        parchment: Quill.import("parchment"),
-        modules: ["Resize", "DisplaySize"],
       },
     }),
     []

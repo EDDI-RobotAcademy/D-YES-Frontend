@@ -1,6 +1,6 @@
 import { Container, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
-import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadStore";
+import useFarmBusinessReadStore from "page/farm/store/FarmBusinessReadWtore";
 import useFarmBusinessStore from "page/farm/store/FarmBusinessStore";
 
 const FarmBusinessInfo = () => {

@@ -1,11 +1,4 @@
 import axiosInstance from "utility/axiosInstance";
-// import {
-//   UseMutationResult,
-//   UseQueryResult,
-//   useMutation,
-//   useQuery,
-//   useQueryClient,
-// } from "react-query";
 import { Farm } from "page/farm/entity/farm/Farm";
 import { FarmRead } from "page/farm/entity/farm/FarmRead";
 import { FarmModify } from "page/farm/entity/farm/FarmModify";
@@ -68,7 +61,9 @@ export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
 // };
 
 // 농가 수정
-export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> => {
+export const updateFarm = async (
+  updatedData: FarmModify
+): Promise<FarmModify> => {
   const {
     farmId,
     csContactNumber,
@@ -77,13 +72,16 @@ export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> =
     produceTypes,
     userToken = localStorage.getItem("userToken"),
   } = updatedData;
-  const response = await axiosInstance.put<FarmModify>(`farm/modify/${farmId}`, {
-    userToken,
-    csContactNumber,
-    mainImage,
-    introduction,
-    produceTypes,
-  });
+  const response = await axiosInstance.put<FarmModify>(
+    `farm/modify/${farmId}`,
+    {
+      userToken,
+      csContactNumber,
+      mainImage,
+      introduction,
+      produceTypes,
+    }
+  );
   return response.data;
 };
 

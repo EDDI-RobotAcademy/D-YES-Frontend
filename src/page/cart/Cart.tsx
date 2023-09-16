@@ -1,8 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { changeCartItemCount, deleteCartItems, getCartItemList } from "./api/CartApi";
+import {
+  changeCartItemCount,
+  deleteCartItems,
+  getCartItemList,
+} from "./api/CartApi";
 import { toast } from "react-toastify";
-import { Button, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 import { won } from "utility/filters/wonFilter";
 import { getImageUrl } from "utility/s3/awsS3";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -64,7 +75,7 @@ export default function CartList() {
   const showProductDetail = (optionId: number, productId: number) => {
     if (optionId === 0) {
       alert("존재하지 않는 상품입니다.");
-      navigate("/productList");
+      navigate("/productList/all");
     } else {
       navigate(`/productDetail/${productId}`);
     }
@@ -145,7 +156,9 @@ export default function CartList() {
 
   const deleteSelectedItems = async () => {
     try {
-      const selectedOptionIds: number[] = selectedItems.map((optionId) => optionId);
+      const selectedOptionIds: number[] = selectedItems.map(
+        (optionId) => optionId
+      );
       await deleteCartItems(selectedOptionIds);
 
       const updatedCartItems = await getCartItemList();
@@ -220,16 +233,21 @@ export default function CartList() {
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}
-                            onClick={() => showProductDetail(item.optionId, item.productId)}
+                            onClick={() =>
+                              showProductDetail(item.optionId, item.productId)
+                            }
                           >
                             <img
                               src={getImageUrl(item.productMainImage)}
                               style={{ width: "100px", height: "100px" }}
-                              alt="" />
+                              alt=""
+                            />
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}
-                            onClick={() => showProductDetail(item.optionId, item.productId)}
+                            onClick={() =>
+                              showProductDetail(item.optionId, item.productId)
+                            }
                           >
                             {item.productName}&nbsp;<br></br>
                             {item.optionName}
@@ -253,7 +271,9 @@ export default function CartList() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell>{won(item.optionPrice * item.optionCount)}</TableCell>
+                          <TableCell>
+                            {won(item.optionPrice * item.optionCount)}
+                          </TableCell>
                           <TableCell>
                             <Tooltip title="삭제">
                               <IconButton
@@ -291,7 +311,11 @@ export default function CartList() {
               </div>
               <br />
               <div className="cart-payment">
-                <Button className="cart-payment-button" variant="outlined" onClick={goToOrderPage}>
+                <Button
+                  className="cart-payment-button"
+                  variant="outlined"
+                  onClick={goToOrderPage}
+                >
                   주문하기
                 </Button>
               </div>
@@ -302,7 +326,10 @@ export default function CartList() {
             <div>
               <div className="cart-empty">장바구니가 비어있습니다</div>
               <div className="cart-empty-button">
-                <Button size="large" onClick={() => navigate("/productList")}>
+                <Button
+                  size="large"
+                  onClick={() => navigate("/productList/all")}
+                >
                   쇼핑하러 가기
                 </Button>
               </div>

@@ -3,7 +3,10 @@ import { Box, Button, Container } from "@mui/material";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
+import {
+  useProductQuery,
+  useProductUpdateMutation,
+} from "page/product/api/ProductApi";
 import { Product } from "page/product/entity/Product";
 import { ProductImg } from "page/product/entity/ProductMainImg";
 import { ProductModify } from "page/product/entity/ProductModify";
@@ -20,6 +23,7 @@ interface RouteParams {
 }
 
 const AdminProductModifyPage = () => {
+  console.log("얼마나 호출하니");
   const navigate = useNavigate();
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
@@ -27,14 +31,21 @@ const AdminProductModifyPage = () => {
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
   const { products, setProducts } = useProductModifyStore();
-  const { productImgs, setProductImgs, productDetailImgs, setProductDetailImgs } =
-    useProductImageStore();
+  const {
+    productImgs,
+    setProductImgs,
+    productDetailImgs,
+    setProductDetailImgs,
+  } = useProductImageStore();
 
   useEffect(() => {
     const newProductName = data?.productResponseForAdmin.productName || "";
-    const newCultivationMethod = data?.productResponseForAdmin.cultivationMethod || "";
-    const newProductSaleStatus = data?.productResponseForAdmin.productSaleStatus || "";
-    const newProductDescription = data?.productResponseForAdmin.productDescription || "";
+    const newCultivationMethod =
+      data?.productResponseForAdmin.cultivationMethod || "";
+    const newProductSaleStatus =
+      data?.productResponseForAdmin.productSaleStatus || "";
+    const newProductDescription =
+      data?.productResponseForAdmin.productDescription || "";
     const newOptions = data?.optionResponseForAdmin || [];
     const newMainImages = data?.mainImageResponseForAdmin || "";
     const newDetailImages = data?.detailImagesForAdmin || [];
@@ -54,7 +65,15 @@ const AdminProductModifyPage = () => {
     });
 
     setProductDetailImgs([...newDetailImages]);
-  }, [data, setProducts, productImgs, products, setProductDetailImgs, setProductImgs]);
+  }, [
+    data,
+    setProducts,
+    // 아래 부분이 무한 루프를 발생시킴(우선 주석 처리)
+    // productImgs,
+    // products,
+    setProductDetailImgs,
+    setProductImgs,
+  ]);
 
   const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
     const target = event.target as HTMLElement;
@@ -103,50 +122,58 @@ const AdminProductModifyPage = () => {
       };
       console.log("확인1", productMainImageModifyRequest);
 
-      const detailImageUploadPromises = productDetailImgs.map(async (image, idx) => {
-        const detailFileToUpload =
-          image instanceof Blob
-            ? (() => {
-                const blobWithProperties = image as Blob & { name: string };
-                return new File([image], blobWithProperties.name);
-              })()
-            : null;
+      const detailImageUploadPromises = productDetailImgs.map(
+        async (image, idx) => {
+          const detailFileToUpload =
+            image instanceof Blob
+              ? (() => {
+                  const blobWithProperties = image as Blob & { name: string };
+                  return new File([image], blobWithProperties.name);
+                })()
+              : null;
 
-        let s3DetailObjectVersion = "";
-        let name = "";
-        if (detailFileToUpload) {
-          s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
-          name = detailFileToUpload.name;
+          let s3DetailObjectVersion = "";
+          let name = "";
+          if (detailFileToUpload) {
+            s3DetailObjectVersion =
+              (await uploadFileAwsS3(detailFileToUpload)) || "";
+            name = detailFileToUpload.name;
+          }
+
+          return {
+            detailImageId: 0,
+            detailImgs: name + "?versionId=" + s3DetailObjectVersion,
+          };
         }
+      );
 
-        return {
-          detailImageId: 0,
-          detailImgs: name + "?versionId=" + s3DetailObjectVersion,
-        };
-      });
-
-      const productDetailImagesModifyRequest = await Promise.all(detailImageUploadPromises);
+      const productDetailImagesModifyRequest = await Promise.all(
+        detailImageUploadPromises
+      );
 
       if (productDetailImgs.length !== 0) {
-        const existingDetailImageRequests = (data?.detailImagesForAdmin || []).map(
-          (existingDetailImage) => ({
-            detailImageId: existingDetailImage.detailImageId || 0,
-            detailImgs: existingDetailImage.detailImgs || "undefined detail image",
-          })
-        );
+        const existingDetailImageRequests = (
+          data?.detailImagesForAdmin || []
+        ).map((existingDetailImage) => ({
+          detailImageId: existingDetailImage.detailImageId || 0,
+          detailImgs:
+            existingDetailImage.detailImgs || "undefined detail image",
+        }));
         productDetailImagesModifyRequest.push(...existingDetailImageRequests);
       }
 
-      const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest.filter(
-        (detailImage) => !productDetailImgs.includes(detailImage)
-      );
+      const updatedProductDetailImagesModifyRequest =
+        productDetailImagesModifyRequest.filter(
+          (detailImage) => !productDetailImgs.includes(detailImage)
+        );
 
       const updatedData: ProductModify = {
         productId: parseInt(productId || ""),
         productModifyRequest: productModifyRequestData,
         productOptionModifyRequest: products.productOptionList,
         productMainImageModifyRequest: productMainImageModifyRequest,
-        productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
+        productDetailImagesModifyRequest:
+          updatedProductDetailImagesModifyRequest,
         userToken: userToken || "",
       };
 
@@ -179,7 +206,10 @@ const AdminProductModifyPage = () => {
       // }
       await mutation.mutateAsync(updatedData);
       console.log("수정확인", updatedData);
-      queryClient.invalidateQueries(["productModify", parseInt(productId || "")]);
+      queryClient.invalidateQueries([
+        "productModify",
+        parseInt(productId || ""),
+      ]);
       navigate("/adminProductListPage");
     }
   };
