@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
 import TextField from "@mui/material/TextField";
@@ -7,34 +7,41 @@ import { getOrderInfo, orderRequestInCart } from "./api/OrderApi";
 import { updateAddressInfo } from "page/user/api/UserApi";
 import { Grid, Button, Checkbox, Paper, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { useNavigate } from "react-router-dom";
-import "./css/Order.css";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useOrderUserInfoStore } from "./store/OrderStore";
 import { UserAddress } from "./entity/UserAddress";
 import { OrderedProduct } from "./entity/OrderedProduct";
 import { OrderRequset } from "./entity/OrderRequset";
+import { OrderProduct } from "./entity/OrderProduct";
+
+import "./css/Order.css";
 
 interface IAddr {
   address: string;
   zonecode: string;
 }
 
-const Order = () => {
+const Order: React.FC = () => {
   const navigate = useNavigate();
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { orderUserInfo, setOrderUserInfo } = useOrderUserInfoStore();
   const [userName, setUserName] = useState<string>("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
 
-  let discount = 0;
-  let deliveryFee = 0;
+  const selectedOptionId: number[] = location.state.selectedOptionId;
+  const selectedOptionCount: number[] = location.state.selectedOptionCount;
+  const orderTotalPrice: number = location.state.orderTotalPrice;
+  const orderDataFrom: string = location.state.orderDataFrom;
+
+  let discount: number = 0;
+  let deliveryFee: number = 0;
 
   useEffect(() => {
     const fetchCartData = async () => {
       try {
-        const data = await getOrderInfo();
+        const data = await getOrderInfo(selectedOptionId);
         if (data) {
           setOrderUserInfo(data);
           setIsLoading(true);
@@ -48,23 +55,7 @@ const Order = () => {
       }
     };
     fetchCartData();
-  }, [setOrderUserInfo, navigate]);
-
-  const calculateTotalPrice = useCallback(() => {
-    let totalPrice = 0;
-    const loadedPrice = orderUserInfo?.productResponseList || undefined;
-    if (loadedPrice)
-      for (const item of loadedPrice) {
-        const itemQuantity = item.optionCount;
-        totalPrice += item.optionPrice * itemQuantity;
-      }
-    return totalPrice;
-  }, [orderUserInfo]);
-
-  useEffect(() => {
-    const calculatedTotalPrice = calculateTotalPrice();
-    setTotalPrice(calculatedTotalPrice);
-  }, [calculateTotalPrice]);
+  }, [selectedOptionId]);
 
   const onClickAddr = () => {
     new window.daum.Postcode({
@@ -120,9 +111,9 @@ const Order = () => {
       }
     }
     // 유효성검사 추가
-    const extractedData: OrderedProduct[] = orderUserInfo!.productResponseList.map((item) => ({
+    const extractedData: OrderedProduct[] = orderUserInfo!.productResponseList.map((item, idx) => ({
       productOptionId: item.optionId,
-      productOptionCount: item.optionCount,
+      productOptionCount: selectedOptionCount[idx],
     }));
 
     const orderedInfo: OrderRequset = {
@@ -141,17 +132,20 @@ const Order = () => {
         orderedPurchaserAddressDetail: orderUserInfo?.userResponse.addressDetail || "",
       },
       orderedProductInfo: extractedData,
-      totalAmount: totalPrice,
+      totalAmount: orderTotalPrice,
+      from: orderDataFrom,
     };
 
     try {
-      const orderRequest = await orderRequestInCart(orderedInfo);
-      if (orderRequest) {
-        toast.success("주문이 완료되었습니다");
-        navigate("/myOrder");
-      } else {
-        toast.warning("주문 요청 중 오류가 발생했습니다");
-      }
+      await orderRequestInCart(orderedInfo);
+      toast.success("주문 요청 성공");
+      // const orderRequest = await orderRequestInCart(orderedInfo);
+      // if (orderRequest) {
+      //   toast.success("주문이 완료되었습니다");
+      //   navigate("/orderComplete");
+      // } else {
+      //   toast.warning("주문 요청 중 오류가 발생했습니다");
+      // }
     } catch (error) {
       toast.error("주문 요청에 실패했습니다");
     }
@@ -168,14 +162,14 @@ const Order = () => {
               <div className="order-list">
                 <Paper style={{ padding: "10px 0", borderRadius: "0.1em" }}>
                   <p className="order-info-title">주문 상품 정보</p>
-                  {orderUserInfo?.productResponseList.map((product) => (
+                  {orderUserInfo?.productResponseList.map((product: OrderProduct, idx: number) => (
                     <div key={product.optionId} className="order-product-info-container">
                       <div className="order-detail-container">
                         <div className="order-product-image">
                           <img
                             src={getImageUrl(product.productMainImage)}
-                            style={{ width: "128px", height: "100px" }}
-                            alt="" />
+                            style={{ width: "100px", height: "100px" }}
+                          />
                         </div>
                         <div className="order-info-container">
                           <div className="order-product-name margin-1">
@@ -184,7 +178,7 @@ const Order = () => {
                             {product.unit}
                           </div>
                           <div data-testid="order-test-id" className="order-product-count margin-1">
-                            {product.optionCount}개
+                            {selectedOptionCount[idx]}개
                           </div>
                           <div className="order-product-price margin-1">
                             {won(product.optionPrice)}
@@ -211,7 +205,9 @@ const Order = () => {
                         className="custom-input"
                         placeholder="이름을 입력해주세요"
                         value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                          setUserName(e.target.value)
+                        }
                       />
                       <div>
                         연락처 <span className="asterisk">*</span>
@@ -225,7 +221,9 @@ const Order = () => {
                         className="custom-input"
                         placeholder="연락처"
                         value={orderUserInfo.userResponse.contactNumber || ""}
-                        onChange={(e) => handleContackNumberChange(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                          handleContackNumberChange(e.target.value)
+                        }
                       />
                       <div>이메일</div>
                       <TextField
@@ -237,7 +235,9 @@ const Order = () => {
                         className="custom-input"
                         placeholder="이메일"
                         value={orderUserInfo.userResponse.email || ""}
-                        onChange={(e) => handleEmailChange(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                          handleEmailChange(e.target.value)
+                        }
                       />
                       <div className="order-checkbox">
                         <span className="asterisk">*</span>&nbsp;표시는 필수입력 사항입니다.
@@ -311,7 +311,9 @@ const Order = () => {
                         className="custom-input"
                         placeholder="상세주소 입력"
                         value={orderUserInfo?.userResponse.addressDetail || ""}
-                        onChange={(e) => handleAddressDetailChange(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                          handleAddressDetailChange(e.target.value)
+                        }
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -346,7 +348,7 @@ const Order = () => {
                   <div className="order-price-info-container">
                     <div className="order-price-info">
                       <p>총 상품 금액</p>
-                      <p>{won(totalPrice)}</p>
+                      <p>{won(orderTotalPrice)}</p>
                     </div>
                     <div className="order-price-info">
                       <p>할인 금액</p>
@@ -359,7 +361,11 @@ const Order = () => {
                     <hr className="hr1" />
                     <div className="order-price-info order-total-price">
                       <p>최종 결제 금액</p>
-                      <p>{won(totalPrice - discount + deliveryFee)}</p>
+                      <p>
+                        {isNaN(orderTotalPrice)
+                          ? "계산 중..."
+                          : won(orderTotalPrice - discount + deliveryFee)}
+                      </p>
                     </div>
                     <br />
                     <div className="order-payment">

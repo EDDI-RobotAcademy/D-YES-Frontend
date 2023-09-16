@@ -1,10 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  changeCartItemCount,
-  deleteCartItems,
-  getCartItemList,
-} from "./api/CartApi";
+import { changeCartItemCount, deleteCartItems, getCartItemList } from "./api/CartApi";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -13,6 +9,8 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { won } from "utility/filters/wonFilter";
 import { getImageUrl } from "utility/s3/awsS3";
@@ -21,9 +19,10 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import "./css/Cart.css";
 import { CartItems } from "./entity/CartItems";
 import { Cart } from "./entity/Cart";
+
+import "./css/Cart.css";
 
 export default function CartList() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,20 +35,20 @@ export default function CartList() {
     return productCount;
   });
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [selectAll, setSelectAll] = useState(false);
+  const [selectAll, setSelectAll] = useState(true);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
 
   const calculateTotalPrice = useCallback(() => {
     let totalPrice = 0;
     for (const item of loadedItems) {
-      if (item.optionId !== 0) {
+      if (item.optionId !== 0 && selectedItems.includes(item.optionId)) {
         const itemQuantity = quantity[item.optionId] || item.optionCount;
         totalPrice += item.optionPrice * itemQuantity;
       }
     }
     return totalPrice;
-  }, [loadedItems, quantity]);
+  }, [loadedItems, quantity, selectedItems]);
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -57,6 +56,9 @@ export default function CartList() {
         const data = await getCartItemList();
         setLoadedItems(data);
         setIsLoading(true);
+
+        const checkAllOptions = data.map((item) => item.optionId);
+        setSelectedItems(checkAllOptions);
       } catch (error) {
         toast.error("장바구니 정보를 가져오는데 실패했습니다");
       }
@@ -75,7 +77,7 @@ export default function CartList() {
   const showProductDetail = (optionId: number, productId: number) => {
     if (optionId === 0) {
       alert("존재하지 않는 상품입니다.");
-      navigate("/productList/all");
+      navigate("/productList");
     } else {
       navigate(`/productDetail/${productId}`);
     }
@@ -91,7 +93,7 @@ export default function CartList() {
 
   const decreaseQuantity = async (optionId: number) => {
     const item = loadedItems.find((item) => item.optionId === optionId);
-    if (item && quantity[optionId] !== 1) {
+    if (item && quantity[optionId] != 1) {
       const updatedQuantity = (quantity[optionId] || item.optionCount) - 1;
       updateQuantity(optionId, updatedQuantity);
     }
@@ -120,15 +122,6 @@ export default function CartList() {
     }
   };
 
-  const selectAllItems = () => {
-    if (selectAll) {
-      setSelectedItems([]);
-    } else {
-      setSelectedItems(loadedItems.map((item) => item.optionId));
-    }
-    setSelectAll(!selectAll);
-  };
-
   const itemSelection = (optionId: number) => {
     // selectedItems 배열에 optionId가 있다면 제거
     if (selectedItems.includes(optionId)) {
@@ -138,6 +131,16 @@ export default function CartList() {
       // 아니면 추가
     } else {
       setSelectedItems((prevSelectedItems) => [...prevSelectedItems, optionId]);
+    }
+  };
+
+  const selectAllItems = () => {
+    setSelectAll((prevSelectAll) => !prevSelectAll);
+    if (!selectAll) {
+      const allOptionIds = loadedItems.map((item) => item.optionId);
+      setSelectedItems(allOptionIds);
+    } else {
+      setSelectedItems([]);
     }
   };
 
@@ -156,9 +159,7 @@ export default function CartList() {
 
   const deleteSelectedItems = async () => {
     try {
-      const selectedOptionIds: number[] = selectedItems.map(
-        (optionId) => optionId
-      );
+      const selectedOptionIds: number[] = selectedItems.map((optionId) => optionId);
       await deleteCartItems(selectedOptionIds);
 
       const updatedCartItems = await getCartItemList();
@@ -186,8 +187,45 @@ export default function CartList() {
     }
   };
 
-  const goToOrderPage = () => {
-    navigate("/order");
+  const orderSelectedProduct = () => {
+    if (selectedItems.length === 0) {
+      toast.error("옵션을 선택해주세요");
+      return;
+    }
+    const selectedProductInfo = selectedItems.map((optionId) => {
+      const item = loadedItems.find((item) => item.optionId === optionId);
+      return {
+        optionId: optionId,
+        optionCount: quantity[optionId] || (item ? item.optionCount : 0),
+      };
+    });
+    const selectedOptionId = selectedProductInfo.map((id) => id.optionId);
+    const selectedOptionCount = selectedProductInfo.map((count) => count.optionCount);
+    const orderTotalPrice = totalPrice;
+    const orderDataFrom = "CART";
+    navigate("/order", {
+      state: {
+        selectedOptionId: selectedOptionId,
+        selectedOptionCount: selectedOptionCount,
+        orderTotalPrice: orderTotalPrice,
+        orderDataFrom: orderDataFrom,
+      },
+    });
+  };
+
+  const orderAllProduct = () => {
+    const allOptionId = loadedItems.map((id) => id.optionId);
+    const allOptionCount = loadedItems.map((count) => count.optionCount);
+    const orderTotalPrice = totalPrice;
+    const orderDataFrom = "CART";
+    navigate("/order", {
+      state: {
+        selectedOptionId: allOptionId,
+        selectedOptionCount: allOptionCount,
+        orderTotalPrice: orderTotalPrice,
+        orderDataFrom: orderDataFrom,
+      },
+    });
   };
 
   return (
@@ -195,14 +233,14 @@ export default function CartList() {
       <div className="cart-grid">
         <div className="cart-page-name">장바구니</div>
         <hr />
-        {loadedItems.length !== 0 && isLoading ? (
+        {loadedItems.length != 0 && isLoading ? (
           <div className="cart-components">
             <div>
               <div className="cart-controll">
-                <div className="cart-select-all">
-                  <input type="checkbox" onClick={selectAllItems} />
-                  전체 선택
-                </div>
+                <FormControlLabel
+                  label="전체 선택"
+                  control={<Checkbox checked={selectAll} onChange={selectAllItems} />}
+                />
                 <div className="cart-delete-buttons">
                   <Button
                     onClick={deleteSelectedItems}
@@ -223,31 +261,24 @@ export default function CartList() {
                       <TableRow key={item.optionId}>
                         <>
                           <TableCell>
-                            <input
+                            <Checkbox
                               data-testid={`cart-select-test-id-${item.optionId}`}
-                              type="checkbox"
-                              // selectedItems 배열에 optionId 추가
                               checked={selectedItems.includes(item.optionId)}
                               onChange={() => itemSelection(item.optionId)}
                             />
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}
-                            onClick={() =>
-                              showProductDetail(item.optionId, item.productId)
-                            }
+                            onClick={() => showProductDetail(item.optionId, item.productId)}
                           >
                             <img
                               src={getImageUrl(item.productMainImage)}
                               style={{ width: "100px", height: "100px" }}
-                              alt=""
                             />
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}
-                            onClick={() =>
-                              showProductDetail(item.optionId, item.productId)
-                            }
+                            onClick={() => showProductDetail(item.optionId, item.productId)}
                           >
                             {item.productName}&nbsp;<br></br>
                             {item.optionName}
@@ -271,9 +302,7 @@ export default function CartList() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            {won(item.optionPrice * item.optionCount)}
-                          </TableCell>
+                          <TableCell>{won(item.optionPrice * item.optionCount)}</TableCell>
                           <TableCell>
                             <Tooltip title="삭제">
                               <IconButton
@@ -314,9 +343,18 @@ export default function CartList() {
                 <Button
                   className="cart-payment-button"
                   variant="outlined"
-                  onClick={goToOrderPage}
+                  onClick={orderSelectedProduct}
                 >
-                  주문하기
+                  선택 상품 주문하기
+                </Button>
+              </div>
+              <div className="cart-payment">
+                <Button
+                  className="cart-payment-button"
+                  variant="outlined"
+                  onClick={orderAllProduct}
+                >
+                  전체 상품 주문하기
                 </Button>
               </div>
             </div>
@@ -326,10 +364,7 @@ export default function CartList() {
             <div>
               <div className="cart-empty">장바구니가 비어있습니다</div>
               <div className="cart-empty-button">
-                <Button
-                  size="large"
-                  onClick={() => navigate("/productList/all")}
-                >
+                <Button size="large" onClick={() => navigate("/productList/all")}>
                   쇼핑하러 가기
                 </Button>
               </div>
