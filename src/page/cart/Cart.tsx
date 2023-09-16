@@ -214,10 +214,10 @@ export default function CartList() {
   };
 
   const orderAllProduct = () => {
-    const allOptionId = loadedItems.map((id) => id.optionId);
-    const allOptionCount = loadedItems.map((count) => count.optionCount);
-    const orderTotalPrice = totalPrice;
-    const orderDataFrom = "CART";
+    const allOptionId: number[] = loadedItems.map((id) => id.optionId);
+    const allOptionCount: number[] = loadedItems.map((count) => count.optionCount);
+    const orderTotalPrice: number = totalPrice;
+    const orderDataFrom: string = "CART";
     navigate("/order", {
       state: {
         selectedOptionId: allOptionId,

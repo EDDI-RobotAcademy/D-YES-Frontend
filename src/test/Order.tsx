@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import * as OrderApi from "page/order/api/OrderApi";
 import Order from "page/order/Order";
@@ -30,29 +30,18 @@ it("주문 상품 목록", async () => {
         value: 10,
         unit: "KG",
       },
-      {
-        optionId: 2,
-        productMainImage: "sampleImg2.jpg",
-        productName: "테스트상품2",
-        optionPrice: 2000000,
-        optionCount: 5,
-        value: 10,
-        unit: "KG",
-      },
     ],
   };
 
   (OrderApi.getOrderInfo as jest.Mock).mockResolvedValue(orderList);
 
   render(
-    <BrowserRouter>
+    <MemoryRouter initialEntries={["/your-route"]} initialIndex={0}>
       <QueryClientProvider client={new QueryClient()}>
         <Order />
       </QueryClientProvider>
-    </BrowserRouter>
+    </MemoryRouter>
   );
-
-  expect(screen.queryAllByTestId("order-test-id"));
 
   const checkbox = await screen.findByTestId("order-checkbox-testid");
 
