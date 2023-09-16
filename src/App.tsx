@@ -25,7 +25,7 @@ import AdminProductList from "page/admin/adminPage/product/AdminProductListPage"
 import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
 import AdminOrderListPage from "page/admin/adminPage/order/AdminOrderListPage";
 import OrderCompletePage from "page/order/OrderCompletePage";
-import MyOrderPage from "page/user/myOrder/MyOrderPage";
+import MyOrderPage from "page/order/MyOrderPage";
 
 const theme = createTheme({
   typography: {

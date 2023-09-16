@@ -1,6 +1,7 @@
 import { OrderInfo } from "../entity/OrderInfo";
 import { OrderRequset } from "../entity/OrderRequset";
 import axiosInstance from "utility/axiosInstance";
+import { UserOrderList } from "../entity/UserOrderList";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -28,4 +29,13 @@ export const orderRequestInCart = async (requsetData: OrderRequset) => {
   // const response = await axiosInstance.post("/order/payment/kakao", data);
   // console.log("주문 데이터 전송 성공");
   // return response.data;
+};
+
+// 사용자의 주문 목록 조회
+export const getUserOrderList = async () => {
+  const response = await axiosInstance.get<UserOrderList[]>("order/my-list", {
+    params: { userToken: userToken },
+  });
+  console.log("사용자 주문 목록 데이터", response.data);
+  return response.data;
 };
