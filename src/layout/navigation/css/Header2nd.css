@@ -26,8 +26,8 @@
 }
 .second-header-btn-container-2 {
   min-width: "220px";
-  align-items: end;
-  justify-content: end;
+  align-items: flex-end;
+  justify-content: flex-end;
   display: flex;
   gap: 50px;
 }
