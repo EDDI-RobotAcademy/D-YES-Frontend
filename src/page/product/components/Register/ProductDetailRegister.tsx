@@ -110,7 +110,7 @@ const ProductDetailRegister = () => {
                 <FarmSearch
                   open={openFarmSearch}
                   onClose={() => setOpenFarmSearch(false)}
-                  onSelectFarmName={setSelectedFarmName}
+                  selectedFarmName={selectedFarmName}
                   onSelectFarm={handleFarmSelect}
                 />
               </div>

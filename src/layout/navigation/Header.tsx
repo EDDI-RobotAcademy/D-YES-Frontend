@@ -17,7 +17,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   // 로그아웃 동작
   const handleLogout = async () => {
     try {
-      (await userLogout()) == true;
+      const result = await userLogout();
+      if (result === true) { console.log("참") }
+      else { console.log("거짓") }
       localStorage.removeItem("userToken");
       localStorage.removeItem("encodedProfileImg");
       localStorage.removeItem("encodedNickName");

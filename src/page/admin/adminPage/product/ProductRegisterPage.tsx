@@ -117,6 +117,7 @@ const ProductRegisterPage = () => {
         const blobWithProperties = image as Blob & { name: string };
         return blobWithProperties.name + "?versionId=" + s3DetailObjectVersion[idx];
       }
+      return undefined;
     });
 
     const productDetailImagesRegisterRequests: Partial<ProductDetailImg>[] = detailImgsName.map(

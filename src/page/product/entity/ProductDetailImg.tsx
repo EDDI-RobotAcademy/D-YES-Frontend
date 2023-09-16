@@ -1,4 +1,4 @@
-export interface ProductDetailImg {
+export type ProductDetailImg = {
   detailImageId: number;
   detailImgs: string;
 }

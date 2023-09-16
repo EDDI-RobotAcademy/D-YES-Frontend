@@ -6,11 +6,9 @@ interface FarmBusinessReadState {
   setBusinessRead: (farms: FarmBusinessRead) => void;
 }
 
-export const useFarmBusinessReadStore = create<FarmBusinessReadState>(
-  (set) => ({
-    businessRead: {} as FarmBusinessRead,
-    setBusinessRead: (businessRead) => set({ businessRead }),
-  })
-);
+export const useFarmBusinessReadStore = create<FarmBusinessReadState>((set) => ({
+  businessRead: {} as FarmBusinessRead,
+  setBusinessRead: (businessRead) => set({ businessRead }),
+}));
 
 export default useFarmBusinessReadStore;
