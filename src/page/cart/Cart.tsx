@@ -93,7 +93,7 @@ export default function CartList() {
 
   const decreaseQuantity = async (optionId: number) => {
     const item = loadedItems.find((item) => item.optionId === optionId);
-    if (item && quantity[optionId] != 1) {
+    if (item && quantity[optionId] > 1) {
       const updatedQuantity = (quantity[optionId] || item.optionCount) - 1;
       updateQuantity(optionId, updatedQuantity);
     }
