@@ -95,7 +95,7 @@ const FarmList = () => {
   return (
     <div>
       <div className="list-menu">
-        <img className="farm-list-icon" alt="농가 목록" src="img/farm-list-icon.png" />
+        {/* <img className="farm-list-icon" alt="농가 목록" src="img/farm-list-icon.png" /> */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Typography
             gutterBottom

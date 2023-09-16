@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { won } from "utility/filters/wonFilter";
 import { Button, FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import {
@@ -21,8 +21,8 @@ import Swal from "sweetalert2";
 import parse from "html-react-parser";
 import { getProductDetail, useProductDetailQuery } from "./api/ProductApi";
 import ProductCarousel from "./carousel/ProductCarousel";
-import ProductOptionStore from "store/product/ProductOptionStore";
-import { useOptions } from "entity/product/useOptions";
+import ProductOptionStore from "page/product/store/ProductOptionStore";
+import { useOptions } from "page/product/entity/useOptions";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 
 import "./css/ProductDetailPage.css";
@@ -54,11 +54,26 @@ const ProductDetail = () => {
       setIsLoading(true);
     };
     fetchProductData();
-  }, []);
+  }, [productId]);
+
+  const getSelectedOption = useCallback((selectedValue: string): useOptions | undefined => {
+    return optionList.find((option) => option.optionId.toString() === selectedValue);
+  }, [optionList]);
 
   useEffect(() => {
+    const updateTotalPrice = () => {
+      let totalPrice = 0;
+      selectedOptionList.forEach((selectedValue) => {
+        const selectedOption = getSelectedOption(selectedValue);
+        const optionId = selectedOption?.optionId;
+        if (optionId) {
+          totalPrice += (selectedOption.optionPrice || 0) * (optionQuantities[optionId] || 0);
+        }
+      });
+      setTotalPrice(totalPrice);
+    };
     updateTotalPrice();
-  }, [selectedOptionList, optionQuantities]);
+  }, [selectedOptionList, optionQuantities, getSelectedOption]);
 
   const productResponse = data?.productResponseForUser;
   const productDescription = productResponse?.productDescription || "";
@@ -110,10 +125,6 @@ const ProductDetail = () => {
     }));
   };
 
-  const getSelectedOption = (selectedValue: string): useOptions | undefined => {
-    return optionList.find((option) => option.optionId.toString() === selectedValue);
-  };
-
   const addCart = async () => {
     const cartItems = Object.keys(optionQuantities).map((optionId) => ({
       productOptionId: parseInt(optionId),
@@ -121,7 +132,7 @@ const ProductDetail = () => {
     }));
     console.log(cartItems);
     try {
-      if (selectedOptionList.length == 0) {
+      if (selectedOptionList.length === 0) {
         toast.warning("옵션을 선택해주세요");
         return;
       }
@@ -162,18 +173,6 @@ const ProductDetail = () => {
     ORGANIC: { className: "tag-organic", name: "유기농" },
     PESTICIDE_FREE: { className: "tag-pesticide-free", name: "무농약" },
     ENVIRONMENT_FRIENDLY: { className: "tag-environment-friendly", name: "친환경" },
-  };
-
-  const updateTotalPrice = () => {
-    let totalPrice = 0;
-    selectedOptionList.forEach((selectedValue) => {
-      const selectedOption = getSelectedOption(selectedValue);
-      const optionId = selectedOption?.optionId;
-      if (optionId) {
-        totalPrice += (selectedOption.optionPrice || 0) * (optionQuantities[optionId] || 0);
-      }
-    });
-    setTotalPrice(totalPrice);
   };
 
   const yDetail = useRef<HTMLDivElement>(null);

@@ -162,7 +162,7 @@ const FarmRegister = () => {
   return (
     <div>
       <div className="register-menu">
-        <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" />
+        {/* <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" /> */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Typography
             gutterBottom

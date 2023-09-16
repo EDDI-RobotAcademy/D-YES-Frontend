@@ -1,6 +1,7 @@
-import { Cart } from "entity/cart/Cart";
-import { CartItems } from "entity/cart/CartItems";
+
 import axiosInstance from "utility/axiosInstance";
+import { Cart } from "../entity/Cart";
+import { CartItems } from "../entity/CartItems";
 
 const userToken: string = localStorage.getItem("userToken") || "";
 
@@ -11,13 +12,13 @@ export const sendCartContainRequest = async (requestData: Cart[]) => {
     requestList: requestData,
   };
   // console.log("장바구니에 보내는 데이터 확인: ", data);
-  await axiosInstance.springAxiosInst.post("/cart/contain", data);
+  await axiosInstance.post("/cart/contain", data);
   console.log("장바구니에 데이터 전송 성공");
 };
 
 // 장바구니 목록 조회
 export const getCartItemList = async () => {
-  const response = await axiosInstance.springAxiosInst.get<CartItems[]>("/cart/list", {
+  const response = await axiosInstance.get<CartItems[]>("/cart/list", {
     params: { userToken: userToken },
   });
   console.log("장바구니 리스트 데이터", response.data);
@@ -30,7 +31,7 @@ export const changeCartItemCount = async (requestData: Cart) => {
     userToken: userToken,
     request: requestData,
   };
-  const response = await axiosInstance.springAxiosInst.put("/cart/change", data);
+  const response = await axiosInstance.put("/cart/change", data);
   console.log("장바구니에 데이터 전송 성공", response.data);
   return response.data;
 };
@@ -43,7 +44,7 @@ export const deleteCartItems = async (optionIds: number[]) => {
       productOptionId: optionId,
     }));
 
-    await axiosInstance.springAxiosInst.delete("/cart/delete", {
+    await axiosInstance.delete("/cart/delete", {
       data: requestData,
     });
     console.log("장바구니 상품 삭제 요청 성공");

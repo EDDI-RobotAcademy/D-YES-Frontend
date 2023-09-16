@@ -10,10 +10,9 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-
 import "./css/Cart.css";
-import { CartItems } from "entity/cart/CartItems";
-import { Cart } from "entity/cart/Cart";
+import { CartItems } from "./entity/CartItems";
+import { Cart } from "./entity/Cart";
 
 export default function CartList() {
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +80,7 @@ export default function CartList() {
 
   const decreaseQuantity = async (optionId: number) => {
     const item = loadedItems.find((item) => item.optionId === optionId);
-    if (item && quantity[optionId] != 1) {
+    if (item && quantity[optionId] !== 1) {
       const updatedQuantity = (quantity[optionId] || item.optionCount) - 1;
       updateQuantity(optionId, updatedQuantity);
     }
@@ -183,7 +182,7 @@ export default function CartList() {
       <div className="cart-grid">
         <div className="cart-page-name">장바구니</div>
         <hr />
-        {loadedItems.length != 0 && isLoading ? (
+        {loadedItems.length !== 0 && isLoading ? (
           <div className="cart-components">
             <div>
               <div className="cart-controll">
@@ -226,7 +225,7 @@ export default function CartList() {
                             <img
                               src={getImageUrl(item.productMainImage)}
                               style={{ width: "100px", height: "100px" }}
-                            />
+                              alt="" />
                           </TableCell>
                           <TableCell
                             style={{ cursor: "pointer" }}

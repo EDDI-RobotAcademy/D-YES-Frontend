@@ -17,7 +17,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   // 로그아웃 동작
   const handleLogout = async () => {
     try {
-      (await userLogout()) == true;
+      const result = await userLogout();
+      if (result === true) { console.log("참") }
+      else { console.log("거짓") }
       localStorage.removeItem("userToken");
       localStorage.removeItem("encodedProfileImg");
       localStorage.removeItem("encodedNickName");
@@ -57,22 +59,24 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           <Link className="Home" to={"/"}>
             <img alt="로고" src="/img/text_logo.png" style={{ width: "100px" }} />
           </Link>
-          {isLoggedIn ? (
-            <>
-              {checkAdminAuthorization() ? (
-                <Link className="register" to="/adminMainPage">
-                  <p>관리자 페이지</p>
+          <div className="header-top-bar-right">
+            {isLoggedIn ? (
+              <>
+                {checkAdminAuthorization() ? (
+                  <Link className="register" to="/adminMainPage">
+                    <div style={{ minWidth: "80px"}}><p>관리자 페이지</p></div>
+                  </Link>
+                ) : null}
+                <AccountMenu handleLogout={handleLogout} />
+              </>
+            ) : (
+              <>
+                <Link className="Login" to={"/login"}>
+                <div style={{ minWidth: "40px", textAlign: "right" }}><p>로그인</p></div>
                 </Link>
-              ) : null}
-              <AccountMenu handleLogout={handleLogout} />
-            </>
-          ) : (
-            <>
-              <Link className="Login" to={"/login"}>
-                <p>로그인</p>
-              </Link>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
         {children}
       </div>

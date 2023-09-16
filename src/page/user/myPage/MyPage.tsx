@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
 import { getImageUrl } from "utility/s3/awsS3";
-import { User } from "entity/user/User";
+import { User } from "page/user/entity/User";
 
 const MyPage = () => {
   const navigate = useNavigate();

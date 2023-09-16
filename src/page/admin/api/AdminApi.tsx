@@ -115,4 +115,3 @@ export const getOrderList = async () => {
   console.log("주문 목록 정보", response.data);
   return response.data;
 };
-
