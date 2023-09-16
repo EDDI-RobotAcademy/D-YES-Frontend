@@ -30,10 +30,10 @@ const Order: React.FC = () => {
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
 
-  const selectedOptionId: number[] = location.state.selectedOptionId;
-  const selectedOptionCount: number[] = location.state.selectedOptionCount;
-  const orderTotalPrice: number = location.state.orderTotalPrice;
-  const orderDataFrom: string = location.state.orderDataFrom;
+  const selectedOptionId: number[] = location.state.selectedOptionId || 0;
+  const selectedOptionCount: number[] = location.state.selectedOptionCount || 0;
+  const orderTotalPrice: number = location.state.orderTotalPrice || 0;
+  const orderDataFrom: string = location.state.orderDataFrom || "";
 
   let discount: number = 0;
   let deliveryFee: number = 0;

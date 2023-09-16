@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { won } from "utility/filters/wonFilter";
 import { Button, FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import {
@@ -43,7 +43,7 @@ const ProductDetail = () => {
   const { data } = useProductDetailQuery(productId || "");
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [selectedOptionList, setSelectedOptionList] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const optionList: useOptions[] = ProductOptionStore((state) => state.optionList);
   const [optionQuantities, setOptionQuantities] = useState<{ [key: number]: number }>({});
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -54,29 +54,14 @@ const ProductDetail = () => {
       setIsLoading(true);
     };
     fetchProductData();
-  }, [productId]);
-
-  const getSelectedOption = useCallback((selectedValue: string): useOptions | undefined => {
-    return optionList.find((option) => option.optionId.toString() === selectedValue);
-  }, [optionList]);
+  }, []);
 
   useEffect(() => {
-    const updateTotalPrice = () => {
-      let totalPrice = 0;
-      selectedOptionList.forEach((selectedValue) => {
-        const selectedOption = getSelectedOption(selectedValue);
-        const optionId = selectedOption?.optionId;
-        if (optionId) {
-          totalPrice += (selectedOption.optionPrice || 0) * (optionQuantities[optionId] || 0);
-        }
-      });
-      setTotalPrice(totalPrice);
-    };
     updateTotalPrice();
-  }, [selectedOptionList, optionQuantities, getSelectedOption]);
+  }, [selectedOptionList, optionQuantities]);
 
   const productResponse = data?.productResponseForUser;
-  const productDescription = productResponse?.productDescription || "";
+  const productDescription: string = productResponse?.productDescription || "";
   const parsedHTML = parse(productDescription);
 
   const handleDecreaseQuantity = (optionId: number) => {
@@ -125,6 +110,31 @@ const ProductDetail = () => {
     }));
   };
 
+  const getSelectedOption = (selectedValue: string): useOptions | undefined => {
+    return optionList.find((option) => option.optionId.toString() === selectedValue);
+  };
+
+  const orderSelectedProduct = () => {
+    if (selectedOptionList.length === 0) {
+      toast.error("옵션을 선택해주세요");
+      return;
+    }
+    let extractedKey = Object.keys(optionQuantities).map((key) => parseInt(key, 10));
+    let extractedValue = Object.values(optionQuantities);
+    const selectedOptionId = extractedKey;
+    const selectedOptionCount = extractedValue;
+    const orderTotalPrice = totalPrice;
+    const orderDataFrom = "DETAIL";
+    navigate("/order", {
+      state: {
+        selectedOptionId: selectedOptionId,
+        selectedOptionCount: selectedOptionCount,
+        orderTotalPrice: orderTotalPrice,
+        orderDataFrom: orderDataFrom,
+      },
+    });
+  };
+
   const addCart = async () => {
     const cartItems = Object.keys(optionQuantities).map((optionId) => ({
       productOptionId: parseInt(optionId),
@@ -132,7 +142,7 @@ const ProductDetail = () => {
     }));
     console.log(cartItems);
     try {
-      if (selectedOptionList.length === 0) {
+      if (selectedOptionList.length == 0) {
         toast.warning("옵션을 선택해주세요");
         return;
       }
@@ -173,6 +183,18 @@ const ProductDetail = () => {
     ORGANIC: { className: "tag-organic", name: "유기농" },
     PESTICIDE_FREE: { className: "tag-pesticide-free", name: "무농약" },
     ENVIRONMENT_FRIENDLY: { className: "tag-environment-friendly", name: "친환경" },
+  };
+
+  const updateTotalPrice = () => {
+    let totalPrice = 0;
+    selectedOptionList.forEach((selectedValue) => {
+      const selectedOption = getSelectedOption(selectedValue);
+      const optionId = selectedOption?.optionId;
+      if (optionId) {
+        totalPrice += (selectedOption.optionPrice || 0) * (optionQuantities[optionId] || 0);
+      }
+    });
+    setTotalPrice(totalPrice);
   };
 
   const yDetail = useRef<HTMLDivElement>(null);
@@ -345,6 +367,7 @@ const ProductDetail = () => {
                     style={{ fontFamily: "SUIT-Bold", fontSize: "large" }}
                     className="confirm-button"
                     variant="contained"
+                    onClick={orderSelectedProduct}
                   >
                     구매하기
                   </Button>
