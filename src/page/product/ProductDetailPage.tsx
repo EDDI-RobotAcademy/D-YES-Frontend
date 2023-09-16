@@ -269,10 +269,10 @@ const ProductDetail = () => {
                       <MenuItem
                         key={idx}
                         value={option.optionId.toString()}
-                        disabled={option.stock === 0}
+                        disabled={option.stock < 1}
                         style={{ fontFamily: "SUIT-Medium" }}
                       >
-                        {option.stock === 0 && (
+                        {option.stock < 1 && (
                           <span
                             style={{
                               color: "red",
