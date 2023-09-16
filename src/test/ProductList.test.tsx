@@ -26,7 +26,9 @@ it("상품 리스트 페이지 랜더링 테스트", async () => {
     </BrowserRouter>
   );
 
-  const { getByTestId } = render(<Typography data-testid="product-name"></Typography>);
+  const { getByTestId } = render(
+    <Typography data-testid="product-name"></Typography>
+  );
   await waitFor(() => {
     const typographyElement = getByTestId("product-name");
     expect(typographyElement).toBeInTheDocument();

@@ -9,7 +9,7 @@ const userToken = localStorage.getItem("userToken");
 
 // 주문 전 확인 정보 요청
 export const getOrderInfo = async () => {
-  const response = await axiosInstance.springAxiosInst.get<OrderInfo>("/order/confirm", {
+  const response = await axiosInstance.get<OrderInfo>("/order/confirm", {
     params: {
       userToken: userToken,
     },
@@ -38,7 +38,7 @@ export const orderRequestInCart = async (requsetData: OrderRequset) => {
     orderedProductOptionRequestList: requsetData.orderedProductInfo,
     totalAmount: requsetData.totalAmount,
   };
-  const response = await axiosInstance.springAxiosInst.post("/order/in-cart", data);
+  const response = await axiosInstance.post("/order/in-cart", data);
   console.log("주문 데이터 전송 성공");
   return response.data;
 };

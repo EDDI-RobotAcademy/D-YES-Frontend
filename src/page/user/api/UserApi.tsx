@@ -13,7 +13,7 @@ const userToken = localStorage.getItem("userToken");
 
 // 회원 정보 확인
 export const UserMyPage = async (): Promise<User | null> => {
-  const response = await axiosInstance.springAxiosInst.get("/user/userProfile", {
+  const response = await axiosInstance.get("/user/userProfile", {
     params: {
       userToken: userToken,
     },
@@ -35,7 +35,7 @@ export const updateInfo = async (updatedData: User): Promise<User> => {
   const { userToken, email, nickName, profileImg, contactNumber, address, zipCode, addressDetail } =
     updatedData;
 
-  const response = await axiosInstance.springAxiosInst.put<User>("/user/updateInfo", {
+  const response = await axiosInstance.put<User>("/user/updateInfo", {
     userToken,
     email,
     nickName,
@@ -62,7 +62,7 @@ export const useUserUpdateMutation = (): UseMutationResult<User, unknown, User> 
 
 // 이메일 중복 확인
 export const checkEmailDuplicate = async (email: string) => {
-  const response = await axiosInstance.springAxiosInst.get(`/user/check-email`, {
+  const response = await axiosInstance.get(`/user/check-email`, {
     params: {
       email: email,
     },
@@ -72,7 +72,7 @@ export const checkEmailDuplicate = async (email: string) => {
 
 // 닉네임 중복 확인
 export const checkNicknameDuplicate = async (nickName: string) => {
-  const response = await axiosInstance.springAxiosInst.get(`/user/check-nickName`, {
+  const response = await axiosInstance.get(`/user/check-nickName`, {
     params: {
       nickName: nickName,
     },
@@ -82,7 +82,7 @@ export const checkNicknameDuplicate = async (nickName: string) => {
 
 // 회원 로그아웃
 export const userLogout = async () => {
-  const response = await axiosInstance.springAxiosInst.get(`/user/logOut`, {
+  const response = await axiosInstance.get(`/user/logOut`, {
     params: {
       userToken: userToken,
     },
@@ -92,7 +92,7 @@ export const userLogout = async () => {
 
 // 회원 탈퇴
 export const deleteInfo = async () => {
-  const response = await axiosInstance.springAxiosInst.delete(`/user/withdrawal`, {
+  const response = await axiosInstance.delete(`/user/withdrawal`, {
     params: {
       userToken: userToken,
     },
@@ -103,7 +103,7 @@ export const deleteInfo = async () => {
 // 사용자 주소 정보 수정
 export const updateAddressInfo = async (updatedData: UserAddress) => {
   const { address, zipCode, addressDetail } = updatedData;
-  const response = await axiosInstance.springAxiosInst.put("/user/update-address", {
+  const response = await axiosInstance.put("/user/update-address", {
     userToken: userToken,
     address,
     zipCode,

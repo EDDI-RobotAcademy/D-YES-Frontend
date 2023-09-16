@@ -129,7 +129,7 @@ const FarmRegister = () => {
 
     const s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
 
-    const mainImages = mainFileToUpload
+    const mainImage = mainFileToUpload
       ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
       : "undefined main image";
 
@@ -143,7 +143,7 @@ const FarmRegister = () => {
       address: farms.farmAddress?.address || "",
       zipCode: farms.farmAddress?.zipCode || "",
       addressDetail: farms.farmAddress?.addressDetail || "",
-      mainImage: mainImages,
+      mainImage: mainImage,
       introduction: farms.introduction,
       produceTypes: farms.produceTypes,
       userToken: userToken || "",
@@ -162,7 +162,7 @@ const FarmRegister = () => {
   return (
     <div>
       <div className="register-menu">
-        <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" />
+        {/* <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" /> */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Typography
             gutterBottom

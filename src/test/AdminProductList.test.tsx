@@ -10,8 +10,6 @@ jest.mock("page/product/api/ProductApi", () => ({
   useProductListQuery: jest.fn(),
 }));
 
-export {}
-
 it("관리자 상품 리스트 페이지 랜더링 테스트", async () => {
   const products = [
     {

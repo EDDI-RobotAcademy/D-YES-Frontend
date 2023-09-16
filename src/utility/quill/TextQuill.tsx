@@ -1,7 +1,6 @@
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useRef, useMemo, useState } from "react";
-import { ImageResize } from "quill-image-resize-module-ts";
+import { useRef, useMemo } from "react";
 
 interface TextQuillProps {
   name: string;
@@ -10,10 +9,13 @@ interface TextQuillProps {
   isDisable: boolean;
 }
 
-Quill.register("modules/ImageResize", ImageResize);
-export default function TextQuill({ name, value, setValue, isDisable }: TextQuillProps) {
+export default function TextQuill({
+  name,
+  value,
+  setValue,
+  isDisable,
+}: TextQuillProps) {
   const quillRef = useRef<ReactQuill | null>(null);
-  const [imageData, setImageData] = useState<string | null>(null); // 이미지 데이터를 저장
 
   const imageHandler = () => {
     const input = document.createElement("input");
@@ -31,11 +33,14 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
           if (reader.result) {
             const base64Data = (reader.result as string).split(",")[1];
             const editor = quillRef?.current?.getEditor();
-            setImageData(base64Data); // 이미지 데이터를 상태로 저장
 
             if (editor) {
               const range = editor.getSelection() || { index: 0, length: 0 };
-              editor.insertEmbed(range.index, "image", `data:image/*;base64,${base64Data}`);
+              editor.insertEmbed(
+                range.index,
+                "image",
+                `data:image/*;base64,${base64Data}`
+              );
               editor.setSelection({ index: range.index + 1, length: 0 });
             }
           }
@@ -60,10 +65,6 @@ export default function TextQuill({ name, value, setValue, isDisable }: TextQuil
       },
       clipboard: {
         matchVisual: false,
-      },
-      ImageResize: {
-        parchment: Quill.import("parchment"),
-        modules: ["Resize", "DisplaySize"],
       },
     }),
     []

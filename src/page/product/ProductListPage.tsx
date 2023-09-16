@@ -10,7 +10,7 @@ import {
   Button,
   Skeleton,
 } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+// import StarIcon from "@mui/icons-material/Star";
 import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";

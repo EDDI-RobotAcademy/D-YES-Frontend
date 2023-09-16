@@ -1,11 +1,11 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+// import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter } from "react-router-dom";
+// import { QueryClient, QueryClientProvider } from "react-query";
+// import { BrowserRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
 import { useProductQuery } from "page/product/api/ProductApi";
-import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
+// import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
 
 jest.mock("page/product/api/ProductApi", () => ({
   updateProduct: jest.fn().mockResolvedValue({ success: true }),
@@ -68,7 +68,6 @@ it("상품 수정 테스트", async () => {
     // const value = screen.getByText("단위");
     // const unit = screen.getByText("단위");
     // const submitButton = screen.getByText("수정 완료");
-
     // fireEvent.change(productName, { target: "새상품" });
     // fireEvent.change(productDescription, { target: "새정보" });
     // fireEvent.change(cultivationMethod, { target: "ENVIRONMENT_FRIENDLY" });
@@ -80,7 +79,6 @@ it("상품 수정 테스트", async () => {
     // fireEvent.change(stock, { target: "10" });
     // fireEvent.change(value, { target: "1" });
     // fireEvent.change(unit, { target: "G" });
-
     // await fireEvent.click(submitButton);
   });
 });

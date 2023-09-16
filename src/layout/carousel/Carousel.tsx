@@ -31,7 +31,7 @@ const Carousel: React.FC = () => {
         {images.map((image) => {
           return (
             <div className="slide-container" key={image.id}>
-            <img className="slide-image" src={image.url} />
+            <img className="slide-image" src={image.url} alt="" />
               {image.id === 1 && (
               <div>
                 <p className="text-common-img">

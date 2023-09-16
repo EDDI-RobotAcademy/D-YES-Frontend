@@ -1,8 +1,8 @@
 name: Deploy
 
 on:
-  push:
-    branches: ["inf-load-source-map-issue"]
+  repository_dispatch:
+    types: [FRONTEND_TEST_FINISH_TRIGGER]
 
 jobs:         
   build:
@@ -36,6 +36,18 @@ jobs:
       #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       #     restore-keys: |
       #       ${{ runner.os }}-node-
+
+      # 캐쉬 제거
+      # - name: Clear Cache
+      #   run: |
+      #     npm cache clean --force
+
+      # node_modules 제거
+      # - name: Remove node_modules
+      #   run: |
+      #     pwd
+      #     ls
+      #     rm -rf node_modules
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'

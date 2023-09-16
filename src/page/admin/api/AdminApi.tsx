@@ -1,11 +1,4 @@
 import axiosInstance from "utility/axiosInstance";
-import {
-  UseMutationResult,
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
 import { Farm } from "page/farm/entity/farm/Farm";
 import { FarmRead } from "page/farm/entity/farm/FarmRead";
 import { FarmModify } from "page/farm/entity/farm/FarmModify";
@@ -17,7 +10,7 @@ export const adminRegister = async (data: {
   name: string;
   userToken: string;
 }): Promise<Admin> => {
-  const response = await axiosInstance.springAxiosInst.post<Admin>("/admin/register", data);
+  const response = await axiosInstance.post<Admin>("/admin/register", data);
   return response.data;
 };
 
@@ -36,19 +29,19 @@ export const farmRegister = async (data: {
   introduction: string;
   produceTypes: string[];
 }): Promise<Farm> => {
-  const response = await axiosInstance.springAxiosInst.post<Farm>("/farm/register", data);
+  const response = await axiosInstance.post<Farm>("/farm/register", data);
   return response.data;
 };
 
 // 농가 목록
 export const getFarmList = async () => {
-  const response = await axiosInstance.springAxiosInst.get("/farm/list");
+  const response = await axiosInstance.get("/farm/list");
   return response.data;
 };
 
 // 농가 삭제
 export const deleteFarm = async (farmId: string): Promise<void> => {
-  await axiosInstance.springAxiosInst.delete(`farm/delete/${farmId}`, {
+  await axiosInstance.delete(`farm/delete/${farmId}`, {
     data: {
       userToken: localStorage.getItem("userToken"),
     },
@@ -57,8 +50,7 @@ export const deleteFarm = async (farmId: string): Promise<void> => {
 
 // 농가 정보 읽기
 export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
-  const response = await axiosInstance.springAxiosInst.get(`farm/read/${farmId}`);
-  console.log("읽기정보", response.data);
+  const response = await axiosInstance.get(`farm/read/${farmId}`);
   return response.data;
 };
 
@@ -69,7 +61,9 @@ export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
 // };
 
 // 농가 수정
-export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> => {
+export const updateFarm = async (
+  updatedData: FarmModify
+): Promise<FarmModify> => {
   const {
     farmId,
     csContactNumber,
@@ -78,13 +72,16 @@ export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> =
     produceTypes,
     userToken = localStorage.getItem("userToken"),
   } = updatedData;
-  const response = await axiosInstance.springAxiosInst.put<FarmModify>(`farm/modify/${farmId}`, {
-    userToken,
-    csContactNumber,
-    mainImage,
-    introduction,
-    produceTypes,
-  });
+  const response = await axiosInstance.put<FarmModify>(
+    `farm/modify/${farmId}`,
+    {
+      userToken,
+      csContactNumber,
+      mainImage,
+      introduction,
+      produceTypes,
+    }
+  );
   return response.data;
 };
 
@@ -99,7 +96,7 @@ export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> =
 
 // 유저 목록
 export const getUserList = async () => {
-  const response = await axiosInstance.springAxiosInst.get("/user/list", {
+  const response = await axiosInstance.get("/user/list", {
     params: {
       userToken: localStorage.getItem("userToken"),
     },
@@ -109,7 +106,7 @@ export const getUserList = async () => {
 
 // 주문 조회
 export const getOrderList = async () => {
-  const response = await axiosInstance.springAxiosInst.get("/order/admin/list", {
+  const response = await axiosInstance.get("/order/admin/list", {
     params: {
       userToken: localStorage.getItem("userToken"),
     },
@@ -125,7 +122,7 @@ export const changeOrderStatus = async (data: {
   deliveryDate: string;
   userToken: string;
 }): Promise<OrderDeliveryStatus> => {
-  const response = await axiosInstance.springAxiosInst.post<OrderDeliveryStatus>(
+  const response = await axiosInstance.post<OrderDeliveryStatus>(
     "/delivery/change-status",
     data
   );

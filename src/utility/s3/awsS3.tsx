@@ -100,6 +100,6 @@ export function deleteAwsS3File(key: string) {
 
 export const getImageUrl = (imagePath: string) => {
   return (
-    "https://" + AWS_BUCKET_NAME + ".s3." + AWS_BUCKET_REGION + ".amazonaws.com/" + `${imagePath}`
+    `https://${AWS_BUCKET_NAME}.s3.${AWS_BUCKET_REGION}.amazonaws.com/${imagePath}`
   );
 };
