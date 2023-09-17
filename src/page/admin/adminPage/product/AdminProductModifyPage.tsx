@@ -14,6 +14,7 @@ import ProductDescriptionModify from "../../../product/components/modify/Product
 import useProductModifyStore from "page/product/store/ProductModifyStore";
 import useProductImageStore from "page/product/store/ProductImageStore";
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
+import { toast } from "react-toastify";
 
 interface RouteParams {
   productId: string;
@@ -161,33 +162,32 @@ const AdminProductModifyPage = () => {
         userToken: userToken || "",
       };
 
-      // const isDuplicateOptionName = useOptions.some((option, index) =>
-      //   useOptions.some(
-      //     (otherOption, otherIndex) =>
-      //       option.optionName === otherOption.optionName && index !== otherIndex
-      //   )
-      // );
+      const isDuplicateOptionName = modifyProducts.productOptionList.some((option, index) =>
+        modifyProducts.productOptionList.some(
+          (otherOption, otherIndex) =>
+            option.optionName === otherOption.optionName && index !== otherIndex
+        )
+      );
 
-      // if (isDuplicateOptionName) {
-      //   toast.error("이미 존재하는 옵션 이름입니다.");
-      //   return;
-      // }
+      if (isDuplicateOptionName) {
+        toast.error("이미 존재하는 옵션 이름입니다.");
+        return;
+      }
 
-      // const hasIncompleteOption = useOptions.some((option) => {
-      //   return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
-      // });
+      const hasIncompleteOption = modifyProducts.productOptionList.some((option) => {
+        return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
+      });
 
-      // if (hasIncompleteOption) {
-      //   toast.error("옵션 정보를 모두 입력해주세요.");
-      //   return;
-      // }
+      if (hasIncompleteOption) {
+        toast.error("옵션 정보를 모두 입력해주세요.");
+        return;
+      }
 
-      // const totalDetailImages = [...selectedDetailImages, ...(data?.detailImagesForAdmin || [])];
+      if (productDetailImgs.length < 6 || productDetailImgs.length > 10) {
+        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+        return;
+      }
 
-      // if (totalDetailImages.length < 6 || totalDetailImages.length > 10) {
-      //   toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
-      //   return;
-      // }
       await mutation.mutateAsync(updatedData);
       console.log("수정확인", updatedData);
       queryClient.invalidateQueries(["productModify", parseInt(productId || "")]);
