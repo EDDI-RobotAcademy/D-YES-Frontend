@@ -170,7 +170,7 @@ const ProductRegisterPage = () => {
   return (
     <div className="product-register-container">
       <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <form onSubmit={handleSubmit} onClick={() => handleFormClick}>
+        <form onSubmit={handleSubmit} onClick={handleFormClick}>
           <Box display="flex" flexDirection="column" gap={2} p={2}>
             <h1>상품 등록</h1>
             <ProductDetailRegister />
