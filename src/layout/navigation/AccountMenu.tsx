@@ -15,6 +15,7 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { getImageUrl } from "utility/s3/awsS3";
 
 interface AccountMenuProps {
@@ -42,12 +43,16 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
     navigate("/cart");
   };
 
+  const goToMyOrder = () => {
+    navigate("/myOrder");
+  };
+
   const userProfileImg = localStorage.getItem("encodedProfileImg");
   const userNickName = localStorage.getItem("encodedNickName");
 
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "end", marginRight: "0px" }}>
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center", marginRight: "0px" }}>
         <div style={{ minWidth: "160px" }}>{userNickName}님 안녕하세요</div>
         <Tooltip title="내 정보">
           <IconButton
@@ -133,6 +138,20 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
           </ListItemIcon>
           <ListItemText>
             <Typography>장바구니</Typography>
+          </ListItemText>
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            goToMyOrder();
+            handleClose();
+          }}
+        >
+          <ListItemIcon>
+            <ReceiptLongIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>
+            <Typography>내 주문목록</Typography>
           </ListItemText>
         </MenuItem>
 

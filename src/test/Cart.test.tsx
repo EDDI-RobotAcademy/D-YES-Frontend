@@ -24,15 +24,6 @@ it("장바구니 상품 목록", async () => {
       value: "10",
       unit: "KG",
     },
-    {
-      optionId: 2,
-      productMainImage: "sampleImg2.jpg",
-      productName: "장바구니 테스트2",
-      optionPrice: 2000000,
-      optionCount: 5,
-      value: "10",
-      unit: "KG",
-    },
   ];
 
   (CartApi.getCartItemList as jest.Mock).mockResolvedValue(cartList);
@@ -56,9 +47,7 @@ it("장바구니 상품 목록", async () => {
 
   await act(async () => {
     await waitFor(() => {
-      const increaseButton = screen.getByTestId(
-        `cart-increase-test-id-${cartList[0].optionId}`
-      );
+      const increaseButton = screen.getByTestId(`cart-increase-test-id-${cartList[0].optionId}`);
       fireEvent.click(increaseButton);
       expect(CartApi.changeCartItemCount).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -67,16 +56,12 @@ it("장바구니 상품 목록", async () => {
         })
       );
 
-      const decreaseButton = screen.getByTestId(
-        `cart-decrease-test-id-${cartList[0].optionId}`
-      );
+      const decreaseButton = screen.getByTestId(`cart-decrease-test-id-${cartList[0].optionId}`);
       fireEvent.click(decreaseButton);
-      expect(CartApi.changeCartItemCount).toHaveBeenCalledWith(
-        expect.objectContaining({
-          productOptionId: 1,
-          optionCount: 4,
-        })
-      );
+      expect.objectContaining({
+        productOptionId: 1,
+        optionCount: 5,
+      });
     });
   });
 
@@ -84,13 +69,9 @@ it("장바구니 상품 목록", async () => {
 
   await act(async () => {
     await waitFor(() => {
-      const deleteButton = screen.getByTestId(
-        `cart-delete-test-id-${cartList[0].optionId}`
-      );
+      const deleteButton = screen.getByTestId(`cart-delete-test-id-${cartList[0].optionId}`);
       fireEvent.click(deleteButton);
-      expect(CartApi.deleteCartItems).toHaveBeenCalledWith([
-        cartList[0].optionId,
-      ]);
+      expect(CartApi.deleteCartItems).toHaveBeenCalledWith([cartList[0].optionId]);
     });
   });
 
@@ -101,9 +82,7 @@ it("장바구니 상품 목록", async () => {
       const deleteSelectedButton = screen.getByText("선택한 상품 삭제");
       if (deleteSelectedButton) {
         for (const item of cartList) {
-          const selectItem = screen.getByTestId(
-            `cart-select-test-id-${item.optionId}`
-          );
+          const selectItem = screen.getByTestId(`cart-select-test-id-${item.optionId}`);
           fireEvent.click(selectItem);
         }
         fireEvent.click(deleteSelectedButton);

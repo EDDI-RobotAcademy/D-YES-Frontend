@@ -1,0 +1,55 @@
+.ordered-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.ordered-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.ordered-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.ordered-component-name {
+  font-family: "SUIT-Bold";
+}
+.ordered-component {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 0 0 30px;
+  font-family: "SUIT-SemiBold";
+}
+.ordered-check-controller {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ordered-check-buttons {
+  padding: 20px 30px;
+}
+.ordered-check-buttons-name {
+  margin-right: 30px;
+}
+.ordered-button-group-style {
+  width: 70px;
+}
+.ordered-notice {
+  display: flex;
+  justify-content: flex-end;
+  font-size: small;
+}
+/* .order-state-preparing {
+  color: #d32f2f;
+}
+.order-state-shipping {
+  color: #f57c00;
+}
+.order-state-delivered {
+  color: #388e3c;
+} */
