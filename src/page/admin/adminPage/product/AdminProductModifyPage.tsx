@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Box, Button, Container } from "@mui/material";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
+import { fetchProduct, useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
 import { Product } from "page/product/entity/Product";
 import { ProductImg } from "page/product/entity/ProductMainImg";
 import { ProductModify } from "page/product/entity/ProductModify";
@@ -23,14 +23,25 @@ interface RouteParams {
 
 const AdminProductModifyPage = () => {
   const navigate = useNavigate();
+  const hasFetchedRef = React.useRef(false);
   const { productId } = useParams<RouteParams>();
-  const { data } = useProductQuery(productId || "");
   const mutation = useProductUpdateMutation();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
   const { modifyProducts, setModifyProducts } = useProductModifyStore();
   const { productImgs, setProductImgs, productDetailImgs, setProductDetailImgs } =
     useProductImageStore();
+
+  const fetchModify = async () => {
+    hasFetchedRef.current = true;
+    const productData = await fetchProduct(productId || "");
+    return productData;
+  };
+
+  const { data } = useQuery("user", fetchModify, {
+    enabled: !!productId && !hasFetchedRef.current,
+    initialData: queryClient.getQueryData("productRead") || undefined,
+  });
 
   useEffect(() => {
     const newProductName = data?.productResponseForAdmin.productName || "";
