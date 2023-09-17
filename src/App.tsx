@@ -24,7 +24,8 @@ import { AdminLayout, UserLayout } from "Layout";
 import AdminProductList from "page/admin/adminPage/product/AdminProductListPage";
 import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
 import AdminOrderListPage from "page/admin/adminPage/order/AdminOrderListPage";
-import MyOrderPage from "page/user/myOrder/MyOrderPage";
+import OrderCompletePage from "page/order/OrderCompletePage";
+import MyOrderPage from "page/order/MyOrderPage";
 
 const theme = createTheme({
   typography: {
@@ -52,6 +53,7 @@ const App: React.FC = () => {
               <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/order" element={<Order />} />
+              <Route path="/orderComplete" element={<OrderCompletePage />} />
               <Route path="/myOrder" element={<MyOrderPage />} />
             </Route>
 

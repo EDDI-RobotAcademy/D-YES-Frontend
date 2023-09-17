@@ -5,4 +5,5 @@ export interface OrderRequset {
   orderedUserInfo: OrderedUser;
   orderedProductInfo: OrderedProduct[];
   totalAmount: number;
+  from: string;
 }
