@@ -5,7 +5,7 @@ import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlin
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 import { compressImg } from "utility/s3/imageCompression";
 import { useDropzone } from "react-dropzone";
-// import { getImageUrl } from "utility/s3/awsS3";
+import { getImageUrl } from "utility/s3/awsS3";
 import { useParams } from "react-router-dom";
 import { useProductQuery } from "page/product/api/ProductApi";
 import useProductImageStore from "page/product/store/ProductImageStore";
@@ -18,9 +18,7 @@ interface RouteParams {
 const ProductImageModify = () => {
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
-  const [selectedDetailImages, setSelectedDetailImages] = useState<File[]>([]);
   const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
-  // const [deletedImageIndexes, setDeletedImageIndexes] = useState<number[]>([]);
   const { setProductImgs, productDetailImgs, setProductDetailImgs } = useProductImageStore();
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
@@ -40,7 +38,6 @@ const ProductImageModify = () => {
       try {
         const compressedImages = await Promise.all(
           acceptedFiles.map(async (file) => {
-            console.log("이미지 추가 중" + file.name);
             return {
               image: await compressImg(file),
               detailImageId: 0,
@@ -48,10 +45,6 @@ const ProductImageModify = () => {
           })
         );
         setProductDetailImgs([...compressedImages.map((item) => item.image), ...productDetailImgs]);
-        setSelectedDetailImages((prevImages: File[]) => [
-          ...prevImages,
-          ...compressedImages.map((item) => item.image),
-        ]);
       } catch (error) {
         console.error(error);
       }
@@ -72,25 +65,15 @@ const ProductImageModify = () => {
 
   const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
     event.stopPropagation();
-
-    const updatedProductDetailImages = productDetailImgs.filter((detailImage) => {
-      if ("detailImageId" in detailImage) {
-        return detailImage.detailImageId !== imageIdToDelete;
+  
+    const updatedProductDetailImages = productDetailImgs.filter((image, idx) => {
+      if (image && "detailImageId" in image) {
+        return image.detailImageId !== imageIdToDelete;
       }
       return true;
     });
-
+  
     setProductDetailImgs(updatedProductDetailImages);
-    // setDeletedImageIndexes((prevIndexes) => [...prevIndexes, imageIdToDelete]);
-  };
-
-  const handleRemoveDetailImage = (event: React.MouseEvent, index: number) => {
-    // 이미지를 삭제할 때 이미지 불러오기 방지
-    event.stopPropagation();
-    const updatedImages = [...selectedDetailImages];
-    updatedImages.splice(index, 1);
-    setSelectedDetailImages(updatedImages);
-    setProductDetailImgs(updatedImages);
   };
 
   return (
@@ -119,8 +102,7 @@ const ProductImageModify = () => {
                 />
               ) : data?.mainImageResponseForAdmin?.mainImg ? (
                 <img
-                  // src={getImageUrl(data.mainImageResponseForAdmin.mainImg)}
-                  src=""
+                  src={getImageUrl(data.mainImageResponseForAdmin.mainImg)}
                   style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
                   alt="Selected"
                 />
@@ -140,35 +122,6 @@ const ProductImageModify = () => {
               }}
               {...detailImageRootProps()}
             >
-              {(selectedDetailImages.length > 0 || productDetailImgs.length > 0) &&
-                selectedDetailImages.map((selectedImage, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      width: "calc(33.33% - 16px)",
-                      height: "auto",
-                      margin: "8px",
-                      cursor: "pointer",
-                      position: "relative",
-                    }}
-                  >
-                    <img
-                      src={URL.createObjectURL(selectedImage)}
-                      style={{ width: "100%", height: "100%" }}
-                      alt={`Selected ${idx}`}
-                    />
-                    <RemoveCircleOutlineSharpIcon
-                      style={{
-                        position: "absolute",
-                        top: "5px",
-                        right: "5px",
-                        cursor: "pointer",
-                        zIndex: 1,
-                      }}
-                      onClick={(event) => handleRemoveDetailImage(event, idx)}
-                    />
-                  </div>
-                ))}
               {productDetailImgs &&
                 productDetailImgs.length > 0 &&
                 productDetailImgs.map((detailImage, idx) => (
@@ -182,11 +135,16 @@ const ProductImageModify = () => {
                       position: "relative",
                     }}
                   >
-                    {"detailImgs" in detailImage && detailImage.detailImgs && (
+                    {detailImage && (
                       <>
                         <img
-                          // src={getImageUrl(detailImage.detailImgs)}
-                          src=""
+                          src={
+                            typeof detailImage === "string"
+                              ? detailImage
+                              : detailImage instanceof Blob
+                              ? URL.createObjectURL(detailImage)
+                              : getImageUrl(detailImage.detailImgs.toString())
+                          }
                           style={{ width: "100%", height: "100%" }}
                           alt={`Selected ${(detailImage as ProductDetailImg).detailImageId}`} // 타입 단언 사용
                         />
@@ -203,7 +161,7 @@ const ProductImageModify = () => {
                               event,
                               (detailImage as ProductDetailImg).detailImageId
                             )
-                          } // 타입 단언 사용
+                          }
                         />
                       </>
                     )}
