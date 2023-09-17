@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import "./css/AdminProductList.css";
 import ReadPopup from "../../../product/components/productOption/ReadPopup";
 import useProductStore from "page/product/store/ProductStore";
-import { deleteProducts, fetchProductList, useProductListQuery } from "page/product/api/ProductApi";
+import { deleteProducts, fetchProductList, useProductListQuery } from "../../../product/api/ProductApi";
 import { useNavigate } from "react-router-dom";
 import useProductModifyStore from "page/product/store/ProductModifyStore";
 
