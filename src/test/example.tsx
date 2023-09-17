@@ -27,7 +27,9 @@ it("메인페이지 테스트", async () => {
     },
   ];
 
-  (FarmProduceApi.getFarmProducePriceList as jest.Mock).mockResolvedValue(farmProducePriceList);
+  (FarmProduceApi.getFarmProducePriceList as jest.Mock).mockResolvedValue(
+    farmProducePriceList
+  );
   const { getByText } = render(
     <BrowserRouter>
       <MainPage />

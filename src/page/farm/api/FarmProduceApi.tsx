@@ -6,7 +6,7 @@ export const getFarmProducePriceList = async () => {
     const formattedDate: string = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     console.log(formattedDate);
 
-    const response = await axiosInstance.springAxiosInst.get("/farmProduce/get-price", {
+    const response = await axiosInstance.get("/farmProduce/get-price", {
         params: {
           currentDate: formattedDate
         }

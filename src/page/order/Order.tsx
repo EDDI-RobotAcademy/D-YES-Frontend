@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import "./css/Order.css";
 import { useOrderUserInfoStore } from "./store/OrderStore";
 import { UserAddress } from "./entity/UserAddress";
-import { OrderdProduct } from "./entity/OrderedProduct";
+import { OrderedProduct } from "./entity/OrderedProduct";
 import { OrderRequset } from "./entity/OrderRequset";
 
 interface IAddr {
@@ -48,7 +48,7 @@ const Order = () => {
       }
     };
     fetchCartData();
-  }, [setOrderUserInfo]);
+  }, [setOrderUserInfo, navigate]);
 
   const calculateTotalPrice = useCallback(() => {
     let totalPrice = 0;
@@ -120,9 +120,9 @@ const Order = () => {
       }
     }
     // 유효성검사 추가
-    const extractedData: OrderdProduct[] = orderUserInfo!.productResponseList.map((item) => ({
+    const extractedData: OrderedProduct[] = orderUserInfo!.productResponseList.map((item) => ({
       productOptionId: item.optionId,
-      productOptionCount: item.optionCount.toString(),
+      productOptionCount: item.optionCount,
     }));
 
     const orderedInfo: OrderRequset = {
@@ -175,7 +175,7 @@ const Order = () => {
                           <img
                             src={getImageUrl(product.productMainImage)}
                             style={{ width: "128px", height: "100px" }}
-                          />
+                            alt="" />
                         </div>
                         <div className="order-info-container">
                           <div className="order-product-name margin-1">

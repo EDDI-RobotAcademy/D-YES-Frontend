@@ -20,8 +20,9 @@ interface FarmSearchProps {
   open: boolean;
   onClose: () => void;
   onSelectFarm: (selectedFarm: Farm) => void;
-  onSelectFarmName: (selectedFarmName: string) => void; // 추가
+  selectedFarmName: string
 }
+
 const FarmSearch: React.FC<FarmSearchProps> = ({ open, onClose, onSelectFarm }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [farmList, setFarmList] = useState<Farm[]>([]);

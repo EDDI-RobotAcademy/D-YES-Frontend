@@ -11,7 +11,6 @@ import useProductModifyStore from "page/product/store/ProductModifyStore";
 import ToggleComponent from "../productOption/ToggleComponent";
 import { useProductQuery } from "page/product/api/ProductApi";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 interface RouteParams {
   productId: string;
