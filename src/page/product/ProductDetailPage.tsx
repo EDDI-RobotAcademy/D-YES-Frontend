@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { won } from "utility/filters/wonFilter";
 import { Button, FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import {
@@ -117,9 +117,10 @@ const ProductDetail = () => {
     }));
   };
 
-  const getSelectedOption = (selectedValue: string): useOptions | undefined => {
-    return optionList.find((option) => option.optionId.toString() === selectedValue);
-  };
+  // 위에서 중복 선언된 부분이 있어서 주석 처리
+  // const getSelectedOption = (selectedValue: string): useOptions | undefined => {
+  //   return optionList.find((option) => option.optionId.toString() === selectedValue);
+  // };
 
   const orderSelectedProduct = () => {
     if (selectedOptionList.length === 0) {
