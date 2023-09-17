@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -24,6 +24,7 @@ const FarmList = () => {
   const [farmList, setFarmList] = useState([] as Farm[]);
   const queryClient = useQueryClient();
   const { setFarmRead } = useFarmReadStore();
+  const hasFetchedRef = React.useRef(false);
   const { setBusinessRead } = useFarmBusinessReadStore();
 
   useEffect(() => {
@@ -32,8 +33,10 @@ const FarmList = () => {
 
   const fetchFarmList = async () => {
     try {
+      hasFetchedRef.current = true;
       const fetchedFarmList = await getFarmList();
       setFarmList(fetchedFarmList);
+      return fetchedFarmList;
     } catch (error) {
       console.error("농가 리스트 불러오기 실패:", error);
     }

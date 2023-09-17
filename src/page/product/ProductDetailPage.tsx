@@ -54,7 +54,14 @@ const ProductDetail = () => {
       setIsLoading(true);
     };
     fetchProductData();
-  }, []);
+  }, [productId]);
+
+  const getSelectedOption = useCallback(
+    (selectedValue: string): useOptions | undefined => {
+      return optionList.find((option) => option.optionId.toString() === selectedValue);
+    },
+    [optionList]
+  );
 
   useEffect(() => {
     updateTotalPrice();
@@ -173,7 +180,7 @@ const ProductDetail = () => {
   const detailImages: ImageObject[] =
     data?.detailImagesForUser?.map((detail, index) => ({
       id: index + 1,
-      url: getImageUrl(detail.detailImgs),
+      url: getImageUrl(detail.detailImgs.toString()),
     })) || [];
   const imageArray: ImageObject[] = [mainImage, ...detailImages].filter(
     (item) => item !== null

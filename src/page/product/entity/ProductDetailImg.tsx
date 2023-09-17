@@ -1,4 +1,4 @@
 export type ProductDetailImg = {
   detailImageId: number;
-  detailImgs: string;
+  detailImgs: File;
 }

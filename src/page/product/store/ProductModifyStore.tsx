@@ -2,12 +2,12 @@ import { ProductModifyResponse } from "page/product/entity/ProductModifyResponse
 import { create } from "zustand";
 
 interface ProductModifyState {
-  products: ProductModifyResponse;
-  setProducts: (products: ProductModifyResponse) => void;
+  modifyProducts: ProductModifyResponse;
+  setModifyProducts: (modifyProducts: ProductModifyResponse) => void;
 }
 
 export const useProductModifyStore = create<ProductModifyState>((set) => ({
-  products: {} as ProductModifyResponse,
-  setProducts: (products) => set({ products }),
+  modifyProducts: {} as ProductModifyResponse,
+  setModifyProducts: (modifyProducts) => set({ modifyProducts }),
 }));
 export default useProductModifyStore;

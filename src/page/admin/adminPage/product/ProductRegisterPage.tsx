@@ -5,17 +5,17 @@ import { Box, Button, Container } from "@mui/material";
 import "../../../product/css/ProductPage.css";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { toast } from "react-toastify";
-import ProductOptionsRegister from "../../../product/components/Register/ProductOptionsRegister";
-import ProductDescription from "../../../product/components/Register/ProductDescription";
-import ProductImageRegister from "../../../product/components/Register/ProductImageRegister";
 import { registerProduct } from "page/product/api/ProductApi";
 import { Product } from "page/product/entity/Product";
 import { useOptions } from "page/product/entity/useOptions";
 import { ProductImg } from "page/product/entity/ProductMainImg";
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
-import ProductDetailRegister from "../../../product/components/Register/ProductDetailRegister";
 import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 import useProductImageStore from "page/product/store/ProductImageStore";
+import ProductDetailRegister from "page/product/components/register/ProductDetailRegister";
+import ProductImageRegister from "page/product/components/register/ProductImageRegister";
+import ProductOptionsRegister from "page/product/components/register/ProductOptionsRegister";
+import ProductDescription from "page/product/components/register/ProductDescription";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -122,7 +122,7 @@ const ProductRegisterPage = () => {
 
     const productDetailImagesRegisterRequests: Partial<ProductDetailImg>[] = detailImgsName.map(
       (detailImg) => ({
-        detailImgs: detailImg,
+        detailImgs: detailImg as unknown as File,
       })
     );
 
@@ -170,7 +170,7 @@ const ProductRegisterPage = () => {
   return (
     <div className="product-register-container">
       <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <form onSubmit={handleSubmit} onClick={() => handleFormClick}>
+        <form onSubmit={handleSubmit} onClick={handleFormClick}>
           <Box display="flex" flexDirection="column" gap={2} p={2}>
             <h1>상품 등록</h1>
             <ProductDetailRegister />

@@ -135,7 +135,7 @@ const OptionTable: React.FC<OptionTableProps> = ({
                     <Select
                       name="unit"
                       size="small"
-                      value={option.unit}
+                      value={option.unit || ""}
                       onChange={(event) => {
                         const updatedOption = { ...option, unit: event.target.value };
                         onChangeOption(index, updatedOption);

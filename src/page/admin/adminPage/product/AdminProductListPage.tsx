@@ -17,15 +17,13 @@ import { v4 as uuidv4 } from "uuid";
 import "./css/AdminProductList.css";
 import ReadPopup from "../../../product/components/productOption/ReadPopup";
 import useProductStore from "page/product/store/ProductStore";
-import {
-  deleteProducts,
-  fetchProductList,
-  useProductListQuery,
-} from "page/product/api/ProductApi";
+import { deleteProducts, fetchProductList, useProductListQuery } from "page/product/api/ProductApi";
 import { useNavigate } from "react-router-dom";
+import useProductModifyStore from "page/product/store/ProductModifyStore";
 
 const AdminProductList: React.FC = () => {
   const setProducts = useProductStore((state) => state.setProducts);
+  const { setModifyProducts } = useProductModifyStore();
   const [selectedOptions, setSelectedOptions] = useState<{
     [productId: number]: string;
   }>({});
@@ -35,6 +33,17 @@ const AdminProductList: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const navigate = useNavigate();
+  const hasFetchedRef = React.useRef(false);
+
+  const fetchList = async () => {
+    hasFetchedRef.current = true;
+    const userData = await fetchProductList();
+    return userData;
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -71,6 +80,12 @@ const AdminProductList: React.FC = () => {
 
   const handleEditClick = (productId: number) => {
     navigate(`../adminProductModifyPage/${productId}`);
+    if (products) {
+      const modifiedData = products.find((product) => product.productId === productId);
+      if (modifiedData) {
+        setModifyProducts(modifiedData);
+      }
+    }
   };
 
   const handleRowClick = (productId: number) => {
@@ -85,9 +100,7 @@ const AdminProductList: React.FC = () => {
 
   const handleDeleteProduct = (productId: number) => {
     if (products) {
-      const updatedProducts = products.filter(
-        (product) => product.productId !== productId
-      );
+      const updatedProducts = products.filter((product) => product.productId !== productId);
       setProducts(updatedProducts);
     }
   };
@@ -139,16 +152,10 @@ const AdminProductList: React.FC = () => {
           >
             <TableHead style={{ fontFamily: "SUIT-Thin" }}>
               <TableRow>
-                <TableCell
-                  className="cellStyle-header"
-                  style={{ width: "60px" }}
-                >
+                <TableCell className="cellStyle-header" style={{ width: "60px" }}>
                   선택
                 </TableCell>
-                <TableCell
-                  className="cellStyle-header"
-                  style={{ width: "60px" }}
-                >
+                <TableCell className="cellStyle-header" style={{ width: "60px" }}>
                   수정
                 </TableCell>
                 <TableCell
@@ -158,27 +165,17 @@ const AdminProductList: React.FC = () => {
                 >
                   상품번호
                 </TableCell>
-                <TableCell
-                  className="cellStyle-header"
-                  style={{ width: "200px" }}
-                >
+                <TableCell className="cellStyle-header" style={{ width: "200px" }}>
                   상품명
                 </TableCell>
-                <TableCell className="cellStyle-header">
-                  상품 판매여부
-                </TableCell>
-                <TableCell
-                  className="cellStyle-header"
-                  style={{ width: "122px" }}
-                >
+                <TableCell className="cellStyle-header">상품 판매여부</TableCell>
+                <TableCell className="cellStyle-header" style={{ width: "122px" }}>
                   농가 이름
                 </TableCell>
                 <TableCell className="cellStyle-header">옵션명</TableCell>
                 <TableCell className="cellStyle-header">옵션가격</TableCell>
                 <TableCell className="cellStyle-header">재고</TableCell>
-                <TableCell className="cellStyle-header">
-                  옵션 판매여부
-                </TableCell>
+                <TableCell className="cellStyle-header">옵션 판매여부</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -219,23 +216,14 @@ const AdminProductList: React.FC = () => {
                         수정
                       </Button>
                     </TableCell>
+                    <TableCell className="cellStyle">{product.productId}</TableCell>
+                    <TableCell className="cellStyle">{product.productName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.productId}
+                      {product.productSaleStatus === "AVAILABLE" ? "판매중" : "판매중지"}
                     </TableCell>
+                    <TableCell className="cellStyle">{product.farmName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.productName}
-                    </TableCell>
-                    <TableCell className="cellStyle">
-                      {product.productSaleStatus === "AVAILABLE"
-                        ? "판매중"
-                        : "판매중지"}
-                    </TableCell>
-                    <TableCell className="cellStyle">
-                      {product.farmName}
-                    </TableCell>
-                    <TableCell className="cellStyle">
-                      {product.productOptionList &&
-                      product.productOptionList.length > 0 ? (
+                      {product.productOptionList && product.productOptionList.length > 0 ? (
                         <Select
                           className="noOutline"
                           variant="outlined"
@@ -273,32 +261,23 @@ const AdminProductList: React.FC = () => {
                       ) : null}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] &&
-                      product.productOptionList
+                      {selectedOptions[product.productId] && product.productOptionList
                         ? product.productOptionList.find(
-                            (option) =>
-                              option.optionName ===
-                              selectedOptions[product.productId]
+                            (option) => option.optionName === selectedOptions[product.productId]
                           )?.optionPrice
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] &&
-                      product.productOptionList
+                      {selectedOptions[product.productId] && product.productOptionList
                         ? product.productOptionList.find(
-                            (option) =>
-                              option.optionName ===
-                              selectedOptions[product.productId]
+                            (option) => option.optionName === selectedOptions[product.productId]
                           )?.stock
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] &&
-                      product.productOptionList
+                      {selectedOptions[product.productId] && product.productOptionList
                         ? product.productOptionList.find(
-                            (option) =>
-                              option.optionName ===
-                              selectedOptions[product.productId]
+                            (option) => option.optionName === selectedOptions[product.productId]
                           )?.optionSaleStatus === "AVAILABLE"
                           ? "판매중"
                           : "판매중지"

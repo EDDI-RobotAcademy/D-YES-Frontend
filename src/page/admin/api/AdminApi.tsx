@@ -54,12 +54,6 @@ export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
   return response.data;
 };
 
-// export const useFarmQuery = (farmId: string): UseQueryResult<FarmRead | null, unknown> => {
-//   return useQuery(["FarmRead", farmId], () => fetchFarm(farmId), {
-//     refetchOnWindowFocus: false,
-//   });
-// };
-
 // 농가 수정
 export const updateFarm = async (
   updatedData: FarmModify
@@ -84,15 +78,6 @@ export const updateFarm = async (
   );
   return response.data;
 };
-
-// export const useFarmUpdateMutation = (): UseMutationResult<FarmModify, unknown, FarmModify> => {
-//   const queryClient = useQueryClient();
-//   return useMutation(updateFarm, {
-//     onSuccess: (data) => {
-//       queryClient.setQueryData(["farmModify", data.farmId], data);
-//     },
-//   });
-// };
 
 // 유저 목록
 export const getUserList = async () => {
