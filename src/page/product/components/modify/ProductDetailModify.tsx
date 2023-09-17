@@ -18,7 +18,7 @@ interface RouteParams {
 }
 
 const ProductDetailModify = () => {
-  const { products, setProducts } = useProductModifyStore();
+  const { modifyProducts, setModifyProducts } = useProductModifyStore();
   const { productId } = useParams<RouteParams>();
   const { data } = useProductQuery(productId || "");
 
@@ -35,17 +35,17 @@ const ProductDetailModify = () => {
 
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newProductName = event.target.value;
-    setProducts({ ...products, productName: newProductName });
+    setModifyProducts({ ...modifyProducts, productName: newProductName });
   };
 
   const handleOptionChange = (event: SelectChangeEvent<string>) => {
     const newCultivationMethod = event.target.value;
-    setProducts({ ...products, cultivationMethod: newCultivationMethod });
+    setModifyProducts({ ...modifyProducts, cultivationMethod: newCultivationMethod });
   };
 
   const handleSaleStatusChange = (event: SelectChangeEvent<string>) => {
     const newProductSaleStatus = event.target.value;
-    setProducts({ ...products, productSaleStatus: newProductSaleStatus });
+    setModifyProducts({ ...modifyProducts, productSaleStatus: newProductSaleStatus });
   };
 
   return (
@@ -62,7 +62,7 @@ const ProductDetailModify = () => {
                   name="productName"
                   className="text-field-input"
                   size="small"
-                  value={products.productName || ""}
+                  value={modifyProducts.productName || ""}
                   onChange={handleProductNameChange}
                 />
               </div>
@@ -78,7 +78,7 @@ const ProductDetailModify = () => {
                 >
                   <Select
                     name="cultivationMethod"
-                    value={products.cultivationMethod || ""}
+                    value={modifyProducts.cultivationMethod || ""}
                     sx={{ width: "100%" }}
                     onChange={handleOptionChange}
                   >
@@ -114,7 +114,7 @@ const ProductDetailModify = () => {
                 >
                   <Select
                     name="saleStatus"
-                    value={products.productSaleStatus || ""}
+                    value={modifyProducts.productSaleStatus || ""}
                     sx={{ width: "100%" }}
                     onChange={handleSaleStatusChange}
                   >

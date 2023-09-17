@@ -4,7 +4,7 @@ import TextQuill from "utility/quill/TextQuill";
 import useProductModifyStore from "page/product/store/ProductModifyStore";
 
 const ProductDescriptionModify = () => {
-  const { products, setProducts } = useProductModifyStore();
+  const { modifyProducts, setModifyProducts } = useProductModifyStore();
 
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
@@ -20,8 +20,8 @@ const ProductDescriptionModify = () => {
             >
               <TextQuill
                 name="productDescription"
-                value={products.productDescription || ""}
-                setValue={(newValue) => setProducts({ ...products, productDescription: newValue })}
+                value={modifyProducts.productDescription || ""}
+                setValue={(newValue) => setModifyProducts({ ...modifyProducts, productDescription: newValue })}
                 isDisable={false}
               />
             </Box>

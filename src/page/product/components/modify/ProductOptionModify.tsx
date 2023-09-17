@@ -7,15 +7,15 @@ import useProductModifyStore from "page/product/store/ProductModifyStore";
 import { useOptions } from "page/product/entity/useOptions";
 
 const ProductOptionModify = () => {
-  const { products, setProducts } = useProductModifyStore();
+  const { modifyProducts, setModifyProducts } = useProductModifyStore();
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
 
   function calculateToggleHeight() {
     const minHeight = 100;
     const optionHeight = 78;
-    const optionsCount = Array.isArray(products.productOptionList)
-      ? products.productOptionList.length
+    const optionsCount = Array.isArray(modifyProducts.productOptionList)
+      ? modifyProducts.productOptionList.length
       : 0; // 옵션 개수
     const calculatedHeight = minHeight + optionHeight * optionsCount;
 
@@ -27,10 +27,9 @@ const ProductOptionModify = () => {
     setUseOptions((prevOptions) => [...prevOptions, newOption]);
     setOptionToggleHeight(optionToggleHeight + 78);
 
-    // products.productOptionList에도 추가
-    setProducts({
-      ...products,
-      productOptionList: [...products.productOptionList, newOption],
+    setModifyProducts({
+      ...modifyProducts,
+      productOptionList: [...modifyProducts.productOptionList, newOption],
     });
   };
 
@@ -41,11 +40,10 @@ const ProductOptionModify = () => {
     setOptionToggleHeight(optionToggleHeight - 78);
     setUseOptions(newOptions);
 
-    // products.productOptionList에서도 삭제
-    const newProductOptionList = [...products.productOptionList];
+    const newProductOptionList = [...modifyProducts.productOptionList];
     newProductOptionList.splice(index, 1);
-    setProducts({
-      ...products,
+    setModifyProducts({
+      ...modifyProducts,
       productOptionList: newProductOptionList,
     });
   };
@@ -53,9 +51,8 @@ const ProductOptionModify = () => {
   const handleProductOptionChange = (newOption: useOptions[]) => {
     setUseOptions(newOption);
 
-    // products.productOptionList에도 수정
-    setProducts({
-      ...products,
+    setModifyProducts({
+      ...modifyProducts,
       productOptionList: newOption,
     });
   };
@@ -67,9 +64,9 @@ const ProductOptionModify = () => {
           <ToggleComponent label="옵션정보" height={calculateToggleHeight()}>
             <Box display="flex" flexDirection="column" gap={2}>
               <OptionTable
-                optionRows={products.productOptionList || []}
+                optionRows={modifyProducts.productOptionList || []}
                 onChangeOption={(index, updatedOption) => {
-                  const newProductOptionList = [...products.productOptionList];
+                  const newProductOptionList = [...modifyProducts.productOptionList];
                   newProductOptionList[index] = updatedOption;
                   handleProductOptionChange(newProductOptionList);
                 }}

@@ -30,7 +30,7 @@ const AdminProductModifyPage = () => {
   const mutation = useProductUpdateMutation();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
-  const { products, setProducts } = useProductModifyStore();
+  const { modifyProducts, setModifyProducts } = useProductModifyStore();
   const {
     productImgs,
     setProductImgs,
@@ -50,8 +50,8 @@ const AdminProductModifyPage = () => {
     const newMainImages = data?.mainImageResponseForAdmin || "";
     const newDetailImages = data?.detailImagesForAdmin || [];
 
-    setProducts({
-      ...products,
+    setModifyProducts({
+      ...modifyProducts,
       productName: newProductName,
       cultivationMethod: newCultivationMethod,
       productSaleStatus: newProductSaleStatus,
@@ -67,7 +67,7 @@ const AdminProductModifyPage = () => {
     setProductDetailImgs([...newDetailImages]);
   }, [
     data,
-    setProducts,
+    setModifyProducts,
     // 아래 부분이 무한 루프를 발생시킴(우선 주석 처리)
     // productImgs,
     // products,
@@ -84,18 +84,17 @@ const AdminProductModifyPage = () => {
 
   const handleEditFinishClick = async () => {
     if (
-      products.productName &&
-      products.cultivationMethod &&
-      products.productDescription &&
-      products.productSaleStatus
+      modifyProducts.productName &&
+      modifyProducts.cultivationMethod &&
+      modifyProducts.productDescription &&
+      modifyProducts.productSaleStatus
     ) {
       const productModifyRequestData: Partial<Product> = {
-        productName: products.productName,
-        cultivationMethod: products.cultivationMethod,
-        productDescription: products.productDescription,
-        productSaleStatus: products.productSaleStatus,
+        productName: modifyProducts.productName,
+        cultivationMethod: modifyProducts.cultivationMethod,
+        productDescription: modifyProducts.productDescription,
+        productSaleStatus: modifyProducts.productSaleStatus,
       };
-      console.log("받은 데이터 확인", products);
 
       const mainFileToUpload =
         productImgs instanceof Blob
@@ -170,7 +169,7 @@ const AdminProductModifyPage = () => {
       const updatedData: ProductModify = {
         productId: parseInt(productId || ""),
         productModifyRequest: productModifyRequestData,
-        productOptionModifyRequest: products.productOptionList,
+        productOptionModifyRequest: modifyProducts.productOptionList,
         productMainImageModifyRequest: productMainImageModifyRequest,
         productDetailImagesModifyRequest:
           updatedProductDetailImagesModifyRequest,
