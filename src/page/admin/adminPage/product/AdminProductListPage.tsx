@@ -33,17 +33,17 @@ const AdminProductList: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const navigate = useNavigate();
-  const hasFetchedRef = React.useRef(false);
+  // const hasFetchedRef = React.useRef(false);
 
-  const fetchList = async () => {
-    hasFetchedRef.current = true;
-    const userData = await fetchProductList();
-    return userData;
-  };
+  // const fetchList = async () => {
+  //   hasFetchedRef.current = true;
+  //   const userData = await fetchProductList();
+  //   return userData;
+  // };
 
-  useEffect(() => {
-    fetchList();
-  }, []);
+  // useEffect(() => {
+  //   fetchList();
+  // }, []);
 
   useEffect(() => {
     const fetchAllProducts = async () => {

@@ -12,10 +12,10 @@ import { ProductImg } from "page/product/entity/ProductMainImg";
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 import useProductImageStore from "page/product/store/ProductImageStore";
-import ProductDetailRegister from "page/product/components/register/ProductDetailRegister";
-import ProductImageRegister from "page/product/components/register/ProductImageRegister";
-import ProductOptionsRegister from "page/product/components/register/ProductOptionsRegister";
-import ProductDescription from "page/product/components/register/ProductDescription";
+import ProductDetailRegister from "page/product/components/Register/ProductDetailRegister";
+import ProductImageRegister from "page/product/components/Register/ProductImageRegister";
+import ProductOptionsRegister from "page/product/components/Register/ProductOptionsRegister";
+import ProductDescription from "page/product/components/Register/ProductDescription";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
