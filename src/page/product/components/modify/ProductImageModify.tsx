@@ -54,13 +54,13 @@ const ProductImageModify = () => {
   const { getRootProps: mainImageRootProps } = useDropzone({
     onDrop: onMainImageDrop,
     maxFiles: 1,
-    noClick: false,
+    noClick: true,
   });
 
   const { getRootProps: detailImageRootProps } = useDropzone({
     onDrop: onDetailImageDrop,
     maxFiles: 10,
-    noClick: false,
+    noClick: true,
   });
 
   const handleDeleteDetailImage = (event: React.MouseEvent, imageIdToDelete: number) => {
