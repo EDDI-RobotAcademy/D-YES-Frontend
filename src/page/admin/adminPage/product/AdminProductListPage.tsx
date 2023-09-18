@@ -81,6 +81,7 @@ const AdminProductList: React.FC = () => {
       if (modifiedData) {
         setModifyProducts(modifiedData);
       }
+      console.log("상품 수정 읽기 데이터 받아오는지 확인", modifiedData);
     }
   };
 
