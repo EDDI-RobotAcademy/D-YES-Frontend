@@ -17,7 +17,11 @@ import { v4 as uuidv4 } from "uuid";
 import "./css/AdminProductList.css";
 import ReadPopup from "../../../product/components/productOption/ReadPopup";
 import useProductStore from "page/product/store/ProductStore";
-import { deleteProducts, fetchProductList, useProductListQuery } from "../../../product/api/ProductApi";
+import {
+  deleteProducts,
+  fetchProductList,
+  useProductListQuery,
+} from "../../../product/api/ProductApi";
 import { useNavigate } from "react-router-dom";
 import useProductModifyStore from "page/product/store/ProductModifyStore";
 
@@ -33,23 +37,15 @@ const AdminProductList: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const navigate = useNavigate();
-  // const hasFetchedRef = React.useRef(false);
-
-  // const fetchList = async () => {
-  //   hasFetchedRef.current = true;
-  //   const userData = await fetchProductList();
-  //   return userData;
-  // };
-
-  // useEffect(() => {
-  //   fetchList();
-  // }, []);
+  const hasFetchedRef = React.useRef(false);
 
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
+        hasFetchedRef.current = true;
         const data = await fetchProductList();
         setProducts(data);
+        return data;
       } catch (error) {
         setProducts([]);
       }
