@@ -51,12 +51,12 @@ const ProductImageModify = () => {
     }
   };
 
-  const { getRootProps: mainImageRootProps } = useDropzone({
+  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
     onDrop: onMainImageDrop,
     noClick: false,
   });
 
-  const { getRootProps: detailImageRootProps } = useDropzone({
+  const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
     onDrop: onDetailImageDrop,
     noClick: false,
   });
@@ -104,7 +104,9 @@ const ProductImageModify = () => {
                   style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
                   alt="Selected"
                 />
-              ) : null}
+              ) : (
+                <input {...mainImageInputProps()} />
+              )}
             </div>
             <div className="text-field-label">상세 이미지</div>
             <div
@@ -120,8 +122,7 @@ const ProductImageModify = () => {
               }}
               {...detailImageRootProps()}
             >
-              {productDetailImgs &&
-                productDetailImgs.length > 0 &&
+              {productDetailImgs && productDetailImgs.length > 0 ? (
                 productDetailImgs.map((detailImage, idx) => (
                   <div
                     key={idx}
@@ -144,7 +145,7 @@ const ProductImageModify = () => {
                               : getImageUrl(detailImage.detailImgs.toString())
                           }
                           style={{ width: "100%", height: "100%" }}
-                          alt={`Selected ${(detailImage as ProductDetailImg).detailImageId}`} // 타입 단언 사용
+                          alt={`Selected ${(detailImage as ProductDetailImg).detailImageId}`}
                         />
                         <RemoveCircleOutlineSharpIcon
                           style={{
@@ -164,7 +165,10 @@ const ProductImageModify = () => {
                       </>
                     )}
                   </div>
-                ))}
+                ))
+              ) : (
+                <input {...detailImageInputProps()} />
+              )}
             </div>
           </ToggleComponent>
         </Box>

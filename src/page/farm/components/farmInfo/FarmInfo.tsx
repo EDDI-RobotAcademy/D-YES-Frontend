@@ -116,6 +116,8 @@ const FarmInfo = () => {
   ];
 
   const handleSelectChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
+    event.preventDefault();
+
     const selectedValue = event.target.value as string[];
     setSelectedOptions(selectedValue);
     setIsSelectOpen(selectedValue.length === 0);
@@ -283,21 +285,45 @@ const FarmInfo = () => {
           {...mainImageRootProps()}
         >
           {farms.mainImage ? (
-            <img
-              src={URL.createObjectURL(farms.mainImage)}
+            <div
               style={{
+                position: "relative",
                 maxWidth: "100%",
                 maxHeight: "100%",
                 cursor: "pointer",
               }}
-              alt="Selected"
-            />
+            >
+              <img
+                src={URL.createObjectURL(farms.mainImage)}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  cursor: "pointer",
+                }}
+                alt="Selected"
+              />
+              <input {...mainImageInputProps()} />
+            </div>
           ) : farmReads.mainImage ? (
-            <img
-              src={getImageUrl(farmReads.mainImage)}
-              style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
-              alt="Selected"
-            />
+            <div
+              style={{
+                position: "relative",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                cursor: "pointer",
+              }}
+            >
+              <img
+                src={getImageUrl(farmReads.mainImage)}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  cursor: "pointer",
+                }}
+                alt="Selected"
+              />
+              <input {...mainImageInputProps()} />
+            </div>
           ) : (
             <div style={{ textAlign: "center", fontFamily: "SUIT-Light" }}>
               <img
