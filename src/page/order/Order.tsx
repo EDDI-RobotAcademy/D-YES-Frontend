@@ -30,6 +30,7 @@ const Order: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({ address: "", zipCode: "" });
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const selectedOptionId: number[] = location.state.selectedOptionId || 0;
   const selectedOptionCount: number[] = location.state.selectedOptionCount || 0;
@@ -71,7 +72,21 @@ const Order: React.FC = () => {
     }).open();
   };
 
+  const isPhoneNumberValid = (phoneNumber: string) => {
+    const phoneNumberPattern = /^\d{11}$/;
+    return phoneNumberPattern.test(phoneNumber);
+  };
+
   const handleContackNumberChange = (contactNumber: string) => {
+    if (!isPhoneNumberValid(contactNumber)) {
+      setValidationErrors({
+        ...validationErrors,
+        contactNumber: "올바른 휴대전화 번호를 입력해주세요.",
+      });
+    } else {
+      setValidationErrors({ ...validationErrors, contactNumber: "" });
+    }
+
     const updatedOrderUserInfo = { ...orderUserInfo };
     updatedOrderUserInfo.userResponse.contactNumber = contactNumber;
     setOrderUserInfo(updatedOrderUserInfo);
@@ -90,60 +105,78 @@ const Order: React.FC = () => {
   };
 
   const handlePayment = async () => {
-    if (defaultAddress) {
-      const userAddressInfo: UserAddress = {
-        address:
-          addressInfo.address === ""
-            ? orderUserInfo?.userResponse.address || ""
-            : addressInfo.address,
+    const errors: { [key: string]: string } = {};
+    if (!userName) {
+      errors.userName = "이름을 입력해주세요.";
+    }
+    if (!orderUserInfo?.userResponse.contactNumber) {
+      errors.contactNumber = "연락처를 입력해주세요.";
+    }
+    if (!addressInfo.address) {
+      errors.address = "주소를 입력해주세요.";
+    }
+    if (!addressInfo.zipCode) {
+      errors.zipCode = "우편번호를 입력해주세요.";
+    }
+    if (!orderUserInfo?.userResponse.addressDetail) {
+      errors.addressDetail = "상세주소를 입력해주세요.";
+    }
+    setValidationErrors(errors);
 
-        zipCode:
-          addressInfo.zipCode === ""
-            ? orderUserInfo?.userResponse.zipCode || ""
-            : addressInfo.zipCode,
+    if (Object.keys(errors).length === 0) {
+      if (defaultAddress) {
+        const userAddressInfo: UserAddress = {
+          address:
+            addressInfo.address === ""
+              ? orderUserInfo?.userResponse.address || ""
+              : addressInfo.address,
+          zipCode:
+            addressInfo.zipCode === ""
+              ? orderUserInfo?.userResponse.zipCode || ""
+              : addressInfo.zipCode,
+          addressDetail: orderUserInfo.userResponse.addressDetail || "",
+        };
+        try {
+          await updateAddressInfo(userAddressInfo);
+          toast.success("배송지 정보가 업데이트되었습니다");
+        } catch {
+          toast.error("배송지 정보 업데이트에 실패했습니다");
+        }
+      }
+      const extractedData: OrderedProduct[] = orderUserInfo!.productResponseList.map(
+        (item, idx) => ({
+          productOptionId: item.optionId,
+          productOptionCount: selectedOptionCount[idx],
+        })
+      );
 
-        addressDetail: orderUserInfo.userResponse.addressDetail || "",
+      const orderedInfo: OrderRequset = {
+        orderedUserInfo: {
+          orderedPurchaserName: userName,
+          orderedPurchaserEmail: orderUserInfo?.userResponse.email || "",
+          orderedPurchaserContactNumber: orderUserInfo?.userResponse.contactNumber || "",
+          orderedPurchaserAddress:
+            addressInfo.address === ""
+              ? orderUserInfo?.userResponse.address || ""
+              : addressInfo.address,
+          orderedPurchaserZipCode:
+            addressInfo.zipCode === ""
+              ? orderUserInfo?.userResponse.zipCode || ""
+              : addressInfo.zipCode,
+          orderedPurchaserAddressDetail: orderUserInfo?.userResponse.addressDetail || "",
+        },
+        orderedProductInfo: extractedData,
+        totalAmount: orderTotalPrice,
+        from: orderDataFrom,
       };
       try {
-        await updateAddressInfo(userAddressInfo);
-        toast.success("배송지 정보가 업데이트되었습니다");
-      } catch {
-        toast.error("배송지 정보 업데이트에 실패했습니다");
+        const orderResponse = await orderRequest(orderedInfo);
+        if (!orderResponse) {
+          toast.warning("주문 요청 중 오류가 발생했습니다");
+        }
+      } catch (error) {
+        toast.error("주문 요청에 실패했습니다");
       }
-    }
-    // 유효성검사 추가
-    const extractedData: OrderedProduct[] = orderUserInfo!.productResponseList.map((item, idx) => ({
-      productOptionId: item.optionId,
-      productOptionCount: selectedOptionCount[idx],
-    }));
-
-    const orderedInfo: OrderRequset = {
-      orderedUserInfo: {
-        orderedPurchaserName: userName,
-        orderedPurchaserEmail: orderUserInfo?.userResponse.email || "",
-        orderedPurchaserContactNumber: orderUserInfo?.userResponse.contactNumber || "",
-        orderedPurchaserAddress:
-          addressInfo.address === ""
-            ? orderUserInfo?.userResponse.address || ""
-            : addressInfo.address,
-        orderedPurchaserZipCode:
-          addressInfo.zipCode === ""
-            ? orderUserInfo?.userResponse.zipCode || ""
-            : addressInfo.zipCode,
-        orderedPurchaserAddressDetail: orderUserInfo?.userResponse.addressDetail || "",
-      },
-      orderedProductInfo: extractedData,
-      totalAmount: orderTotalPrice,
-      from: orderDataFrom,
-    };
-
-    try {
-      const orderResponse = await orderRequest(orderedInfo);
-      if (!orderResponse) {
-        toast.warning("주문 요청 중 오류가 발생했습니다");
-      }
-    } catch (error) {
-      toast.error("주문 요청에 실패했습니다");
     }
   };
 
@@ -201,10 +234,13 @@ const Order: React.FC = () => {
                         className="custom-input"
                         placeholder="이름을 입력해주세요"
                         value={userName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                           setUserName(e.target.value)
                         }
                       />
+                      {validationErrors.userName && (
+                        <p className="order-error-massage">{validationErrors.userName}</p>
+                      )}
                       <div>
                         연락처 <span className="asterisk">*</span>
                       </div>
@@ -217,10 +253,18 @@ const Order: React.FC = () => {
                         className="custom-input"
                         placeholder="연락처"
                         value={orderUserInfo.userResponse.contactNumber || ""}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-                          handleContackNumberChange(e.target.value)
-                        }
+                        onChange={(
+                          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                        ) => {
+                          const input = e.target.value;
+                          if (input.length <= 11) {
+                            handleContackNumberChange(input);
+                          }
+                        }}
                       />
+                      {validationErrors.contactNumber && (
+                        <p className="order-error-massage">{validationErrors.contactNumber}</p>
+                      )}
                       <div>이메일</div>
                       <TextField
                         id="optionName"
@@ -268,6 +312,9 @@ const Order: React.FC = () => {
                       placeholder="주소 검색"
                       onClick={onClickAddr}
                     />
+                    {validationErrors.addressDetail && !addressInfo.address && (
+                      <p className="order-error-massage">주소를 입력해주세요.</p>
+                    )}
                     <Grid item xs={12}>
                       <div>
                         우편번호 <span className="asterisk">*</span>
@@ -311,6 +358,9 @@ const Order: React.FC = () => {
                           handleAddressDetailChange(e.target.value)
                         }
                       />
+                      {validationErrors.addressDetail && (
+                        <p className="order-error-massage">{validationErrors.addressDetail}</p>
+                      )}
                     </Grid>
                     <Grid item xs={12}>
                       <div className="order-checkbox">

@@ -97,3 +97,9 @@
 .asterisk {
   color: orangered;
 }
+.order-error-massage {
+  font-size: small;
+  color: red;
+  display: flex;
+  justify-content: flex-end;
+}
