@@ -4,7 +4,7 @@ import { getUserList } from "page/admin/api/AdminApi";
 import { UserList } from "page/user/entity/UserList";
 
 const UserListPage = () => {
-  const [userList, setUserList] = useState([] as UserList[]);
+  const [userList, setUserList] = useState<UserList[]>([]);
 
   const fetchUserList = async () => {
     try {

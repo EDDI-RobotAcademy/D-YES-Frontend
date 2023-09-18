@@ -3,7 +3,11 @@ import { Box, Button, Container } from "@mui/material";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchProduct, useProductQuery, useProductUpdateMutation } from "page/product/api/ProductApi";
+import {
+  fetchProduct,
+  useProductQuery,
+  useProductUpdateMutation,
+} from "page/product/api/ProductApi";
 import { Product } from "page/product/entity/Product";
 import { ProductImg } from "page/product/entity/ProductMainImg";
 import { ProductModify } from "page/product/entity/ProductModify";
@@ -199,9 +203,16 @@ const AdminProductModifyPage = () => {
     }
   };
 
+  const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
+    const target = event.target as HTMLElement;
+    if (!target.matches('button[type="submit"]')) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <form>
+      <form onClick={handleFormClick}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 수정</h1>
           <ProductDetailModify />
