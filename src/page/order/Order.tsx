@@ -3,7 +3,7 @@ import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
 import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
-import { getOrderInfo, orderRequestInCart } from "./api/OrderApi";
+import { getOrderInfo } from "./api/OrderApi";
 import { updateAddressInfo } from "page/user/api/UserApi";
 import { Grid, Button, Checkbox, Paper, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -13,6 +13,7 @@ import { UserAddress } from "./entity/UserAddress";
 import { OrderedProduct } from "./entity/OrderedProduct";
 import { OrderRequset } from "./entity/OrderRequset";
 import { OrderProduct } from "./entity/OrderProduct";
+import { orderRequest } from "page/payment/api/PaymentApi";
 
 import "./css/Order.css";
 
@@ -137,15 +138,10 @@ const Order: React.FC = () => {
     };
 
     try {
-      await orderRequestInCart(orderedInfo);
-      toast.success("주문 요청 성공");
-      // const orderRequest = await orderRequestInCart(orderedInfo);
-      // if (orderRequest) {
-      //   toast.success("주문이 완료되었습니다");
-      //   navigate("/orderComplete");
-      // } else {
-      //   toast.warning("주문 요청 중 오류가 발생했습니다");
-      // }
+      const orderResponse = await orderRequest(orderedInfo);
+      if (!orderResponse) {
+        toast.warning("주문 요청 중 오류가 발생했습니다");
+      }
     } catch (error) {
       toast.error("주문 요청에 실패했습니다");
     }
