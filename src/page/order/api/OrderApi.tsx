@@ -16,21 +16,6 @@ export const getOrderInfo = async (requestData: number[]) => {
   return response.data;
 };
 
-// 장바구니에 있는 상품 주문
-export const orderRequestInCart = async (requsetData: OrderRequset) => {
-  const data = {
-    userToken: userToken,
-    orderedPurchaserProfileRequest: requsetData.orderedUserInfo,
-    orderedProductOptionRequestList: requsetData.orderedProductInfo,
-    totalAmount: requsetData.totalAmount,
-    from: requsetData.from,
-  };
-  console.log("주문 요청 성공", data);
-  // const response = await axiosInstance.post("/order/payment/kakao", data);
-  // console.log("주문 데이터 전송 성공");
-  // return response.data;
-};
-
 // 사용자의 주문 목록 조회
 export const getUserOrderList = async () => {
   const response = await axiosInstance.get<UserOrderList[]>("order/my-list", {

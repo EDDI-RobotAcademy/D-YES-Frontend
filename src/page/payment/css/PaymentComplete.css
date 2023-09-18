@@ -1,0 +1,12 @@
+.payment-complete {
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.payment-complete-name {
+  font-family: "SUIT-Bold";
+  font-size: x-large;
+  padding-bottom: 10px;
+}

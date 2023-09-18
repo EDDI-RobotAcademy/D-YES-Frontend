@@ -26,6 +26,10 @@ import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductMod
 import AdminOrderListPage from "page/admin/adminPage/order/AdminOrderListPage";
 import OrderCompletePage from "page/order/OrderCompletePage";
 import MyOrderPage from "page/order/MyOrderPage";
+import PaymentApprovalPage from "page/payment/kakao/PaymentApprovalPage";
+import PaymentCancelPage from "page/payment/kakao/PaymentCancelPage";
+import PaymentFailPage from "page/payment/kakao/PaymentFailPage";
+import PaymentCompletePage from "page/payment/PaymentCompletePage";
 
 const theme = createTheme({
   typography: {
@@ -55,6 +59,10 @@ const App: React.FC = () => {
               <Route path="/order" element={<Order />} />
               <Route path="/orderComplete" element={<OrderCompletePage />} />
               <Route path="/myOrder" element={<MyOrderPage />} />
+              <Route path="/payment/kakao/approval" element={<PaymentApprovalPage />} />
+              <Route path="/payment/kakao/cancel" element={<PaymentCancelPage />} />
+              <Route path="/payment/kakao/fail" element={<PaymentFailPage />} />
+              <Route path="/payment/complete" element={<PaymentCompletePage />} />
             </Route>
 
             <Route element={<AdminLayout />}>
