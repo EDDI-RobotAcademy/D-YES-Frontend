@@ -119,8 +119,6 @@ const FarmRegister = () => {
   });
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
     const mainFileToUpload = farms.mainImage ? farms.mainImage : "";
     if (!mainFileToUpload) {
       toast.error("농가 이미지를 등록해주세요");
