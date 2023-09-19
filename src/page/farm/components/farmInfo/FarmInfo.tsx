@@ -113,6 +113,9 @@ const FarmInfo = () => {
     { value: "CUCUMBER", label: "오이" },
     { value: "CARROT", label: "당근" },
     { value: "EGGPLANT", label: "가지" },
+    { value: "ONION", label: "양파" },
+    { value: "YOUNG_PUMPKIN", label: "애호박" },
+    { value: "WELSH_ONION", label: "대파" },
   ];
 
   const handleSelectChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
