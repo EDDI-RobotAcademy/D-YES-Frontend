@@ -72,23 +72,22 @@ const Order: React.FC = () => {
     }).open();
   };
 
-  const isPhoneNumberValid = (phoneNumber: string) => {
-    const phoneNumberPattern = /^\d{11}$/;
-    return phoneNumberPattern.test(phoneNumber);
-  };
-
   const handleContackNumberChange = (contactNumber: string) => {
-    if (!isPhoneNumberValid(contactNumber)) {
-      setValidationErrors({
-        ...validationErrors,
-        contactNumber: "올바른 휴대전화 번호를 입력해주세요.",
-      });
-    } else {
-      setValidationErrors({ ...validationErrors, contactNumber: "" });
+    const formattedNumber = contactNumber.replace(/[^\d-]/g, "");
+    let formattedPhoneNumber = "";
+    if (formattedNumber.length > 0) {
+      const numbersOnly = formattedNumber.replace(/-/g, "");
+      formattedPhoneNumber = numbersOnly.slice(0, 3);
+      if (numbersOnly.length > 3) {
+        formattedPhoneNumber += "-" + numbersOnly.slice(3, 7);
+        if (numbersOnly.length > 7) {
+          formattedPhoneNumber += "-" + numbersOnly.slice(7, 11);
+        }
+      }
     }
 
     const updatedOrderUserInfo = { ...orderUserInfo };
-    updatedOrderUserInfo.userResponse.contactNumber = contactNumber;
+    updatedOrderUserInfo.userResponse.contactNumber = formattedPhoneNumber;
     setOrderUserInfo(updatedOrderUserInfo);
   };
 
@@ -112,11 +111,8 @@ const Order: React.FC = () => {
     if (!orderUserInfo?.userResponse.contactNumber) {
       errors.contactNumber = "연락처를 입력해주세요.";
     }
-    if (!addressInfo.address) {
+    if (!orderUserInfo?.userResponse.address) {
       errors.address = "주소를 입력해주세요.";
-    }
-    if (!addressInfo.zipCode) {
-      errors.zipCode = "우편번호를 입력해주세요.";
     }
     if (!orderUserInfo?.userResponse.addressDetail) {
       errors.addressDetail = "상세주소를 입력해주세요.";
@@ -257,7 +253,7 @@ const Order: React.FC = () => {
                           e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                         ) => {
                           const input = e.target.value;
-                          if (input.length <= 11) {
+                          if (input.length <= 13) {
                             handleContackNumberChange(input);
                           }
                         }}
@@ -312,7 +308,7 @@ const Order: React.FC = () => {
                       placeholder="주소 검색"
                       onClick={onClickAddr}
                     />
-                    {validationErrors.addressDetail && !addressInfo.address && (
+                    {validationErrors.address && !addressInfo.address && (
                       <p className="order-error-massage">주소를 입력해주세요.</p>
                     )}
                     <Grid item xs={12}>
