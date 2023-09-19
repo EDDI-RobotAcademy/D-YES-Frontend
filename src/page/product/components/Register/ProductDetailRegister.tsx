@@ -4,6 +4,8 @@ import {
   Button,
   Container,
   FormControl,
+  Grid,
+  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -38,8 +40,30 @@ const ProductDetailRegister = () => {
     { value: "ORGANIC", label: "유기농" },
   ];
 
+  const produceTypesOptions = [
+    { value: "POTATO", label: "감자" },
+    { value: "SWEET_POTATO", label: "고구마" },
+    { value: "CABBAGE", label: "양배추" },
+    { value: "KIMCHI_CABBAGE", label: "배추" },
+    { value: "LEAF_LETTUCE", label: "상추" },
+    { value: "ROMAINE_LETTUCE", label: "로메인 상추" },
+    { value: "PEPPER", label: "고추" },
+    { value: "GARLIC", label: "마늘" },
+    { value: "TOMATO", label: "토마토" },
+    { value: "CUCUMBER", label: "오이" },
+    { value: "CARROT", label: "당근" },
+    { value: "EGGPLANT", label: "가지" },
+    { value: "ONION", label: "양파" },
+    { value: "YOUNG_PUMPKIN", label: "애호박" },
+    { value: "WELSH_ONION", label: "대파" },
+  ];
+
   const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
     setProducts({ ...products, cultivationMethod: event.target.value.toString() });
+  };
+
+  const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+    setProducts({ ...products, produceTypes: event.target.value.toString() });
   };
 
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +75,7 @@ const ProductDetailRegister = () => {
     <div className="product-register-container">
       <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
         <div>
-          <ToggleComponent label="기본정보" height={150}>
+          <ToggleComponent label="기본정보" height={200}>
             <Box display="flex" flexDirection="column" gap={2}>
               <div className="text-field-container">
                 <div className="text-field-label" aria-label="상품명*">
@@ -113,6 +137,36 @@ const ProductDetailRegister = () => {
                   selectedFarmName={selectedFarmName}
                   onSelectFarm={handleFarmSelect}
                 />
+              </div>
+              <div className="text-field-container">
+                <div className="text-field-label">농산물*</div>
+                <FormControl
+                  sx={{
+                    display: "flex",
+                    flexGrow: 1,
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Select
+                    name="produceTypes"
+                    value={
+                      (products.produceTypes as "" | { value: string; label: string }) || ""
+                    }
+                    onChange={handleProduceTypesChange}
+                    className="text-field"
+                    sx={{
+                      width: "100%",
+                    }}
+                  >
+                    <MenuItem value="">판매상품을 선택해주세요</MenuItem>
+                    {produceTypesOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </div>
             </Box>
           </ToggleComponent>

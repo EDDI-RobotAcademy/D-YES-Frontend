@@ -138,6 +138,7 @@ const ProductRegisterPage = () => {
       productName: products.productName,
       productDescription: products.productDescription,
       cultivationMethod: products.cultivationMethod,
+      produceTypes: products.produceTypes,
     };
 
     const data = {
