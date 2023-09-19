@@ -80,7 +80,7 @@ const AddressRegister = () => {
         receiver: receiver.value,
         contactNumber: contactNumber,
         userToken: localStorage.getItem("userToken") || "",
-        addressBookOption: isDefault ? "DEFAULT_OPTION" : "",
+        addressBookOption: isDefault ? "DEFAULT_OPTION" : "NON_DEFAULT_OPTION",
         address: {
           address: userAddress.address,
           zipCode: userAddress.zipCode,
