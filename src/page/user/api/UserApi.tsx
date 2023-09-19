@@ -8,6 +8,7 @@ import {
 } from "react-query";
 import { User } from "page/user/entity/User";
 import { UserAddress } from "page/order/entity/UserAddress";
+import { AddressBook } from "../entity/AddressBook";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -109,5 +110,18 @@ export const updateAddressInfo = async (updatedData: UserAddress) => {
     zipCode,
     addressDetail,
   });
+  return response.data;
+};
+
+// 배송지 등록
+export const registerAddress = async (data: {
+  userToken: string;
+  addressBookOption: string;
+  receiver: string;
+  contactNumber: string;
+  address: UserAddress;
+}): Promise<AddressBook> => {
+  const response = await axiosInstance.post<AddressBook>("/user/address-book/update", data);
+  console.log("api데이터 확인", response.data);
   return response.data;
 };

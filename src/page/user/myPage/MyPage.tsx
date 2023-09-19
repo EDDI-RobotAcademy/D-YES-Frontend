@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UserMyPage } from "../api/UserApi";
 import { getImageUrl } from "utility/s3/awsS3";
 import { User } from "page/user/entity/User";
+import AddressPopup from "./AddressPopup";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const MyPage = () => {
   const userToken = localStorage.getItem("userToken");
   const hasFetchedRef = React.useRef(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const fetchUser = async () => {
     hasFetchedRef.current = true;
@@ -63,6 +65,11 @@ const MyPage = () => {
       setImageLoaded(true);
     }, 700);
   }, [user?.profileImg]);
+
+  const handleAddressClick = () => {
+    // 주소 설정 버튼을 클릭하면 팝업을 엽니다.
+    setIsPopupOpen(true);
+  };
 
   return (
     <Container className="mypage-container">
@@ -158,6 +165,9 @@ const MyPage = () => {
         <Button className="mypage-btn" onClick={handleEditClick}>
           수정하기
         </Button>
+        <Button className="mypage-btn" onClick={handleAddressClick}>
+          배송지 설정
+        </Button>
         {/* <Button className="mypage-btn" onClick={handleCancelClick}>
           돌아가기
         </Button> */}
@@ -165,6 +175,7 @@ const MyPage = () => {
           회원탈퇴
         </Button>
       </Box>
+      <AddressPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </Container>
   );
 };
