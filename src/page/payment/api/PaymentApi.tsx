@@ -27,3 +27,13 @@ export const kakaoPaymentApprovalRequest = async (pgToken: string) => {
   console.log("결제 확인 데이터", response.data);
   return response.data;
 };
+
+// 카카오 결제 취소 및 실패
+export const kakaoPaymentRejectRequest = async () => {
+  const response = await axiosInstance.delete<boolean>("/order/payment/kakao/reject", {
+    data: {
+      userToken: userToken,
+    },
+  });
+  return response.data;
+};
