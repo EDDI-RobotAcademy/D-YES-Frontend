@@ -26,6 +26,10 @@ const MyOrderPage: React.FC = () => {
   const [filteredOrderList, setFilteredOrderList] = React.useState<UserOrderList[]>([]);
   const navigate = useNavigate();
 
+  const currentDate = new Date();
+  const koreanTime = 9 * 60 * 60 * 1000;
+  const msKoreanTime = currentDate.getTime() + koreanTime;
+
   React.useEffect(() => {
     const fetchOrderData = async (): Promise<void> => {
       try {
@@ -40,26 +44,29 @@ const MyOrderPage: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    const currentDate = new Date();
     const dateFilters: Record<string, number> = {
-      today: 0,
+      today: 1,
       day7: 7,
       day15: 15,
       day30: 30,
       day90: 90,
       day365: 365,
     };
-    const filteredOrders: UserOrderList[] = loadedOrderList.filter((item) => {
-      const orderedTime: Date = new Date(item.orderDetailInfoResponse.orderedTime);
-      const timeDifference: number = currentDate.getTime() - orderedTime.getTime();
-      const daysAgo: number = timeDifference / (24 * 60 * 60 * 1000);
-      return daysAgo <= dateFilters[filter];
-    });
-    setFilteredOrderList(filteredOrders);
-  }, [filter, loadedOrderList]);
+    if (isLoading) {
+      const filteredOrders: UserOrderList[] = loadedOrderList.filter((item) => {
+        const orderedTime: Date = new Date(item.orderDetailInfoResponse.orderedTime);
+        // console.log("msKoreanTime", msKoreanTime);
+        // console.log("orderedTime", orderedTime.getTime());
+        const timeDifference: number = msKoreanTime - orderedTime.getTime();
+        const daysAgo: number = timeDifference / (24 * 60 * 60 * 1000);
+        return daysAgo <= dateFilters[filter];
+      });
+      setFilteredOrderList(filteredOrders);
+    }
+  }, [filter, isLoading, loadedOrderList]);
 
   const goToReviewPage = (productId: number) => {
-    navigate(`/review/${productId}`);
+    navigate(`/review/list/${productId}`);
   };
 
   const tagMapping: { [key: string]: { className: string; name: string } } = {
@@ -69,10 +76,9 @@ const MyOrderPage: React.FC = () => {
   };
 
   const refundDeadline = React.useMemo(() => {
-    const currentDate = new Date();
     return loadedOrderList.filter((item: UserOrderList) => {
       const orderedTime: Date = new Date(item.orderDetailInfoResponse.orderedTime);
-      const timeDifference: number = currentDate.getTime() - orderedTime.getTime();
+      const timeDifference: number = msKoreanTime - orderedTime.getTime();
       const daysDifference: number = timeDifference / (24 * 60 * 60 * 1000);
       return daysDifference > 7;
     });
@@ -118,112 +124,102 @@ const MyOrderPage: React.FC = () => {
             ※ 주문 후 7일 이상 경과한 상품은 환불 신청이 불가능합니다.
           </div>
         </div>
-        {!loadedOrderList ? (
-          <>
-            {isLoading ? (
-              <div>
-                <div className="ordered-list">
-                  <div className="ordered-component">
-                    주문목록/배송조회 내역 총&nbsp;
-                    {filteredOrderList.length ? filteredOrderList.length : null}건
-                  </div>
-                  <div>
-                    <TableContainer>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>주문일자</TableCell>
-                            <TableCell>상품명</TableCell>
-                            <TableCell>옵션정보</TableCell>
-                            <TableCell>총 상품금액</TableCell>
-                            <TableCell>배송상태</TableCell>
-                            <TableCell>환불</TableCell>
-                            <TableCell>리뷰</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {filteredOrderList.map((item: UserOrderList, idx: number) => (
-                            <TableRow key={idx}>
-                              <TableCell>{item.orderDetailInfoResponse.orderedTime}</TableCell>
-                              <TableCell>
-                                {item.orderProductList.map(
-                                  (options: OrderProductListResponse, idx: number) => (
-                                    <div key={idx}>{options.productName}</div>
-                                  )
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {item.orderProductList.map(
-                                  (options: OrderProductListResponse, idx: number) => (
-                                    <div key={idx}>
-                                      {options.orderOptionList.map(
-                                        (option: OrderOptionListResponse, idx: number) => (
-                                          <div key={idx}>
-                                            {options.productName} / {option.optionName}&nbsp;
-                                            {option.optionCount}개
-                                          </div>
-                                        )
-                                      )}
-                                    </div>
-                                  )
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {won(item.orderDetailInfoResponse.totalPrice || 0)}
-                              </TableCell>
-                              <TableCell>
-                                <div
-                                // className={`${
-                                //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
-                                // }`}
-                                >
-                                  {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="outlined"
-                                  color="error"
-                                  disabled={refundDeadline.some(
-                                    (refundItem: UserOrderList) =>
-                                      refundItem.orderDetailInfoResponse.productOrderId ===
-                                      item.orderDetailInfoResponse.productOrderId
-                                  )}
-                                >
-                                  환불 신청
-                                </Button>
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="outlined"
-                                  onClick={() => {
-                                    item.orderProductList.forEach(
-                                      (product: OrderProductListResponse) => {
-                                        goToReviewPage(product.productId);
-                                      }
-                                    );
-                                  }}
-                                  disabled={
-                                    item.orderDetailInfoResponse.deliveryStatus !== "DELIVERED"
-                                  }
-                                >
-                                  리뷰 작성하기
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-                </div>
+        {isLoading ? (
+          <div>
+            <div className="ordered-list">
+              <div className="ordered-component">
+                주문목록/배송조회 내역 총&nbsp;
+                {filteredOrderList.length ? filteredOrderList.length : null}건
               </div>
-            ) : (
-              <div>주문 목록 조회 중</div>
-            )}
-          </>
+              <div>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>주문일자</TableCell>
+                        <TableCell>상품명</TableCell>
+                        <TableCell>옵션정보</TableCell>
+                        <TableCell>총 상품금액</TableCell>
+                        <TableCell>배송상태</TableCell>
+                        <TableCell>환불</TableCell>
+                        <TableCell>리뷰</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {filteredOrderList.map((item: UserOrderList, idx: number) => (
+                        <TableRow key={idx}>
+                          <TableCell>{item.orderDetailInfoResponse.orderedTime}</TableCell>
+                          <TableCell>
+                            {item.orderProductList.map(
+                              (options: OrderProductListResponse, idx: number) => (
+                                <div key={idx}>{options.productName}</div>
+                              )
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {item.orderProductList.map(
+                              (options: OrderProductListResponse, idx: number) => (
+                                <div key={idx}>
+                                  {options.orderOptionList.map(
+                                    (option: OrderOptionListResponse, idx: number) => (
+                                      <div key={idx}>
+                                        {options.productName} / {option.optionName}&nbsp;
+                                        {option.optionCount}개
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              )
+                            )}
+                          </TableCell>
+                          <TableCell>{won(item.orderDetailInfoResponse.totalPrice || 0)}</TableCell>
+                          <TableCell>
+                            <div
+                            // className={`${
+                            //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
+                            // }`}
+                            >
+                              {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              disabled={refundDeadline.some(
+                                (refundItem: UserOrderList) =>
+                                  refundItem.orderDetailInfoResponse.productOrderId ===
+                                  item.orderDetailInfoResponse.productOrderId
+                              )}
+                            >
+                              환불 신청
+                            </Button>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outlined"
+                              onClick={() => {
+                                item.orderProductList.forEach(
+                                  (product: OrderProductListResponse) => {
+                                    goToReviewPage(product.productId);
+                                  }
+                                );
+                              }}
+                              disabled={item.orderDetailInfoResponse.deliveryStatus !== "DELIVERED"}
+                            >
+                              리뷰 작성하기
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </div>
+          </div>
         ) : (
-          <div>주문한 상품이 없습니다</div>
+          <div>주문 목록 조회 중</div>
         )}
       </div>
     </div>
