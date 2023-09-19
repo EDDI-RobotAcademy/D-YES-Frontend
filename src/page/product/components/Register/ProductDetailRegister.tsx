@@ -4,8 +4,6 @@ import {
   Button,
   Container,
   FormControl,
-  Grid,
-  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -63,7 +61,7 @@ const ProductDetailRegister = () => {
   };
 
   const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
-    setProducts({ ...products, produceTypes: event.target.value.toString() });
+    setProducts({ ...products, produceType: event.target.value.toString() });
   };
 
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,9 +147,9 @@ const ProductDetailRegister = () => {
                   }}
                 >
                   <Select
-                    name="produceTypes"
+                    name="produceType"
                     value={
-                      (products.produceTypes as "" | { value: string; label: string }) || ""
+                      (products.produceType as "" | { value: string; label: string }) || ""
                     }
                     onChange={handleProduceTypesChange}
                     className="text-field"
