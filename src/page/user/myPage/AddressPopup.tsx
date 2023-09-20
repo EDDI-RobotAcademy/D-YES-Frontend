@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { registerAddress } from "../api/UserApi";
+import React from "react";
 import "./css/AddressPopup.css";
 import AddressRegister from "./components/AddressRegister";
+import AddressList from "./components/AddressList";
 
 interface AddressPopupProps {
   isOpen: boolean;
@@ -18,6 +17,7 @@ const AddressPopup: React.FC<AddressPopupProps> = ({ isOpen, onClose }) => {
         <div className="popup-container">
           <div className="popup-content">
             <AddressRegister />
+            <AddressList />
             <button onClick={onClose}>닫기</button>
           </div>
         </div>

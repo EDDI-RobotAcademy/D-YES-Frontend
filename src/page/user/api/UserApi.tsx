@@ -125,3 +125,14 @@ export const registerAddress = async (data: {
   console.log("api데이터 확인", response.data);
   return response.data;
 };
+
+// 배송지 목록
+export const getAddressList = async () => {
+  const response = await axiosInstance.get("/user/address-book", {
+    params: {
+      userToken: localStorage.getItem("userToken"),
+    },
+  });
+  console.log("읽기", response.data);
+  return response.data;
+};
