@@ -5,6 +5,7 @@ export interface ProductModifyResponse {
   productName: string;
   productSaleStatus: string;
   productDescription: string;
+  produceType: string;
   cultivationMethod: string;
   productOptionList: useOptions[];
   farmName: string;
