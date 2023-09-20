@@ -205,16 +205,9 @@ const AdminProductModifyPage = () => {
     }
   };
 
-  const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
-    const target = event.target as HTMLElement;
-    if (!target.matches('button[type="submit"]')) {
-      event.preventDefault();
-    }
-  };
-
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <form onClick={handleFormClick}>
+      <form>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 수정</h1>
           <ProductDetailModify />

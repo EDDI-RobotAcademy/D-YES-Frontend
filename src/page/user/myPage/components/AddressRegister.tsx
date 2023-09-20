@@ -55,10 +55,6 @@ const AddressRegister = () => {
           address: data.address,
           zipCode: data.zonecode,
         }));
-
-        localStorage.setItem("address", data.address);
-        localStorage.setItem("zipCode", data.zonecode);
-        localStorage.getItem("addressDetail");
         document.getElementById("addrDetail")?.focus();
       },
     }).open();
@@ -67,6 +63,16 @@ const AddressRegister = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (
+      !userAddress.address ||
+      !userAddress.zipCode ||
+      !userAddress.addressDetail ||
+      !contactNumber
+    ) {
+      toast.error("모든 필드를 입력해주세요.");
+      return;
+    }
+    
     try {
       const target = event.target as typeof event.target & {
         elements: {

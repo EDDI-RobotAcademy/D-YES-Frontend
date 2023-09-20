@@ -8,6 +8,7 @@ export interface ProductList {
   mainImage: string;
   representativeName: string;
   farmName: string;
+  roundedPriceChangePercentage: number
 
   // sellerInfo: string;
   // ratings: number;
