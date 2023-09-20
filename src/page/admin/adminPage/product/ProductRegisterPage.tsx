@@ -161,17 +161,11 @@ const ProductRegisterPage = () => {
     console.log("데이터확인", data);
   };
 
-  const handleFormClick = (event: React.MouseEvent<HTMLFormElement>) => {
-    const target = event.target as HTMLElement;
-    if (!target.matches('button[type="submit"]')) {
-      event.preventDefault();
-    }
-  };
 
   return (
     <div className="product-register-container">
       <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <form onSubmit={handleSubmit} onClick={handleFormClick}>
+        <form onSubmit={handleSubmit}>
           <Box display="flex" flexDirection="column" gap={2} p={2}>
             <h1>상품 등록</h1>
             <ProductDetailRegister />
