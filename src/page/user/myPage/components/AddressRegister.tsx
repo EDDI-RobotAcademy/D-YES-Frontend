@@ -1,4 +1,4 @@
-import { Box, Container, InputLabel, TextField, Button } from "@mui/material";
+import { Box, Container, TextField, Button, Typography } from "@mui/material";
 import { UserAddress } from "page/order/entity/UserAddress";
 import { registerAddress } from "page/user/api/UserApi";
 import React, { useState } from "react";
@@ -72,7 +72,7 @@ const AddressRegister = () => {
       toast.error("모든 필드를 입력해주세요.");
       return;
     }
-    
+
     try {
       const target = event.target as typeof event.target & {
         elements: {
@@ -95,6 +95,17 @@ const AddressRegister = () => {
       };
       console.log("데이터", data);
       await mutation.mutateAsync(data);
+
+      setContactNumber("");
+      setUserAddress({
+        address: "",
+        zipCode: "",
+        addressDetail: "",
+      });
+      receiver.value = "";
+      setIsDefault(false);
+
+      toast.success("배송지 등록이 완료되었습니다.");
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         toast.error("다른 배송지를 기본 배송지로 설정해주세요");
@@ -108,24 +119,47 @@ const AddressRegister = () => {
   return (
     <Container>
       <form onSubmit={handleSubmit}>
-        <Box display="flex" flexDirection="column" gap={1} p={2}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          p={2}
+          sx={{
+            width: "500px",
+          }}
+        >
+          <Typography variant="h4" sx={{ fontSize: "19px" }} gutterBottom>
+            주소지 등록
+          </Typography>
           <div>
             <div>
               <TextField
                 label="이름"
                 name="receiver"
                 inputProps={{ name: "receiver" }}
-                sx={{ borderRadius: "4px", marginRight: "8px" }}
+                sx={{ borderRadius: "4px", marginRight: "8px", width: "246px" }}
+                InputProps={{
+                  style: {
+                    fontFamily: "SUIT-light",
+                  },
+                }}
+                size="small"
               />
               <TextField
                 label="연락처"
                 value={contactNumber}
                 onChange={handleContactNumberChange}
-                sx={{ borderRadius: "4px" }}
+                sx={{ borderRadius: "4px", width: "246px" }}
+                InputProps={{
+                  style: {
+                    fontFamily: "SUIT-light",
+                  },
+                }}
+                size="small"
               />
             </div>
             <div
-              style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginTop: "25px" }}
+              style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginTop: "10px" }}
             >
               <TextField
                 id="address"
@@ -140,6 +174,7 @@ const AddressRegister = () => {
                     fontFamily: "SUIT-light",
                   },
                 }}
+                size="small"
               />
               <Button
                 className="mapage-btn"
@@ -148,8 +183,7 @@ const AddressRegister = () => {
                 style={{
                   fontSize: "14px",
                   color: "orange",
-                  height: "56px",
-                  padding: "0 40px",
+                  height: "40px",
                   borderColor: "orange",
                 }}
               >
@@ -161,13 +195,14 @@ const AddressRegister = () => {
                 id="zipNo"
                 fullWidth
                 variant="outlined"
-                sx={{ paddingTop: "24px", marginBottom: "3px" }}
+                sx={{ paddingTop: "10px", marginBottom: "3px" }}
                 value={userAddress.zipCode}
                 InputProps={{
                   style: {
                     fontFamily: "SUIT-light",
                   },
                 }}
+                size="small"
               >
                 우편번호
               </TextField>
@@ -177,7 +212,7 @@ const AddressRegister = () => {
                 id="addressDetail"
                 fullWidth
                 variant="outlined"
-                sx={{ paddingTop: "24px", marginBottom: "10px" }}
+                sx={{ paddingTop: "10px", marginBottom: "10px" }}
                 value={userAddress.addressDetail}
                 InputProps={{
                   style: {
@@ -187,6 +222,7 @@ const AddressRegister = () => {
                 onChange={(event) => {
                   setUserAddress((prev) => ({ ...prev, addressDetail: event.target.value }));
                 }}
+                size="small"
               >
                 상세주소
               </TextField>
