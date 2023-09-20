@@ -67,11 +67,18 @@ const MyOrderPage: React.FC = () => {
 
   const goToReviewPage = (reviewItem: UserOrderList) => {
     const productOptions = reviewItem.orderProductList.map((options) => options.orderOptionList);
-    const productOptionIdList = productOptions.map((option) => option[0].optionId);
+    const productOptionIdList = productOptions.map((options) =>
+      options.map((option) => option.optionId)
+    );
+    const productName = reviewItem.orderProductList[0]?.productName || "";
+    const optionInfo = reviewItem.orderProductList.map((product) => product.orderOptionList).flat();
+
     navigate("/review/register", {
       state: {
         productOptionId: productOptionIdList,
         orderId: reviewItem.orderDetailInfoResponse.productOrderId,
+        productName: productName,
+        optionInfo: optionInfo,
       },
     });
   };
