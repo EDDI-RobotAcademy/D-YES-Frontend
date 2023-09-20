@@ -111,7 +111,7 @@ const Order: React.FC = () => {
     if (!orderUserInfo?.userResponse.contactNumber) {
       errors.contactNumber = "연락처를 입력해주세요.";
     }
-    if (!orderUserInfo?.userResponse.address) {
+    if (!orderUserInfo?.userResponse.address && !addressInfo.address) {
       errors.address = "주소를 입력해주세요.";
     }
     if (!orderUserInfo?.userResponse.addressDetail) {
