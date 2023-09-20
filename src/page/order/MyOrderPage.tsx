@@ -65,8 +65,15 @@ const MyOrderPage: React.FC = () => {
     }
   }, [filter, isLoading, loadedOrderList]);
 
-  const goToReviewPage = (productId: number) => {
-    navigate(`/review/list/${productId}`);
+  const goToReviewPage = (reviewItem: UserOrderList) => {
+    const productOptions = reviewItem.orderProductList.map((options) => options.orderOptionList);
+    const productOptionIdList = productOptions.map((option) => option[0].optionId);
+    navigate("/review/register", {
+      state: {
+        productOptionId: productOptionIdList,
+        orderId: reviewItem.orderDetailInfoResponse.productOrderId,
+      },
+    });
   };
 
   const tagMapping: { [key: string]: { className: string; name: string } } = {
@@ -184,7 +191,7 @@ const MyOrderPage: React.FC = () => {
                                 <TableCell rowSpan={item.orderProductList.length}>
                                   <Button
                                     variant="outlined"
-                                    onClick={() => goToReviewPage(options.productId)}
+                                    onClick={() => goToReviewPage(item)}
                                     disabled={
                                       item.orderDetailInfoResponse.deliveryStatus !== "DELIVERED"
                                     }
