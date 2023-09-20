@@ -9,6 +9,7 @@ import {
   CardActions,
   Button,
   Skeleton,
+  Badge,
 } from "@mui/material";
 // import StarIcon from "@mui/icons-material/Star";
 import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
@@ -125,7 +126,7 @@ const ProductListPage = () => {
 
   const filteredProducts = filterProducts(loadedProducts, selectedFilters);
   const sortedProducts = sortProducts(filteredProducts);
-
+  
   return (
     <div className="product-list-container">
       <div className="product-list-page">상품 전체 리스트</div>
@@ -240,6 +241,7 @@ const ProductListPage = () => {
                         {product.farmName}
                         <br />
                         {product.representativeName}
+                        <br />
                       </div>
                       <CardMedia
                         component="img"
@@ -284,6 +286,23 @@ const ProductListPage = () => {
                             {tagMapping[product.cultivationMethod]?.name ||
                               product.cultivationMethod}
                           </div>
+                        </div>
+                      )}
+                      {product.roundedPriceChangePercentage !== -999 && (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            gap: "4px",
+                            marginTop: "8px",
+                            marginRight: "20px",
+                          }}
+                        >
+                      <Badge
+                          badgeContent={`${product.roundedPriceChangePercentage}%`}
+                          color={product.roundedPriceChangePercentage > 0 ? "error" : "primary"}
+                        >
+                        </Badge>
                         </div>
                       )}
                       <Typography data-testid="product-name" variant="h6" fontFamily={"SUIT-Bold"}>
