@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAddressList } from "page/user/api/UserApi";
 import { AddressLists } from "page/user/entity/AddressLists";
-import {
-  Box,
-  Container,
-  List,
-  ListItem,
-  ListItemText,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Box, TableCell, TableHead, TableRow } from "@mui/material";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
@@ -27,6 +17,11 @@ const AddressList = () => {
     try {
       hasFetchedRef.current = true;
       const fetchedAddressList = await getAddressList();
+
+      if (fetchedAddressList.length === 0) {
+        return;
+      }
+
       setAddressList(fetchedAddressList);
     } catch (error) {
       console.error("배송지 목록 불러오기 실패:", error);
@@ -39,7 +34,7 @@ const AddressList = () => {
         display="flex"
         alignItems="center"
         flexDirection="column"
-        minHeight="25vh"
+        // minHeight="25vh"
         // paddingTop="32px"
         // paddingBottom="20px"
         bgcolor="white"
@@ -101,12 +96,20 @@ const AddressList = () => {
                 >
                   {address.receiver}
                 </TableCell>
-                <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
-                >
-                  {address.address.address} {address.address.zipCode} (
-                  {address.address.addressDetail})
-                </TableCell>
+                {address.address ? (
+                  <TableCell
+                    style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  >
+                    {address.address.address} {address.address.zipCode} (
+                    {address.address.addressDetail})
+                  </TableCell>
+                ) : (
+                  <TableCell
+                    style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  >
+                    등록된 주소가 없습니다.
+                  </TableCell>
+                )}
                 <TableCell
                   style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >
