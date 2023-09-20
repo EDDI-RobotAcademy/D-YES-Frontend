@@ -33,6 +33,11 @@ const ProductImageModify = () => {
     }
   };
 
+  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+    onDrop: onMainImageDrop,
+    noClick: false,
+  });
+
   const onDetailImageDrop = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       try {
@@ -50,11 +55,6 @@ const ProductImageModify = () => {
       }
     }
   };
-
-  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
-    onDrop: onMainImageDrop,
-    noClick: false,
-  });
 
   const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
     onDrop: onDetailImageDrop,
@@ -92,6 +92,7 @@ const ProductImageModify = () => {
               }}
               {...mainImageRootProps()}
             >
+              <input {...mainImageInputProps()} />
               {selectedMainImage ? (
                 <img
                   src={URL.createObjectURL(selectedMainImage)}
@@ -122,6 +123,7 @@ const ProductImageModify = () => {
               }}
               {...detailImageRootProps()}
             >
+              <input {...detailImageInputProps()} />
               {productDetailImgs && productDetailImgs.length > 0 ? (
                 productDetailImgs.map((detailImage, idx) => (
                   <div
