@@ -65,8 +65,15 @@ const MyOrderPage: React.FC = () => {
     }
   }, [filter, isLoading, loadedOrderList]);
 
-  const goToReviewPage = (productId: number) => {
-    navigate(`/review/list/${productId}`);
+  const goToReviewPage = (reviewItem: UserOrderList) => {
+    const productOptions = reviewItem.orderProductList.map((options) => options.orderOptionList);
+    const productOptionIdList = productOptions.map((option) => option[0].optionId);
+    navigate("/review/register", {
+      state: {
+        productOptionId: productOptionIdList,
+        orderId: reviewItem.orderDetailInfoResponse.productOrderId,
+      },
+    });
   };
 
   const tagMapping: { [key: string]: { className: string; name: string } } = {
@@ -141,77 +148,75 @@ const MyOrderPage: React.FC = () => {
                         <TableCell>옵션정보</TableCell>
                         <TableCell>총 상품금액</TableCell>
                         <TableCell>배송상태</TableCell>
-                        <TableCell>환불</TableCell>
                         <TableCell>리뷰</TableCell>
+                        <TableCell>환불</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {filteredOrderList.map((item: UserOrderList, idx: number) => (
-                        <TableRow key={idx}>
-                          <TableCell>{item.orderDetailInfoResponse.orderedTime}</TableCell>
-                          <TableCell>
-                            {item.orderProductList.map(
-                              (options: OrderProductListResponse, idx: number) => (
-                                <div key={idx}>{options.productName}</div>
-                              )
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {item.orderProductList.map(
-                              (options: OrderProductListResponse, idx: number) => (
-                                <div key={idx}>
-                                  {options.orderOptionList.map(
-                                    (option: OrderOptionListResponse, idx: number) => (
-                                      <div key={idx}>
-                                        {options.productName} / {option.optionName}&nbsp;
-                                        {option.optionCount}개
-                                      </div>
-                                    )
+                      {filteredOrderList.map((item: UserOrderList) =>
+                        item.orderProductList.map(
+                          (options: OrderProductListResponse, idx: number) => (
+                            <TableRow key={idx}>
+                              {idx === 0 ? (
+                                <TableCell rowSpan={item.orderProductList.length}>
+                                  {item.orderDetailInfoResponse.orderedTime}
+                                </TableCell>
+                              ) : null}
+                              <TableCell>{options.productName}</TableCell>
+                              <TableCell>
+                                {options.orderOptionList.map(
+                                  (option: OrderOptionListResponse, idx: number) => (
+                                    <div key={idx}>
+                                      {option.optionName}&nbsp;{option.optionCount}개
+                                    </div>
+                                  )
+                                )}
+                              </TableCell>
+                              {idx === 0 ? (
+                                <TableCell rowSpan={item.orderProductList.length}>
+                                  {won(item.orderDetailInfoResponse.totalPrice || 0)}
+                                </TableCell>
+                              ) : null}
+                              {idx === 0 ? (
+                                <TableCell
+                                  rowSpan={item.orderProductList.length}
+                                  // className={`${
+                                  //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
+                                  // }`}
+                                >
+                                  {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
+                                </TableCell>
+                              ) : null}
+                              {idx === 0 ? (
+                                <TableCell rowSpan={item.orderProductList.length}>
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() => goToReviewPage(item)}
+                                    disabled={
+                                      item.orderDetailInfoResponse.deliveryStatus !== "DELIVERED"
+                                    }
+                                  >
+                                    리뷰 작성하기
+                                  </Button>
+                                </TableCell>
+                              ) : null}
+                              <TableCell>
+                                <Button
+                                  variant="outlined"
+                                  color="error"
+                                  disabled={refundDeadline.some(
+                                    (refundItem: UserOrderList) =>
+                                      refundItem.orderDetailInfoResponse.productOrderId ===
+                                      item.orderDetailInfoResponse.productOrderId
                                   )}
-                                </div>
-                              )
-                            )}
-                          </TableCell>
-                          <TableCell>{won(item.orderDetailInfoResponse.totalPrice || 0)}</TableCell>
-                          <TableCell>
-                            <div
-                            // className={`${
-                            //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
-                            // }`}
-                            >
-                              {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              disabled={refundDeadline.some(
-                                (refundItem: UserOrderList) =>
-                                  refundItem.orderDetailInfoResponse.productOrderId ===
-                                  item.orderDetailInfoResponse.productOrderId
-                              )}
-                            >
-                              환불 신청
-                            </Button>
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="outlined"
-                              onClick={() => {
-                                item.orderProductList.forEach(
-                                  (product: OrderProductListResponse) => {
-                                    goToReviewPage(product.productId);
-                                  }
-                                );
-                              }}
-                              disabled={item.orderDetailInfoResponse.deliveryStatus !== "DELIVERED"}
-                            >
-                              리뷰 작성하기
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                                >
+                                  환불 신청
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
