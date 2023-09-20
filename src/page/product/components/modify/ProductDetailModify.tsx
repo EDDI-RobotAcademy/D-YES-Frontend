@@ -33,28 +33,6 @@ const ProductDetailModify = () => {
     { value: "UNAVAILABLE", label: "판매중지" },
   ];
 
-  const produceTypesOptions = [
-    { value: "POTATO", label: "감자" },
-    { value: "SWEET_POTATO", label: "고구마" },
-    { value: "CABBAGE", label: "양배추" },
-    { value: "KIMCHI_CABBAGE", label: "배추" },
-    { value: "LEAF_LETTUCE", label: "상추" },
-    { value: "ROMAINE_LETTUCE", label: "로메인 상추" },
-    { value: "PEPPER", label: "고추" },
-    { value: "GARLIC", label: "마늘" },
-    { value: "TOMATO", label: "토마토" },
-    { value: "CUCUMBER", label: "오이" },
-    { value: "CARROT", label: "당근" },
-    { value: "EGGPLANT", label: "가지" },
-    { value: "ONION", label: "양파" },
-    { value: "YOUNG_PUMPKIN", label: "애호박" },
-    { value: "WELSH_ONION", label: "대파" },
-  ];
-
-  const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
-    setModifyProducts({ ...modifyProducts, produceType: event.target.value.toString() });
-  };
-
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newProductName = event.target.value;
     setModifyProducts({ ...modifyProducts, productName: newProductName });
@@ -146,37 +124,6 @@ const ProductDetailModify = () => {
                     {saleStatus.map((status) => (
                       <MenuItem key={status.value} value={status.value}>
                         {status.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="text-field-container">
-                <div className="text-field-label">농산물*</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="produceTypes"
-                    value={
-                      (modifyProducts.produceType as "" | { value: string; label: string }) || ""
-                    }
-                    onChange={handleProduceTypesChange}
-                    className="text-field"
-                    sx={{
-                      width: "100%",
-                    }}
-                    disabled
-                  >
-                    <MenuItem value="">판매상품을 선택해주세요</MenuItem>
-                    {produceTypesOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
                       </MenuItem>
                     ))}
                   </Select>

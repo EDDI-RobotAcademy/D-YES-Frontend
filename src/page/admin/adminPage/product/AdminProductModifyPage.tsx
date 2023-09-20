@@ -55,7 +55,6 @@ const AdminProductModifyPage = () => {
     const newOptions = data?.optionResponseForAdmin || [];
     const newMainImages = data?.mainImageResponseForAdmin || "";
     const newDetailImages = data?.detailImagesForAdmin || [];
-    const newProduceType = data?.productResponseForAdmin.produceType || "";
 
     setModifyProducts({
       ...modifyProducts,
@@ -64,7 +63,6 @@ const AdminProductModifyPage = () => {
       productSaleStatus: newProductSaleStatus,
       productDescription: newProductDescription,
       productOptionList: newOptions,
-      produceType: newProduceType,
     });
 
     setProductImgs({
