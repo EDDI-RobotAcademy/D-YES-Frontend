@@ -11,6 +11,7 @@ import "dayjs/locale/ko";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { toast } from "react-toastify";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -20,8 +21,17 @@ dayjs.tz.setDefault("Asia/Seoul");
 
 const AdminOrderListPage = () => {
   const [orderList, setOrderList] = useState([] as AdminOrderList[]);
-  const [selectedStatus, setSelectedStatus] = useState<OrderDeliveryStatus[]>([]);
-  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const [orderStatuses, setOrderStatuses] = useState<Record<string, OrderDeliveryStatus>>({});
+  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(() => {
+    const savedDates: Record<string, string> = JSON.parse(
+      localStorage.getItem("selectedDates") || "{}"
+    );
+    const result: Record<string, dayjs.Dayjs> = {};
+    for (const key in savedDates) {
+      result[key] = dayjs(savedDates[key]);
+    }
+    return result;
+  });
 
   const fetchOrderList = async () => {
     try {
@@ -36,27 +46,38 @@ const AdminOrderListPage = () => {
     fetchOrderList();
   }, []);
 
-  const handleStatusChange = async (productOrderId: string, newStatus: string) => {
+  const handleStatusChange = async (productOrderId: string, newStatus: OrderDeliveryStatus) => {
     try {
-      setSelectedStatus((prevSelectedStatus) => ({
-        ...prevSelectedStatus,
+      const savedDates = JSON.parse(localStorage.getItem("selectedDates") || "{}");
+      const prevDate = savedDates[productOrderId];
+      const currentDate = selectedDate[productOrderId]?.toDate().toISOString();
+
+      if (prevDate === currentDate) {
+        toast.error("날짜가 변경되어야만 배송 상태를 변경할 수 있습니다.");
+        return;
+      }
+      setOrderStatuses((prevStatuses) => ({
+        ...prevStatuses,
         [productOrderId]: newStatus,
       }));
 
+      savedDates[productOrderId] = currentDate;
+      localStorage.setItem("selectedDates", JSON.stringify(savedDates));
+
       const data = {
         productOrderId: productOrderId,
-        deliveryStatus: newStatus,
-        // 날짜 형식의 객체를 문자열로 변환 -> toISOString()
-        deliveryDate: selectedDate ? selectedDate.toISOString() : "",
+        deliveryStatus: newStatus.toString(),
+        deliveryDate: currentDate || "",
         userToken: localStorage.getItem("userToken") || "",
       };
-      console.log("배송일ㅈ", data);
 
+      console.log("배송일", data);
       await changeOrderStatus(data);
     } catch (error) {
       console.log("배송 상태 업데이트 실패", error);
     }
   };
+
   return (
     <div style={{ paddingTop: "32px", paddingBottom: "32px" }}>
       <Box
@@ -188,20 +209,44 @@ const AdminOrderListPage = () => {
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-                      <DatePicker value={selectedDate} onChange={(date) => setSelectedDate(date)} />
+                      <DatePicker
+                        value={
+                          selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
+                        }
+                        onChange={(date) =>
+                          setSelectedDate((prevSelectedDate) => ({
+                            ...prevSelectedDate,
+                            [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
+                          }))
+                        }
+                      />
                     </LocalizationProvider>
                     <Select
                       value={
-                        selectedStatus[
-                          order.orderDetailInfoResponse.productOrderId.toString() as keyof typeof selectedStatus
-                        ] || order.orderDetailInfoResponse.deliveryStatus
+                        orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
+                        order.orderDetailInfoResponse.deliveryStatus
                       }
-                      onChange={(e) =>
-                        handleStatusChange(
-                          order.orderDetailInfoResponse.productOrderId,
-                          `${e.target.value}`
-                        )
-                      }
+                      onChange={(e) => {
+                        const newStatus = e.target.value as OrderDeliveryStatus;
+                        const currentStatus =
+                          orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
+                          order.orderDetailInfoResponse.deliveryStatus;
+                        if (currentStatus.toString() === "DELIVERED") {
+                          toast.error("이미 배송 완료된 주문은 상태를 변경할 수 없습니다.");
+                          return;
+                        }
+                        if (
+                          currentStatus.toString() === "SHIPPING" &&
+                          newStatus.toString() !== "DELIVERED"
+                        ) {
+                          toast.error(
+                            "배송 중인 주문은 배송 상태를 '배송 완료'로만 변경할 수 있습니다."
+                          );
+                          return;
+                        }
+
+                        handleStatusChange(order.orderDetailInfoResponse.productOrderId, newStatus);
+                      }}
                     >
                       <MenuItem value="PREPARING">상품 준비 중</MenuItem>
                       <MenuItem value="SHIPPING">배송 중</MenuItem>
