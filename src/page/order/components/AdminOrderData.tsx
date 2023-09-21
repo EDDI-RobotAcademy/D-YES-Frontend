@@ -111,17 +111,17 @@ const AdminOrderData = () => {
               <TableCell
                 style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
               >
+                {orderData.productOrderId}
+              </TableCell>
+              <TableCell
+                style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+              >
                 {updatedOrderData.deliveryStatus}
               </TableCell>
               <TableCell
                 style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
               >
                 {updatedOrderData.orderStatus}
-              </TableCell>
-              <TableCell
-                style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
-              >
-                {orderData.totalPrice}
               </TableCell>
             </TableRow>
           </tbody>

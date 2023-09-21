@@ -75,7 +75,7 @@ const AdminOrderPaymentData = () => {
                   fontFamily: "SUIT-Medium",
                 }}
               >
-                결제정보
+                결제일
               </TableCell>
               <TableCell
                 style={{
@@ -100,7 +100,7 @@ const AdminOrderPaymentData = () => {
               <TableCell
                 style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
               >
-                {paymentData.paymentMethod}
+                {paymentData.paymentMethod === "CARD" ? "카드" : "현금"}
               </TableCell>
               <TableCell
                 style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
