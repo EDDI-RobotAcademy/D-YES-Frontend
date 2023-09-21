@@ -4,6 +4,7 @@ import { FarmRead } from "page/farm/entity/farm/FarmRead";
 import { FarmModify } from "page/farm/entity/farm/FarmModify";
 import { Admin } from "../entity/Admin";
 import { OrderDeliveryStatus } from "page/order/entity/OrderDeliveryStatus";
+import { AdminOrderResponseDetail } from "page/order/entity/AdminOrderResponseDetail";
 
 export const adminRegister = async (data: {
   id: string;
@@ -55,9 +56,7 @@ export const fetchFarm = async (farmId: string): Promise<FarmRead | null> => {
 };
 
 // 농가 수정
-export const updateFarm = async (
-  updatedData: FarmModify
-): Promise<FarmModify> => {
+export const updateFarm = async (updatedData: FarmModify): Promise<FarmModify> => {
   const {
     farmId,
     csContactNumber,
@@ -66,16 +65,13 @@ export const updateFarm = async (
     produceTypes,
     userToken = localStorage.getItem("userToken"),
   } = updatedData;
-  const response = await axiosInstance.put<FarmModify>(
-    `farm/modify/${farmId}`,
-    {
-      userToken,
-      csContactNumber,
-      mainImage,
-      introduction,
-      produceTypes,
-    }
-  );
+  const response = await axiosInstance.put<FarmModify>(`farm/modify/${farmId}`, {
+    userToken,
+    csContactNumber,
+    mainImage,
+    introduction,
+    produceTypes,
+  });
   return response.data;
 };
 
@@ -96,7 +92,6 @@ export const getOrderList = async () => {
       userToken: localStorage.getItem("userToken"),
     },
   });
-  console.log("주문 목록 정보", response.data);
   return response.data;
 };
 
@@ -107,10 +102,14 @@ export const changeOrderStatus = async (data: {
   deliveryDate: string;
   userToken: string;
 }): Promise<OrderDeliveryStatus> => {
-  const response = await axiosInstance.post<OrderDeliveryStatus>(
-    "/delivery/change-status",
-    data
-  );
-  console.log("배송상태변경", response.data);
+  const response = await axiosInstance.post<OrderDeliveryStatus>("/delivery/change-status", data);
+  return response.data;
+};
+
+// 주문 조회 시 주문 상세 정보
+export const fetchOrderRead = async (
+  productOrderId: string
+): Promise<AdminOrderResponseDetail | null> => {
+  const response = await axiosInstance.get<AdminOrderResponseDetail>(`/order/admin/combine-order-data/${productOrderId}`);
   return response.data;
 };
