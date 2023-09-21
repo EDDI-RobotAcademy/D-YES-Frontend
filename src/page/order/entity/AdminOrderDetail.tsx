@@ -3,4 +3,5 @@ export interface AdminOrderDetail {
   orderedTime: string;
   productOrderId: string;
   totalPrice: number;
+  orderStatus: string;
 }

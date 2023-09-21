@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { adminRegister } from "../../api/AdminApi";
 import { Container, Box, Grid, TextField, Typography, Button } from "@mui/material";
 import { toast } from "react-toastify";
 
 import "./css/AdminRegisterPage.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const NormalAdminRegister = () => {
+  const navigate = useNavigate();
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
+
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
 
   const mutation = useMutation(adminRegister, {
     onSuccess: (data) => {
