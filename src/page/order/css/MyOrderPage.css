@@ -22,7 +22,7 @@
 .ordered-component {
   display: flex;
   justify-content: flex-start;
-  padding: 10px 0 0 30px;
+  padding: 10px 0 20px 30px;
   font-family: "SUIT-SemiBold";
 }
 .ordered-check-controller {

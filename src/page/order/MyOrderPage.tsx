@@ -65,18 +65,14 @@ const MyOrderPage: React.FC = () => {
     }
   }, [filter, isLoading, loadedOrderList]);
 
-  const goToReviewPage = (reviewItem: UserOrderList) => {
-    const productOptions = reviewItem.orderProductList.map((options) => options.orderOptionList);
-    const productOptionIdList = productOptions.map((options) =>
-      options.map((option) => option.optionId)
-    );
-    const productName = reviewItem.orderProductList[0]?.productName || "";
-    const optionInfo = reviewItem.orderProductList.map((product) => product.orderOptionList).flat();
-
+  const goToReviewPage = (productOrderId: string, options: OrderProductListResponse) => {
+    const productOptionIdList = options.orderOptionList.map((option) => option.optionId);
+    const productName = options.productName;
+    const optionInfo = options.orderOptionList;
     navigate("/review/register", {
       state: {
         productOptionId: productOptionIdList,
-        orderId: reviewItem.orderDetailInfoResponse.productOrderId,
+        orderId: productOrderId,
         productName: productName,
         optionInfo: optionInfo,
       },
@@ -149,81 +145,151 @@ const MyOrderPage: React.FC = () => {
                 <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow>
-                        <TableCell>주문일자</TableCell>
-                        <TableCell>상품명</TableCell>
-                        <TableCell>옵션정보</TableCell>
-                        <TableCell>총 상품금액</TableCell>
-                        <TableCell>배송상태</TableCell>
-                        <TableCell>리뷰</TableCell>
-                        <TableCell>환불</TableCell>
+                      <TableRow
+                        style={{
+                          borderTop: "2px solid",
+                          borderBottom: "2px solid",
+                        }}
+                      >
+                        <TableCell align="center">주문일자</TableCell>
+                        <TableCell align="center">상품명</TableCell>
+                        <TableCell align="center">옵션정보</TableCell>
+                        <TableCell align="center">총 상품금액</TableCell>
+                        <TableCell align="center">배송상태</TableCell>
+                        <TableCell align="center">리뷰</TableCell>
+                        <TableCell align="center">환불</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {filteredOrderList.map((item: UserOrderList) =>
-                        item.orderProductList.map(
-                          (options: OrderProductListResponse, idx: number) => (
-                            <TableRow key={idx}>
-                              {idx === 0 ? (
-                                <TableCell rowSpan={item.orderProductList.length}>
-                                  {item.orderDetailInfoResponse.orderedTime}
+                      {filteredOrderList.map((item: UserOrderList) => {
+                        const orderedTimes = new Set();
+                        const productNames = new Set();
+                        return item.orderProductList.map(
+                          (options: OrderProductListResponse, idx: number) => {
+                            const isProductNameRowSpan = !productNames.has(options.productName);
+                            if (isProductNameRowSpan) {
+                              productNames.add(options.productName);
+                            }
+                            const isOrderedTimeRowSpan = !orderedTimes.has(
+                              item.orderDetailInfoResponse.orderedTime
+                            );
+                            const formattedOrderedTime1 = isOrderedTimeRowSpan
+                              ? new Date(item.orderDetailInfoResponse.orderedTime).toLocaleString(
+                                  "ko-KR",
+                                  {
+                                    year: "2-digit",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                  }
+                                )
+                              : null;
+                            const formattedOrderedTime2 = isOrderedTimeRowSpan
+                              ? new Date(item.orderDetailInfoResponse.orderedTime).toLocaleString(
+                                  "ko-KR",
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  }
+                                )
+                              : null;
+                            return (
+                              <TableRow key={idx}>
+                                {isProductNameRowSpan ? (
+                                  <>
+                                    {idx === 0 ? (
+                                      <TableCell
+                                        rowSpan={item.orderProductList.length}
+                                        align="center"
+                                      >
+                                        {formattedOrderedTime1}
+                                        <br />
+                                        {formattedOrderedTime2}
+                                      </TableCell>
+                                    ) : null}
+                                    <TableCell
+                                      rowSpan={
+                                        item.orderProductList.filter(
+                                          (prod) => prod.productName === options.productName
+                                        ).length
+                                      }
+                                      align="center"
+                                    >
+                                      {options.productName}
+                                    </TableCell>
+                                  </>
+                                ) : null}
+                                <TableCell align="center">
+                                  {options.orderOptionList.map(
+                                    (option: OrderOptionListResponse, idx: number) => (
+                                      <div key={idx}>
+                                        {option.optionName}&nbsp;{option.optionCount}개
+                                        {idx !== options.orderOptionList.length - 1 ? <br /> : null}
+                                      </div>
+                                    )
+                                  )}
                                 </TableCell>
-                              ) : null}
-                              <TableCell>{options.productName}</TableCell>
-                              <TableCell>
-                                {options.orderOptionList.map(
-                                  (option: OrderOptionListResponse, idx: number) => (
-                                    <div key={idx}>
-                                      {option.optionName}&nbsp;{option.optionCount}개
-                                    </div>
-                                  )
-                                )}
-                              </TableCell>
-                              {idx === 0 ? (
-                                <TableCell rowSpan={item.orderProductList.length}>
-                                  {won(item.orderDetailInfoResponse.totalPrice || 0)}
-                                </TableCell>
-                              ) : null}
-                              {idx === 0 ? (
-                                <TableCell
-                                  rowSpan={item.orderProductList.length}
-                                  // className={`${
-                                  //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
-                                  // }`}
-                                >
-                                  {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
-                                </TableCell>
-                              ) : null}
-                              {idx === 0 ? (
-                                <TableCell rowSpan={item.orderProductList.length}>
+                                {idx === 0 ? (
+                                  <TableCell rowSpan={item.orderProductList.length} align="right">
+                                    {won(item.orderDetailInfoResponse.totalPrice || 0)}
+                                  </TableCell>
+                                ) : null}
+                                {idx === 0 ? (
+                                  <TableCell
+                                    align="center"
+                                    rowSpan={item.orderProductList.length}
+                                    // className={`${
+                                    //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
+                                    // }`}
+                                  >
+                                    {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
+                                  </TableCell>
+                                ) : null}
+                                {isProductNameRowSpan ? (
+                                  <>
+                                    <TableCell
+                                      rowSpan={
+                                        item.orderProductList.filter(
+                                          (prod) => prod.productName === options.productName
+                                        ).length
+                                      }
+                                      align="center"
+                                    >
+                                      <Button
+                                        variant="outlined"
+                                        onClick={() =>
+                                          goToReviewPage(
+                                            item.orderDetailInfoResponse.productOrderId,
+                                            options
+                                          )
+                                        }
+                                        disabled={
+                                          item.orderDetailInfoResponse.deliveryStatus !==
+                                          "DELIVERED"
+                                        }
+                                      >
+                                        리뷰 작성하기
+                                      </Button>
+                                    </TableCell>
+                                  </>
+                                ) : null}
+                                <TableCell align="center">
                                   <Button
                                     variant="outlined"
-                                    onClick={() => goToReviewPage(item)}
-                                    disabled={
-                                      item.orderDetailInfoResponse.deliveryStatus !== "DELIVERED"
-                                    }
+                                    color="error"
+                                    disabled={refundDeadline.some(
+                                      (refundItem: UserOrderList) =>
+                                        refundItem.orderDetailInfoResponse.productOrderId ===
+                                        item.orderDetailInfoResponse.productOrderId
+                                    )}
                                   >
-                                    리뷰 작성하기
+                                    환불 신청
                                   </Button>
                                 </TableCell>
-                              ) : null}
-                              <TableCell>
-                                <Button
-                                  variant="outlined"
-                                  color="error"
-                                  disabled={refundDeadline.some(
-                                    (refundItem: UserOrderList) =>
-                                      refundItem.orderDetailInfoResponse.productOrderId ===
-                                      item.orderDetailInfoResponse.productOrderId
-                                  )}
-                                >
-                                  환불 신청
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        )
-                      )}
+                              </TableRow>
+                            );
+                          }
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>

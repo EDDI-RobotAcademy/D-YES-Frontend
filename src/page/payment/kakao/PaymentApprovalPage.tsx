@@ -18,7 +18,7 @@ const PaymentApprovalPage: React.FC = () => {
           if (data) {
             navigate("/payment/complete");
           } else {
-            toast.error("결제 승인 요청 중 오류가 발생했습니다");
+            navigate("/payment/kakao/error");
           }
         } catch (error) {
           toast.error("결제 서버와의 통신에 실패했습니다");

@@ -24,6 +24,7 @@ import ProductCarousel from "./carousel/ProductCarousel";
 import ProductOptionStore from "page/product/store/ProductOptionStore";
 import { useOptions } from "page/product/entity/useOptions";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
+import ReviewListPage from "page/review/ReviewListPage";
 
 import "./css/ProductDetailPage.css";
 
@@ -539,16 +540,7 @@ const ProductDetail = () => {
           </div>
 
           <div className="example2" ref={yReview}>
-            {data && isLoading ? (
-              <>
-                {/* 여기에 리뷰 작성하세요 */}
-                <div className="example-container">
-                  <div className="product-detail-header-name">상품후기</div>
-                </div>
-              </>
-            ) : (
-              <p>리뷰 정보 불러오는 중</p>
-            )}
+            {data && isLoading ? <ReviewListPage /> : <p>리뷰 정보 불러오는 중</p>}
           </div>
         </div>
       </div>
