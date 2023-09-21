@@ -19,6 +19,7 @@ import useProductModifyStore from "page/product/store/ProductModifyStore";
 import useProductImageStore from "page/product/store/ProductImageStore";
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 interface RouteParams {
   productId: string;
@@ -35,6 +36,19 @@ const AdminProductModifyPage = () => {
   const { modifyProducts, setModifyProducts } = useProductModifyStore();
   const { productImgs, setProductImgs, productDetailImgs, setProductDetailImgs } =
     useProductImageStore();
+    const { checkAdminAuthorization } = useAuth();
+    const isAdmin = checkAdminAuthorization();
+  
+    useEffect(() => {
+      if (!isAdmin) {
+        toast.error("권한이 없습니다.");
+        navigate("/");
+      }
+    }, [isAdmin, navigate]);
+  
+    if (!isAdmin) {
+      return null;
+    }
 
   const fetchModify = async () => {
     hasFetchedRef.current = true;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Container } from "@mui/material";
@@ -16,6 +16,7 @@ import ProductDetailRegister from "page/product/components/Register/ProductDetai
 import ProductImageRegister from "page/product/components/Register/ProductImageRegister";
 import ProductOptionsRegister from "page/product/components/Register/ProductOptionsRegister";
 import ProductDescription from "page/product/components/Register/ProductDescription";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const ProductRegisterPage = () => {
   const navigate = useNavigate();
@@ -23,6 +24,19 @@ const ProductRegisterPage = () => {
   const userToken = localStorage.getItem("userToken");
   const { products } = useProductRegisterStore();
   const { productImgs, productDetailImgs } = useProductImageStore();
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
+
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
 
   const mutation = useMutation(registerProduct, {
     onSuccess: (data) => {
@@ -160,7 +174,6 @@ const ProductRegisterPage = () => {
     });
     console.log("데이터확인", data);
   };
-
 
   return (
     <div className="product-register-container">

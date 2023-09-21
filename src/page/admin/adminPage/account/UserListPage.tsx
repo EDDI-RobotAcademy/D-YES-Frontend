@@ -2,10 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, TableHead, TableRow, TableCell } from "@mui/material";
 import { getUserList } from "page/admin/api/AdminApi";
 import { UserList } from "page/user/entity/UserList";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "layout/navigation/AuthConText";
+import { toast } from "react-toastify";
 
 const UserListPage = () => {
+  const navigate = useNavigate();
+  const { checkAdminAuthorization } = useAuth();
   const [userList, setUserList] = useState<UserList[]>([]);
+  const isAdmin = checkAdminAuthorization();
 
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
+  
   const fetchUserList = async () => {
     try {
       const fetchedUserList = await getUserList();
