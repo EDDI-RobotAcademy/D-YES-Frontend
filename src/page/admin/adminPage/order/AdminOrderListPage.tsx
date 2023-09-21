@@ -48,17 +48,26 @@ const AdminOrderListPage = () => {
 
   const handleStatusChange = async (productOrderId: string, newStatus: OrderDeliveryStatus) => {
     try {
+      const savedDates = JSON.parse(localStorage.getItem("selectedDates") || "{}");
+      const prevDate = savedDates[productOrderId];
+      const currentDate = selectedDate[productOrderId]?.toDate().toISOString();
+
+      if (prevDate === currentDate) {
+        toast.error("날짜가 변경되어야만 배송 상태를 변경할 수 있습니다.");
+        return;
+      }
       setOrderStatuses((prevStatuses) => ({
         ...prevStatuses,
         [productOrderId]: newStatus,
       }));
 
+      savedDates[productOrderId] = currentDate;
+      localStorage.setItem("selectedDates", JSON.stringify(savedDates));
+
       const data = {
         productOrderId: productOrderId,
         deliveryStatus: newStatus.toString(),
-        deliveryDate: selectedDate[productOrderId]
-          ? selectedDate[productOrderId].toDate().toISOString()
-          : "",
+        deliveryDate: currentDate || "",
         userToken: localStorage.getItem("userToken") || "",
       };
 
@@ -67,16 +76,6 @@ const AdminOrderListPage = () => {
     } catch (error) {
       console.log("배송 상태 업데이트 실패", error);
     }
-  };
-
-  const handleDateChange = (productOrderId: string, date: dayjs.Dayjs) => {
-    setSelectedDate((prevSelectedDate) => ({
-      ...prevSelectedDate,
-      [productOrderId]: date,
-    }));
-    const savedDates = JSON.parse(localStorage.getItem("selectedDates") || "{}");
-    savedDates[productOrderId] = date.toISOString();
-    localStorage.setItem("selectedDates", JSON.stringify(savedDates));
   };
 
   return (
@@ -215,10 +214,10 @@ const AdminOrderListPage = () => {
                           selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
                         }
                         onChange={(date) =>
-                          handleDateChange(
-                            order.orderDetailInfoResponse.productOrderId,
-                            date || dayjs()
-                          )
+                          setSelectedDate((prevSelectedDate) => ({
+                            ...prevSelectedDate,
+                            [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
+                          }))
                         }
                       />
                     </LocalizationProvider>
