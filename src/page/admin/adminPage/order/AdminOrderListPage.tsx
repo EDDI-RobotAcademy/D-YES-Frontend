@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "layout/navigation/AuthConText";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -20,6 +22,9 @@ dayjs.extend(utc);
 dayjs.tz.setDefault("Asia/Seoul");
 
 const AdminOrderListPage = () => {
+  const navigate = useNavigate();
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
   const [orderList, setOrderList] = useState([] as AdminOrderList[]);
   const [orderStatuses, setOrderStatuses] = useState<Record<string, OrderDeliveryStatus>>({});
   const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(() => {
@@ -32,6 +37,17 @@ const AdminOrderListPage = () => {
     }
     return result;
   });
+
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
 
   const fetchOrderList = async () => {
     try {
@@ -76,6 +92,10 @@ const AdminOrderListPage = () => {
     } catch (error) {
       console.log("배송 상태 업데이트 실패", error);
     }
+  };
+
+  const handleOrderClick = (productOrderId: string) => {
+    navigate(`/adminOrderListPage/orderReadPage/${productOrderId}`);
   };
 
   return (
@@ -187,7 +207,11 @@ const AdminOrderListPage = () => {
           </TableHead>
           <tbody>
             {orderList?.map((order) => (
-              <TableRow key={order.orderDetailInfoResponse.productOrderId}>
+              <TableRow
+                key={order.orderDetailInfoResponse.productOrderId}
+                onClick={(e) => handleOrderClick(order.orderDetailInfoResponse.productOrderId)}
+                style={{ cursor: "pointer" }}
+              >
                 <TableCell
                   style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >
@@ -208,19 +232,21 @@ const AdminOrderListPage = () => {
                   style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-                      <DatePicker
-                        value={
-                          selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
-                        }
-                        onChange={(date) =>
-                          setSelectedDate((prevSelectedDate) => ({
-                            ...prevSelectedDate,
-                            [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
-                          }))
-                        }
-                      />
-                    </LocalizationProvider>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                        <DatePicker
+                          value={
+                            selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
+                          }
+                          onChange={(date) =>
+                            setSelectedDate((prevSelectedDate) => ({
+                              ...prevSelectedDate,
+                              [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
+                            }))
+                          }
+                        />
+                      </LocalizationProvider>
+                    </div>
                     <Select
                       value={
                         orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
@@ -246,6 +272,9 @@ const AdminOrderListPage = () => {
                         }
 
                         handleStatusChange(order.orderDetailInfoResponse.productOrderId, newStatus);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
                       }}
                     >
                       <MenuItem value="PREPARING">상품 준비 중</MenuItem>
