@@ -93,9 +93,19 @@ export default function CartList() {
 
   const decreaseQuantity = async (optionId: number) => {
     const item = loadedItems.find((item) => item.optionId === optionId);
-    if (item && quantity[optionId] > 1) {
+    if (item) {
       const updatedQuantity = (quantity[optionId] || item.optionCount) - 1;
-      updateQuantity(optionId, updatedQuantity);
+      if (updatedQuantity >= 1) {
+        updateQuantity(optionId, updatedQuantity);
+      }
+    } else {
+      const updatedQuantity = (quantity[optionId] || 0) - 1;
+      if (updatedQuantity >= 1) {
+        setQuantity((prevQuantity) => ({
+          ...prevQuantity,
+          [optionId]: updatedQuantity,
+        }));
+      }
     }
   };
 

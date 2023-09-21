@@ -181,7 +181,7 @@
   padding-top: 60px;
 }
 .example2 {
-  height: 80vw;
+  height: auto;
   /* background-color: bisque; */
   padding-top: 60px;
 }
