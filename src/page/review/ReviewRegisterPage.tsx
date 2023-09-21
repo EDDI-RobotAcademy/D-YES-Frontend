@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { reviewRegister } from "./api/ReviewApi";
 import useReviewStore from "./store/ReviewStore";
-import { compressImg } from "utility/s3/imageCompression";
 import useReviewImageStore from "./store/ReviewImageStore";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { ReviewImage } from "./entity/ReviewImage";
@@ -17,6 +16,7 @@ import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 
 function IconContainer(props: IconContainerProps) {
   const { value, ...other } = props;
@@ -61,7 +61,7 @@ const ReviewRegisterPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { reviews, setReviews } = useReviewStore();
-  const [rating, setRating] = useState(2);
+  const [rating, setRating] = useState(5);
   const { reviewImages, setReviewImages } = useReviewImageStore();
   const location = useLocation();
   const { productOptionId, orderId, productName, optionInfo } = location.state;
@@ -108,6 +108,19 @@ const ReviewRegisterPage = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (!reviews.content) {
+      toast.error("리뷰를 입력해주세요!");
+      return;
+    }
+
+    if (reviewImages.length < 1) {
+      toast.error("이미지를 최소 1장 이상 등록해주세요.");
+      return;
+    } else if (reviewImages.length > 6) {
+      toast.error("이미지는 최대 6장까지 등록할 수 있습니다.");
+      return;
+    }
+
     const reviewImageUpload = reviewImages.map(async (image) => {
       if (image.reviewImages instanceof File) {
         const reviewFileToUpload = image.reviewImages;
@@ -147,6 +160,9 @@ const ReviewRegisterPage = () => {
       rating: rating,
       imagesRegisterRequestList: reviewImagesRegisterRequests as ReviewImage[],
     });
+
+    setReviews({ ...reviews, content: "" });
+    setReviewImages([]);
   };
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
@@ -158,14 +174,17 @@ const ReviewRegisterPage = () => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
+              fontFamily: "SUIT-light",
             }}
           >
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <p style={{ fontSize: "20px", marginRight: "10px" }}>{productName}</p>
-              <p style={{ color: "gray" }}>
+              <p style={{ fontSize: "20px", marginRight: "10px", fontFamily: "SUIT-light" }}>
+                {productName}
+              </p>
+              <p style={{ color: "gray", fontFamily: "SUIT-light" }}>
                 {optionInfo.map((option: OrderOptionListResponse, index: number) => (
                   <span key={index}>
-                    {option.optionName}
+                    옵션: {option.optionName}
                     {index < optionInfo.length - 1 ? ", " : ""}
                   </span>
                 ))}
