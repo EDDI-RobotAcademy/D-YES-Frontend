@@ -1,8 +1,10 @@
 import { useAuth } from "layout/navigation/AuthConText";
 import { fetchOrderRead } from "page/admin/api/AdminApi";
 import AdminOrderData from "page/order/components/AdminOrderData";
+import AdminOrderOptionList from "page/order/components/AdminOrderOptionList";
 import AdminOrderPaymentData from "page/order/components/AdminOrderPaymentData";
 import { useOrderDataStore } from "page/order/store/OrderDataStore";
+import { useOrderOptionDataStore } from "page/order/store/OrderOptionStore";
 import { usePaymentDataStore } from "page/order/store/OrderPaymentStore";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,6 +17,7 @@ const AdminOrderReadPage = () => {
   const { productOrderId } = useParams();
   const { setOrderDataInfo } = useOrderDataStore();
   const { setPaymentDataInfo } = usePaymentDataStore();
+  const { setOrderOptionDataInfo } = useOrderOptionDataStore();
 
   useEffect(() => {
     if (!isAdmin) {
@@ -36,6 +39,9 @@ const AdminOrderReadPage = () => {
       if (data?.paymentData) {
         setPaymentDataInfo(data.paymentData);
       }
+      if (data?.productDataList) {
+        setOrderOptionDataInfo(data.productDataList);
+      }
       console.log("상세정보", data);
     };
     fetchOrderReadDetail();
@@ -45,6 +51,7 @@ const AdminOrderReadPage = () => {
     <div>
       <AdminOrderData />
       <AdminOrderPaymentData />
+      <AdminOrderOptionList />
     </div>
   );
 };

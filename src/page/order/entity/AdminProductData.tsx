@@ -1,6 +1,8 @@
-export interface AdminProductData{
-productName: string;
-optionName: string;
-optionPrice: number;
-optionCount: number;
+export interface AdminProductData {
+  productId: number;
+  productName: string;
+  productOptionId: number;
+  productOptionCount: number;
+  productOptionName: string;
+  productOptionPrice: number;
 }

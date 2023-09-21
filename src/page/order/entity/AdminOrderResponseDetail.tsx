@@ -6,6 +6,6 @@ import { AdminProductData } from "./AdminProductData";
 export interface AdminOrderResponseDetail {
   orderData: AdminOrderDetail;
   paymentData: AdminPayment;
-  productDataList: AdminProductData;
+  productDataList: AdminProductData[];
   profileData: AdminOrderProfile;
 }
