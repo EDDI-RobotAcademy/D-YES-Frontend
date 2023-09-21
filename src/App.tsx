@@ -31,6 +31,7 @@ import PaymentCancelPage from "page/payment/kakao/PaymentCancelPage";
 import PaymentFailPage from "page/payment/kakao/PaymentFailPage";
 import PaymentCompletePage from "page/payment/PaymentCompletePage";
 import ReviewRegisterPage from "page/review/ReviewRegisterPage";
+import PaymentErrorPage from "page/payment/kakao/PaymentErrorPage";
 
 const theme = createTheme({
   typography: {
@@ -63,6 +64,7 @@ const App: React.FC = () => {
               <Route path="/payment/kakao/approval" element={<PaymentApprovalPage />} />
               <Route path="/payment/kakao/cancel" element={<PaymentCancelPage />} />
               <Route path="/payment/kakao/fail" element={<PaymentFailPage />} />
+              <Route path="/payment/kakao/error" element={<PaymentErrorPage />} />
               <Route path="/payment/complete" element={<PaymentCompletePage />} />
               <Route path="/review/register" element={<ReviewRegisterPage />} />
             </Route>
