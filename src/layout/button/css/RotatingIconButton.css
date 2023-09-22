@@ -1,0 +1,22 @@
+.rotating-toggle-button {
+  background-color: #1f1f1f;
+  border: none;
+  border-radius: 5em;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.rotating-toggle-button-icon {
+  display: flex;
+  vertical-align: middle;
+  transition: transform 0.5s;
+}
+.rotating-toggle-button-rotate {
+  transform: rotate(180deg);
+}
+.rotating-toggle-button-text {
+  font-weight: bold;
+}

@@ -1,38 +1,20 @@
-.product-filter-options {
+.product-list-filter-options {
   align-items: center;
 }
-.product-list-page {
+.product-list-page-name {
   font-family: "SUIT-Bold";
   font-size: x-large;
   margin-left: 50px;
   margin-bottom: 10px;
 }
-.product-filter-toggle {
-  font-family: "SUIT-Thin";
-  font-size: medium;
-  align-items: center;
-}
-.tag-common {
-  font-family: "SUIT-SemiBold";
-  font-weight: bold;
-  padding: 3px 6px;
-  border-radius: 0.2rem;
-}
-.tag-organic {
-  background-color: rgb(255, 200, 100);
-  color: black;
-}
-.tag-pesticide-free {
-  background-color: rgb(100, 100, 255);
-  color: white;
-}
-.tag-environment-friendly {
-  background-color: rgb(120, 200, 120);
-  color: white;
-}
-.sort-button {
-  display: flex;
-  justify-content: flex-end;
+.product-list-soldout-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -65%);
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 1;
 }
 .filter-button-container {
   display: flex;
@@ -40,41 +22,73 @@
   align-items: center;
   padding: 0 30px;
 }
-.checkbox-name {
-  font-family: "SUIT-Light";
-  font-size: small;
+.product-list-card-style {
+  width: 275px;
+  height: auto;
+  margin-bottom: 2;
+  box-shadow: none !important;
+  position: relative;
+  box-shadow: none;
 }
-.toggle-button {
-  background-color: #000000;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  padding: 4px 8px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  vertical-align: middle;
-}
-.toggle-button-icon {
-  display: flex;
-  vertical-align: middle;
-  transition: transform 0.5s;
-}
-.toggle-button-rotate {
-  transform: rotate(180deg);
-}
-.toggle-button-text {
-  font-weight: bold;
-}
-.product-name {
-  font-family: "SUIT_Bold";
-  font-size: 22px;
-}
-.product-price {
-  font-family: "SUIT-Light";
+.product-list-price {
   color: gray;
 }
-.farm-info {
+.product-list-farm-info {
   text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 4px;
+  font-family: "SUIT-Light";
+}
+.product-list-main-img {
+  position: relative;
+  max-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  justify-content: flex-end;
+  align-items: flex-end;
+  overflow: hidden;
+  object-fit: cover;
+  padding-left: 6px;
+}
+.product-list-tag-style {
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px;
+  margin-top: 8px;
+}
+.product-list-fluctuation-rate {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 8px;
+  margin-right: 20px;
+}
+.product-list-review-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "SUIT-SemiBold";
+}
+.product-list-review-btn {
+  display: flex;
+  align-items: center;
+}
+.product-list-tag-common {
+  font-family: "SUIT-Light";
+  padding: 3px 6px;
+  border-radius: 0.2em;
+}
+.product-list-tag-organic {
+  background-color: rgb(255, 200, 100);
+  color: black;
+}
+.product-list-tag-pesticide-free {
+  background-color: rgb(100, 100, 255);
+  color: white;
+}
+.product-list-tag-environment-friendly {
+  background-color: rgb(120, 200, 120);
+  color: white;
 }
