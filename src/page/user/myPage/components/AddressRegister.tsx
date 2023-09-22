@@ -94,7 +94,13 @@ const AddressRegister = () => {
         },
       };
       console.log("데이터", data);
-      await mutation.mutateAsync(data);
+      const response = await mutation.mutateAsync(data);
+
+      if (response) {
+        toast.success("배송지 등록이 완료되었습니다.");
+      } else {
+        toast.error("최대 5개의 배송지 등록이 가능합니다.");
+      }
 
       setContactNumber("");
       setUserAddress({
@@ -104,8 +110,6 @@ const AddressRegister = () => {
       });
       receiver.value = "";
       setIsDefault(false);
-
-      toast.success("배송지 등록이 완료되었습니다.");
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         toast.error("다른 배송지를 기본 배송지로 설정해주세요");
