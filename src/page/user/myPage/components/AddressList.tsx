@@ -107,8 +107,7 @@ const AddressList = () => {
                   color: "#252525",
                   fontFamily: "SUIT-Medium",
                 }}
-              >
-              </TableCell>
+              ></TableCell>
             </TableRow>
           </TableHead>
           <tbody>
@@ -138,13 +137,17 @@ const AddressList = () => {
                 >
                   {address.contactNumber}
                 </TableCell>
-                <IconButton
-                  onClick={() => handleDeleteClick(address.addressId.toString())}
-                  color="default"
-                  aria-label="delete"
+                <TableCell
+                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >
-                  <DeleteIcon />
-                </IconButton>
+                  <IconButton
+                    onClick={() => handleDeleteClick(address.addressId.toString())}
+                    color="default"
+                    aria-label="delete"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </tbody>
