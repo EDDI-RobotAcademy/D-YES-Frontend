@@ -1,0 +1,53 @@
+.review-reg-info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "SUIT-light";
+  padding: 0 10px;
+}
+.review-reg-info-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: "SUIT-SemiBold";
+}
+.review-reg-product-name {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+.review-reg-option-info {
+  color: gray;
+}
+.review-reg-img-input {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  background-color: #eef2f3;
+  cursor: pointer;
+  flex-wrap: wrap;
+  border-radius: 0.5em;
+  gap: 5px;
+}
+.review-reg-img-preview {
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  position: relative;
+}
+.review-reg-img-style {
+  width: auto;
+  height: 70px;
+}
+.review-reg-input-message {
+  text-align: center;
+  width: 100%;
+  font-family: "SUIT-SemiBold";
+}
+.review-reg-submit-btn {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
