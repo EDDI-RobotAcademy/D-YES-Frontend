@@ -9,14 +9,14 @@ interface ChartFormProps {
 }
 
 const translateKorean: { [key: string]: string } = {
-  cabbage: "양배추",
-  carrot: "당근",
-  cucumber: "오이",
-  kimchiCabbage: "배추",
-  onion: "양파",
-  potato: "감자",
-  welshOnion: "대파",
-  youngPumpkin: "애호박",
+  cabbage: "양배추(8kg)",
+  carrot: "당근(20kg)",
+  cucumber: "오이(100개)",
+  kimchiCabbage: "배추(10kg)",
+  onion: "양파(15kg)",
+  potato: "감자(20kg)",
+  welshOnion: "대파(1kg)",
+  youngPumpkin: "애호박(20개)",
 };
 
 const LineChart: React.FC<ChartFormProps> = ({ priceList }) => {
@@ -38,7 +38,7 @@ const LineChart: React.FC<ChartFormProps> = ({ priceList }) => {
           type: "linear",
           min: 0,
           max: "auto",
-          stacked: true,
+          stacked: false,
           reverse: false,
         }}
         axisTop={null}
