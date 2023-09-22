@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { addressDelete, getAddressList } from "page/user/api/UserApi";
+import { addressDelete, defaultChange, getAddressList } from "page/user/api/UserApi";
 import { AddressLists } from "page/user/entity/AddressLists";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
+import { Box, Checkbox, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
   const hasFetchedRef = React.useRef(false);
 
   useEffect(() => {
@@ -17,13 +18,18 @@ const AddressList = () => {
   const fetchAddressList = async () => {
     try {
       hasFetchedRef.current = true;
-      const fetchedAddressList = await getAddressList();
+      const fetchedAddressList: AddressLists[] = await getAddressList();
 
       if (fetchedAddressList.length === 0) {
         return;
       }
-
       setAddressList(fetchedAddressList);
+      const defaultOptionAddress = fetchedAddressList.find(
+        (address) => address.addressBookOption === "DEFAULT_OPTION"
+      );
+      if (defaultOptionAddress) {
+        setSelectedAddressId(defaultOptionAddress.addressId.toString());
+      }
     } catch (error) {
       console.error("배송지 목록 불러오기 실패:", error);
     }
@@ -38,6 +44,22 @@ const AddressList = () => {
       setAddressList(updatedAddressList);
     } catch (error) {
       console.error("배송지 삭제 실패:", error);
+    }
+  };
+
+  const handleCheckboxToggle = async (addressId: string) => {
+    try {
+      const updateData = {
+        userToken: localStorage.getItem("userToken") || "",
+        addressBookOption: "DEFAULT_OPTION",
+        addressBookId: Number(addressId),
+      };
+
+      await defaultChange(updateData);
+
+      setSelectedAddressId(addressId);
+    } catch (error) {
+      console.error("주소 업데이트 실패:", error);
     }
   };
 
@@ -66,6 +88,15 @@ const AddressList = () => {
         >
           <TableHead>
             <TableRow>
+              <TableCell
+                style={{
+                  width: "10px",
+                  // padding: "8px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Medium",
+                }}
+              ></TableCell>
               <TableCell
                 style={{
                   width: "100px",
@@ -101,7 +132,7 @@ const AddressList = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "50px",
+                  width: "20px",
                   // padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -113,6 +144,12 @@ const AddressList = () => {
           <tbody>
             {addressList.map((address, index) => (
               <TableRow key={address.addressId}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedAddressId === address.addressId.toString()}
+                    onChange={() => handleCheckboxToggle(address.addressId.toString())}
+                  />
+                </TableCell>
                 <TableCell
                   style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >

@@ -9,6 +9,7 @@ import {
 import { User } from "page/user/entity/User";
 import { UserAddress } from "page/order/entity/UserAddress";
 import { AddressBook } from "../entity/AddressBook";
+import { AddressModify } from "../entity/AddressModify";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -142,4 +143,16 @@ export const addressDelete = async (addressBookId: string): Promise<void> => {
   await axiosInstance.delete(`user/address-book/${addressBookId}`, {
     data: { userToken: localStorage.getItem("userToken") },
   });
+};
+
+// 배송지 기본 배송지 옵션 변경
+export const defaultChange = async (updateData: AddressModify) => {
+  const { userToken, addressBookOption, addressBookId } = updateData;
+  const response = await axiosInstance.put("/user/address-book/change-option", {
+    userToken,
+    addressBookOption,
+    addressBookId,
+  });
+  console.log("확인", response.data);
+  return response.data;
 };
