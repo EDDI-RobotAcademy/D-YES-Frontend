@@ -1,65 +1,21 @@
 import * as React from "react";
-import { Rating, IconContainerProps } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useReviewInfoStore } from "./store/ReviewListStore";
 import { getReviewList } from "./api/ReviewApi";
 import { ReviewRequestResponseForm } from "./entity/ReviewList";
-import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
-import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
-import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
-import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
-import { styled } from "@mui/material/styles";
 import { getImageUrl } from "utility/s3/awsS3";
+import { ReviewRequestImages } from "./entity/ReviewListImage";
+import { ProductReviewResponseForUser } from "page/product/entity/ProductReview";
+import { Rating } from "@mui/material";
 
 import "./css/ReviewListPage.css";
-import { ReviewRequestImages } from "./entity/ReviewListImage";
-
-const StyledRating = styled(Rating)(({ theme }) => ({
-  "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
-    color: theme.palette.action.disabled,
-  },
-}));
-
-const customIcons: {
-  [index: string]: {
-    icon: React.ReactElement;
-    label: string;
-  };
-} = {
-  1: {
-    icon: <SentimentVeryDissatisfiedIcon color="error" />,
-    label: "1point",
-  },
-  2: {
-    icon: <SentimentDissatisfiedIcon color="error" />,
-    label: "2point",
-  },
-  3: {
-    icon: <SentimentSatisfiedIcon color="warning" />,
-    label: "3point",
-  },
-  4: {
-    icon: <SentimentSatisfiedAltIcon color="success" />,
-    label: "4point",
-  },
-  5: {
-    icon: <SentimentVerySatisfiedIcon color="success" />,
-    label: "5point",
-  },
-};
-
-function IconContainer(props: IconContainerProps) {
-  const { value, ...other } = props;
-  return <span {...other}>{customIcons[value].icon}</span>;
-}
 
 interface RouteParams {
   productId: string;
   [key: string]: string;
 }
 
-const ReviewListPage: React.FC = () => {
+const ReviewListPage: React.FC<{ reviewData: ProductReviewResponseForUser }> = (props) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const { productId } = useParams<RouteParams>();
   const { reviewInfo, setReviewInfo } = useReviewInfoStore();
@@ -113,6 +69,18 @@ const ReviewListPage: React.FC = () => {
   return (
     <div className="review-component">
       <div className="review-header-name">상품후기</div>
+      <p>평균 만족도</p>
+      <Rating
+        name="total-rating"
+        value={Number(props.reviewData.averageRating.toFixed(1))}
+        precision={0.1}
+        style={{ padding: "5px 0" }}
+        size="large"
+        readOnly
+      />
+      <div>
+        {props.reviewData.averageRating.toFixed(1)} ({props.reviewData.totalReviewCount})
+      </div>
       {isLoading ? (
         <>
           <div className="review-controll">
@@ -138,11 +106,10 @@ const ReviewListPage: React.FC = () => {
               <div className="review-info-container">
                 <div className="review-user-info-container">
                   <p>{review.reviewRequestResponse.userNickName}</p>
-                  <StyledRating
-                    name="highlight-selected-only"
+                  <Rating
+                    name="user-rating"
                     value={review.reviewRequestResponse.rating}
-                    IconContainerComponent={IconContainer}
-                    highlightSelectedOnly
+                    precision={0.5}
                     readOnly
                   />
                   <p className="review-text-color-gray">

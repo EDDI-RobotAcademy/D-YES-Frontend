@@ -4,4 +4,5 @@ export interface OrderProductListResponse {
   productId: number;
   productName: string;
   orderOptionList: OrderOptionListResponse[];
+  reviewId: number;
 }

@@ -234,13 +234,7 @@ const MyOrderPage: React.FC = () => {
                                   </TableCell>
                                 ) : null}
                                 {idx === 0 ? (
-                                  <TableCell
-                                    align="center"
-                                    rowSpan={item.orderProductList.length}
-                                    // className={`${
-                                    //   tagMapping[item.orderDetailInfoResponse.deliveryStatus]?.className
-                                    // }`}
-                                  >
+                                  <TableCell align="center" rowSpan={item.orderProductList.length}>
                                     {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
                                   </TableCell>
                                 ) : null}
@@ -254,21 +248,25 @@ const MyOrderPage: React.FC = () => {
                                       }
                                       align="center"
                                     >
-                                      <Button
-                                        variant="outlined"
-                                        onClick={() =>
-                                          goToReviewPage(
-                                            item.orderDetailInfoResponse.productOrderId,
-                                            options
-                                          )
-                                        }
-                                        disabled={
-                                          item.orderDetailInfoResponse.deliveryStatus !==
-                                          "DELIVERED"
-                                        }
-                                      >
-                                        리뷰 작성하기
-                                      </Button>
+                                      {options.reviewId === null ? (
+                                        <Button
+                                          variant="outlined"
+                                          onClick={() =>
+                                            goToReviewPage(
+                                              item.orderDetailInfoResponse.productOrderId,
+                                              options
+                                            )
+                                          }
+                                          disabled={
+                                            item.orderDetailInfoResponse.deliveryStatus !==
+                                            "DELIVERED"
+                                          }
+                                        >
+                                          리뷰 작성하기
+                                        </Button>
+                                      ) : (
+                                        <>리뷰 작성 완료</>
+                                      )}
                                     </TableCell>
                                   </>
                                 ) : null}
