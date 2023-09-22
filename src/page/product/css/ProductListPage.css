@@ -71,6 +71,10 @@
   align-items: center;
   font-family: "SUIT-SemiBold";
 }
+.product-list-review-rate {
+  display: flex;
+  align-items: center;
+}
 .product-list-review-btn {
   display: flex;
   align-items: center;

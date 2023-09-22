@@ -10,6 +10,7 @@ import {
   Button,
   Skeleton,
   Badge,
+  Rating,
 } from "@mui/material";
 import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -269,6 +270,15 @@ const ProductListPage = () => {
                     </CardContent>
                   </CardActionArea>
                   <CardActions className="product-list-review-grid">
+                    <div className="product-list-review-rate">
+                      <Rating
+                        name="rating"
+                        value={product.productReviewResponseForUser.averageRating}
+                        precision={0.1}
+                        readOnly
+                      />
+                      ({product.productReviewResponseForUser.totalReviewCount})
+                    </div>
                     <Button
                       size="small"
                       component={Link}
