@@ -136,3 +136,10 @@ export const getAddressList = async () => {
   console.log("읽기", response.data);
   return response.data;
 };
+
+// 배송지 삭제
+export const addressDelete = async (addressBookId: string): Promise<void> => {
+  await axiosInstance.delete(`user/address-book/${addressBookId}`, {
+    data: { userToken: localStorage.getItem("userToken") },
+  });
+};

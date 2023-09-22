@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getAddressList } from "page/user/api/UserApi";
+import { addressDelete, getAddressList } from "page/user/api/UserApi";
 import { AddressLists } from "page/user/entity/AddressLists";
-import { Box, TableCell, TableHead, TableRow } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
@@ -28,6 +29,18 @@ const AddressList = () => {
     }
   };
 
+  const handleDeleteClick = async (addressBookId: string) => {
+    try {
+      await addressDelete(addressBookId);
+      const updatedAddressList = addressList.filter(
+        (address) => address.addressId !== Number(addressBookId)
+      );
+      setAddressList(updatedAddressList);
+    } catch (error) {
+      console.error("배송지 삭제 실패:", error);
+    }
+  };
+
   return (
     <div style={{ paddingBottom: "16px" }}>
       <Box
@@ -40,7 +53,7 @@ const AddressList = () => {
         bgcolor="white"
         overflow="hidden" // 가로 스크롤 숨김
         border="solid 1px lightgray"
-        maxWidth="500px" // 가로 길이 제한
+        maxWidth="600px" // 가로 길이 제한
         margin="0 auto" // 수평 가운데 정렬
       >
         <div></div>
@@ -86,6 +99,16 @@ const AddressList = () => {
               >
                 배송지
               </TableCell>
+              <TableCell
+                style={{
+                  width: "50px",
+                  // padding: "8px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Medium",
+                }}
+              >
+              </TableCell>
             </TableRow>
           </TableHead>
           <tbody>
@@ -115,6 +138,13 @@ const AddressList = () => {
                 >
                   {address.contactNumber}
                 </TableCell>
+                <IconButton
+                  onClick={() => handleDeleteClick(address.addressId.toString())}
+                  color="default"
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
               </TableRow>
             ))}
           </tbody>
