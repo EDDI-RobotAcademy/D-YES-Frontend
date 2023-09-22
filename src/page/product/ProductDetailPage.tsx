@@ -540,7 +540,11 @@ const ProductDetail = () => {
           </div>
 
           <div className="example2" ref={yReview}>
-            {data && isLoading ? <ReviewListPage /> : <p>리뷰 정보 불러오는 중</p>}
+            {data && isLoading ? (
+              <ReviewListPage reviewData={data.productReviewResponseForUser} />
+            ) : (
+              <p>리뷰 정보 불러오는 중</p>
+            )}
           </div>
         </div>
       </div>
