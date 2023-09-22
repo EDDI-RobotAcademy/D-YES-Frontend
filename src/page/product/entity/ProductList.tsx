@@ -1,16 +1,15 @@
-export interface ProductList {
-  productId: number;
-  productName: string;
-  cultivationMethod: string;
-  minOptionPrice: number;
-  productMainImage: string;
-  isSoldOut: boolean;
-  mainImage: string;
-  representativeName: string;
-  farmName: string;
-  roundedPriceChangePercentage: number
+import { ProductMainImageForUser } from "./ProductMainImg";
+import { ProductListForUser } from "./ProductListProductInfo";
+import { ProductOptionForUser } from "./ProductListOption";
+import { FarmInfoForUser } from "./ProductListFarmInfo";
+import { ProductReviewResponseForUser } from "./ProductReview";
+import { FarmProducePriceChangeForUser } from "./ProductlListPriceChange";
 
-  // sellerInfo: string;
-  // ratings: number;
-  // reviewCount: number;
+export interface ProductListResponseFormForUser {
+  productResponseForListForUser: ProductListForUser;
+  productMainImageResponseForListForUser: ProductMainImageForUser;
+  productOptionResponseForListForUser: ProductOptionForUser;
+  farmInfoResponseForListForUser: FarmInfoForUser;
+  productReviewResponseForUser: ProductReviewResponseForUser;
+  farmProducePriceChangeInfoForListForUser: FarmProducePriceChangeForUser;
 }

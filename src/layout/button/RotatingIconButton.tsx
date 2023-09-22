@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
+import "./css/RotatingIconButton.css";
+
 interface RotatingIconButtonProps {
   up: string;
   down: string;
@@ -16,9 +18,13 @@ const RotatingIconButton: React.FC<RotatingIconButtonProps> = ({ up, down, onTog
   };
 
   return (
-    <button className="toggle-button" onClick={handleToggle}>
-      <span className="toggle-button-text">{isToggled ? up : down}</span>
-      <span className={`toggle-button-icon ${isToggled ? "toggle-button-rotate" : ""}`}>
+    <button className="rotating-toggle-button" onClick={handleToggle}>
+      <span className="rotating-toggle-button-text">{isToggled ? up : down}</span>
+      <span
+        className={`rotating-toggle-button-icon ${
+          isToggled ? "rotating-toggle-button-rotate" : ""
+        }`}
+      >
         <KeyboardArrowDownIcon />
       </span>
     </button>

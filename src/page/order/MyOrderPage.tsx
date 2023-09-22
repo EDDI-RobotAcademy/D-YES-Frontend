@@ -65,10 +65,14 @@ const MyOrderPage: React.FC = () => {
     }
   }, [filter, isLoading, loadedOrderList]);
 
-  const goToReviewPage = (productOrderId: string, options: OrderProductListResponse) => {
-    const productOptionIdList = options.orderOptionList.map((option) => option.optionId);
-    const productName = options.productName;
-    const optionInfo = options.orderOptionList;
+  const goToReviewPage = (productOrderId: string, options: OrderProductListResponse[]) => {
+    const productOptionIdList: number[] = options.flatMap((option) =>
+      option.orderOptionList.map((item) => item.optionId)
+    );
+    const productName: string = options[0].productName;
+    const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
+      option.orderOptionList.map((item) => item)
+    );
     navigate("/review/register", {
       state: {
         productOptionId: productOptionIdList,
@@ -254,7 +258,7 @@ const MyOrderPage: React.FC = () => {
                                           onClick={() =>
                                             goToReviewPage(
                                               item.orderDetailInfoResponse.productOrderId,
-                                              options
+                                              item.orderProductList
                                             )
                                           }
                                           disabled={

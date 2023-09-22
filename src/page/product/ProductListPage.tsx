@@ -10,23 +10,22 @@ import {
   Button,
   Skeleton,
   Badge,
+  Rating,
 } from "@mui/material";
-// import StarIcon from "@mui/icons-material/Star";
 import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
-import ToggleComponent from "page/product/components/productOption/ToggleComponent";
-import { ProductList } from "page/product/entity/ProductList";
+import { ProductListResponseFormForUser } from "page/product/entity/ProductList";
 import RotatingIconButton from "layout/button/RotatingIconButton";
 import { getProductList } from "./api/ProductApi";
 
 import "./css/ProductListPage.css";
 
 const tagMapping: { [key: string]: { className: string; name: string } } = {
-  ORGANIC: { className: "tag-organic", name: "유기농" },
-  PESTICIDE_FREE: { className: "tag-pesticide-free", name: "무농약" },
-  ENVIRONMENT_FRIENDLY: { className: "tag-environment-friendly", name: "친환경" },
+  ORGANIC: { className: "product-list-tag-organic", name: "유기농" },
+  PESTICIDE_FREE: { className: "product-list-tag-pesticide-free", name: "무농약" },
+  ENVIRONMENT_FRIENDLY: { className: "product-list-tag-environment-friendly", name: "친환경" },
 };
 
 const FilterOptions: React.FC<{
@@ -40,7 +39,6 @@ const FilterOptions: React.FC<{
       onFilterChange([...selectedFilters, tag]);
     }
   };
-
   return (
     <div>
       {Object.keys(tagMapping).map((tag) => (
@@ -53,7 +51,6 @@ const FilterOptions: React.FC<{
               value={tag}
             />
           }
-          className="checkbox-name"
           label={tagMapping[tag].name || tag}
           labelPlacement="end"
         />
@@ -66,7 +63,7 @@ const ProductListPage = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>(Object.keys(tagMapping));
   const [priceSort, setPriceSort] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(true);
-  const [loadedProducts, setLoadedProducts] = useState<ProductList[]>([]);
+  const [loadedProducts, setLoadedProducts] = useState<ProductListResponseFormForUser[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -74,7 +71,7 @@ const ProductListPage = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await getProductList(currentPath!);
+        const response = await getProductList(currentPath);
         setLoadedProducts(response);
         setLoading(false);
       } catch (error) {
@@ -92,32 +89,49 @@ const ProductListPage = () => {
     setPriceSort((prevSort) => (prevSort === "asc" ? "desc" : "asc"));
   };
 
-  const filterProducts = (products: ProductList[], selectedFilters: string[]): ProductList[] => {
+  const filterProducts = (
+    products: ProductListResponseFormForUser[],
+    selectedFilters: string[]
+  ): ProductListResponseFormForUser[] => {
     if (selectedFilters.length === 0) {
       return products;
     }
     return products.filter((product) =>
-      selectedFilters.some((filter) => product.cultivationMethod === filter)
+      selectedFilters.some(
+        (filter) => product.productResponseForListForUser.cultivationMethod === filter
+      )
     );
   };
 
-  const sortProducts = (products: ProductList[]): ProductList[] => {
-    // 기본 필터 -> 판매 여부
-    // 추가 필터 -> 가격순
+  const sortProducts = (
+    products: ProductListResponseFormForUser[]
+  ): ProductListResponseFormForUser[] => {
     return products
       .slice()
       .sort((a, b) => {
         if (priceSort === "asc") {
-          return a.minOptionPrice - b.minOptionPrice;
+          return (
+            a.productOptionResponseForListForUser.minOptionPrice -
+            b.productOptionResponseForListForUser.minOptionPrice
+          );
         } else {
-          return b.minOptionPrice - a.minOptionPrice;
+          return (
+            b.productOptionResponseForListForUser.minOptionPrice -
+            a.productOptionResponseForListForUser.minOptionPrice
+          );
         }
       })
       .sort((a, b) => {
-        if (a.isSoldOut && !b.isSoldOut) {
+        if (
+          a.productOptionResponseForListForUser.isSoldOut &&
+          !b.productOptionResponseForListForUser.isSoldOut
+        ) {
           return 1;
         }
-        if (!a.isSoldOut && b.isSoldOut) {
+        if (
+          !a.productOptionResponseForListForUser.isSoldOut &&
+          b.productOptionResponseForListForUser.isSoldOut
+        ) {
           return -1;
         }
         return 0;
@@ -126,45 +140,23 @@ const ProductListPage = () => {
 
   const filteredProducts = filterProducts(loadedProducts, selectedFilters);
   const sortedProducts = sortProducts(filteredProducts);
-  
+
   return (
-    <div className="product-list-container">
-      <div className="product-list-page">상품 전체 리스트</div>
+    <div className="product-list-filter-options">
+      <div className="product-list-page-name">상품 전체 리스트</div>
       <div className="product-filter-options">
-        <div className="product-filter-toggle">
-          <ToggleComponent label="필터" height={50}>
-            <Box>
-              <div className="filter-button-container">
-                <div>
-                  <FilterOptions
-                    selectedFilters={selectedFilters}
-                    onFilterChange={setSelectedFilters}
-                  />
-                </div>
-                <div>
-                  <RotatingIconButton
-                    up="가격 높은 순"
-                    down="가격 낮은 순"
-                    onToggle={handleSortToggle}
-                  />
-                </div>
-              </div>
-            </Box>
-          </ToggleComponent>
+        <div className="filter-button-container">
+          <div>
+            <FilterOptions selectedFilters={selectedFilters} onFilterChange={setSelectedFilters} />
+          </div>
+          <div>
+            <RotatingIconButton up="가격 높은 순" down="가격 낮은 순" onToggle={handleSortToggle} />
+          </div>
         </div>
         {loading ? (
           <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center" alignItems="center">
             {Array.from({ length: 8 }).map((_, idx) => (
-              <Card
-                key={idx}
-                sx={{
-                  width: 275,
-                  height: "auto",
-                  marginBottom: 2,
-                  boxShadow: "none",
-                  position: "relative",
-                }}
-              >
+              <Card className="product-list-card-style" key={idx}>
                 <Skeleton variant="rectangular" height={200} />
                 <CardContent sx={{ padding: "8px" }}>
                   <Skeleton variant="text" height={28} />
@@ -181,132 +173,91 @@ const ProductListPage = () => {
             ))}
           </Box>
         ) : (
-          <Container
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "auto",
-            }}
-          >
+          <Container>
             <Box
               display="flex"
               flexWrap="wrap"
               gap={2}
-              justifyContent="center"
+              justifyContent="flex-start"
               alignItems="center"
               paddingTop="10px"
             >
               {sortedProducts.map((product) => (
                 <Card
-                  key={product.productId}
-                  className=""
+                  key={product.productResponseForListForUser.productId}
+                  className="product-list-card-style"
                   sx={{
-                    width: 275,
-                    height: "auto",
-                    marginBottom: 2,
-                    boxShadow: "none",
-                    position: "relative",
-                    opacity: product.isSoldOut ? 0.5 : 1,
-                    pointerEvents: product.isSoldOut ? "none" : "auto",
+                    opacity: product.productOptionResponseForListForUser.isSoldOut ? 0.5 : 1,
+                    pointerEvents: product.productOptionResponseForListForUser.isSoldOut
+                      ? "none"
+                      : "auto",
                   }}
                 >
-                  {product.isSoldOut && (
+                  {product.productOptionResponseForListForUser.isSoldOut && (
                     <img
                       src="img/soldoutExample.png"
                       alt="Sold Out"
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -65%)",
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        zIndex: 1,
-                      }}
+                      className="product-list-soldout-img"
                     />
                   )}
-                  <CardActionArea onClick={() => handleProductClick(product.productId)}>
-                    <CardContent
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                        padding: "4px",
-                        fontFamily: "SUIT-Light",
-                        fontSize: "15px",
-                      }}
-                    >
-                      <div className="farm-info">
-                        {product.farmName}
-                        <br />
-                        {product.representativeName}
-                        <br />
+                  <CardActionArea
+                    onClick={() =>
+                      handleProductClick(product.productResponseForListForUser.productId)
+                    }
+                  >
+                    <CardContent className="product-list-farm-info">
+                      <div>
+                        <div>
+                          {product.farmInfoResponseForListForUser.farmName}
+                          <br />
+                          {product.farmInfoResponseForListForUser.representativeName}
+                        </div>
                       </div>
                       <CardMedia
                         component="img"
-                        height="30"
-                        image={getImageUrl(product.mainImage)}
-                        alt={`farmImage ${product.productId}`}
-                        style={{
-                          position: "relative",
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                          justifyContent: "flex-end",
-                          alignItems: "flex-end",
-                          overflow: "hidden",
-                          objectFit: "cover",
-                          paddingLeft: "6px",
-                        }}
+                        image={getImageUrl(product.farmInfoResponseForListForUser.mainImage)}
+                        alt={`farmImage ${product.productResponseForListForUser.productId}`}
+                        className="product-list-main-img"
                       />
                     </CardContent>
                     <CardMedia
                       component="img"
                       height="200"
-                      image={getImageUrl(product.productMainImage)}
-                      alt={`mainImage ${product.productId}`}
+                      image={getImageUrl(product.productMainImageResponseForListForUser.mainImg)}
+                      alt={`mainImage ${product.productResponseForListForUser.productId}`}
                     />
                     <CardContent sx={{ padding: "8px" }}>
-                      {product.cultivationMethod && product.cultivationMethod.length > 0 && (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            gap: "4px",
-                            marginTop: "8px",
-                          }}
-                        >
-                          <div
-                            data-testid="cultivation-method"
-                            className={`${
-                              tagMapping[product.cultivationMethod]?.className
-                            } tag-common`}
-                          >
-                            {tagMapping[product.cultivationMethod]?.name ||
-                              product.cultivationMethod}
+                      {product.productResponseForListForUser.cultivationMethod &&
+                        product.productResponseForListForUser.cultivationMethod.length > 0 && (
+                          <div className="product-list-tag-style">
+                            <div
+                              data-testid="cultivation-method"
+                              className={`${
+                                tagMapping[product.productResponseForListForUser.cultivationMethod]
+                                  ?.className
+                              } product-list-tag-common`}
+                            >
+                              {tagMapping[product.productResponseForListForUser.cultivationMethod]
+                                ?.name || product.productResponseForListForUser.cultivationMethod}
+                            </div>
                           </div>
-                        </div>
-                      )}
-                      {product.roundedPriceChangePercentage !== -999 && (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            gap: "4px",
-                            marginTop: "8px",
-                            marginRight: "20px",
-                          }}
-                        >
-                      <Badge
-                          badgeContent={`${product.roundedPriceChangePercentage}%`}
-                          color={product.roundedPriceChangePercentage > 0 ? "error" : "primary"}
-                        >
-                        </Badge>
+                        )}
+                      {product.farmProducePriceChangeInfoForListForUser
+                        .roundedPriceChangePercentage !== -999 && (
+                        <div className="product-list-fluctuation-rate">
+                          <Badge
+                            badgeContent={`${product.farmProducePriceChangeInfoForListForUser.roundedPriceChangePercentage}%`}
+                            color={
+                              product.farmProducePriceChangeInfoForListForUser
+                                .roundedPriceChangePercentage > 0
+                                ? "error"
+                                : "primary"
+                            }
+                          />
                         </div>
                       )}
                       <Typography data-testid="product-name" variant="h6" fontFamily={"SUIT-Bold"}>
-                        {product.productName}
+                        {product.productResponseForListForUser.productName}
                       </Typography>
                       <Typography
                         data-testid="option-price"
@@ -314,26 +265,24 @@ const ProductListPage = () => {
                         color="text.secondary"
                         fontFamily={"SUIT-Light"}
                       >
-                        {won(product.minOptionPrice)}
+                        {won(product.productOptionResponseForListForUser.minOptionPrice)}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
-                  <CardActions style={{ justifyContent: "space-between", alignItems: "center" }}>
-                    {/* <div style={{ display: "flex", alignItems: "center" }}>
-                      <StarIcon sx={{ color: "#f1c40f", fontSize: "1rem" }} />
-                      <Typography
-                        variant="body2"
-                        sx={{ marginLeft: "4px" }}
-                        fontFamily={"SUIT-Light"}
-                      >
-                        {product.ratings.toFixed(1) || 0}&nbsp;({product.reviewCount})
-                      </Typography>
-                    </div> */}
+                  <CardActions className="product-list-review-grid">
+                    <div className="product-list-review-rate">
+                      <Rating
+                        name="rating"
+                        value={product.productReviewResponseForUser.averageRating}
+                        precision={0.1}
+                        readOnly
+                      />
+                      ({product.productReviewResponseForUser.totalReviewCount})
+                    </div>
                     <Button
                       size="small"
                       component={Link}
-                      to={`/reviews/${product.productId}`}
-                      style={{ display: "flex", alignItems: "center", fontFamily: "SUIT-Light" }}
+                      to={`/reviews/${product.productResponseForListForUser.productId}`}
                     >
                       리뷰 확인하기
                     </Button>

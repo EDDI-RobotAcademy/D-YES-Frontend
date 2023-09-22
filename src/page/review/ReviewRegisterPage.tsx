@@ -1,5 +1,5 @@
 import { Box, Button, Container, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { reviewRegister } from "./api/ReviewApi";
@@ -8,68 +8,24 @@ import useReviewImageStore from "./store/ReviewImageStore";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { ReviewImage } from "./entity/ReviewImage";
 import { OrderOptionListResponse } from "page/order/entity/UserOrderOption";
-import { styled } from "@mui/material/styles";
-import Rating, { IconContainerProps } from "@mui/material/Rating";
-import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
-import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
-import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
-import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import Rating from "@mui/material/Rating";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 
-function IconContainer(props: IconContainerProps) {
-  const { value, ...other } = props;
-  return <span {...other}>{customIcons[value].icon}</span>;
-}
-
-const StyledRating = styled(Rating)(({ theme }) => ({
-  "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
-    color: theme.palette.action.disabled,
-  },
-}));
-
-const customIcons: {
-  [index: string]: {
-    icon: React.ReactElement;
-    label: string;
-  };
-} = {
-  1: {
-    icon: <SentimentVeryDissatisfiedIcon color="error" />,
-    label: "Very Dissatisfied",
-  },
-  2: {
-    icon: <SentimentDissatisfiedIcon color="error" />,
-    label: "Dissatisfied",
-  },
-  3: {
-    icon: <SentimentSatisfiedIcon color="warning" />,
-    label: "Neutral",
-  },
-  4: {
-    icon: <SentimentSatisfiedAltIcon color="success" />,
-    label: "Satisfied",
-  },
-  5: {
-    icon: <SentimentVerySatisfiedIcon color="success" />,
-    label: "Very Satisfied",
-  },
-};
+import "./css/ReviewRegisterPage.css";
 
 const ReviewRegisterPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { reviews, setReviews } = useReviewStore();
-  const [rating, setRating] = useState(5);
+  const [ratingValue, setRatingValue] = React.useState<number>(0);
   const { reviewImages, setReviewImages } = useReviewImageStore();
   const location = useLocation();
   const { productOptionId, orderId, productName, optionInfo } = location.state;
   const mutation = useMutation(reviewRegister, {
     onSuccess: (data) => {
       queryClient.setQueryData("review", data);
-      console.log("리뷰확인", data);
-      navigate("/");
+      navigate("/myOrder");
     },
   });
 
@@ -83,10 +39,13 @@ const ReviewRegisterPage = () => {
           };
         })
       );
-
+      if (reviewImages.length + compressedImages.length > 6) {
+        toast.error("이미지는 최대 6장까지 등록할 수 있습니다.");
+        return;
+      }
       setReviewImages([...reviewImages, ...compressedImages]);
     } catch (error) {
-      console.error(error);
+      toast.error("이미지 불러오기에 실패했습니다");
     }
   };
 
@@ -94,12 +53,6 @@ const ReviewRegisterPage = () => {
     onDrop: onReviewImageDrop,
     maxFiles: 10,
   });
-
-  const handleRatingChange = (event: React.ChangeEvent<{}>, newValue: number | null) => {
-    if (newValue !== null) {
-      setRating(newValue);
-    }
-  };
 
   const handleContentChange = (newContent: string) => {
     setReviews({ ...reviews, content: newContent });
@@ -118,6 +71,11 @@ const ReviewRegisterPage = () => {
       return;
     } else if (reviewImages.length > 6) {
       toast.error("이미지는 최대 6장까지 등록할 수 있습니다.");
+      return;
+    }
+
+    if (!ratingValue) {
+      toast.error("평점을 선택해주세요");
       return;
     }
 
@@ -148,16 +106,15 @@ const ReviewRegisterPage = () => {
       orderId: orderId,
       productOptionId: Number(productOptionId[0]),
       content: reviews.content,
-      rating: rating,
+      rating: ratingValue,
       imagesRegisterRequestList: reviewImagesRegisterRequests,
     };
-    console.log("data", data);
     await mutation.mutateAsync({
       ...data,
       orderId: orderId,
       productOptionId: Number(productOptionId[0]),
       content: reviews.content,
-      rating: rating,
+      rating: ratingValue,
       imagesRegisterRequestList: reviewImagesRegisterRequests as ReviewImage[],
     });
 
@@ -168,36 +125,27 @@ const ReviewRegisterPage = () => {
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              fontFamily: "SUIT-light",
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <p style={{ fontSize: "20px", marginRight: "10px", fontFamily: "SUIT-light" }}>
-                {productName}
-              </p>
-              <p style={{ color: "gray", fontFamily: "SUIT-light" }}>
-                {optionInfo.map((option: OrderOptionListResponse, index: number) => (
-                  <span key={index}>
-                    옵션: {option.optionName}
-                    {index < optionInfo.length - 1 ? ", " : ""}
-                  </span>
-                ))}
-              </p>
+          <div className="review-reg-info-container">
+            <div className="review-reg-info-grid">
+              <div>
+                <p className="review-reg-product-name">{productName}</p>
+                <p className="review-reg-option-info">
+                  {optionInfo.map((option: OrderOptionListResponse, index: number) => (
+                    <span key={index}>
+                      {option.optionName}
+                      {index < optionInfo.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </p>
+              </div>
             </div>
-            <StyledRating
-              name="highlight-selected-only"
-              value={rating}
-              defaultValue={2}
-              IconContainerComponent={IconContainer}
-              getLabelText={(value: number) => customIcons[value].label}
-              highlightSelectedOnly
-              onChange={handleRatingChange}
+            <Rating
+              name="rating"
+              value={ratingValue}
+              onChange={(_, value) => {
+                setRatingValue(value!);
+              }}
+              precision={0.5}
             />
           </div>
           <TextField
@@ -207,38 +155,18 @@ const ReviewRegisterPage = () => {
             multiline
             minRows={10}
             maxRows={10}
-            sx={{ borderRadius: "4px" }}
-            onChange={(event) => handleContentChange(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+              handleContentChange(event.target.value)
+            }
           />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              width: "100%",
-              height: "100px",
-              backgroundColor: "#eef2f3",
-              cursor: "pointer",
-              flexWrap: "wrap",
-            }}
-            {...reviewImageRootProps()}
-          >
+          <div className="review-reg-img-input" {...reviewImageRootProps()}>
             {reviewImages.length > 0 ? (
-              reviewImages.map((image, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    width: "auto",
-                    height: "auto",
-                    margin: "0 8px",
-                    cursor: "pointer",
-                    position: "relative",
-                  }}
-                >
+              reviewImages.map((image: ReviewImage, idx: number) => (
+                <div key={idx}>
                   <img
                     src={URL.createObjectURL(image.reviewImages)}
                     alt={`Selected ${idx}`}
-                    style={{ width: "auto", height: "70px" }}
+                    className="review-reg-img-style"
                   />
                   {/* <RemoveCircleOutlineSharpIcon
                     style={{
@@ -253,14 +181,22 @@ const ReviewRegisterPage = () => {
                 </div>
               ))
             ) : (
-              <div style={{ textAlign: "center", width: "100%" }}>
+              <div className="review-reg-input-message">
                 <div>리뷰 이미지를 추가해주세요.</div>
                 <input {...reviewImageInputProps()} />
               </div>
             )}
           </div>
+          <div className="review-reg-submit-btn">
+            <Button
+              style={{ minWidth: "150px", color: "#578b36", borderColor: "#578b36" }}
+              variant="outlined"
+              type="submit"
+            >
+              작성 완료
+            </Button>
+          </div>
         </Box>
-        <Button type="submit">작성 완료</Button>
       </form>
     </Container>
   );

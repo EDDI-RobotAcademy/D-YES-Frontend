@@ -16,6 +16,7 @@ import { ProductModify } from "page/product/entity/ProductModify";
 import { ProductDetail } from "page/product/entity/ProductDetail";
 import { ProductPopupRead } from "page/product/entity/ProductPopupRead";
 import ProductOptionStore from "page/product/store/ProductOptionStore";
+import { ProductListResponseFormForUser } from "../entity/ProductList";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -25,10 +26,7 @@ export const registerProduct = async (data: {
   productDetailImagesRegisterRequests: ProductDetailImg[];
   farmName: string;
 }): Promise<Product> => {
-  const response = await axiosInstance.post<Product>(
-    "/product/admin/register",
-    data
-  );
+  const response = await axiosInstance.post<Product>("/product/admin/register", data);
   console.log("api데이터 확인", response.data);
   return response.data;
 };
@@ -47,7 +45,7 @@ export const getProductList = async (currentPath: string) => {
     endpoint = `/product/user/list/region/${selectedName}`;
   }
 
-  const response = await axiosInstance.get(endpoint);
+  const response = await axiosInstance.get<ProductListResponseFormForUser[]>(endpoint);
   console.log("상품 리스트 데이터", response.data);
   return response.data;
 };
@@ -95,9 +93,7 @@ export const deleteProducts = async (productIds: string[]): Promise<any> => {
 
 // 관리자용 수정 페이지에 접근했을 때 데이터 읽어오기
 export const fetchProduct = async (productId: string): Promise<ProductRead | null> => {
-  const response = await axiosInstance.get<ProductRead>(
-    `/product/admin/read/${productId}`
-  );
+  const response = await axiosInstance.get<ProductRead>(`/product/admin/read/${productId}`);
   console.log("읽기", response.data);
   return response.data;
 };
@@ -118,16 +114,13 @@ export const updateProduct = async (updatedData: ProductModify): Promise<Product
     productDetailImagesModifyRequest,
     userToken = localStorage.getItem("userToken"),
   } = updatedData;
-  const response = await axiosInstance.put<ProductModify>(
-    `/product/admin/modify/${productId}`,
-    {
-      userToken,
-      productModifyRequest,
-      productOptionModifyRequest,
-      productMainImageModifyRequest,
-      productDetailImagesModifyRequest,
-    }
-  );
+  const response = await axiosInstance.put<ProductModify>(`/product/admin/modify/${productId}`, {
+    userToken,
+    productModifyRequest,
+    productOptionModifyRequest,
+    productMainImageModifyRequest,
+    productDetailImagesModifyRequest,
+  });
   return response.data;
 };
 
@@ -146,9 +139,7 @@ export const useProductUpdateMutation = (): UseMutationResult<
 
 // 사용자용 상품 상세정보 확인
 export const getProductDetail = async (productId: string): Promise<ProductDetail | null> => {
-  const response = await axiosInstance.get<ProductDetail>(
-    `/product/user/read/${productId}`
-  );
+  const response = await axiosInstance.get<ProductDetail>(`/product/user/read/${productId}`);
 
   const optionList: useOptions[] = response.data.optionResponseForUser;
   const extendedOptionList = optionList.map((option) => ({
