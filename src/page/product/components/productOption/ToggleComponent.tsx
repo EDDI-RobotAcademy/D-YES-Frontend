@@ -19,15 +19,14 @@ const ToggleComponent: React.FC<ToggleComponentProps> = ({ label, children, heig
     }
   }, [isInputVisible, height]);
 
-  const handleButtonClick = () => {
-    setInputVisible(!isInputVisible);
-  };
-
   return (
     <div>
       <button
+        type="button"
         ref={buttonRef}
-        onClick={handleButtonClick}
+        onClick={() => {
+          setInputVisible(!isInputVisible);
+        }}
         style={{
           width: "100%",
           height: "40px",

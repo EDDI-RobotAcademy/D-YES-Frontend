@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { getAddressList } from "page/user/api/UserApi";
+import { addressDelete, defaultChange, getAddressList } from "page/user/api/UserApi";
 import { AddressLists } from "page/user/entity/AddressLists";
-import { Box, TableCell, TableHead, TableRow } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Checkbox, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
   const hasFetchedRef = React.useRef(false);
 
   useEffect(() => {
@@ -16,15 +18,48 @@ const AddressList = () => {
   const fetchAddressList = async () => {
     try {
       hasFetchedRef.current = true;
-      const fetchedAddressList = await getAddressList();
+      const fetchedAddressList: AddressLists[] = await getAddressList();
 
       if (fetchedAddressList.length === 0) {
         return;
       }
-
       setAddressList(fetchedAddressList);
+      const defaultOptionAddress = fetchedAddressList.find(
+        (address) => address.addressBookOption === "DEFAULT_OPTION"
+      );
+      if (defaultOptionAddress) {
+        setSelectedAddressId(defaultOptionAddress.addressId.toString());
+      }
     } catch (error) {
       console.error("배송지 목록 불러오기 실패:", error);
+    }
+  };
+
+  const handleDeleteClick = async (addressBookId: string) => {
+    try {
+      await addressDelete(addressBookId);
+      const updatedAddressList = addressList.filter(
+        (address) => address.addressId !== Number(addressBookId)
+      );
+      setAddressList(updatedAddressList);
+    } catch (error) {
+      console.error("배송지 삭제 실패:", error);
+    }
+  };
+
+  const handleCheckboxToggle = async (addressId: string) => {
+    try {
+      const updateData = {
+        userToken: localStorage.getItem("userToken") || "",
+        addressBookOption: "DEFAULT_OPTION",
+        addressBookId: Number(addressId),
+      };
+
+      await defaultChange(updateData);
+
+      setSelectedAddressId(addressId);
+    } catch (error) {
+      console.error("주소 업데이트 실패:", error);
     }
   };
 
@@ -40,7 +75,7 @@ const AddressList = () => {
         bgcolor="white"
         overflow="hidden" // 가로 스크롤 숨김
         border="solid 1px lightgray"
-        maxWidth="500px" // 가로 길이 제한
+        maxWidth="600px" // 가로 길이 제한
         margin="0 auto" // 수평 가운데 정렬
       >
         <div></div>
@@ -53,6 +88,15 @@ const AddressList = () => {
         >
           <TableHead>
             <TableRow>
+              <TableCell
+                style={{
+                  width: "10px",
+                  // padding: "8px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Medium",
+                }}
+              ></TableCell>
               <TableCell
                 style={{
                   width: "100px",
@@ -86,11 +130,26 @@ const AddressList = () => {
               >
                 배송지
               </TableCell>
+              <TableCell
+                style={{
+                  width: "20px",
+                  // padding: "8px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Medium",
+                }}
+              ></TableCell>
             </TableRow>
           </TableHead>
           <tbody>
             {addressList.map((address, index) => (
               <TableRow key={address.addressId}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedAddressId === address.addressId.toString()}
+                    onChange={() => handleCheckboxToggle(address.addressId.toString())}
+                  />
+                </TableCell>
                 <TableCell
                   style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >
@@ -114,6 +173,17 @@ const AddressList = () => {
                   style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
                 >
                   {address.contactNumber}
+                </TableCell>
+                <TableCell
+                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                >
+                  <IconButton
+                    onClick={() => handleDeleteClick(address.addressId.toString())}
+                    color="default"
+                    aria-label="delete"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
