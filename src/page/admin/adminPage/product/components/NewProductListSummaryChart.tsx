@@ -24,7 +24,7 @@ const transformData2 = (data: NewProductManagemantInfo[]): ChartData[] => {
       id: "registeredProductCount",
       data: data.map((item) => ({
         x: item.registrationDate,
-        y: item.registeredUserCount,
+        y: item.registeredProductCount,
       })),
     },
   ];

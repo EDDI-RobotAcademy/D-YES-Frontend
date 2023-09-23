@@ -1,4 +1,4 @@
 export interface NewProductManagemantInfo {
   registrationDate: Date;
-  registeredUserCount: number;
+  registeredProductCount: number;
 }
