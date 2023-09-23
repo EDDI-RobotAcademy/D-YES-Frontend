@@ -1,0 +1,71 @@
+.refund-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.refund-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.refund-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.refund-component-name {
+  font-family: "SUIT-Bold";
+}
+.refund-component {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+  font-family: "SUIT-SemiBold";
+}
+.refund-info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "SUIT-SemiBold";
+  padding: 0 10px;
+}
+.refund-grid-container {
+  width: 300px;
+}
+.refund-product-info {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+.refund-product-name {
+  font-size: 16px;
+  padding: 15px;
+}
+.refund-option-info {
+  font-size: 16px;
+  padding: 15px;
+}
+.refund-form-group {
+  padding-left: 20px;
+}
+.refund-submit-btn {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+.refund-description {
+  font-size: small;
+  color: gray;
+  padding-top: 10px;
+}
+.refund-reason-container {
+  font-size: 16px;
+  padding: 15px;
+}
+.refund-warning {
+  color: red;
+  font-size: 14px;
+  padding-left: 15px;
+}

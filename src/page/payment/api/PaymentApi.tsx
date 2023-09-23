@@ -1,3 +1,4 @@
+import { OrderRefund } from "page/order/entity/OrderRefund";
 import { OrderRequset } from "page/order/entity/OrderRequset";
 import axiosInstance from "utility/axiosInstance";
 
@@ -35,5 +36,16 @@ export const kakaoPaymentRejectRequest = async () => {
       userToken: userToken,
     },
   });
+  return response.data;
+};
+
+// 카카오 상품 환불
+export const refundOrderedItems = async (refundItems: OrderRefund) => {
+  const requestForm = {
+    userToken: userToken,
+    requestList: refundItems,
+  };
+  const response = await axiosInstance.post<boolean>("/order/payment/kakao/refund", requestForm);
+  console.log("환불 데이터", requestForm);
   return response.data;
 };
