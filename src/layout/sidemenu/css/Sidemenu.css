@@ -5,6 +5,7 @@
   background-color: #121e2d;
   color: #fff;
   width: 250px;
+  width: 100%;
   flex: 0 0 auto; /* 너비를 고정 */
   display: flex;
   flex-direction: column;
