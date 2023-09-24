@@ -1,8 +1,9 @@
 .admin-bash-board-container {
-  /* background-color: red; */
   width: 100%;
-  height: 93%;
 }
 .new-product-info-container {
+  display: flex;
+}
+.new-order-info-container {
   display: flex;
 }
