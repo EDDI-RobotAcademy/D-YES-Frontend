@@ -9,7 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Chip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
@@ -92,7 +92,9 @@ const AdminProductList: React.FC = () => {
   const handleEditClick = (productId: number) => {
     navigate(`../adminProductModifyPage/${productId}`);
     if (products) {
-      const modifiedData = products.find((product) => product.productId === productId);
+      const modifiedData = products.find(
+        (product) => product.productId === productId
+      );
       if (modifiedData) {
         setModifyProducts(modifiedData);
       }
@@ -112,7 +114,9 @@ const AdminProductList: React.FC = () => {
 
   const handleDeleteProduct = (productId: number) => {
     if (products) {
-      const updatedProducts = products.filter((product) => product.productId !== productId);
+      const updatedProducts = products.filter(
+        (product) => product.productId !== productId
+      );
       setProducts(updatedProducts);
     }
   };
@@ -120,74 +124,110 @@ const AdminProductList: React.FC = () => {
   return (
     <div className="admin-product-list-container">
       <div className="admin-product-list-box">
-        <TableContainer component={Paper} style={{ boxShadow: "none" }}>
-          <div className="product-list-menu">
-            <div className="product-list-icon">
-              <img
-                className="farm-product-list-icon"
-                alt="상품 목록"
-                src="img/farm-product-list-icon.png"
-              />
-            </div>
-            <div className="product-list-text">
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                style={{
-                  fontSize: "16px",
-                  fontFamily: "SUIT-Medium",
-                  color: "#252525",
-                  marginBottom: "0px",
-                }}
-              >
-                상품 목록
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="subtitle2"
-                style={{
-                  fontSize: "12px",
-                  fontFamily: "SUIT-Regular",
-                  color: "#252525",
-                }}
-              >
-                * 등록된 상품 목록을 확인해주세요
-              </Typography>
-            </div>
-          </div>
+        <TableContainer
+          component={Paper}
+          style={{ boxShadow: "none", width: "100%" }}
+        >
           <table
             style={{
-              width: "100%",
-              borderTop: "solid 1px lightgray",
-              padding: "10px 10px 10px 10px",
+              borderCollapse: "collapse",
+              textAlign: "center",
+              margin: "20px",
             }}
           >
             <TableHead style={{ fontFamily: "SUIT-Thin" }}>
-              <TableRow>
-                <TableCell className="cellStyle-header" style={{ width: "60px" }}>
+              <TableRow style={{ backgroundColor: "#F8F9FA" }}>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "4%",
+                    textAlign: "center",
+                  }}
+                >
                   선택
                 </TableCell>
-                <TableCell className="cellStyle-header" style={{ width: "60px" }}>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "4%",
+                    textAlign: "center",
+                  }}
+                >
                   수정
                 </TableCell>
                 <TableCell
                   className="cellStyle-header"
-                  style={{ width: "60px" }}
+                  style={{
+                    width: "6%",
+                    textAlign: "center",
+                  }}
                   data-testid="product-id"
                 >
                   상품번호
                 </TableCell>
-                <TableCell className="cellStyle-header" style={{ width: "200px" }}>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "20%",
+                    textAlign: "center",
+                  }}
+                >
                   상품명
                 </TableCell>
-                <TableCell className="cellStyle-header">상품 판매여부</TableCell>
-                <TableCell className="cellStyle-header" style={{ width: "122px" }}>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "8%",
+                    textAlign: "center",
+                  }}
+                >
+                  상품 판매여부
+                </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "8%",
+                    textAlign: "center",
+                  }}
+                >
                   농가 이름
                 </TableCell>
-                <TableCell className="cellStyle-header">옵션명</TableCell>
-                <TableCell className="cellStyle-header">옵션가격</TableCell>
-                <TableCell className="cellStyle-header">재고</TableCell>
-                <TableCell className="cellStyle-header">옵션 판매여부</TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "6%",
+                    textAlign: "center",
+                  }}
+                >
+                  옵션명
+                </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "6%",
+                    textAlign: "center",
+                  }}
+                >
+                  옵션가격
+                </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "6%",
+                    textAlign: "center",
+                  }}
+                >
+                  재고
+                </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "8%",
+                    textAlign: "center",
+                  }}
+                >
+                  옵션 판매여부
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -228,14 +268,25 @@ const AdminProductList: React.FC = () => {
                         수정
                       </Button>
                     </TableCell>
-                    <TableCell className="cellStyle">{product.productId}</TableCell>
-                    <TableCell className="cellStyle">{product.productName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.productSaleStatus === "AVAILABLE" ? "판매중" : "판매중지"}
+                      {product.productId}
                     </TableCell>
-                    <TableCell className="cellStyle">{product.farmName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.productOptionList && product.productOptionList.length > 0 ? (
+                      {product.productName}
+                    </TableCell>
+                    <TableCell className="cellStyle">
+                      {product.productSaleStatus === "AVAILABLE" ? (
+                        <Chip label="판매중" color="success" />
+                      ) : (
+                        <Chip label="판매중지" color="error" />
+                      )}
+                    </TableCell>
+                    <TableCell className="cellStyle">
+                      {product.farmName}
+                    </TableCell>
+                    <TableCell className="cellStyle">
+                      {product.productOptionList &&
+                      product.productOptionList.length > 0 ? (
                         <Select
                           className="noOutline"
                           variant="outlined"
@@ -273,27 +324,42 @@ const AdminProductList: React.FC = () => {
                       ) : null}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] && product.productOptionList
+                      {selectedOptions[product.productId] &&
+                      product.productOptionList
                         ? product.productOptionList.find(
-                            (option) => option.optionName === selectedOptions[product.productId]
+                            (option) =>
+                              option.optionName ===
+                              selectedOptions[product.productId]
                           )?.optionPrice
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] && product.productOptionList
+                      {selectedOptions[product.productId] &&
+                      product.productOptionList
                         ? product.productOptionList.find(
-                            (option) => option.optionName === selectedOptions[product.productId]
+                            (option) =>
+                              option.optionName ===
+                              selectedOptions[product.productId]
                           )?.stock
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] && product.productOptionList
-                        ? product.productOptionList.find(
-                            (option) => option.optionName === selectedOptions[product.productId]
-                          )?.optionSaleStatus === "AVAILABLE"
-                          ? "판매중"
-                          : "판매중지"
-                        : ""}
+                      {selectedOptions[product.productId] &&
+                        product.productOptionList &&
+                        product.productOptionList.find(
+                          (option) =>
+                            option.optionName ===
+                              selectedOptions[product.productId] &&
+                            option.optionSaleStatus === "AVAILABLE"
+                        ) && <Chip label="판매중" color="success" />}
+                      {selectedOptions[product.productId] &&
+                        product.productOptionList &&
+                        !product.productOptionList.find(
+                          (option) =>
+                            option.optionName ===
+                              selectedOptions[product.productId] &&
+                            option.optionSaleStatus === "AVAILABLE"
+                        ) && <Chip label="판매중지" color="error" />}
                     </TableCell>
                   </TableRow>
                 ))
@@ -303,14 +369,13 @@ const AdminProductList: React.FC = () => {
           <Button
             onClick={handleDeleteClick}
             variant="contained"
-            color="primary"
             style={{
               fontSize: "13px",
               padding: "4px 8px 4px 8px",
               fontFamily: "SUIT-Regular",
               marginLeft: "32px",
-              marginBottom: "10px",
-              backgroundColor: "#DF726D",
+              marginBottom: "18px",
+              backgroundColor: "#df726d",
             }}
           >
             삭제

@@ -1,0 +1,9 @@
+.admin-bash-board-container {
+  width: 100%;
+}
+.new-product-info-container {
+  display: flex;
+}
+.new-order-info-container {
+  display: flex;
+}

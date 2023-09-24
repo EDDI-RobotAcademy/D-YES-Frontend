@@ -1,0 +1,14 @@
+.product-info-container {
+  width: 100%;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  /* background-color: red; */
+}
+.new-product-list {
+  /* width: 900px; */
+  height: 460px;
+  background-color: white;
+  padding: 20px 20px 20px 20px;
+  justify-content: flex-start;
+}

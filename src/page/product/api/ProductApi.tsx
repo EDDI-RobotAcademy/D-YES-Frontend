@@ -17,6 +17,7 @@ import { ProductDetail } from "page/product/entity/ProductDetail";
 import { ProductPopupRead } from "page/product/entity/ProductPopupRead";
 import ProductOptionStore from "page/product/store/ProductOptionStore";
 import { ProductListResponseFormForUser } from "../entity/ProductList";
+import { ProductInfoResponse } from "../entity/ProductInfoResponse";
 
 // 관리자용 상품 등록
 export const registerProduct = async (data: {
@@ -188,4 +189,17 @@ export const usePopupProductQuery = (
   return useQuery(["productPopupRead", productId], () => fetchPopupProduct(productId), {
     refetchOnWindowFocus: false,
   });
+};
+
+// 관리자용 신규 상품 리스트 확인
+export const fetchNewProductList = async (): Promise<ProductInfoResponse> => {
+  const response = await axiosInstance.get<ProductInfoResponse>(
+    "/product/admin/new-list"
+  );
+  console.log("신규 상품 리스트 데이터", response.data);
+  console.log(
+    "신규 상품 리스트 데이터2",
+    JSON.stringify(response.data.registeredProductCountList)
+  );
+  return response.data;
 };

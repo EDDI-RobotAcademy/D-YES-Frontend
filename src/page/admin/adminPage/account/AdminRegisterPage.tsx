@@ -62,7 +62,7 @@ const NormalAdminRegister = () => {
           flexDirection="column"
           alignItems={"center"}
           justifyContent="center"
-          height="100vh"
+          // height="100vh"
           width="100%"
         >
           <div className="normal-admin-register-form">

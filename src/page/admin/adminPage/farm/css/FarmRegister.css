@@ -33,5 +33,29 @@
 
 .farm-page-container {
   display: flex;
-  background-color: lightgray;
+}
+.farm-container {
+  padding: 20px 20px 20px 20px;
+}
+.farm-register-box {
+  width: 100%;
+}
+.farm-register {
+  width: 40%;
+  min-height: 100%;
+  padding-right: 20px;
+}
+.farm-list {
+  width: 60%;
+  min-height: 100%;
+}
+.css-1d5yvye {
+  width: 96%;
+}
+.farm-menu {
+  background-color: white;
+  font-family: "SUIT-ExtraBold";
+  font-size: 26px;
+  padding-left: 60px;
+  padding-top: 20px;
 }

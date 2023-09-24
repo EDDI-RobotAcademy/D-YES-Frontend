@@ -1,0 +1,10 @@
+.admin-main-container {
+  display: flex;
+}
+.side-menu-container {
+  background-color: #121e2d;
+}
+.side-board-container {
+  width: 100%;
+  background-color: #f8f8f8;
+}

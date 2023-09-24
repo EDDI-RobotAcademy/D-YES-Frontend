@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Typography,
   TableContainer,
   Paper,
   TableHead,
@@ -45,14 +44,22 @@ const FarmList = () => {
   const handleDeleteClick = async (farmId: string) => {
     try {
       const farmList = await getFarmList();
-      const farm = farmList.find((farm: Farm) => farm.farmId.toString() === farmId);
+      const farm = farmList.find(
+        (farm: Farm) => farm.farmId.toString() === farmId
+      );
 
       if (farm) {
         const products = await fetchProductList();
-        const hasRelatedProducts = products.some((product) => product.farmName === farm.farmName);
+        const hasRelatedProducts = products.some(
+          (product) => product.farmName === farm.farmName
+        );
 
         if (hasRelatedProducts) {
-          Swal.fire("경고", "농가에 등록된 상품이 있으므로 삭제할 수 없습니다.", "warning");
+          Swal.fire(
+            "경고",
+            "농가에 등록된 상품이 있으므로 삭제할 수 없습니다.",
+            "warning"
+          );
         } else {
           const result = await Swal.fire({
             title: "삭제하시겠습니까?",
@@ -85,8 +92,12 @@ const FarmList = () => {
     try {
       const farmInfo = await fetchFarm(farmId);
       if (farmInfo !== null) {
-        setFarmRead(farmInfo.farmInfoResponseForAdmin as unknown as FarmInfoRead);
-        setBusinessRead(farmInfo.farmOperationInfoResponseForAdmin as FarmBusinessRead);
+        setFarmRead(
+          farmInfo.farmInfoResponseForAdmin as unknown as FarmInfoRead
+        );
+        setBusinessRead(
+          farmInfo.farmOperationInfoResponseForAdmin as FarmBusinessRead
+        );
       } else {
         console.error("농가 정보를 가져오는 데 실패했습니다.");
       }
@@ -97,64 +108,43 @@ const FarmList = () => {
 
   return (
     <div>
-      <div className="list-menu">
-        {/* <img className="farm-list-icon" alt="농가 목록" src="img/farm-list-icon.png" /> */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Typography
-            gutterBottom
-            style={{
-              fontSize: "16px",
-              fontFamily: "SUIT-Medium",
-              color: "#252525",
-              marginBottom: "0px",
-            }}
-          >
-            등록된 농가 목록
-          </Typography>
-          <Typography
-            gutterBottom
-            sx={{
-              fontSize: "12px",
-              fontFamily: "SUIT-Regular",
-              color: "#252525",
-            }}
-          >
-            * 등록되어 있는 농가 목록을 확인해주세요
-          </Typography>
-        </div>
-      </div>
       <Box
         display="flex"
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        minHeight="158.8vh"
+        height="auto"
         paddingTop="32px"
         paddingBottom="20px"
         bgcolor="white"
         overflow="hidden" // 가로 스크롤 숨김
-        border="solid 1px lightgray"
       >
         <Box flex="0"></Box>
-        <Box bgcolor="white" flex="10" flexDirection="column" alignItems="center">
+        <Box bgcolor="white" flexDirection="column" alignItems="center">
           <button
             onClick={fetchFarmList}
             style={{
-              backgroundColor: "#4F72CA",
+              backgroundColor: "#6DA082",
               border: "none",
+              borderRadius: "6px",
+              height: "40px",
               color: "white",
               padding: "6px 398px",
               cursor: "pointer",
-              fontSize: "14px",
-              marginBottom: "2px",
+              fontSize: "16px",
+              marginBottom: "20px",
               fontFamily: "SUIT-Light",
             }}
           >
-            농가 목록 불러오기
+            목록 불러오기
           </button>
           <TableContainer
             component={Paper}
-            style={{ width: "900px", borderRadius: "0px", fontFamily: "SUIT-ExtraBold" }}
+            style={{
+              width: "auto",
+              borderRadius: "0px",
+              fontFamily: "SUIT-ExtraBold",
+            }}
           >
             <table
               style={{
@@ -167,7 +157,7 @@ const FarmList = () => {
                 <TableRow>
                   <TableCell
                     style={{
-                      width: "50px",
+                      width: "10%",
                       padding: "18px 16px",
                       textAlign: "center",
                       color: "#252525",
@@ -178,7 +168,7 @@ const FarmList = () => {
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "300px",
+                      width: "30%",
                       padding: "8px 16px",
                       textAlign: "center",
                       color: "#252525",
@@ -189,7 +179,7 @@ const FarmList = () => {
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "500px",
+                      width: "50%",
                       padding: "8px 16px",
                       textAlign: "center",
                       color: "#252525",
@@ -200,7 +190,7 @@ const FarmList = () => {
                   </TableCell>
                   <TableCell
                     style={{
-                      width: "50px",
+                      width: "10%",
                       padding: "18px 16px",
                       textAlign: "center",
                       color: "#252525",
@@ -218,19 +208,32 @@ const FarmList = () => {
                     onClick={() => handleFarmClick(farm.farmId.toString())}
                   >
                     <TableCell
-                      style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                      style={{
+                        padding: "8px 16px",
+                        textAlign: "center",
+                        fontFamily: "SUIT-Light",
+                      }}
                     >
                       {farm.farmId}
                     </TableCell>
                     <TableCell
-                      style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                      style={{
+                        padding: "8px 16px",
+                        textAlign: "center",
+                        fontFamily: "SUIT-Light",
+                      }}
                     >
                       {farm.farmName}
                     </TableCell>
                     <TableCell
-                      style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                      style={{
+                        padding: "8px 16px",
+                        textAlign: "center",
+                        fontFamily: "SUIT-Light",
+                      }}
                     >
-                      {farm.farmAddress.address} {farm.farmAddress.addressDetail} (
+                      {farm.farmAddress.address}{" "}
+                      {farm.farmAddress.addressDetail} (
                       {farm.farmAddress.zipCode})
                     </TableCell>
                     <TableCell
@@ -241,7 +244,9 @@ const FarmList = () => {
                       }}
                     >
                       <IconButton
-                        onClick={() => handleDeleteClick(farm.farmId.toString())}
+                        onClick={() =>
+                          handleDeleteClick(farm.farmId.toString())
+                        }
                         color="default"
                         aria-label="delete"
                       >

@@ -1,0 +1,15 @@
+.admin-header-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+  height: 60px;
+  padding: 0 20px;
+}
+
+.menu {
+  margin: 0;
+  text-align: left;
+  font-family: "SUIT-ExtraBold";
+  font-size: 20px;
+}

@@ -4,6 +4,8 @@ import Footer from "layout/footer/Footer";
 import Header from "layout/navigation/Header";
 import Header2nd from "layout/navigation/Header2nd";
 import Sidemenu from "layout/sidemenu/Sidemenu";
+import AdminHeader from "layout/navigation/AdminHeader";
+import "./layout/css/AdminLayout.css";
 
 export function UserLayout() {
   return (
@@ -19,9 +21,15 @@ export function UserLayout() {
 export function AdminLayout() {
   return (
     <>
-      <Sidemenu>
-        <Outlet />
-      </Sidemenu>
+      <div className="admin-main-container">
+        <div className="side-menu-container">
+          <Sidemenu />
+        </div>
+        <div className="side-board-container">
+          <AdminHeader />
+          <Outlet />
+        </div>
+      </div>
     </>
   );
 }
