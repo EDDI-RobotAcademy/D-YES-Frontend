@@ -2,10 +2,9 @@
   display: flex;
 }
 .sidebar {
-  background-color: #121e2d;
+  /* background-color: #121e2d; */
   color: #fff;
   width: 250px;
-  width: 100%;
   flex: 0 0 auto; /* 너비를 고정 */
   display: flex;
   flex-direction: column;
@@ -20,7 +19,8 @@
 }
 .account-management,
 .product-management,
-.order-management {
+.order-management,
+.dash-board {
   padding: 10px; /* 버튼 간격 */
   margin-left: 20px;
 }
@@ -70,7 +70,14 @@
   font-family: "SUIT-Thin";
   cursor: pointer;
 }
+.dash-board {
+  cursor: pointer;
+}
 .menu-icon {
   padding-right: 18px;
+  color: white;
+}
+.btn-icon {
+  padding-left: 80px;
   color: white;
 }
