@@ -15,8 +15,7 @@ interface ChartFormProps {
 const transformData = (data: NewOrderManagemantInfo[]): ChartData[] => {
   data.sort(
     (a, b) =>
-      new Date(a.orderedTime).getTime() -
-      new Date(b.orderedTime).getTime()
+      new Date(a.orderedTime).getTime() - new Date(b.orderedTime).getTime()
   );
 
   const chartData: ChartData[] = [
@@ -66,7 +65,7 @@ const NewOrderListSummaryChart: React.FC<ChartFormProps> = ({
               tickPadding: 5,
               tickRotation: 0,
             }}
-            colors={{ scheme: "nivo" }}
+            colors={{ scheme: "dark2" }}
             pointSize={8}
             pointColor={{ from: "color", modifiers: [] }}
             pointBorderWidth={2}

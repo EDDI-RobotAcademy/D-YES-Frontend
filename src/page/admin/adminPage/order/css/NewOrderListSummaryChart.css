@@ -1,16 +1,15 @@
 .order-managemant-info-container {
   width: 40%;
   padding-top: 20px;
-  /* background-color: yellow; */
 }
 .new-order-chart {
-  /* width: 600px; */
   height: 460px;
   background-color: white;
   padding: 20px 20px 20px 20px;
   justify-content: flex-end;
+  margin-right: 20px;
 }
 .orderChart {
   height: 420px;
-  padding-bottom: 20px;
+  /* padding-bottom: 20px; */
 }
