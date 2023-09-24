@@ -65,24 +65,6 @@ const MyOrderPage: React.FC = () => {
     }
   }, [filter, isLoading, loadedOrderList]);
 
-  const goToReviewPage = (productOrderId: string, options: OrderProductListResponse[]) => {
-    const productOptionIdList: number[] = options.flatMap((option) =>
-      option.orderOptionList.map((item) => item.optionId)
-    );
-    const productName: string = options[0].productName;
-    const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
-      option.orderOptionList.map((item) => item)
-    );
-    navigate("/review/register", {
-      state: {
-        productOptionId: productOptionIdList,
-        orderId: productOrderId,
-        productName: productName,
-        optionInfo: optionInfo,
-      },
-    });
-  };
-
   const tagMapping: { [key: string]: { className: string; name: string } } = {
     PREPARING: { className: "order-state-preparing", name: "상품 준비 중" },
     SHIPPING: { className: "order-state-shipping", name: "배송 중" },
@@ -109,6 +91,38 @@ const MyOrderPage: React.FC = () => {
 
   const handleFilterClick = (value: string) => {
     setFilter(value);
+  };
+
+  const goToReviewPage = (productOrderId: string, options: OrderProductListResponse[]) => {
+    const productOptionIdList: number[] = options.flatMap((option) =>
+      option.orderOptionList.map((item) => item.optionId)
+    );
+    const productName: string = options[0].productName;
+    const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
+      option.orderOptionList.map((item) => item)
+    );
+    navigate("/review/register", {
+      state: {
+        productOptionId: productOptionIdList,
+        orderId: productOrderId,
+        productName: productName,
+        optionInfo: optionInfo,
+      },
+    });
+  };
+
+  const goToRefund = (options: OrderProductListResponse[], orderId: string) => {
+    const productName: string = options[0].productName;
+    const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
+      option.orderOptionList.map((item) => item)
+    );
+    navigate("/payment/refund", {
+      state: {
+        orderId: orderId,
+        productName: productName,
+        optionInfo: optionInfo,
+      },
+    });
   };
 
   return (
@@ -233,14 +247,17 @@ const MyOrderPage: React.FC = () => {
                                   )}
                                 </TableCell>
                                 {idx === 0 ? (
-                                  <TableCell rowSpan={item.orderProductList.length} align="right">
-                                    {won(item.orderDetailInfoResponse.totalPrice || 0)}
-                                  </TableCell>
-                                ) : null}
-                                {idx === 0 ? (
-                                  <TableCell align="center" rowSpan={item.orderProductList.length}>
-                                    {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
-                                  </TableCell>
+                                  <>
+                                    <TableCell rowSpan={item.orderProductList.length} align="right">
+                                      {won(item.orderDetailInfoResponse.totalPrice || 0)}
+                                    </TableCell>
+                                    <TableCell
+                                      align="center"
+                                      rowSpan={item.orderProductList.length}
+                                    >
+                                      {tagMapping[item.orderDetailInfoResponse.deliveryStatus].name}
+                                    </TableCell>
+                                  </>
                                 ) : null}
                                 {isProductNameRowSpan ? (
                                   <>
@@ -272,21 +289,34 @@ const MyOrderPage: React.FC = () => {
                                         <>리뷰 작성 완료</>
                                       )}
                                     </TableCell>
+                                    <TableCell
+                                      rowSpan={
+                                        item.orderProductList.filter(
+                                          (prod) => prod.productName === options.productName
+                                        ).length
+                                      }
+                                      align="center"
+                                    >
+                                      <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() =>
+                                          goToRefund(
+                                            item.orderProductList,
+                                            item.orderDetailInfoResponse.productOrderId
+                                          )
+                                        }
+                                        disabled={refundDeadline.some(
+                                          (refundItem: UserOrderList) =>
+                                            refundItem.orderDetailInfoResponse.productOrderId ===
+                                            item.orderDetailInfoResponse.productOrderId
+                                        )}
+                                      >
+                                        환불 신청
+                                      </Button>
+                                    </TableCell>
                                   </>
                                 ) : null}
-                                <TableCell align="center">
-                                  <Button
-                                    variant="outlined"
-                                    color="error"
-                                    disabled={refundDeadline.some(
-                                      (refundItem: UserOrderList) =>
-                                        refundItem.orderDetailInfoResponse.productOrderId ===
-                                        item.orderDetailInfoResponse.productOrderId
-                                    )}
-                                  >
-                                    환불 신청
-                                  </Button>
-                                </TableCell>
                               </TableRow>
                             );
                           }
