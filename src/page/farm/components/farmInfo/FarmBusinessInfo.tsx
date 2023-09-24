@@ -7,30 +7,44 @@ const FarmBusinessInfo = () => {
   const { business, setBusiness } = useFarmBusinessStore();
   const { businessRead } = useFarmBusinessReadStore();
 
-  const handlerBusinessNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlerBusinessNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newBusinessNameChange = event.target.value;
     setBusiness({ ...business, businessName: newBusinessNameChange });
   };
 
-  const handlerRepresentativeNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlerRepresentativeNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newRepresentativeName = event.target.value;
     setBusiness({ ...business, representativeName: newRepresentativeName });
   };
 
-  const handleBusinessNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBusinessNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     const cleanedValue = value.replace(/[^0-9]/g, "");
     if (cleanedValue.length <= 10) {
-      const formattedValue = cleanedValue.replace(/(\d{3})(\d{2})(\d{5})/, "$1-$2-$3");
+      const formattedValue = cleanedValue.replace(
+        /(\d{3})(\d{2})(\d{5})/,
+        "$1-$2-$3"
+      );
       setBusiness({ ...business, businessNumber: formattedValue });
     }
   };
   // 연락처
-  const handleContactNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContactNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     const cleanedValue = value.replace(/[^0-9]/g, "");
     if (cleanedValue.length <= 11) {
-      const formattedValue = cleanedValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+      const formattedValue = cleanedValue.replace(
+        /(\d{3})(\d{4})(\d{4})/,
+        "$1-$2-$3"
+      );
       setBusiness({ ...business, representativeContactNumber: formattedValue });
     }
   };
@@ -45,12 +59,12 @@ const FarmBusinessInfo = () => {
             padding: "10px 10px 0px 0px",
             marginBottom: "-6px",
             fontSize: "15px",
-            fontFamily: "SUIT-Medium",
+            fontFamily: "SUIT-Bold",
             height: "32px",
             alignItems: "center",
           }}
         >
-          | 사업자 정보
+          사업자 정보
         </Typography>
         <Typography
           gutterBottom
@@ -74,7 +88,11 @@ const FarmBusinessInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={businessRead.businessName ? businessRead.businessName : business.businessName}
+            value={
+              businessRead.businessName
+                ? businessRead.businessName
+                : business.businessName
+            }
             onChange={handlerBusinessNameChange}
             disabled={!!businessRead.businessName}
           />
@@ -91,7 +109,9 @@ const FarmBusinessInfo = () => {
             className="custom-input"
             InputLabelProps={{ shrink: true }}
             value={
-              businessRead.businessNumber ? businessRead.businessNumber : business.businessNumber
+              businessRead.businessNumber
+                ? businessRead.businessNumber
+                : business.businessNumber
             }
             onChange={handleBusinessNumberChange}
             disabled={!!businessRead.businessNumber}

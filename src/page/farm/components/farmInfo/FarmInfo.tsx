@@ -34,16 +34,23 @@ const FarmInfo = () => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const handlerFarmNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlerFarmNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newFarmName = event.target.value;
     setFarms({ ...farms, farmName: newFarmName });
   };
 
-  const handleContactNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContactNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     const cleanedValue = value.replace(/[^0-9]/g, "");
     if (cleanedValue.length <= 11) {
-      const formattedValue = cleanedValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+      const formattedValue = cleanedValue.replace(
+        /(\d{3})(\d{4})(\d{4})/,
+        "$1-$2-$3"
+      );
       setFarms({ ...farms, csContactNumber: formattedValue });
       setFarmRead({ ...farmReads, csContactNumber: formattedValue });
     }
@@ -66,7 +73,9 @@ const FarmInfo = () => {
     }).open();
   };
 
-  const handlerAddressInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlerAddressInfoChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newAddressDetail = event.target.value;
     setFarms({
       ...farms,
@@ -77,7 +86,9 @@ const FarmInfo = () => {
     });
   };
 
-  const handlerIntroductionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlerIntroductionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newIntroduction = event.target.value;
     setFarms({ ...farms, introduction: newIntroduction });
     setFarmRead({ ...farmReads, introduction: newIntroduction });
@@ -95,7 +106,10 @@ const FarmInfo = () => {
     }
   };
 
-  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+  const {
+    getRootProps: mainImageRootProps,
+    getInputProps: mainImageInputProps,
+  } = useDropzone({
     onDrop: onMainImageDrop,
     maxFiles: 1,
   });
@@ -118,7 +132,9 @@ const FarmInfo = () => {
     { value: "WELSH_ONION", label: "대파" },
   ];
 
-  const handleSelectChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
+  const handleSelectChange = (
+    event: SelectChangeEvent<typeof selectedOptions>
+  ) => {
     event.preventDefault();
 
     const selectedValue = event.target.value as string[];
@@ -146,12 +162,12 @@ const FarmInfo = () => {
             padding: "10px 10px 0px 0px",
             marginBottom: "-6px",
             fontSize: "15px",
-            fontFamily: "SUIT-Medium",
+            fontFamily: "SUIT-Bold",
             height: "32px",
             alignItems: "center",
           }}
         >
-          | 농가 정보
+          농가 정보
         </Typography>
         <Typography
           gutterBottom
@@ -191,7 +207,11 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farmReads.csContactNumber ? farmReads.csContactNumber : farms.csContactNumber}
+            value={
+              farmReads.csContactNumber
+                ? farmReads.csContactNumber
+                : farms.csContactNumber
+            }
             onChange={handleContactNumberChange}
             disabled={false}
           />
@@ -280,8 +300,9 @@ const FarmInfo = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            width: "100%",
-            height: "400px",
+            margin: "auto",
+            width: "500px",
+            height: "500px",
             backgroundColor: "#e4e4e4",
             cursor: "pointer",
           }}
@@ -290,18 +311,19 @@ const FarmInfo = () => {
           {farms.mainImage ? (
             <div
               style={{
+                justifyContent: "center",
+                alignItems: "center",
                 position: "relative",
-                maxWidth: "100%",
-                maxHeight: "100%",
                 cursor: "pointer",
               }}
             >
               <img
                 src={URL.createObjectURL(farms.mainImage)}
+                width={500}
+                height={500}
                 style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
                   cursor: "pointer",
+                  objectFit: "cover",
                 }}
                 alt="Selected"
               />
@@ -311,17 +333,18 @@ const FarmInfo = () => {
             <div
               style={{
                 position: "relative",
-                maxWidth: "100%",
-                maxHeight: "100%",
+                justifyContent: "center",
+                alignItems: "center",
                 cursor: "pointer",
               }}
             >
               <img
                 src={getImageUrl(farmReads.mainImage)}
+                width={500}
+                height={500}
                 style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
                   cursor: "pointer",
+                  objectFit: "cover",
                 }}
                 alt="Selected"
               />
@@ -351,7 +374,11 @@ const FarmInfo = () => {
             margin="normal"
             className="custom-input"
             InputLabelProps={{ shrink: true }}
-            value={farmReads.introduction ? farmReads.introduction : farms.introduction}
+            value={
+              farmReads.introduction
+                ? farmReads.introduction
+                : farms.introduction
+            }
             onChange={handlerIntroductionChange}
           />
         </div>
@@ -359,20 +386,26 @@ const FarmInfo = () => {
       <FormControl fullWidth>
         <Grid item xs={12}>
           <div style={{ position: "relative", paddingBottom: "8px" }}>
-            {selectedOptions.length === 0 && (
-              <InputLabel
-                id="demo-simple-select-label"
-                style={{ position: "absolute", fontFamily: "SUIT-Regular" }}
-              >
-                판매할 품목을 선택해주세요 (필수)
-              </InputLabel>
-            )}
+            {selectedOptions.length === 0 &&
+              (!farmReads.produceTypes ||
+                farmReads.produceTypes.length === 0) && (
+                <InputLabel
+                  id="demo-simple-select-label"
+                  style={{ position: "absolute", fontFamily: "SUIT-Regular" }}
+                >
+                  판매할 품목을 선택해주세요 (필수)
+                </InputLabel>
+              )}
             <Select
               labelId="demo-simple-select-label"
               name="produceTypes"
               fullWidth
               multiple
-              value={farmReads.produceTypes ? farmReads.produceTypes : farms.produceTypes || []}
+              value={
+                farmReads.produceTypes
+                  ? farmReads.produceTypes
+                  : farms.produceTypes || []
+              }
               open={isSelectOpen}
               onClose={handleSelectClose}
               onOpen={handleSelectOpen}
