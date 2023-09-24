@@ -4,9 +4,8 @@ import Footer from "layout/footer/Footer";
 import Header from "layout/navigation/Header";
 import Header2nd from "layout/navigation/Header2nd";
 import Sidemenu from "layout/sidemenu/Sidemenu";
-import AdminHeader from "layout/navigation/AdminHeader"
-import AdminDashBoard from "layout/admindashboard/AdminDashBoard"
-import "./layout/css/AdminLayout.css"
+import AdminHeader from "layout/navigation/AdminHeader";
+import "./layout/css/AdminLayout.css";
 
 export function UserLayout() {
   return (
@@ -26,9 +25,9 @@ export function AdminLayout() {
         <div className="side-menu-container">
           <Sidemenu />
         </div>
-        <div className="dash-board-container">
+        <div className="side-board-container">
           <AdminHeader />
-          <AdminDashBoard />
+          <Outlet />
         </div>
       </div>
     </>
