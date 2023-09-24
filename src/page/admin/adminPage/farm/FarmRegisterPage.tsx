@@ -23,9 +23,9 @@ const FarmRegisterPage = () => {
   }
 
   return (
-    <div className="farm-register-container">
+    <div className="farm-container">
       <div className="farm-register-box">
-        <div style={{ display: "flex", backgroundColor: "#f0f0f0" }}>
+        <div style={{ display: "flex", backgroundColor: "white" }}>
           <div className="farm-register">
             <FarmRegister />
           </div>

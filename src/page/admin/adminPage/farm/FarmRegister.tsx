@@ -1,4 +1,4 @@
-import { Container, Box, Typography, Grid, Button } from "@mui/material";
+import { Container, Box, Grid, Button } from "@mui/material";
 import { farmRegister, updateFarm } from "page/admin/api/AdminApi";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -44,14 +44,16 @@ const FarmRegister = () => {
 
       // farms.mainImage가 존재하면 새 이미지 업로드
       if (farms.mainImage) {
-        const s3MainObjectVersion = (await uploadFileAwsS3(farms.mainImage)) || "";
+        const s3MainObjectVersion =
+          (await uploadFileAwsS3(farms.mainImage)) || "";
         mainImage = farms.mainImage.name + "?versionId=" + s3MainObjectVersion;
       }
 
       const updateData: FarmModify = {
         farmId: (farmId || "").toString(),
         userToken,
-        csContactNumber: farms.csContactNumber || farmReads?.csContactNumber || "",
+        csContactNumber:
+          farms.csContactNumber || farmReads?.csContactNumber || "",
         introduction: farms.introduction || farmReads?.introduction || "",
         produceTypes: farms.produceTypes || farmReads?.produceTypes || [],
         mainImage: mainImage,
@@ -120,7 +122,7 @@ const FarmRegister = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     const mainFileToUpload = farms.mainImage ? farms.mainImage : "";
     if (!mainFileToUpload) {
       toast.error("농가 이미지를 등록해주세요");
@@ -160,33 +162,7 @@ const FarmRegister = () => {
   };
 
   return (
-    <div>
-      <div className="register-menu">
-        {/* <img className="farm-register-icon" alt="농가 등록" src="img/farm-register-icon.png" /> */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Typography
-            gutterBottom
-            style={{
-              fontSize: "16px",
-              fontFamily: "SUIT-Medium",
-              color: "#252525",
-              marginBottom: "0px",
-            }}
-          >
-            농가(사업자) 등록
-          </Typography>
-          <Typography
-            gutterBottom
-            sx={{
-              fontSize: "12px",
-              fontFamily: "SUIT-Regular",
-              color: "#252525",
-            }}
-          >
-            * 사업자 등록증에 있는 정보를 작성해주세요
-          </Typography>
-        </div>
-      </div>
+    <div className="farm-register-container">
       <Box
         display="flex"
         flexDirection="column"
@@ -196,7 +172,6 @@ const FarmRegister = () => {
         paddingTop="20px" // 위쪽 패딩 값
         paddingBottom="50px" // 아래쪽 패딩 값
         bgcolor="white" // 하얀색 백그라운드 컬러
-        border="solid 1px lightgray"
         paddingLeft="10px"
         paddingRight="10px"
       >
