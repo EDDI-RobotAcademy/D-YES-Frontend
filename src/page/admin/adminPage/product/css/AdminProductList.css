@@ -1,14 +1,14 @@
 .cellStyle {
   padding: 8px 16px !important;
-  text-align: center !important; /* 텍스트를 가운데로 정렬 */
+  text-align: center !important;
   font-family: "SUIT-Regular" !important;
 }
 
 .cellStyle-header {
-  padding: 18px 16px !important;
-  text-align: center !important; /* 텍스트를 가운데로 정렬 */
-  font-family: "SUIT-Medium" !important;
-  border-top: solid 1px lightgray;
+  padding: "18px 16px";
+  text-align: "center";
+  color: "#252525";
+  font-family: "SUIT-Bold";
 }
 
 .noOutline {
@@ -21,26 +21,14 @@
 
 .admin-product-list-container {
   width: 100%;
-  display: flex;
+  height: calc(100vh - 102px);
   justify-content: center;
   align-items: center;
 }
 
 .admin-product-list-box {
-  border: solid 1px lightgray;
-  width: 98%;
-  display: flex;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  min-height: 96.2vh;
-}
-
-.product-list-menu {
-  display: flex;
-  background-color: white;
-  height: 50px;
-  padding: 10px 10px 2px 12px;
-  border-bottom: solid 1px lightgray;
+  border: 1px solid rgb(240, 240, 240);
+  margin: 20px 20px 20px 20px;
 }
 
 .modify-btn {
