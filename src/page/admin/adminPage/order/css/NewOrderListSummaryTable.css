@@ -1,0 +1,14 @@
+.order-info-container {
+  width: 100%;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0px;
+  background-color: blue;
+}
+.new-order-list {
+  height: 460px;
+  background-color: white;
+  padding: 20px 20px 20px 20px;
+  justify-content: flex-start;
+}
