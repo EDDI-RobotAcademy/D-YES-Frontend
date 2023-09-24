@@ -1,0 +1,13 @@
+.user-list-container {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.admin-user-list-box {
+  margin: 20px 20px 20px 20px;
+  border: 1px solid rgb(240, 240, 240);
+}
+.normal-user-list-box {
+  margin: 0px 20px 20px 20px;
+  border: 1px solid rgb(240, 240, 240);
+}

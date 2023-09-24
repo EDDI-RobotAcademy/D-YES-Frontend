@@ -3,4 +3,5 @@ export interface UserList {
   userType: string;
   active: string;
   roleType: string;
+  registeredDate: Date;
 }
