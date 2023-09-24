@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Select, MenuItem, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,9 +18,9 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { toast } from "react-toastify";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "layout/navigation/AuthConText";
-
+import "./css/OrderListPage.css";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
@@ -26,17 +32,21 @@ const AdminOrderListPage = () => {
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
   const [orderList, setOrderList] = useState([] as AdminOrderList[]);
-  const [orderStatuses, setOrderStatuses] = useState<Record<string, OrderDeliveryStatus>>({});
-  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(() => {
-    const savedDates: Record<string, string> = JSON.parse(
-      localStorage.getItem("selectedDates") || "{}"
-    );
-    const result: Record<string, dayjs.Dayjs> = {};
-    for (const key in savedDates) {
-      result[key] = dayjs(savedDates[key]);
+  const [orderStatuses, setOrderStatuses] = useState<
+    Record<string, OrderDeliveryStatus>
+  >({});
+  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(
+    () => {
+      const savedDates: Record<string, string> = JSON.parse(
+        localStorage.getItem("selectedDates") || "{}"
+      );
+      const result: Record<string, dayjs.Dayjs> = {};
+      for (const key in savedDates) {
+        result[key] = dayjs(savedDates[key]);
+      }
+      return result;
     }
-    return result;
-  });
+  );
 
   useEffect(() => {
     if (!isAdmin) {
@@ -62,14 +72,19 @@ const AdminOrderListPage = () => {
     fetchOrderList();
   }, []);
 
-  const handleStatusChange = async (productOrderId: string, newStatus: OrderDeliveryStatus) => {
+  const handleStatusChange = async (
+    productOrderId: string,
+    newStatus: OrderDeliveryStatus
+  ) => {
     try {
-      const savedDates = JSON.parse(localStorage.getItem("selectedDates") || "{}");
+      const savedDates = JSON.parse(
+        localStorage.getItem("selectedDates") || "{}"
+      );
       const prevDate = savedDates[productOrderId];
       const currentDate = selectedDate[productOrderId]?.toDate().toISOString();
 
       if (prevDate === currentDate) {
-        toast.error("날짜가 변경되어야만 배송 상태를 변경할 수 있습니다.");
+        toast.error("날짜를 선택해주세요.");
         return;
       }
       setOrderStatuses((prevStatuses) => ({
@@ -99,106 +114,98 @@ const AdminOrderListPage = () => {
   };
 
   return (
-    <div style={{ paddingTop: "32px", paddingBottom: "32px" }}>
+    <div className="order-list-container">
       <Box
         display="flex"
-        alignItems="center"
+        alignItems="left"
         flexDirection="column"
-        minHeight="130vh"
-        paddingTop="32px"
-        paddingBottom="20px"
+        minHeight="40vh"
         bgcolor="white"
         overflow="hidden" // 가로 스크롤 숨김
-        border="solid 1px lightgray"
-        maxWidth="1600px" // 가로 길이 제한
         margin="0 auto" // 수평 가운데 정렬
       >
-        <div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <Typography
-              gutterBottom
-              style={{
-                fontSize: "20px",
-                fontFamily: "SUIT-Medium",
-                color: "#252525",
-                marginTop: "20px",
-              }}
-            >
-              주문 목록
-            </Typography>
-          </div>
-        </div>
         <table
           style={{
             borderCollapse: "collapse",
-            width: "100%",
             textAlign: "center",
+            margin: "20px",
           }}
         >
           <TableHead>
-            <TableRow>
+            <TableRow style={{ backgroundColor: "#F8F9FA" }}>
               <TableCell
                 style={{
-                  width: "300px",
+                  width: "6%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
-                  fontFamily: "SUIT-Medium",
+                  fontFamily: "SUIT-Bold",
                 }}
               >
-                USERID
+                주문 번호
               </TableCell>
               <TableCell
                 style={{
-                  width: "300px",
-                  padding: "8px 16px",
+                  width: "15%",
+                  padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
-                  fontFamily: "SUIT-Medium",
+                  fontFamily: "SUIT-Bold",
+                }}
+              >
+                사용자 ID
+              </TableCell>
+              <TableCell
+                style={{
+                  width: "30%",
+                  padding: "18px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Bold",
                 }}
               >
                 주소
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
-                  padding: "8px 16px",
+                  width: "9%",
+                  padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
-                  fontFamily: "SUIT-Medium",
+                  fontFamily: "SUIT-Bold",
                 }}
               >
                 연락처
               </TableCell>
               <TableCell
                 style={{
-                  width: "300px",
+                  width: "20%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
-                  fontFamily: "SUIT-Medium",
+                  fontFamily: "SUIT-Bold",
                 }}
               >
                 배송상태
               </TableCell>
               <TableCell
                 style={{
-                  width: "100px",
+                  width: "10%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
-                  fontFamily: "SUIT-Medium",
+                  fontFamily: "SUIT-Bold",
                 }}
               >
-                주문 시간
+                주문 일자
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "10%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
-                  fontFamily: "SUIT-Medium",
+                  fontFamily: "SUIT-Bold",
                 }}
               >
                 결제 금액
@@ -209,39 +216,73 @@ const AdminOrderListPage = () => {
             {orderList?.map((order) => (
               <TableRow
                 key={order.orderDetailInfoResponse.productOrderId}
-                onClick={(e) => handleOrderClick(order.orderDetailInfoResponse.productOrderId)}
+                onClick={(e) =>
+                  handleOrderClick(order.orderDetailInfoResponse.productOrderId)
+                }
                 style={{ cursor: "pointer" }}
               >
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
+                >
+                  {order.orderDetailInfoResponse.productOrderId}
+                </TableCell>
+                <TableCell
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {order.orderUserInfo.userId}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
-                  {order.orderUserInfo.address.address} {order.orderUserInfo.address.zipCode} (
+                  {order.orderUserInfo.address.address}{" "}
+                  {order.orderUserInfo.address.zipCode} (
                   {order.orderUserInfo.address.addressDetail})
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {order.orderUserInfo.contactNumber}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <div onClick={(e) => e.stopPropagation()}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="ko"
+                      >
                         <DatePicker
                           value={
-                            selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
+                            selectedDate[
+                              order.orderDetailInfoResponse.productOrderId
+                            ] || dayjs()
                           }
                           onChange={(date) =>
                             setSelectedDate((prevSelectedDate) => ({
                               ...prevSelectedDate,
-                              [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
+                              [order.orderDetailInfoResponse.productOrderId]:
+                                date || dayjs(),
                             }))
                           }
                         />
@@ -249,16 +290,20 @@ const AdminOrderListPage = () => {
                     </div>
                     <Select
                       value={
-                        orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
-                        order.orderDetailInfoResponse.deliveryStatus
+                        orderStatuses[
+                          order.orderDetailInfoResponse.productOrderId
+                        ] || order.orderDetailInfoResponse.deliveryStatus
                       }
                       onChange={(e) => {
                         const newStatus = e.target.value as OrderDeliveryStatus;
                         const currentStatus =
-                          orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
-                          order.orderDetailInfoResponse.deliveryStatus;
+                          orderStatuses[
+                            order.orderDetailInfoResponse.productOrderId
+                          ] || order.orderDetailInfoResponse.deliveryStatus;
                         if (currentStatus.toString() === "DELIVERED") {
-                          toast.error("이미 배송 완료된 주문은 상태를 변경할 수 없습니다.");
+                          toast.error(
+                            "이미 배송 완료된 주문은 상태를 변경할 수 없습니다."
+                          );
                           return;
                         }
                         if (
@@ -271,7 +316,10 @@ const AdminOrderListPage = () => {
                           return;
                         }
 
-                        handleStatusChange(order.orderDetailInfoResponse.productOrderId, newStatus);
+                        handleStatusChange(
+                          order.orderDetailInfoResponse.productOrderId,
+                          newStatus
+                        );
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -284,12 +332,20 @@ const AdminOrderListPage = () => {
                   </div>
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {order.orderDetailInfoResponse.orderedTime}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {order.orderDetailInfoResponse.totalPrice}
                 </TableCell>
