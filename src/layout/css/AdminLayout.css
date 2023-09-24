@@ -1,16 +1,10 @@
 .admin-main-container {
-  background-color: #f8f8f8;
   display: flex;
-  /* background-color: green; */
-  min-width: 100%;
 }
 .side-menu-container {
-  justify-content: center;
-  align-items: center;
-  width: 13%;
-  /* background-color: blue; */
+  background-color: #121e2d;
 }
-.dash-board-container {
-  width: 87%;
-  /* background-color: red; */
+.side-board-container {
+  width: 100%;
+  background-color: #f8f8f8;
 }
