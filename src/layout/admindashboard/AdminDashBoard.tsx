@@ -8,7 +8,9 @@ import { NewProductManagemantInfo } from "page/product/entity/NewProductManagema
 import { NewProductSummaryInfo } from "page/product/entity/NewProductSummaryInfo";
 import { NewOrderSummaryInfo } from "page/order/entity/NewOrderSummaryInfo";
 import { fetchNewOrderList } from "page/order/api/OrderApi";
+import { NewOrderManagemantInfo } from "page/order/entity/NewOrderManagemantInfo";
 import NewOrderListSummaryTable from "page/admin/adminPage/order/components/NewORderListSummaryTable";
+import NewOrderListSummaryChart from "page/admin/adminPage/order/components/NewOrderListSummaryChart";
 
 const AdminDashBoard: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,8 @@ const AdminDashBoard: React.FC = () => {
     useState<NewProductManagemantInfo[]>();
   const [loadedOrdersInfo, setLoadedOrdersInfo] =
     useState<NewOrderSummaryInfo[]>();
+  const [loadedOrdersManagementInfo, setLoadedOrdersManagementInfo] =
+    useState<NewOrderManagemantInfo[]>();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -38,6 +42,7 @@ const AdminDashBoard: React.FC = () => {
       try {
         const response = await fetchNewOrderList();
         setLoadedOrdersInfo(response.orderInfoResponseForAdminList);
+        setLoadedOrdersManagementInfo(response.createdOrderCountList);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -61,6 +66,11 @@ const AdminDashBoard: React.FC = () => {
       <div className="new-order-info-container">
         {!loading && (
           <NewOrderListSummaryTable orderList={loadedOrdersInfo || []} />
+        )}
+        {!loading && (
+          <NewOrderListSummaryChart
+            orderDataList={loadedOrdersManagementInfo || []}
+          />
         )}
       </div>
     </div>
