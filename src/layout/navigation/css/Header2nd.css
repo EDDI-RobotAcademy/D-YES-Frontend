@@ -2,7 +2,7 @@
   position: relative;
   margin: 0 auto;
   padding: 0 60px;
-  min-width: 1200px;
+  min-width: auto;
 }
 .second-header-fontstyle {
   font-family: "SUIT-Bold";
@@ -26,11 +26,20 @@
   gap: 50px;
 }
 .second-header-btn-container-2 {
-  min-width: "220px";
+  min-width: 220px;
   align-items: flex-end;
   justify-content: flex-end;
   display: flex;
   gap: 50px;
+}
+.second-header-btn-container-3 {
+  display: flex;
+  font-size: 14px;
+}
+.second-header-recipe-btn {
+  padding: 5px 8px;
+  border: 2px solid;
+  border-radius: 2em;
 }
 .second-header-link {
   align-items: center;

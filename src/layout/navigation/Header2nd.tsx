@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./css/Header2nd.css";
 import Header3rd from "./Header3rd";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 type HeaderProps = {
   children?: ReactNode;
@@ -50,6 +51,12 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
               <div style={{ minWidth: "60px", textAlign: "center" }}>
                 <p>이벤트</p>
               </div>
+            </Link>
+          </div>
+          <div className="second-header-btn-container-3">
+            <Link className="second-header-link second-header-recipe-btn" to={"/recipe/list"}>
+              <RestaurantIcon fontSize="small" />
+              레시피
             </Link>
           </div>
           <div className={`second-header-drawer ${isDrawerOpen ? "drawer-open" : ""}`}>
