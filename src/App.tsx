@@ -38,7 +38,7 @@ import PaymentRefundPage from "page/payment/PaymentRefundPage";
 import RecipeListPage from "page/recipe/RecipeListPage";
 import RecipeDetailPage from "page/recipe/RecipeDetailPage";
 import RecipeRegisterPage from "page/recipe/RecipeRegisterPage";
-import RecipeReadPage from "page/recipe/RecipeReadPage";
+// import RecipeReadPage from "page/recipe/RecipeReadPage";
 import EventRegisterPage from "page/event/EventRegisterPage";
 import AdminEventListPage from "page/event/AdminEventListPage";
 
