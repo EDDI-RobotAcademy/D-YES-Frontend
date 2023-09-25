@@ -9,17 +9,15 @@ import { NewProductSummaryInfo } from "page/product/entity/NewProductSummaryInfo
 import { NewOrderSummaryInfo } from "page/order/entity/NewOrderSummaryInfo";
 import { fetchNewOrderList } from "page/order/api/OrderApi";
 import { NewOrderManagemantInfo } from "page/order/entity/NewOrderManagemantInfo";
-import NewOrderListSummaryTable from "page/admin/adminPage/order/components/NewORderListSummaryTable";
+import NewOrderListSummaryTable from "page/admin/adminPage/order/components/NewOrderListSummaryTable";
 import NewOrderListSummaryChart from "page/admin/adminPage/order/components/NewOrderListSummaryChart";
 
 const AdminDashBoard: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [loadedProductsInfo, setLoadedProductsInfo] =
-    useState<NewProductSummaryInfo[]>();
+  const [loadedProductsInfo, setLoadedProductsInfo] = useState<NewProductSummaryInfo[]>();
   const [loadedProductsManagementInfo, setLoadedProductsManagementInfo] =
     useState<NewProductManagemantInfo[]>();
-  const [loadedOrdersInfo, setLoadedOrdersInfo] =
-    useState<NewOrderSummaryInfo[]>();
+  const [loadedOrdersInfo, setLoadedOrdersInfo] = useState<NewOrderSummaryInfo[]>();
   const [loadedOrdersManagementInfo, setLoadedOrdersManagementInfo] =
     useState<NewOrderManagemantInfo[]>();
 
@@ -54,24 +52,14 @@ const AdminDashBoard: React.FC = () => {
   return (
     <div className="admin-bash-board-container">
       <div className="new-product-info-container">
+        {!loading && <NewProductListSummaryTable productList={loadedProductsInfo || []} />}
         {!loading && (
-          <NewProductListSummaryTable productList={loadedProductsInfo || []} />
-        )}
-        {!loading && (
-          <NewProductListSummaryChart
-            productDataList={loadedProductsManagementInfo || []}
-          />
+          <NewProductListSummaryChart productDataList={loadedProductsManagementInfo || []} />
         )}
       </div>
       <div className="new-order-info-container">
-        {!loading && (
-          <NewOrderListSummaryTable orderList={loadedOrdersInfo || []} />
-        )}
-        {!loading && (
-          <NewOrderListSummaryChart
-            orderDataList={loadedOrdersManagementInfo || []}
-          />
-        )}
+        {!loading && <NewOrderListSummaryTable orderList={loadedOrdersInfo || []} />}
+        {!loading && <NewOrderListSummaryChart orderDataList={loadedOrdersManagementInfo || []} />}
       </div>
     </div>
   );
