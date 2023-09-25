@@ -10,6 +10,7 @@ import MyPageUpdate from "page/user/myPage/MyPageUpdate";
 import WithdrawalPage from "page/user/withdrawal/WithdrawalPage";
 import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
 import ProductListPage from "page/product/ProductListPage";
+import NewProductListPage from "page/product/NewProductListPage";
 import ProductDetailPage from "page/product/ProductDetailPage";
 import Cart from "page/cart/Cart";
 import Order from "page/order/Order";
@@ -59,6 +60,7 @@ const App: React.FC = () => {
               <Route path="/withdrawal" element={<WithdrawalPage />} />
               <Route path="/exit" element={<WithdrawalComplete />} />
               <Route path="/productList/all" element={<ProductListPage />} />
+              <Route path="/productList/new" element={<NewProductListPage />} />
               <Route path="/productList/category/:categoryName" element={<ProductListPage />} />
               <Route path="/productList/region/:region" element={<ProductListPage />} />
               <Route path="/productDetail/:productId" element={<ProductDetailPage />} />

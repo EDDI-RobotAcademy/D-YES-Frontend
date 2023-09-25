@@ -30,18 +30,26 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           <div className="second-header-btn-container-1">
             <Link className="second-header-link" to={"/productList/all"}>
               <MenuIcon />
-              <div><p>카테고리</p></div>
+              <div>
+                <p>카테고리</p>
+              </div>
             </Link>
           </div>
           <div className="second-header-btn-container-2">
-            <Link className="second-header-link" to={"/"}>
-            <div style={{ minWidth: "60px", textAlign: "center" }}><p>신상품</p></div>
+            <Link className="second-header-link" to={"/productList/new"}>
+              <div style={{ minWidth: "60px", textAlign: "center" }}>
+                <p>신상품</p>
+              </div>
             </Link>
             <Link className="second-header-link" to={"/"}>
-            <div style={{ minWidth: "60px", textAlign: "center" }}><p>베스트</p></div>
+              <div style={{ minWidth: "60px", textAlign: "center" }}>
+                <p>베스트</p>
+              </div>
             </Link>
             <Link className="second-header-link" to={"/"}>
-            <div style={{ minWidth: "60px", textAlign: "center" }}><p>이벤트</p></div>
+              <div style={{ minWidth: "60px", textAlign: "center" }}>
+                <p>이벤트</p>
+              </div>
             </Link>
           </div>
           <div className={`second-header-drawer ${isDrawerOpen ? "drawer-open" : ""}`}>
