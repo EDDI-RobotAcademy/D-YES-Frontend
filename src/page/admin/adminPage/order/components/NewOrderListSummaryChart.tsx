@@ -13,10 +13,7 @@ interface ChartFormProps {
 }
 
 const transformData = (data: NewOrderManagemantInfo[]): ChartData[] => {
-  data.sort(
-    (a, b) =>
-      new Date(a.orderedTime).getTime() - new Date(b.orderedTime).getTime()
-  );
+  data.sort((a, b) => new Date(a.orderedTime).getTime() - new Date(b.orderedTime).getTime());
 
   const chartData: ChartData[] = [
     {
@@ -31,16 +28,14 @@ const transformData = (data: NewOrderManagemantInfo[]): ChartData[] => {
   return chartData;
 };
 
-const NewOrderListSummaryChart: React.FC<ChartFormProps> = ({
-  orderDataList,
-}) => {
+const NewOrderListSummaryChart: React.FC<ChartFormProps> = ({ orderDataList }) => {
   const chartData = transformData(orderDataList);
   console.log("그리기 전 데이터: " + JSON.stringify(chartData));
 
   return (
     <div className="order-managemant-info-container">
       <div className="new-order-chart">
-        <h3>Recent Orders</h3>
+        <h4>주문 건수</h4>
         <div className="orderChart">
           <ResponsiveLine
             data={chartData}
@@ -65,7 +60,9 @@ const NewOrderListSummaryChart: React.FC<ChartFormProps> = ({
               tickPadding: 5,
               tickRotation: 0,
             }}
-            colors={{ scheme: "dark2" }}
+            enablePoints={false}
+            colors={{ scheme: "category10" }}
+            enableGridX={false}
             pointSize={8}
             pointColor={{ from: "color", modifiers: [] }}
             pointBorderWidth={2}
