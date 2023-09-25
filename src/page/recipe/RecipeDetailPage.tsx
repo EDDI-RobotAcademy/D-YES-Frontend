@@ -1,9 +1,9 @@
 import { Container, Grid, Paper, Typography } from "@mui/material";
 import React from "react";
 
-const RecipeReadPage = () => {
+const RecipeDetailPage = () => {
   const recipeData = {
-    mainImage: "/img/images (1).jpg",
+    mainImage: `/img/sampleImg.jpg`,
     recipeTitle: "레시피 제목",
     cookingTime: "조리 시간",
     briefDescription: "간략한 설명",
@@ -131,4 +131,4 @@ const RecipeReadPage = () => {
     </div>
   );
 };
-export default RecipeReadPage;
+export default RecipeDetailPage;

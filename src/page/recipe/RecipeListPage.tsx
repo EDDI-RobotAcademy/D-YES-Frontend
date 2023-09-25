@@ -1,73 +1,174 @@
-import { Card, CardContent, CardMedia, Typography, Grid, Box } from "@mui/material";
-import React from "react";
+import * as React from "react";
+import { Card, CardContent, CardMedia } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+import { RecipeListResponseForm } from "./entity/RecipeList";
+import { getRecipeList } from "./api/RecipeApi";
+import { toast } from "react-toastify";
+import TimerIcon from "@mui/icons-material/Timer";
+import { getImageUrl } from "utility/s3/awsS3";
 
-const RecipeListPage = () => {
-  // 가상 레시피 데이터 배열 생성 (이미지 URL 포함)
-  const recipes = [
-    {
-      id: 1,
-      title: "파스타",
-      description: "맛있는 파스타 레시피",
-      image: "/img/images (1).jpg",
-    },
-    {
-      id: 2,
-      title: "스프",
-      description: "건강한 스프 레시피",
-      image: "/img/images (1).jpg",
-    },
-    {
-      id: 3,
-      title: "샐러드",
-      description: "시원한 샐러드 레시피",
-      image: "/img/images.jpg",
-    },
-    {
-      id: 4,
-      title: "한식",
-      description: "고소한 한식 레시피",
-      image: "/img/images.jpg",
-    },
-  ];
+import "./css/RecipeListPage.css";
 
-  const cardsPerRow = 3;
+const ImageButton = styled(ButtonBase)(({ theme }) => ({
+  position: "relative",
+  width: "100%",
+  height: 200,
+  [theme.breakpoints.down("sm")]: {
+    height: 100,
+  },
+  "&:hover, &.Mui-focusVisible": {
+    zIndex: 1,
+    "& .MuiImageBackdrop-root": {
+      opacity: 0.15,
+    },
+    "& .MuiImageMarked-root": {
+      opacity: 0,
+    },
+    "& .MuiTypography-root": {
+      border: "4px solid currentColor",
+    },
+  },
+}));
 
-  const cardGroups = [];
-  for (let i = 0; i < recipes.length; i += cardsPerRow) {
-    const cardGroup = recipes.slice(i, i + cardsPerRow);
-    cardGroups.push(cardGroup);
-  }
+const ImageSrc = styled("span")({
+  position: "absolute",
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundSize: "cover",
+  backgroundPosition: "center 40%",
+});
+
+const Image = styled("span")(({ theme }) => ({
+  position: "absolute",
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: theme.palette.common.white,
+}));
+
+const ImageBackdrop = styled("span")(({ theme }) => ({
+  position: "absolute",
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundColor: theme.palette.common.black,
+  opacity: 0.4,
+  transition: theme.transitions.create("opacity"),
+}));
+
+const ImageMarked = styled("span")(({ theme }) => ({
+  height: 3,
+  width: 18,
+  backgroundColor: theme.palette.common.white,
+  position: "absolute",
+  bottom: -2,
+  left: "calc(50% - 9px)",
+  transition: theme.transitions.create("opacity"),
+}));
+
+const RecipeListPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [loadedItems, setLoadedItems] = React.useState<RecipeListResponseForm[]>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+  const showRecipeDetail = (recipeId: number) => {
+    navigate(`/recipe/detail/${recipeId}`);
+  };
+
+  React.useEffect(() => {
+    const fetchRecipeListData = async () => {
+      try {
+        const data = await getRecipeList();
+        setLoadedItems(data);
+        setIsLoading(true);
+      } catch (error) {
+        toast.error("레시피 목록을 가져오는데 실패했습니다");
+      }
+    };
+    fetchRecipeListData();
+  }, []);
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center">
-      <div>
-        <h1>레시피 목록</h1>
-        {cardGroups.map((group, index) => (
-          <Grid container spacing={2} key={index} sx={{ marginY: 2 }}>
-            {group.map((recipe) => (
-              <Grid item key={recipe.id} xs={12 / cardsPerRow}>
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardMedia
-                    component="img"
-                    height="300"
-                    image={recipe.image}
-                    alt={recipe.title}
-                  />
+    <div className="recipe-list-container">
+      <div className="recipe-list-grid">
+        <div className="recipe-list-page-name">레시피 목록</div>
+        <hr />
+        {isLoading ? (
+          loadedItems && loadedItems.length > 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                minWidth: 300,
+                width: "100%",
+                gap: "5px",
+              }}
+            >
+              {loadedItems?.map((recipe: RecipeListResponseForm, idx: number) => (
+                <Card key={idx} sx={{ maxWidth: "340px", alignItems: "center" }}>
+                  <CardMedia>
+                    <ImageButton
+                      focusRipple
+                      style={{ width: "100%" }}
+                      onClick={() => showRecipeDetail(recipe.recipeId)}
+                    >
+                      <ImageSrc
+                        style={{ backgroundImage: `url(${getImageUrl(recipe.recipeMainImage)})` }}
+                      />
+                      <ImageBackdrop className="MuiImageBackdrop-root" />
+                      <Image>
+                        <Typography
+                          component="span"
+                          variant="subtitle1"
+                          color="inherit"
+                          sx={{
+                            position: "relative",
+                            p: 4,
+                            pt: 2,
+                            pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                          }}
+                        >
+                          {recipe.recipeName}
+                          <ImageMarked className="MuiImageMarked-root" />
+                        </Typography>
+                      </Image>
+                    </ImageButton>
+                  </CardMedia>
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {recipe.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {recipe.description}
-                    </Typography>
+                    <div className="recipe-list-info">
+                      <div className="recipe-list-description">{recipe.recipeDescription}</div>
+                      <div className="recipe-list-detail">
+                        <p className="recipe-list-icon">
+                          <TimerIcon fontSize="inherit" />
+                          {recipe.cookingTime}분
+                        </p>
+                        <p>{recipe.nickName}님의 레시피</p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ))}
+              ))}
+            </Box>
+          ) : (
+            <p>레시피 정보가 없습니다</p>
+          )
+        ) : (
+          <p>레시피를 불러오는 중</p>
+        )}
       </div>
-    </Box>
+    </div>
   );
 };
 
