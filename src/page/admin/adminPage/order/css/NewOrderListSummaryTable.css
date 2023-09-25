@@ -6,8 +6,31 @@
   margin: 0px;
 }
 .new-order-list {
-  height: 460px;
+  /* height: 460px; */
   background-color: white;
   padding: 20px 20px 20px 20px;
   justify-content: flex-start;
+  font-family: "SUIT-Regular";
+}
+.pagination {
+  font-family: "SUIT-Medium";
+  font-size: 12px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: flex-end;
+  padding-top: 2px;
+}
+.order-table {
+  box-shadow: 0px 0px 0px 0px !important;
+}
+.order-cell-style {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  color: #252525 !important;
+}
+.order-cell-body-style {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  color: #252525 !important;
+  font-family: SUIT-Regular !important;
 }
