@@ -140,6 +140,14 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
                   >
                     이벤트 등록
                   </p>
+                  <p
+                    className="product-menu"
+                    onClick={() => {
+                      navigate("/adminEventList");
+                    }}
+                  >
+                    이벤트 상품 목록
+                  </p>
                 </div>
               </div>
             )}

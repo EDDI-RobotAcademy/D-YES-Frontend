@@ -24,6 +24,7 @@ const EventRegisterPage = () => {
   const mutation = useMutation(registerEvent, {
     onSuccess: (data) => {
       queryClient.setQueryData("event", data);
+      navigate("/adminEventList");
     },
   });
 

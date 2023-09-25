@@ -38,6 +38,7 @@ import RecipeListPage from "page/recipe/RecipeListPage";
 import RecipeRegisterPage from "page/recipe/RecipeRegisterPage";
 import RecipeReadPage from "page/recipe/RecipeReadPage";
 import EventRegisterPage from "page/event/EventRegisterPage";
+import AdminEventListPage from "page/event/AdminEventListPage";
 
 const theme = createTheme({
   typography: {
@@ -95,6 +96,7 @@ const App: React.FC = () => {
                 element={<AdminOrderReadPage />}
               />
               <Route path="/adminEventRegister" element={<EventRegisterPage />} />
+              <Route path="/adminEventList" element={<AdminEventListPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
