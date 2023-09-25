@@ -40,7 +40,26 @@ const EventRegisterPage = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(events);
+
+    if (!events || !events.eventProductRegisterRequest) {
+      toast.error("이벤트 정보가 올바르게 설정되지 않았습니다.");
+      return;
+    }
+
+    if (!events.eventProductRegisterRequest.productDescription) {
+      toast.error("상품 설명을 입력하세요.");
+      return;
+    }
+
+    if (
+      !events.eventProductRegisterRequest.optionName ||
+      !events.eventProductRegisterRequest.optionPrice ||
+      !events.eventProductRegisterRequest.stock ||
+      !events.eventProductRegisterRequest.unit
+    ) {
+      toast.error("옵션 정보를 모두 입력해주세요.");
+      return;
+    }
 
     const mainFileToUpload =
       events.eventProductRegisterRequest.mainImg instanceof Blob
@@ -54,6 +73,35 @@ const EventRegisterPage = () => {
 
     if (!mainFileToUpload) {
       toast.success("메인 이미지를 등록해주세요");
+      return;
+    }
+
+    const detailImages = events.eventProductRegisterRequest.detailImgs || [];
+    if (detailImages.length < 6 || detailImages.length > 10) {
+      toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+      return;
+    }
+
+    if (
+      !events.eventProductRegisterDeadLineRequest ||
+      !events.eventProductRegisterDeadLineRequest.startLine
+    ) {
+      toast.error("이벤트 기한을 설정해주세요.");
+      return;
+    }
+
+    const { startLine, deadLine } = events.eventProductRegisterDeadLineRequest;
+
+    if (!startLine || !deadLine || startLine >= deadLine) {
+      toast.error("올바른 이벤트 기한을 설정해주세요.");
+      return;
+    }
+
+    if (
+      !events.eventProductRegisterPurchaseCountRequest ||
+      !events.eventProductRegisterPurchaseCountRequest.targetCount
+    ) {
+      toast.error("최대 참여 인원수를 입력하세요.");
       return;
     }
 
