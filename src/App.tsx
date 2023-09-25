@@ -10,6 +10,7 @@ import MyPageUpdate from "page/user/myPage/MyPageUpdate";
 import WithdrawalPage from "page/user/withdrawal/WithdrawalPage";
 import WithdrawalComplete from "page/user/withdrawal/WithdrawalComplete";
 import ProductListPage from "page/product/ProductListPage";
+import NewProductListPage from "page/product/NewProductListPage";
 import ProductDetailPage from "page/product/ProductDetailPage";
 import Cart from "page/cart/Cart";
 import Order from "page/order/Order";
@@ -35,7 +36,7 @@ import AdminOrderReadPage from "page/admin/adminPage/order/AdminOrderReadPage";
 import PaymentErrorPage from "page/payment/kakao/PaymentErrorPage";
 import PaymentRefundPage from "page/payment/PaymentRefundPage";
 import RecipeListPage from "page/recipe/RecipeListPage";
-import RecipeReadPage from "page/recipe/RecipeReadPage";
+import RecipeDetailPage from "page/recipe/RecipeDetailPage";
 import RecipeRegisterPage from "page/recipe/RecipeRegisterPage";
 
 const theme = createTheme({
@@ -59,6 +60,7 @@ const App: React.FC = () => {
               <Route path="/withdrawal" element={<WithdrawalPage />} />
               <Route path="/exit" element={<WithdrawalComplete />} />
               <Route path="/productList/all" element={<ProductListPage />} />
+              <Route path="/productList/new" element={<NewProductListPage />} />
               <Route path="/productList/category/:categoryName" element={<ProductListPage />} />
               <Route path="/productList/region/:region" element={<ProductListPage />} />
               <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
@@ -73,8 +75,8 @@ const App: React.FC = () => {
               <Route path="/payment/complete" element={<PaymentCompletePage />} />
               <Route path="/payment/refund" element={<PaymentRefundPage />} />
               <Route path="/review/register" element={<ReviewRegisterPage />} />
-              <Route path="/recipe" element={<RecipeListPage />} />
-              <Route path="/recipe/read" element={<RecipeReadPage />} />
+              <Route path="/recipe/list" element={<RecipeListPage />} />
+              <Route path="/recipe/detail/:id" element={<RecipeDetailPage />} />
               <Route path="/recipe/register" element={<RecipeRegisterPage />} />
             </Route>
 

@@ -1,0 +1,36 @@
+.recipe-list-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.recipe-list-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.recipe-list-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.recipe-list-info {
+  font-family: "SUIT-SemiBold";
+  width: 300px;
+}
+.recipe-list-description {
+  font-size: large;
+  padding-bottom: 10px;
+}
+.recipe-list-detail {
+  font-size: medium;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.recipe-list-icon {
+  display: flex;
+  align-items: center;
+}

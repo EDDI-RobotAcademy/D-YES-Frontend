@@ -193,13 +193,17 @@ export const usePopupProductQuery = (
 
 // 관리자용 신규 상품 리스트 확인
 export const fetchNewProductList = async (): Promise<ProductInfoResponse> => {
-  const response = await axiosInstance.get<ProductInfoResponse>(
-    "/product/admin/new-list"
-  );
+  const response = await axiosInstance.get<ProductInfoResponse>("/product/admin/new-list");
   console.log("신규 상품 리스트 데이터", response.data);
-  console.log(
-    "신규 상품 리스트 데이터2",
-    JSON.stringify(response.data.registeredProductCountList)
+  console.log("신규 상품 리스트 데이터2", JSON.stringify(response.data.registeredProductCountList));
+  return response.data;
+};
+
+// 사용자용 신상품 리스트 확인
+export const getNewProductList = async () => {
+  const response = await axiosInstance.get<ProductListResponseFormForUser[]>(
+    "/product/user/list/new"
   );
+  console.log("신상품 리스트 데이터", response.data);
   return response.data;
 };

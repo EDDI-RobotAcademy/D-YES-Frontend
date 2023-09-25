@@ -1,0 +1,10 @@
+.new-product-tag {
+  background-color: rgb(255, 94, 94);
+  color: white;
+}
+.new-product-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
