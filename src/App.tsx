@@ -34,6 +34,8 @@ import ReviewRegisterPage from "page/review/ReviewRegisterPage";
 import AdminOrderReadPage from "page/admin/adminPage/order/AdminOrderReadPage";
 import PaymentErrorPage from "page/payment/kakao/PaymentErrorPage";
 import PaymentRefundPage from "page/payment/PaymentRefundPage";
+import RecipeListPage from "page/recipe/RecipeListPage";
+import RecipeRegisterPage from "page/recipe/RecipeRegisterPage";
 
 const theme = createTheme({
   typography: {
@@ -70,6 +72,8 @@ const App: React.FC = () => {
               <Route path="/payment/complete" element={<PaymentCompletePage />} />
               <Route path="/payment/refund" element={<PaymentRefundPage />} />
               <Route path="/review/register" element={<ReviewRegisterPage />} />
+              <Route path="/recipe" element={<RecipeListPage />} />
+              <Route path="/recipe/register" element={<RecipeRegisterPage />} />
             </Route>
 
             <Route element={<AdminLayout />}>
