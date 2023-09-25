@@ -1,15 +1,16 @@
 .product-managemant-info-container {
-  width: 40%;
+  width: 50%;
   padding-top: 20px;
   padding-right: 20px;
 }
 .new-product-chart {
-  height: 460px;
+  /* height: 460px; */
   background-color: white;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 20px 0px 20px;
   justify-content: flex-end;
+  font-family: "SUIT-Regular";
 }
 .productChart {
-  height: 420px;
+  height: 260px;
   padding-bottom: 20px;
 }

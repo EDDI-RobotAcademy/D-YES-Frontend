@@ -14,9 +14,7 @@ interface ChartFormProps {
 
 const transformData2 = (data: NewProductManagemantInfo[]): ChartData[] => {
   data.sort(
-    (a, b) =>
-      new Date(a.registrationDate).getTime() -
-      new Date(b.registrationDate).getTime()
+    (a, b) => new Date(a.registrationDate).getTime() - new Date(b.registrationDate).getTime()
   );
 
   const chartData: ChartData[] = [
@@ -32,16 +30,14 @@ const transformData2 = (data: NewProductManagemantInfo[]): ChartData[] => {
   return chartData;
 };
 
-const NewProductListSummaryChart: React.FC<ChartFormProps> = ({
-  productDataList,
-}) => {
+const NewProductListSummaryChart: React.FC<ChartFormProps> = ({ productDataList }) => {
   const chartData = transformData2(productDataList);
   console.log("그리기 전 데이터: " + JSON.stringify(chartData));
 
   return (
     <div className="product-managemant-info-container">
       <div className="new-product-chart">
-        <h3>Recent Products</h3>
+        <h4>등록 상품</h4>
         <div className="productChart">
           <ResponsiveLine
             data={chartData}
@@ -66,7 +62,9 @@ const NewProductListSummaryChart: React.FC<ChartFormProps> = ({
               tickPadding: 5,
               tickRotation: 0,
             }}
+            enablePoints={false}
             colors={{ scheme: "nivo" }}
+            enableGridX={false}
             pointSize={8}
             pointColor={{ from: "color", modifiers: [] }}
             pointBorderWidth={2}
