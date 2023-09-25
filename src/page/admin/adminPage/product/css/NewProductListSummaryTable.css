@@ -7,8 +7,31 @@
 }
 .new-product-list {
   /* width: 900px; */
-  height: 460px;
+  /* height: 460px; */
   background-color: white;
   padding: 20px 20px 20px 20px;
   justify-content: flex-start;
+  font-family: "SUIT-Regular";
+}
+.pagination {
+  font-family: "SUIT-Medium";
+  font-size: 12px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: flex-end;
+  padding-top: 2px;
+}
+.product-table {
+  box-shadow: 0px 0px 0px 0px !important;
+}
+.product-cell-style {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  color: #252525 !important;
+}
+.product-cell-body-style {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  color: #252525 !important;
+  font-family: SUIT-Regular !important;
 }
