@@ -3,6 +3,7 @@ import { OrderRequset } from "../entity/OrderRequset";
 import axiosInstance from "utility/axiosInstance";
 import { UserOrderList } from "../entity/UserOrderList";
 import { OrderInfoResponse } from "../entity/OrderInfoResponse";
+import { OrderStatisticsResponse } from "../entity/OrderStatisticsResponse";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -12,10 +13,7 @@ export const getOrderInfo = async (requestData: number[]) => {
     userToken: userToken,
     requestList: requestData,
   };
-  const response = await axiosInstance.post<OrderInfo>(
-    "/order/confirm",
-    requestForm
-  );
+  const response = await axiosInstance.post<OrderInfo>("/order/confirm", requestForm);
   console.log("주문 확인 데이터", response.data);
   return response.data;
 };
@@ -29,11 +27,16 @@ export const getUserOrderList = async () => {
   return response.data;
 };
 
-// 관리자용 신규 상품 리스트 확인
+// 관리자용 신규 주문 리스트 확인
 export const fetchNewOrderList = async (): Promise<OrderInfoResponse> => {
-  const response = await axiosInstance.get<OrderInfoResponse>(
-    "/order/admin/new-list"
-  );
+  const response = await axiosInstance.get<OrderInfoResponse>("/order/admin/new-list");
   console.log("신규 주문 리스트 데이터", response.data);
+  return response.data;
+};
+
+// 관리자용 당월 주문 통계 데이터 확인
+export const monthlyOrderStatistics = async (): Promise<OrderStatisticsResponse> => {
+  const response = await axiosInstance.get<OrderStatisticsResponse>("/order/admin/monthly_orders");
+  console.log("당월 주문 통계 데이터", response.data);
   return response.data;
 };

@@ -11,6 +11,7 @@ import { fetchNewOrderList } from "page/order/api/OrderApi";
 import { NewOrderManagemantInfo } from "page/order/entity/NewOrderManagemantInfo";
 import NewOrderListSummaryTable from "page/admin/adminPage/order/components/NewOrderListSummaryTable";
 import NewOrderListSummaryChart from "page/admin/adminPage/order/components/NewOrderListSummaryChart";
+import AdminStatisticsList from "./AdminStatisticsList";
 
 const AdminDashBoard: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,9 @@ const AdminDashBoard: React.FC = () => {
 
   return (
     <div className="admin-bash-board-container">
+      <div className="statistics-info-container">
+        <AdminStatisticsList />
+      </div>
       <div className="new-product-info-container">
         {!loading && <NewProductListSummaryTable productList={loadedProductsInfo || []} />}
         {!loading && (
