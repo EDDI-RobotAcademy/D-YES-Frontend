@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EventList } from "./entity/EventList";
-import { getEventList } from "./api/EventApi";
+import { fetchEvent, getEventList } from "./api/EventApi";
 import {
   Button,
   Paper,
@@ -12,11 +12,29 @@ import {
 } from "@mui/material";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "layout/navigation/AuthConText";
+import { toast } from "react-toastify";
+import useEventReadStore from "./store/EventReadStore";
+import { EventRead } from "./entity/EventRead";
 
 const AdminEventListPage = () => {
   const [eventList, setEventList] = useState<EventList>();
   const navigate = useNavigate();
   const hasFetchedRef = React.useRef(false);
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
+  const { setEventRead } = useEventReadStore();
+
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
 
   const fetchEventList = async () => {
     try {
@@ -32,8 +50,16 @@ const AdminEventListPage = () => {
     fetchEventList();
   }, []);
 
-  const handleEditClick = (eventId: number) => {
-    navigate(`/adminEventModifyPage/${eventId}`);
+  const handleEditClick = async (eventProductId: string) => {
+    try {
+      const eventData = await fetchEvent(eventProductId);
+      if (eventData !== null) {
+        setEventRead(eventData as unknown as EventRead);
+      }
+      navigate(`/adminEventModifyPage/${eventProductId}`);
+    } catch (error) {
+      console.error("이벤트 데이터를 불러오는 중 오류 발생:", error);
+    }
   };
 
   return (
@@ -122,7 +148,7 @@ const AdminEventListPage = () => {
                     <TableCell className="cellStyle">
                       <Button
                         className="modify-btn"
-                        onClick={() => handleEditClick(event.eventProductId)}
+                        onClick={() => handleEditClick(event.eventProductId.toString())}
                         variant="contained"
                         style={{
                           fontSize: "13px",
