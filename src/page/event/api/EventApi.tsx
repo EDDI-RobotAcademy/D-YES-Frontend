@@ -3,6 +3,8 @@ import { EventCount } from "../entity/EventCount";
 import { EventDate } from "../entity/EventDate";
 import { EventProduct } from "../entity/EventProduct";
 import axiosInstance from "utility/axiosInstance";
+import { EventRead } from "../entity/EventRead";
+import { EventModify } from "../entity/EventModify";
 
 // 이벤트 등록
 export const registerEvent = async (data: {
@@ -19,5 +21,37 @@ export const registerEvent = async (data: {
 export const getEventList = async () => {
   const response = await axiosInstance.get("/event/admin/list/all");
   console.log("받은 데이터", response.data);
+  return response.data;
+};
+
+// 이벤트 수정 전 읽어오기
+export const fetchEvent = async (eventProductId: string): Promise<EventRead | null> => {
+  const response = await axiosInstance.get(`event/read/${eventProductId}`);
+  console.log("읽기", response.data);
+  return response.data;
+};
+
+export const updateEvent = async (updatedData: EventModify): Promise<EventModify> => {
+  const {
+    eventProductId,
+    productModifyUserTokenAndEventProductIdRequest,
+    productModifyRequest,
+    productOptionModifyRequest,
+    productMainImageModifyRequest,
+    // productDetailImagesModifyRequest,
+    // eventProductModifyDeadLineRequest,
+    // eventProductModifyPurchaseCountRequest,
+  } = updatedData;
+  const response = await axiosInstance.put<EventModify>(`/event/modify/${eventProductId}`, {
+    eventProductId,
+    productModifyUserTokenAndEventProductIdRequest,
+    productModifyRequest,
+    productOptionModifyRequest,
+    productMainImageModifyRequest,
+    // productDetailImagesModifyRequest,
+    // eventProductModifyDeadLineRequest,
+    // eventProductModifyPurchaseCountRequest,
+  });
+  console.log("수정데이터", response.data);
   return response.data;
 };
