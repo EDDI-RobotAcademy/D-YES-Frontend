@@ -1,0 +1,12 @@
+.statistics-info-container {
+  margin: 20px 0px 0px 0px;
+  /* background-color: white; */
+}
+.box-container {
+  display: flex;
+  gap: 26px;
+  justify-content: center;
+  align-items: center;
+  /* padding-top: 20px;
+    padding-bottom: 20px; */
+}
