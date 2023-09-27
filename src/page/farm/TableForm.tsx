@@ -89,7 +89,9 @@ const TableForm: React.FC<TableFormProps> = ({ priceList }) => {
                   </TableCell>
                   {dateList.map((date) => (
                     <TableCell key={date} style={{ textAlign: "right" }}>
-                      {won(transformedData[date][farmProduceName])}
+                      {transformedData[date][farmProduceName] === 0
+                        ? "업데이트 준비중"
+                        : won(transformedData[date][farmProduceName])}
                     </TableCell>
                   ))}
                 </TableRow>

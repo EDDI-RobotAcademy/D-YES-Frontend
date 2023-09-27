@@ -20,12 +20,23 @@ const translateKorean: { [key: string]: string } = {
 };
 
 const LineChart: React.FC<ChartFormProps> = ({ priceList }) => {
-  const formattedData = priceList.map((item) => ({
+  const formattedData = priceList.map((item, index) => ({
     id: translateKorean[item.farmProduceName],
-    data: item.priceList.map((priceItem) => ({
-      x: Object.keys(priceItem)[0].split("-").slice(1).join("/"),
-      y: priceItem[Object.keys(priceItem)[0]],
-    })),
+    data: item.priceList.map((priceItem, priceIndex) => {
+      const currentYValue = priceItem[Object.keys(priceItem)[0]];
+
+      const y =
+        currentYValue !== 0
+          ? currentYValue
+          : priceIndex > 0
+          ? item.priceList[priceIndex - 1][Object.keys(item.priceList[priceIndex - 1])[0]]
+          : 0;
+
+      return {
+        x: Object.keys(priceItem)[0].split("-").slice(1).join("/"),
+        y: y,
+      };
+    }),
   }));
 
   return (

@@ -1,0 +1,26 @@
+.inquiry-reg-info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "SUIT-light";
+  padding: 0 10px;
+}
+.inquiry-reg-info-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: "SUIT-SemiBold";
+}
+.inquiry-reg-product-name {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+.inquiry-reg-option-info {
+  color: gray;
+}
+.inquiry-reg-submit-btn {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
