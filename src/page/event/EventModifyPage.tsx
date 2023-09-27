@@ -62,9 +62,6 @@ const EventModifyPage = () => {
       cultivationMethod:
         eventModify.productModifyRequest?.cultivationMethod ||
         eventReads.productResponseForUser?.cultivationMethod,
-      produceType:
-        eventModify.productModifyRequest?.produceType ||
-        eventReads.productResponseForUser?.produceType,
     };
 
     const productOptionModifyRequest: EventOption = {
