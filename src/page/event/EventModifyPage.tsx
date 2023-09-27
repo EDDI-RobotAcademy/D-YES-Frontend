@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import useEventModifyStore from "./store/EventModifyStore";
 import { Box, Button, Container } from "@mui/material";
 import EventModifyDescription from "./components/modify/EventModifyDescription";
@@ -83,32 +83,30 @@ const EventModifyPage = () => {
       mainImg: mainImage,
     };
 
-    const detailImageUploadPromises = eventModify.productDetailImagesModifyRequest.map(
-      async (image, idx) => {
-        const detailFileToUpload = new File([image.detailImgs], image.detailImgs.name);
+    const detailImageUploadPromises = eventModify.productDetailImagesModifyRequest
+      ? eventModify.productDetailImagesModifyRequest.map(async (image, idx) => {
+          const detailFileToUpload = new File([image.detailImgs], image.detailImgs.name);
 
-        let s3DetailObjectVersion = "";
-        let name = "";
+          let s3DetailObjectVersion = "";
+          let name = "";
 
-        s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
-        name = detailFileToUpload.name;
+          s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
+          name = detailFileToUpload.name;
 
-        if (name.trim() === "") {
-          return null;
-        }
+          if (name.trim() === "") {
+            return null;
+          }
 
-        return {
-          detailImageId: 0,
-          detailImgs: name + "?versionId=" + s3DetailObjectVersion,
-        };
-      }
-    );
+          return {
+            detailImageId: 0,
+            detailImgs: name + "?versionId=" + s3DetailObjectVersion,
+          };
+        })
+      : [];
     const existingDetailImageNames = eventReads.detailImagesForUser.map((image) => ({
       detailImageId: image.detailImageId,
       detailImgs: image.detailImgs,
     }));
-
-    console.log("이미지 이름", existingDetailImageNames);
 
     const allDetailImageUploadPromises = [
       ...detailImageUploadPromises,
@@ -118,12 +116,10 @@ const EventModifyPage = () => {
     const filteredAllDetailImageUploadPromises = allDetailImageUploadPromises.filter(
       (image) => image !== null
     );
-    console.log("이미지1", filteredAllDetailImageUploadPromises);
 
     const productDetailImagesModifyRequest = await Promise.all(
       filteredAllDetailImageUploadPromises
     );
-    console.log("이미지2", productDetailImagesModifyRequest);
 
     const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest
       .filter((detailImage) => detailImage !== null)
@@ -135,7 +131,7 @@ const EventModifyPage = () => {
 
         return productDetailImg;
       });
-    console.log("이미지3", updatedProductDetailImagesModifyRequest);
+      
     // const eventProductModifyDeadLineRequest: EventDate = {
     //   startLine:
     //     eventModify.eventProductModifyDeadLineRequest.startLine ||
