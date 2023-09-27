@@ -328,7 +328,7 @@ const RecipeRegisterPage = () => {
       servingSize: servingSize,
       mainIngredient: recipes.recipeIngredientRegisterRequest.mainIngredient,
       mainIngredientAmount: recipes.recipeIngredientRegisterRequest.mainIngredientAmount,
-      otherIngredienList: recipes.recipeIngredientRegisterRequest.otherIngredienList,
+      otherIngredientList: recipes.recipeIngredientRegisterRequest.otherIngredientList,
       seasoningList: recipes.recipeIngredientRegisterRequest.seasoningList,
     };
 
