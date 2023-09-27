@@ -30,7 +30,7 @@ dayjs.tz.setDefault("Asia/Seoul");
 const EventModifyLimit = () => {
   const { eventReads, setEventRead } = useEventReadStore();
   const { eventModify, setEventModify } = useEventModifyStore();
-
+  
   const handleEventTargetCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEventModify({
       ...eventModify,
@@ -46,6 +46,30 @@ const EventModifyLimit = () => {
         targetCount: parseInt(event.target.value),
       },
     });
+  };
+
+  const handleStartDateChange = (date: dayjs.Dayjs | null) => {
+    if (date !== null) {
+      setEventModify({
+        ...eventModify,
+        eventProductModifyDeadLineRequest: {
+          ...eventModify.eventProductModifyDeadLineRequest,
+          startLine: date.toDate(),
+        },
+      });
+    }
+  };
+
+  const handleEndDateChange = (date: dayjs.Dayjs | null) => {
+    if (date !== null) {
+      setEventModify({
+        ...eventModify,
+        eventProductModifyDeadLineRequest: {
+          ...eventModify.eventProductModifyDeadLineRequest,
+          deadLine: date.toDate(),
+        },
+      });
+    }
   };
 
   return (
@@ -80,13 +104,16 @@ const EventModifyLimit = () => {
                       >
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <div onClick={(e) => e.stopPropagation()}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
                               <DatePicker
                                 value={
                                   eventReads?.eventProductDeadLineResponse.startLine
                                     ? dayjs(eventReads.eventProductDeadLineResponse.startLine)
+                                    : eventModify?.eventProductModifyDeadLineRequest.startLine
+                                    ? dayjs(eventModify.eventProductModifyDeadLineRequest.startLine)
                                     : null
                                 }
+                                onChange={handleStartDateChange}
                               />
                             </LocalizationProvider>
                           </div>
@@ -101,13 +128,16 @@ const EventModifyLimit = () => {
                       >
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <div onClick={(e) => e.stopPropagation()}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
                               <DatePicker
                                 value={
                                   eventReads?.eventProductDeadLineResponse.deadLine
                                     ? dayjs(eventReads.eventProductDeadLineResponse.deadLine)
+                                    : eventModify?.eventProductModifyDeadLineRequest.deadLine
+                                    ? dayjs(eventModify.eventProductModifyDeadLineRequest.deadLine)
                                     : null
                                 }
+                                onChange={handleEndDateChange}
                               />
                             </LocalizationProvider>
                           </div>
