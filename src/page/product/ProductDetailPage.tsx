@@ -278,10 +278,10 @@ const ProductDetail = () => {
                       <MenuItem
                         key={idx}
                         value={option.optionId.toString()}
-                        disabled={option.stock < 1}
+                        disabled={option.stock < 1 || option.optionSaleStatus === "UNAVAILABLE"}
                         style={{ fontFamily: "SUIT-Medium" }}
                       >
-                        {option.stock < 1 && (
+                        {(option.stock < 1 && (
                           <span
                             style={{
                               color: "red",
@@ -292,7 +292,19 @@ const ProductDetail = () => {
                           >
                             품절
                           </span>
-                        )}
+                        )) ||
+                          (option.optionSaleStatus === "UNAVAILABLE" && (
+                            <span
+                              style={{
+                                color: "red",
+                                marginRight: "5px",
+                                fontFamily: "SUIT-Bold",
+                                display: "flex",
+                              }}
+                            >
+                              판매 중지
+                            </span>
+                          ))}
                         <div className="options-style">
                           {option.optionName + " / " + option.value + option.unit}
                           <span>{won(option.optionPrice)}</span>
