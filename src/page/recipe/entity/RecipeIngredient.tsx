@@ -4,6 +4,6 @@ export interface RecipeIngredient {
   servingSize: number;
   mainIngredient: string;
   mainIngredientAmount: string;
-  otherIngredienList: RecipeIngredientInfo[];
+  otherIngredientList: RecipeIngredientInfo[];
   seasoningList: RecipeIngredientInfo[];
 }
