@@ -358,6 +358,10 @@ const RecipeRegisterPage = () => {
     });
   };
 
+  const goToRecipeList = () => {
+    navigate("/recipe/list");
+  };
+
   return (
     <div className="recipe-reg-container">
       <div className="recipe-reg-grid">
@@ -637,9 +641,8 @@ const RecipeRegisterPage = () => {
               <div className="recipe-reg-spacer" />
               <div className="recipe-reg-title">만드는 방법</div>
               {recipeDetails.map((detail, idx) => (
-                <div className="recipe-reg-ing-container">
+                <div key={idx} className="recipe-reg-ing-container">
                   <TextField
-                    key={idx}
                     className="recipe-reg-detail-recipe"
                     label={`${detail.step} 단계`}
                     variant="outlined"
@@ -670,7 +673,35 @@ const RecipeRegisterPage = () => {
               </div>
             </div>
           </div>
-          <Button onClick={handleSubmit}>확인</Button>
+          <div className="recipe-reg-btn-container">
+            <div className="recipe-reg-submit-btn">
+              <Button
+                style={{
+                  borderColor: "#578b36",
+                  color: "#578b36",
+                  width: "120px",
+                }}
+                variant="outlined"
+                onClick={goToRecipeList}
+              >
+                돌아가기
+              </Button>
+            </div>
+            <div className="recipe-reg-submit-btn">
+              <Button
+                style={{
+                  borderColor: "#578b36",
+                  backgroundColor: "#578b36",
+                  color: "white",
+                  width: "120px",
+                }}
+                variant="contained"
+                onClick={handleSubmit}
+              >
+                확인
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

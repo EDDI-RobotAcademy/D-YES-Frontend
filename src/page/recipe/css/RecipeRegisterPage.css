@@ -216,3 +216,9 @@
 .recipe-reg-detail-recipe {
   flex: 9;
 }
+.recipe-reg-btn-container {
+  display: flex;
+}
+.recipe-reg-submit-btn {
+  margin: 8px 2px;
+}
