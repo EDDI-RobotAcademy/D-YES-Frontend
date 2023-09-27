@@ -1,0 +1,54 @@
+.order-statistics-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.order-statistics-head {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* background-color: red; */
+  height: 60px;
+  width: 100%;
+}
+
+.order-statistics-body-1 {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  /* background-color: blue; */
+}
+
+.order-statistics-body-2 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end !important;
+  width: 20%;
+  height: 60px;
+  /* background-color: yellow; */
+  flex: 1;
+}
+
+.order-statistics-body-3 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  /* background-color: green; */
+}
+
+.monthly-statistics-text-head {
+  justify-content: center;
+  align-items: center;
+  min-width: 120px;
+}
+
+.order-dash-board-img {
+  padding-left: 20px;
+  padding-right: 10px;
+  width: 40px;
+  height: 40px;
+}
