@@ -24,7 +24,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     <div className="second-header-container">
       <div className="second-header-fontstyle">
         <div
-          className={`second-header-top-bar ${isDrawerOpen ? "drawer-open" : ""}`}
+          className={`second-header-top-bar ${
+            isDrawerOpen ? "drawer-open" : ""
+          }`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -47,19 +49,26 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                 <p>베스트</p>
               </div>
             </Link>
-            <Link className="second-header-link" to={"/"}>
+            <Link className="second-header-link" to={"/event/list/all"}>
               <div style={{ minWidth: "60px", textAlign: "center" }}>
                 <p>이벤트</p>
               </div>
             </Link>
           </div>
           <div className="second-header-btn-container-3">
-            <Link className="second-header-link second-header-recipe-btn" to={"/recipe/list"}>
+            <Link
+              className="second-header-link second-header-recipe-btn"
+              to={"/recipe/list"}
+            >
               <RestaurantIcon fontSize="small" />
               레시피
             </Link>
           </div>
-          <div className={`second-header-drawer ${isDrawerOpen ? "drawer-open" : ""}`}>
+          <div
+            className={`second-header-drawer ${
+              isDrawerOpen ? "drawer-open" : ""
+            }`}
+          >
             <Header3rd />
           </div>
         </div>

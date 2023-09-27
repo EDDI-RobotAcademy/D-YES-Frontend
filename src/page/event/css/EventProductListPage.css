@@ -1,0 +1,77 @@
+.event-product-randon-list-container {
+  color: white;
+  height: 100%;
+  min-width: 1200px;
+}
+.event-product-container {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  width: 1000px;
+  background-color: #252525;
+}
+.event-product-randon-list-header {
+  font-family: "SUIT-Bold";
+  font-size: x-large;
+  width: 1000px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  align-items: center;
+  margin: auto;
+  margin-top: 20px;
+  background-color: #ff520d;
+}
+
+.event-product-other-list-header {
+  font-family: "SUIT-Bold";
+  font-size: x-large;
+  width: 1000px;
+  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: auto;
+  color: #252525;
+}
+
+.event-product-name {
+  font-family: "SUIT_Bold";
+  font-size: 22px;
+}
+
+.event-product-price {
+  font-family: "SUIT-Light";
+  /* color: gray; */
+}
+.event-product-introduce-container {
+  /* background-color: yellow; */
+  width: 60%;
+  margin-right: 10px;
+}
+.event-product-info-container {
+  background-color: rgb(6, 38, 218);
+  height: 300px !important;
+  margin: 0px !important;
+  padding: 0px !important;
+}
+.event-product-other-container {
+  /* background-color: red; */
+  margin-top: 60px;
+}
+.css-eg7ehk-MuiContainer-root {
+  padding: 0px !important;
+}
+.discount-percentage-value {
+  color: red;
+  padding-right: 6px;
+}
+.discounted-current-price-value {
+  /* color: red; */
+  padding-left: 10px;
+  font-size: 22px;
+}
+
+.original-price {
+  color: red;
+  opacity: 0.6;
+}

@@ -5,6 +5,7 @@ import { EventProduct } from "../entity/EventProduct";
 import axiosInstance from "utility/axiosInstance";
 import { EventRead } from "../entity/EventRead";
 import { EventModify } from "../entity/EventModify";
+import { EventProductAdminListResponseForm } from "../entity/EventProductAdminListResponseForm";
 
 // 이벤트 등록
 export const registerEvent = async (data: {
@@ -25,13 +26,17 @@ export const getEventList = async () => {
 };
 
 // 이벤트 수정 전 읽어오기
-export const fetchEvent = async (eventProductId: string): Promise<EventRead | null> => {
+export const fetchEvent = async (
+  eventProductId: string
+): Promise<EventRead | null> => {
   const response = await axiosInstance.get(`event/read/${eventProductId}`);
   console.log("읽기", response.data);
   return response.data;
 };
 
-export const updateEvent = async (updatedData: EventModify): Promise<EventModify> => {
+export const updateEvent = async (
+  updatedData: EventModify
+): Promise<EventModify> => {
   const {
     eventProductId,
     productModifyUserTokenAndEventProductIdRequest,
@@ -42,16 +47,28 @@ export const updateEvent = async (updatedData: EventModify): Promise<EventModify
     eventProductModifyDeadLineRequest,
     eventProductModifyPurchaseCountRequest,
   } = updatedData;
-  const response = await axiosInstance.put<EventModify>(`/event/modify/${eventProductId}`, {
-    eventProductId,
-    productModifyUserTokenAndEventProductIdRequest,
-    productModifyRequest,
-    productOptionModifyRequest,
-    productMainImageModifyRequest,
-    productDetailImagesModifyRequest,
-    eventProductModifyDeadLineRequest,
-    eventProductModifyPurchaseCountRequest,
-  });
+  const response = await axiosInstance.put<EventModify>(
+    `/event/modify/${eventProductId}`,
+    {
+      eventProductId,
+      productModifyUserTokenAndEventProductIdRequest,
+      productModifyRequest,
+      productOptionModifyRequest,
+      productMainImageModifyRequest,
+      productDetailImagesModifyRequest,
+      eventProductModifyDeadLineRequest,
+      eventProductModifyPurchaseCountRequest,
+    }
+  );
   console.log("수정데이터", response.data);
+  return response.data;
+};
+
+// 사용자용 상품 리스트 확인
+export const getEventProductList = async () => {
+  const response = await axiosInstance.get<EventProductAdminListResponseForm>(
+    "/event/list/all"
+  );
+  console.log("이벤트 상품 리스트 데이터", response.data);
   return response.data;
 };

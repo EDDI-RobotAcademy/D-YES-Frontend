@@ -43,6 +43,7 @@ import EventRegisterPage from "page/event/EventRegisterPage";
 import AdminEventListPage from "page/event/AdminEventListPage";
 import EventModifyPage from "page/event/EventModifyPage";
 import InquiryRegisterPage from "page/inquiry/InquiryRegisterPage";
+import EventListPage from "page/event/EventListPage";
 
 const theme = createTheme({
   typography: {
@@ -108,6 +109,7 @@ const App: React.FC = () => {
                 path="/inquiry/register"
                 element={<InquiryRegisterPage />}
               />
+              <Route path="/event/list/all" element={<EventListPage />} />
             </Route>
 
             <Route element={<AdminLayout />}>
