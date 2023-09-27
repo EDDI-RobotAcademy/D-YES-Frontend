@@ -1,6 +1,5 @@
-// import { EventCount } from "./EventCount";
-// import { EventDate } from "./EventDate";
-// import { EventDetailImage } from "./EventDetailImage";
+import { EventCount } from "./EventCount";
+import { EventDate } from "./EventDate";
 import { EventDetailImage } from "./EventDetailImage";
 import { EventMainImage } from "./EventMainImage";
 import { EventModifyDetail } from "./EventModifyDetail";
@@ -14,6 +13,6 @@ export interface EventModify {
   productOptionModifyRequest: EventOption;
   productMainImageModifyRequest: EventMainImage;
   productDetailImagesModifyRequest: EventDetailImage[];
-  // eventProductModifyDeadLineRequest: EventDate;
-  // eventProductModifyPurchaseCountRequest: EventCount;
+  eventProductModifyDeadLineRequest: EventDate;
+  eventProductModifyPurchaseCountRequest: EventCount;
 }

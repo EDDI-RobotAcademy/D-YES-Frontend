@@ -39,8 +39,8 @@ export const updateEvent = async (updatedData: EventModify): Promise<EventModify
     productOptionModifyRequest,
     productMainImageModifyRequest,
     productDetailImagesModifyRequest,
-    // eventProductModifyDeadLineRequest,
-    // eventProductModifyPurchaseCountRequest,
+    eventProductModifyDeadLineRequest,
+    eventProductModifyPurchaseCountRequest,
   } = updatedData;
   const response = await axiosInstance.put<EventModify>(`/event/modify/${eventProductId}`, {
     eventProductId,
@@ -49,8 +49,8 @@ export const updateEvent = async (updatedData: EventModify): Promise<EventModify
     productOptionModifyRequest,
     productMainImageModifyRequest,
     productDetailImagesModifyRequest,
-    // eventProductModifyDeadLineRequest,
-    // eventProductModifyPurchaseCountRequest,
+    eventProductModifyDeadLineRequest,
+    eventProductModifyPurchaseCountRequest,
   });
   console.log("수정데이터", response.data);
   return response.data;

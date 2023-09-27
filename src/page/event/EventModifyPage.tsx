@@ -16,6 +16,9 @@ import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { EventOption } from "./entity/EventOption";
 import { useNavigate, useParams } from "react-router-dom";
 import { EventDetailImage } from "./entity/EventDetailImage";
+import { EventDate } from "./entity/EventDate";
+import { EventCount } from "./entity/EventCount";
+import EventModifyLimit from "./components/modify/EventModifyLimit";
 
 const EventModifyPage = () => {
   const { eventModify, setEventModify } = useEventModifyStore();
@@ -131,21 +134,23 @@ const EventModifyPage = () => {
 
         return productDetailImg;
       });
-      
-    // const eventProductModifyDeadLineRequest: EventDate = {
-    //   startLine:
-    //     eventModify.eventProductModifyDeadLineRequest.startLine ||
-    //     eventReads.eventProductDeadLineResponse.startLine,
-    //   deadLine:
-    //     eventModify.eventProductModifyDeadLineRequest.deadLine ||
-    //     eventReads.eventProductDeadLineResponse.deadLine,
-    // };
 
-    // const eventProductModifyPurchaseCountRequest: EventCount = {
-    //   targetCount:
-    //     eventModify.eventProductModifyPurchaseCountRequest.targetCount ||
-    //     eventReads.eventProductPurchaseCountResponse.targetCount,
-    // };
+    const eventProductModifyDeadLineRequest: EventDate = {
+      startLine:
+        eventModify.eventProductModifyDeadLineRequest?.startLine ||
+        eventReads?.eventProductDeadLineResponse?.startLine ||
+        null,
+      deadLine:
+        eventModify.eventProductModifyDeadLineRequest?.deadLine ||
+        eventReads?.eventProductDeadLineResponse?.deadLine ||
+        null,
+    };
+
+    const eventProductModifyPurchaseCountRequest: EventCount = {
+      targetCount:
+        eventModify.eventProductModifyPurchaseCountRequest?.targetCount ||
+        eventReads.eventProductPurchaseCountResponse?.targetCount,
+    };
 
     const updateData: EventModify = {
       eventProductId: parseInt(eventProductId || ""),
@@ -155,8 +160,8 @@ const EventModifyPage = () => {
       productOptionModifyRequest: productOptionModifyRequest,
       productMainImageModifyRequest: productMainImageModifyRequest,
       productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
-      // eventProductModifyDeadLineRequest: eventProductModifyDeadLineRequest,
-      // eventProductModifyPurchaseCountRequest: eventProductModifyPurchaseCountRequest,
+      eventProductModifyDeadLineRequest: eventProductModifyDeadLineRequest,
+      eventProductModifyPurchaseCountRequest: eventProductModifyPurchaseCountRequest,
     };
 
     console.log("수정정보전송", updateData);
@@ -171,7 +176,7 @@ const EventModifyPage = () => {
             <h1>이벤트 수정</h1>
             <EventModifyDetailPage />
             <EventModifyImage />
-            {/* <EventModifyLimit /> */}
+            <EventModifyLimit />
             <EventModifyDescription />
           </Box>
           <Button type="submit">수정완료</Button>

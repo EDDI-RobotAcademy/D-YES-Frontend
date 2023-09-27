@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Container,
@@ -13,36 +14,63 @@ import useEventModifyStore from "page/event/store/EventModifyStore";
 import useEventReadStore from "page/event/store/EventReadStore";
 import ToggleComponent from "page/product/components/productOption/ToggleComponent";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; // 수정
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ko";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+dayjs.locale("ko");
 dayjs.extend(timezone);
 dayjs.extend(utc);
+dayjs.extend(localizedFormat);
 dayjs.tz.setDefault("Asia/Seoul");
 
 const EventModifyLimit = () => {
   const { eventReads, setEventRead } = useEventReadStore();
   const { eventModify, setEventModify } = useEventModifyStore();
+  
+  const handleEventTargetCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEventModify({
+      ...eventModify,
+      eventProductModifyPurchaseCountRequest: {
+        ...eventModify.eventProductModifyPurchaseCountRequest,
+        targetCount: parseInt(event.target.value),
+      },
+    });
+    setEventRead({
+      ...eventReads,
+      eventProductPurchaseCountResponse: {
+        ...eventReads.eventProductPurchaseCountResponse,
+        targetCount: parseInt(event.target.value),
+      },
+    });
+  };
 
-  // const handleEventTargetCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setEventModify({
-  //     ...eventModify,
-  //     eventProductModifyPurchaseCountRequest: {
-  //       ...eventModify.eventProductModifyPurchaseCountRequest,
-  //       targetCount: parseInt(event.target.value),
-  //     },
-  //   });
-  //   setEventRead({
-  //     ...eventReads,
-  //     eventProductPurchaseCountResponse: {
-  //       ...eventReads.eventProductPurchaseCountResponse,
-  //       targetCount: parseInt(event.target.value),
-  //     },
-  //   });
-  // };
+  const handleStartDateChange = (date: dayjs.Dayjs | null) => {
+    if (date !== null) {
+      setEventModify({
+        ...eventModify,
+        eventProductModifyDeadLineRequest: {
+          ...eventModify.eventProductModifyDeadLineRequest,
+          startLine: date.toDate(),
+        },
+      });
+    }
+  };
+
+  const handleEndDateChange = (date: dayjs.Dayjs | null) => {
+    if (date !== null) {
+      setEventModify({
+        ...eventModify,
+        eventProductModifyDeadLineRequest: {
+          ...eventModify.eventProductModifyDeadLineRequest,
+          deadLine: date.toDate(),
+        },
+      });
+    }
+  };
 
   return (
     <div className="event-register-container">
@@ -77,31 +105,16 @@ const EventModifyLimit = () => {
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <div onClick={(e) => e.stopPropagation()}>
                             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-                              {/* <DatePicker
+                              <DatePicker
                                 value={
                                   eventReads?.eventProductDeadLineResponse.startLine
-                                    ? eventReads?.eventProductDeadLineResponse.startLine
-                                    : eventModify.eventProductModifyDeadLineRequest.startLine || dayjs()
+                                    ? dayjs(eventReads.eventProductDeadLineResponse.startLine)
+                                    : eventModify?.eventProductModifyDeadLineRequest.startLine
+                                    ? dayjs(eventModify.eventProductModifyDeadLineRequest.startLine)
+                                    : null
                                 }
-                                onChange={(date) => {
-                                  if (date !== null) {
-                                    setEventModify({
-                                      ...eventModify,
-                                      eventProductModifyDeadLineRequest: {
-                                        ...(eventModify.eventProductModifyDeadLineRequest || {}),
-                                        startLine: date,
-                                      },
-                                    });
-                                    setEventRead({
-                                      ...eventReads,
-                                      eventProductDeadLineResponse: {
-                                        ...(eventReads.eventProductDeadLineResponse || {}),
-                                        startLine: date,
-                                      },
-                                    });
-                                  }
-                                }}
-                              /> */}
+                                onChange={handleStartDateChange}
+                              />
                             </LocalizationProvider>
                           </div>
                         </div>
@@ -116,37 +129,22 @@ const EventModifyLimit = () => {
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <div onClick={(e) => e.stopPropagation()}>
                             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-                              {/* <DatePicker // 수정
+                              <DatePicker
                                 value={
                                   eventReads?.eventProductDeadLineResponse.deadLine
-                                    ? eventReads.eventProductDeadLineResponse.deadLine
-                                    : eventModify.eventProductModifyDeadLineRequest.deadLine || dayjs()
+                                    ? dayjs(eventReads.eventProductDeadLineResponse.deadLine)
+                                    : eventModify?.eventProductModifyDeadLineRequest.deadLine
+                                    ? dayjs(eventModify.eventProductModifyDeadLineRequest.deadLine)
+                                    : null
                                 }
-                                onChange={(date) => {
-                                  if (date !== null) {
-                                    setEventModify({
-                                      ...eventModify,
-                                      eventProductModifyDeadLineRequest: {
-                                        ...(eventModify.eventProductModifyDeadLineRequest || {}),
-                                        deadLine: date,
-                                      },
-                                    });
-                                    setEventRead({
-                                      ...eventReads,
-                                      eventProductDeadLineResponse: {
-                                        ...(eventReads.eventProductDeadLineResponse || {}),
-                                        deadLine: date,
-                                      },
-                                    });
-                                  }
-                                }}
-                              /> */}
+                                onChange={handleEndDateChange}
+                              />
                             </LocalizationProvider>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        {/* <TextField
+                        <TextField
                           name="targetCount"
                           size="small"
                           value={
@@ -156,7 +154,7 @@ const EventModifyLimit = () => {
                           }
                           fullWidth
                           onChange={handleEventTargetCountChange}
-                        /> */}
+                        />
                       </TableCell>
                     </TableRow>
                   </TableBody>
