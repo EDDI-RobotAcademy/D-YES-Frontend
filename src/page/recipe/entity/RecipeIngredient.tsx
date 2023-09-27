@@ -1,4 +1,9 @@
+import { RecipeIngredientInfo } from "./RecipeIngredientInfo";
+
 export interface RecipeIngredient {
+  servingSize: number;
   mainIngredient: string;
-  otherIngredient: string[];
+  mainIngredientAmount: string;
+  otherIngredienList: RecipeIngredientInfo[];
+  seasoningList: RecipeIngredientInfo[];
 }

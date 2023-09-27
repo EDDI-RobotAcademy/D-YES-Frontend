@@ -5,11 +5,14 @@ import { RecipeImage } from "../entity/RecipeImage";
 import { RecipeIngredient } from "../entity/RecipeIngredient";
 import { RecipeName } from "../entity/RecipeName";
 import { RecipeListResponseForm } from "../entity/RecipeList";
+import { RecipeCategory } from "../entity/RecipeCategory";
 
+// 레시피 등록
 export const recipeRegister = async (data: {
   userToken: string;
   recipeRegisterRequest: RecipeName;
   recipeContentRegisterRequest: RecipeContent;
+  recipeCategoryRegisterRequest: RecipeCategory;
   recipeIngredientRegisterRequest: RecipeIngredient;
   recipeMainImageRegisterRequest: RecipeImage;
 }): Promise<Recipe> => {

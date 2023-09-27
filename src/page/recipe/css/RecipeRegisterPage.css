@@ -1,0 +1,218 @@
+.recipe-reg-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.recipe-reg-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.recipe-reg-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.recipe-reg-position {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.recipe-reg-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 400px;
+}
+.recipe-reg-input-flex {
+  width: 100%;
+}
+.recipe-reg-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 400px;
+  background-color: #e4e4e4;
+  cursor: pointer;
+}
+.recipe-reg-image {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  cursor: pointer;
+}
+.recipe-reg-selected-image {
+  max-width: 100%;
+  max-height: 100%;
+  cursor: pointer;
+}
+.recipe-reg-image-input {
+  text-align: center;
+  font-family: "SUIT-Light";
+}
+.recipe-reg-input {
+  position: relative;
+}
+.recipe-reg-category-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 15px;
+  padding-bottom: 10px;
+}
+.recipe-reg-category-btn {
+  font-family: "SUIT-Light";
+  padding: 15px 14px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 0.125em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-color: rgb(229 231 235);
+}
+.recipe-reg-arrow-icon {
+  color: rgb(229 231 235);
+}
+.recipe-reg-spacer {
+  margin: 25px 0;
+  height: 15px;
+  width: 100%;
+  background-color: rgb(249 250 251);
+}
+.recipe-reg-backdrop-container {
+  transform: translate(-50%, -50%);
+  align-items: center;
+  flex-direction: column;
+  max-width: 28rem;
+  width: 100%;
+  display: flex;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+}
+.recipe-reg-backdrop-name {
+  font-size: 20px;
+  line-height: 24px;
+  color: rgb(47 56 69);
+  margin: 0;
+  padding-bottom: 20px;
+}
+.recipe-reg-backdrop-padding {
+  padding: 30px 15px 0 15px;
+}
+.recipe-reg-backdrop-grid {
+  padding-bottom: 72px;
+  background-color: white;
+  border-radius: 0.125rem;
+  overflow-y: auto;
+  width: 100%;
+  height: 480px;
+}
+.recipe-reg-backdrop-menu {
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: grid;
+}
+.recipe-reg-backdrop-btn {
+  line-height: 1;
+  font-size: 14px;
+  color: rgb(65 75 90);
+  padding: 15px 0;
+  border-color: white;
+  border-width: 1px;
+  border-radius: 0.125em;
+  border: 0.001px solid #ccc;
+  cursor: pointer;
+  background-color: inherit;
+  text-transform: none;
+  font-family: "SUIT-medium";
+}
+.recipe-reg-backdrop-cancel {
+  line-height: 1;
+  color: white;
+  padding: 20px 0;
+  background-color: rgb(65 75 90);
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  cursor: pointer;
+  text-transform: none;
+  font-family: "SUIT-Light";
+}
+.recipe-reg-quantity-container {
+  display: flex;
+  align-items: center;
+  font-size: large;
+  margin: 15px;
+  padding-bottom: 10px;
+}
+.recipe-reg-quantity {
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
+}
+.recipe-reg-counter-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.2rem;
+  color: #366925;
+  background-color: #dcedca;
+  cursor: pointer;
+}
+.recipe-reg-text-p {
+  padding-left: 10px;
+}
+.recipe-reg-ing-container {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+}
+.recipe-reg-ing-input {
+  font-size: 15px;
+  border-width: 1px;
+  flex: 6;
+}
+.recipe-reg-unit-input {
+  font-size: 15px;
+  line-height: 1;
+  padding-left: 6px;
+  flex: 3;
+}
+.recipe-reg-ing-delete-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 56px;
+  height: auto;
+  justify-content: center;
+  flex: 1;
+  color: #366925;
+  border: 1px solid #366925;
+  background-color: #dcedca;
+  border-radius: 0.3em;
+}
+.recipe-reg-btn-position {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+.recipe-reg-add-btn {
+  width: 100px;
+}
+.recipe-reg-title {
+  padding-top: 10px;
+}
+.recipe-reg-detail-recipe {
+  flex: 9;
+}
