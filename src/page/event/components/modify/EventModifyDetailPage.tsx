@@ -66,9 +66,9 @@ const EventModifyDetailPage = () => {
   const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
     setEventRead({
       ...eventReads,
-      productResponseForUser: {
-        ...eventReads.productResponseForUser,
-        produceType: event.target.value.toString(),
+      eventProductProduceTypeResponse: {
+        ...eventReads.eventProductProduceTypeResponse,
+        productType: event.target.value.toString(),
       },
     });
   };
@@ -262,7 +262,7 @@ const EventModifyDetailPage = () => {
                   <Select
                     name="produceType"
                     value={
-                      (eventReads.productResponseForUser?.produceType as
+                      (eventReads.eventProductProduceTypeResponse?.productType as
                         | ""
                         | { value: string; label: string }) || ""
                     }
