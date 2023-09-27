@@ -99,17 +99,25 @@ const RecipeListPage: React.FC = () => {
     fetchRecipeListData();
   }, []);
 
+  const registerRecipe = () => {
+    navigate("/recipe/register");
+  };
+
   return (
     <div className="recipe-list-container">
       <div className="recipe-list-grid">
-        <div className="recipe-list-page-name">레시피 목록</div>
+        <div className="recipe-list-page-name">
+          <p>레시피 목록</p>
+          <p className="recipe-list-reg-btn" onClick={registerRecipe}>
+            레시피 등록하기
+          </p>
+        </div>
         <hr />
         {isLoading ? (
           loadedItems && loadedItems.length > 0 ? (
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
                 flexWrap: "wrap",
                 minWidth: 300,
                 width: "100%",

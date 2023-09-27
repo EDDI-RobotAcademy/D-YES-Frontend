@@ -15,6 +15,19 @@
   font-size: x-large;
   font-family: "SUIT-Bold";
   margin-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.recipe-list-reg-btn {
+  font-size: 14px;
+  margin: 0 10px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 0.5em;
+  background-color: #578b36;
+  color: white;
+  font-family: "SUIT-SemiBold";
 }
 .recipe-list-info {
   font-family: "SUIT-SemiBold";
