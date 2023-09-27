@@ -1,4 +1,4 @@
 export interface EventDetailImage {
   detailImageId: number;
-  detailImgs: File[];
+  detailImgs: File;
 }

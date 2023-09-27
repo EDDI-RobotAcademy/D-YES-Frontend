@@ -40,6 +40,51 @@ const EventModifyImage = () => {
     maxFiles: 1,
   });
 
+  const onDetailImageDrop = async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      try {
+        const compressedImages = await Promise.all(
+          acceptedFiles.map(async (file) => {
+            return {
+              image: await compressImg(file),
+              detailImageId: 0,
+            };
+          })
+        );
+
+        // setEventRead({
+        //   ...eventReads,
+        //   detailImagesForUser: [
+        //     ...compressedImages.map((item) => ({
+        //       detailImageId: 0,
+        //       detailImgs: item.image,
+        //     })),
+        //   ],
+        // });
+
+        setEventModify({
+          ...eventModify,
+          productDetailImagesModifyRequest: [
+            ...compressedImages.map((item) => ({
+              detailImageId: 0,
+              detailImgs: item.image,
+            })),
+          ],
+        });
+
+        // console.log("기존이미지", existingDetailImages);
+        // console.log("추가이미지", updatedDetailImages);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
+    onDrop: onDetailImageDrop,
+    noClick: false,
+  });
+
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
       <div>
@@ -102,6 +147,75 @@ const EventModifyImage = () => {
                   <input {...mainImageInputProps()} />
                 </div>
               )}
+            </div>
+            <div className="text-field-label">상세 이미지</div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "400px",
+                backgroundColor: "#e4e4e4",
+                cursor: "pointer",
+                flexWrap: "wrap",
+              }}
+              {...detailImageRootProps()}
+            >
+              <input {...detailImageInputProps()} />
+              {eventModify.productDetailImagesModifyRequest &&
+              eventModify.productDetailImagesModifyRequest.length > 0
+                ? eventModify.productDetailImagesModifyRequest.map((detailImage, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        width: "calc(33.33% - 16px)",
+                        height: "auto",
+                        margin: "8px",
+                        cursor: "pointer",
+                        position: "relative",
+                      }}
+                    >
+                      {detailImage && (
+                        <img
+                          src={
+                            typeof detailImage.detailImgs === "string"
+                              ? detailImage.detailImgs
+                              : URL.createObjectURL(detailImage.detailImgs)
+                          }
+                          style={{ width: "100%", height: "100%" }}
+                          alt={`Selected ${idx}`}
+                        />
+                      )}
+                    </div>
+                  ))
+                : null}
+              {eventReads.detailImagesForUser && eventReads.detailImagesForUser.length > 0
+                ? eventReads.detailImagesForUser.map((detailImage, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        width: "calc(33.33% - 16px)",
+                        height: "auto",
+                        margin: "8px",
+                        cursor: "pointer",
+                        position: "relative",
+                      }}
+                    >
+                      {detailImage && (
+                        <img
+                          src={
+                            typeof detailImage.detailImgs === "string"
+                              ? getImageUrl(detailImage.detailImgs)
+                              : URL.createObjectURL(detailImage.detailImgs)
+                          }
+                          style={{ width: "100%", height: "100%" }}
+                          alt={`Selected ${idx}`}
+                        />
+                      )}
+                    </div>
+                  ))
+                : null}
             </div>
           </ToggleComponent>
         </Box>

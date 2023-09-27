@@ -14,11 +14,13 @@ import EventModifyDetailPage from "./components/modify/EventModifyDetailPage";
 import { EventMainImage } from "./entity/EventMainImage";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { EventOption } from "./entity/EventOption";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { EventDetailImage } from "./entity/EventDetailImage";
 
 const EventModifyPage = () => {
   const { eventModify, setEventModify } = useEventModifyStore();
   const { eventReads, setEventRead } = useEventReadStore();
+  const navigate = useNavigate();
   const { eventProductId } = useParams();
   const hasFetchedRef = React.useRef(false);
   const queryClient = useQueryClient();
@@ -27,6 +29,7 @@ const EventModifyPage = () => {
       queryClient.setQueryData("eventModify", data);
       console.log("수정확인", data);
       toast.success("수정되었습니다.");
+      navigate("/adminEventList");
     },
   });
   const handleSubmit = async (event: React.FormEvent) => {
@@ -80,6 +83,59 @@ const EventModifyPage = () => {
       mainImg: mainImage,
     };
 
+    const detailImageUploadPromises = eventModify.productDetailImagesModifyRequest.map(
+      async (image, idx) => {
+        const detailFileToUpload = new File([image.detailImgs], image.detailImgs.name);
+
+        let s3DetailObjectVersion = "";
+        let name = "";
+
+        s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
+        name = detailFileToUpload.name;
+
+        if (name.trim() === "") {
+          return null;
+        }
+
+        return {
+          detailImageId: 0,
+          detailImgs: name + "?versionId=" + s3DetailObjectVersion,
+        };
+      }
+    );
+    const existingDetailImageNames = eventReads.detailImagesForUser.map((image) => ({
+      detailImageId: image.detailImageId,
+      detailImgs: image.detailImgs,
+    }));
+
+    console.log("이미지 이름", existingDetailImageNames);
+
+    const allDetailImageUploadPromises = [
+      ...detailImageUploadPromises,
+      ...existingDetailImageNames,
+    ];
+
+    const filteredAllDetailImageUploadPromises = allDetailImageUploadPromises.filter(
+      (image) => image !== null
+    );
+    console.log("이미지1", filteredAllDetailImageUploadPromises);
+
+    const productDetailImagesModifyRequest = await Promise.all(
+      filteredAllDetailImageUploadPromises
+    );
+    console.log("이미지2", productDetailImagesModifyRequest);
+
+    const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest
+      .filter((detailImage) => detailImage !== null)
+      .map((detailImage) => {
+        const productDetailImg: EventDetailImage = {
+          detailImageId: detailImage!.detailImageId,
+          detailImgs: detailImage!.detailImgs as unknown as File,
+        };
+
+        return productDetailImg;
+      });
+    console.log("이미지3", updatedProductDetailImagesModifyRequest);
     // const eventProductModifyDeadLineRequest: EventDate = {
     //   startLine:
     //     eventModify.eventProductModifyDeadLineRequest.startLine ||
@@ -102,7 +158,7 @@ const EventModifyPage = () => {
       productModifyRequest: productModifyRequest,
       productOptionModifyRequest: productOptionModifyRequest,
       productMainImageModifyRequest: productMainImageModifyRequest,
-      // productDetailImagesModifyRequest: ,
+      productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
       // eventProductModifyDeadLineRequest: eventProductModifyDeadLineRequest,
       // eventProductModifyPurchaseCountRequest: eventProductModifyPurchaseCountRequest,
     };

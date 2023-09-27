@@ -38,7 +38,7 @@ export const updateEvent = async (updatedData: EventModify): Promise<EventModify
     productModifyRequest,
     productOptionModifyRequest,
     productMainImageModifyRequest,
-    // productDetailImagesModifyRequest,
+    productDetailImagesModifyRequest,
     // eventProductModifyDeadLineRequest,
     // eventProductModifyPurchaseCountRequest,
   } = updatedData;
@@ -48,7 +48,7 @@ export const updateEvent = async (updatedData: EventModify): Promise<EventModify
     productModifyRequest,
     productOptionModifyRequest,
     productMainImageModifyRequest,
-    // productDetailImagesModifyRequest,
+    productDetailImagesModifyRequest,
     // eventProductModifyDeadLineRequest,
     // eventProductModifyPurchaseCountRequest,
   });
