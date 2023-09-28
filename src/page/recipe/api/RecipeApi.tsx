@@ -15,8 +15,8 @@ export const recipeRegister = async (data: {
   recipeCategoryRegisterRequest: RecipeCategory;
   recipeIngredientRegisterRequest: RecipeIngredient;
   recipeMainImageRegisterRequest: RecipeImage;
-}): Promise<Recipe> => {
-  const response = await axiosInstance.post<Recipe>("/recipe/register", data);
+}): Promise<boolean> => {
+  const response = await axiosInstance.post<boolean>("/recipe/register", data);
   console.log("짜잔", response.data);
   return response.data;
 };

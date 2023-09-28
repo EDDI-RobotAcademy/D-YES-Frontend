@@ -42,8 +42,10 @@ const RecipeRegisterPage = () => {
   const queryClient = useQueryClient();
   const { recipes, setRecipes } = useRecipeStore();
   const [currentStep, setCurrentStep] = React.useState(1);
-  const [additionalIngredient, setAdditionalIngredient] = React.useState([{ name: "", unit: "" }]);
-  const [seasoning, setSeasoning] = React.useState([{ name: "", unit: "" }]);
+  const [additionalIngredient, setAdditionalIngredient] = React.useState([
+    { ingredientName: "", ingredientAmount: "" },
+  ]);
+  const [seasoning, setSeasoning] = React.useState([{ ingredientName: "", ingredientAmount: "" }]);
   const [recipeDetails, setRecipeDetails] = React.useState([{ step: 1, description: "" }]);
   const [openBackdrop1, setOpenBackdrop1] = React.useState(false);
   const [openBackdrop2, setOpenBackdrop2] = React.useState(false);
@@ -214,15 +216,22 @@ const RecipeRegisterPage = () => {
   };
 
   // 부가 재료 이름, 양 변경
-  const handleAdditionalIngredientChange = (index: number, name: string, unit: string) => {
+  const handleAdditionalIngredientChange = (
+    index: number,
+    ingredientName: string,
+    ingredientAmount: string
+  ) => {
     const updatedIngredients = [...additionalIngredient];
-    updatedIngredients[index] = { name, unit };
+    updatedIngredients[index] = { ingredientName, ingredientAmount };
     setAdditionalIngredient(updatedIngredients);
   };
 
   // 부가 재료 input 필드 추가
   const addAdditionalIngredient = () => {
-    setAdditionalIngredient([...additionalIngredient, { name: "", unit: "" }]);
+    setAdditionalIngredient([
+      ...additionalIngredient,
+      { ingredientName: "", ingredientAmount: "" },
+    ]);
   };
 
   // 부가 재료 input 필드 제거
@@ -233,15 +242,19 @@ const RecipeRegisterPage = () => {
   };
 
   // 양념 이름, 양 변경
-  const handleSeasoningChange = (index: number, name: string, unit: string) => {
+  const handleSeasoningChange = (
+    index: number,
+    ingredientName: string,
+    ingredientAmount: string
+  ) => {
     const updatedIngredients = [...seasoning];
-    updatedIngredients[index] = { name, unit };
+    updatedIngredients[index] = { ingredientName, ingredientAmount };
     setSeasoning(updatedIngredients);
   };
 
   // 양념 input 필드 추가
   const addSeasoning = () => {
-    setSeasoning([...seasoning, { name: "", unit: "" }]);
+    setSeasoning([...seasoning, { ingredientName: "", ingredientAmount: "" }]);
   };
 
   // 양념 input 필드 제거
@@ -328,8 +341,8 @@ const RecipeRegisterPage = () => {
       servingSize: servingSize,
       mainIngredient: recipes.recipeIngredientRegisterRequest.mainIngredient,
       mainIngredientAmount: recipes.recipeIngredientRegisterRequest.mainIngredientAmount,
-      otherIngredientList: recipes.recipeIngredientRegisterRequest.otherIngredientList,
-      seasoningList: recipes.recipeIngredientRegisterRequest.seasoningList,
+      otherIngredientList: additionalIngredient,
+      seasoningList: seasoning,
     };
 
     // 모든 유효성 검사 통과 후 S3에 이미지 업로드
@@ -574,17 +587,25 @@ const RecipeRegisterPage = () => {
                     <TextField
                       className="recipe-reg-ing-input"
                       placeholder="예) 사과"
-                      value={ingredient.name}
+                      value={ingredient.ingredientName}
                       onChange={(e) =>
-                        handleAdditionalIngredientChange(idx, e.target.value, ingredient.unit)
+                        handleAdditionalIngredientChange(
+                          idx,
+                          e.target.value,
+                          ingredient.ingredientAmount
+                        )
                       }
                     />
                     <TextField
                       className="recipe-reg-unit-input"
                       placeholder="예) 반개"
-                      value={ingredient.unit}
+                      value={ingredient.ingredientAmount}
                       onChange={(e) =>
-                        handleAdditionalIngredientChange(idx, ingredient.name, e.target.value)
+                        handleAdditionalIngredientChange(
+                          idx,
+                          ingredient.ingredientName,
+                          e.target.value
+                        )
                       }
                     />
                     <div
@@ -613,14 +634,18 @@ const RecipeRegisterPage = () => {
                     <TextField
                       className="recipe-reg-ing-input"
                       placeholder="예) 간장"
-                      value={list.name}
-                      onChange={(e) => handleSeasoningChange(idx, e.target.value, list.unit)}
+                      value={list.ingredientName}
+                      onChange={(e) =>
+                        handleSeasoningChange(idx, e.target.value, list.ingredientAmount)
+                      }
                     />
                     <TextField
                       className="recipe-reg-unit-input"
                       placeholder="예) 2큰술"
-                      value={list.unit}
-                      onChange={(e) => handleSeasoningChange(idx, list.name, e.target.value)}
+                      value={list.ingredientAmount}
+                      onChange={(e) =>
+                        handleSeasoningChange(idx, list.ingredientName, e.target.value)
+                      }
                     />
                     <div className="recipe-reg-ing-delete-btn" onClick={() => removeSeasoning(idx)}>
                       <ClearIcon fontSize="small" />
