@@ -13,7 +13,7 @@ import {
   Rating,
 } from "@mui/material";
 import { CardActionArea, FormControlLabel, Checkbox } from "@mui/material";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
 import { ProductListResponseFormForUser } from "page/product/entity/ProductList";
@@ -140,6 +140,11 @@ const ProductListPage = () => {
 
   const filteredProducts = filterProducts(loadedProducts, selectedFilters);
   const sortedProducts = sortProducts(filteredProducts);
+
+  const goToReview = (productId: number) => {
+    localStorage.setItem("fromReview", "true");
+    navigate(`/productDetail/${productId}`);
+  };
 
   return (
     <div className="product-list-filter-options">
@@ -281,8 +286,7 @@ const ProductListPage = () => {
                     </div>
                     <Button
                       size="small"
-                      component={Link}
-                      to={`/reviews/${product.productResponseForListForUser.productId}`}
+                      onClick={() => goToReview(product.productResponseForListForUser.productId)}
                     >
                       리뷰 확인하기
                     </Button>
