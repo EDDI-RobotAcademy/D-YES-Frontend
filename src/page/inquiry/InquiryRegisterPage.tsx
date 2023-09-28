@@ -46,6 +46,10 @@ const InquiryRegisterPage = () => {
     setInquiry({ ...inquiry, title: newTitle });
   };
 
+  const handleEmailChange = (newEmail: string) => {
+    setInquiry({ ...inquiry, email: newEmail });
+  };
+
   const handleInquiryTypeChange = (
     event: React.ChangeEvent<{ value: unknown }>
   ) => {
@@ -58,6 +62,11 @@ const InquiryRegisterPage = () => {
 
     if (!inquiry.title) {
       toast.error("문의 제목을 입력해주세요!");
+      return;
+    }
+
+    if (!inquiry.email) {
+      toast.error("답변 받으실 이메일을 입력해주세요!");
       return;
     }
 
@@ -74,6 +83,7 @@ const InquiryRegisterPage = () => {
     const data: InquiryRegisterRequest = {
       inquiryRegisterRequest: {
         userToken: localStorage.getItem("userToken") || "",
+        email: inquiry.email,
         title: inquiry.title,
         content: inquiry.content,
         inquiryType: inquiry.inquiryType,
@@ -107,6 +117,17 @@ const InquiryRegisterPage = () => {
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
               ) => handleTitleChange(event.target.value)}
+            />
+            <TextField
+              label="이메일"
+              name="email"
+              value={inquiry.email}
+              multiline
+              minRows={1}
+              maxRows={1}
+              onChange={(
+                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => handleEmailChange(event.target.value)}
             />
             <TextField
               select
