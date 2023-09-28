@@ -95,15 +95,9 @@ const App: React.FC = () => {
               <Route path="/userListPage" element={<UserListPage />} />
               <Route path="/productRegisterPage" element={<ProductRegisterPage />} />
               <Route path="/adminProductListPage" element={<AdminProductList />} />
-              <Route
-                path="/adminProductModifyPage/:productId"
-                element={<AdminProductModifyPage />}
-              />
+              <Route path="/adminProductModifyPage/:productId" element={<AdminProductModifyPage />} />
               <Route path="/adminOrderListPage" element={<AdminOrderListPage />} />
-              <Route
-                path="/adminOrderListPage/orderReadPage/:productOrderId"
-                element={<AdminOrderReadPage />}
-              />
+              <Route path="/adminOrderListPage/orderReadPage/:productOrderId" element={<AdminOrderReadPage />} />
               <Route path="/adminEventRegister" element={<EventRegisterPage />} />
               <Route path="/adminEventList" element={<AdminEventListPage />} />
               <Route path="/adminEventModifyPage/:eventProductId" element={<EventModifyPage />} />
