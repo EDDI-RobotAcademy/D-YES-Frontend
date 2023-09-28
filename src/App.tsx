@@ -67,88 +67,46 @@ const App: React.FC = () => {
               <Route path="/exit" element={<WithdrawalComplete />} />
               <Route path="/productList/all" element={<ProductListPage />} />
               <Route path="/productList/new" element={<NewProductListPage />} />
-              <Route
-                path="/productList/category/:categoryName"
-                element={<ProductListPage />}
-              />
-              <Route
-                path="/productList/region/:region"
-                element={<ProductListPage />}
-              />
-              <Route
-                path="/productDetail/:productId"
-                element={<ProductDetailPage />}
-              />
+              <Route path="/productList/category/:categoryName" element={<ProductListPage />} />
+              <Route path="/productList/region/:region" element={<ProductListPage />} />
+              <Route path="/productDetail/:productId" element={<ProductDetailPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/order" element={<Order />} />
               <Route path="/orderComplete" element={<OrderCompletePage />} />
               <Route path="/myOrder" element={<MyOrderPage />} />
-              <Route
-                path="/payment/kakao/approval"
-                element={<PaymentApprovalPage />}
-              />
-              <Route
-                path="/payment/kakao/cancel"
-                element={<PaymentCancelPage />}
-              />
+              <Route path="/payment/kakao/approval" element={<PaymentApprovalPage />} />
+              <Route path="/payment/kakao/cancel" element={<PaymentCancelPage />} />
               <Route path="/payment/kakao/fail" element={<PaymentFailPage />} />
-              <Route
-                path="/payment/kakao/error"
-                element={<PaymentErrorPage />}
-              />
-              <Route
-                path="/payment/complete"
-                element={<PaymentCompletePage />}
-              />
+              <Route path="/payment/kakao/error" element={<PaymentErrorPage />} />
+              <Route path="/payment/complete" element={<PaymentCompletePage />} />
               <Route path="/payment/refund" element={<PaymentRefundPage />} />
               <Route path="/review/register" element={<ReviewRegisterPage />} />
               <Route path="/recipe/list" element={<RecipeListPage />} />
-              <Route path="/recipe/detail/:id" element={<RecipeDetailPage />} />
+              <Route path="/recipe/detail/:recipeId" element={<RecipeDetailPage />} />
               <Route path="/recipe/register" element={<RecipeRegisterPage />} />
-              <Route
-                path="/inquiry/register"
-                element={<InquiryRegisterPage />}
-              />
+              <Route path="/inquiry/register" element={<InquiryRegisterPage />} />
               <Route path="/event/list/all" element={<EventListPage />} />
             </Route>
 
             <Route element={<AdminLayout />}>
               <Route path="/adminMainPage" element={<AdminMainPage />} />
-              <Route
-                path="/adminRegisterPage"
-                element={<AdminRegisterPage />}
-              />
+              <Route path="/adminRegisterPage" element={<AdminRegisterPage />} />
               <Route path="/farmRegisterPage" element={<FarmRegisterPage />} />
               <Route path="/userListPage" element={<UserListPage />} />
-              <Route
-                path="/productRegisterPage"
-                element={<ProductRegisterPage />}
-              />
-              <Route
-                path="/adminProductListPage"
-                element={<AdminProductList />}
-              />
+              <Route path="/productRegisterPage" element={<ProductRegisterPage />} />
+              <Route path="/adminProductListPage" element={<AdminProductList />} />
               <Route
                 path="/adminProductModifyPage/:productId"
                 element={<AdminProductModifyPage />}
               />
-              <Route
-                path="/adminOrderListPage"
-                element={<AdminOrderListPage />}
-              />
+              <Route path="/adminOrderListPage" element={<AdminOrderListPage />} />
               <Route
                 path="/adminOrderListPage/orderReadPage/:productOrderId"
                 element={<AdminOrderReadPage />}
               />
-              <Route
-                path="/adminEventRegister"
-                element={<EventRegisterPage />}
-              />
+              <Route path="/adminEventRegister" element={<EventRegisterPage />} />
               <Route path="/adminEventList" element={<AdminEventListPage />} />
-              <Route
-                path="/adminEventModifyPage/:eventProductId"
-                element={<EventModifyPage />}
-              />
+              <Route path="/adminEventModifyPage/:eventProductId" element={<EventModifyPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

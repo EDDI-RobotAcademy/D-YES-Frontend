@@ -1,5 +1,5 @@
 import axiosInstance from "utility/axiosInstance";
-import { Recipe } from "../entity/Recipe";
+import { RecipeDetail } from "../entity/Recipe";
 import { RecipeContent } from "../entity/RecipeContent";
 import { RecipeImage } from "../entity/RecipeImage";
 import { RecipeIngredient } from "../entity/RecipeIngredient";
@@ -25,5 +25,12 @@ export const recipeRegister = async (data: {
 export const getRecipeList = async () => {
   const response = await axiosInstance.get<RecipeListResponseForm[]>("/recipe/list");
   console.log("레시피 목록 정보", response.data);
+  return response.data;
+};
+
+// 레시피 읽기
+export const getRecipeDetail = async (recipeId: string) => {
+  const response = await axiosInstance.get<RecipeDetail>(`/recipe/read/${recipeId}`);
+  console.log("레시피 상세정보", response.data);
   return response.data;
 };
