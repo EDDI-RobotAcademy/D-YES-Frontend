@@ -38,3 +38,9 @@ export const recipeSubCategory = [
   { value: "SAUCE", label: "소스" },
   { value: "OTHERS", label: "기타" },
 ];
+
+export const recipeDifficulty = [
+  { value: "EASY", label: "초급" },
+  { value: "NORMAL", label: "중급" },
+  { value: "HARD", label: "고급" },
+];
