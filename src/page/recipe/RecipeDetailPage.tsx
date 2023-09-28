@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import { RecipeDetail } from "./entity/Recipe";
 import {
@@ -11,7 +11,7 @@ import {
 import FireIcon from "@mui/icons-material/LocalFireDepartment";
 import TimerIcon from "@mui/icons-material/Timer";
 import GroupIcon from "@mui/icons-material/Group";
-import { getRecipeDetail } from "./api/RecipeApi";
+import { deleteRecipe, getRecipeDetail } from "./api/RecipeApi";
 import { toast } from "react-toastify";
 import { getImageUrl } from "utility/s3/awsS3";
 
@@ -22,6 +22,7 @@ interface RouteParams {
   [key: string]: string;
 }
 const RecipeDetailPage: React.FC = () => {
+  const navigate = useNavigate();
   const { recipeId } = useParams<RouteParams>();
   const [loadedItems, setLoadedItems] = useState<RecipeDetail>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -64,8 +65,18 @@ const RecipeDetailPage: React.FC = () => {
     toast.error("준비중입니다");
   };
 
-  const handleRecipeDelete = () => {
-    toast.error("준비중입니다");
+  const handleRecipeDelete = async (recipeId: string) => {
+    try {
+      const isDelete = await deleteRecipe(recipeId);
+      if (isDelete) {
+        toast.success("레시피가 삭제되었습니다");
+        navigate("/recipe/list", { replace: true });
+      } else {
+        toast.error("서버와의 통신 중 오류가 발생했습니다");
+      }
+    } catch (error) {
+      toast.error("레시피 삭제에 실패했습니다");
+    }
   };
 
   return (
@@ -195,7 +206,7 @@ const RecipeDetailPage: React.FC = () => {
                 <Button
                   variant="contained"
                   style={{ minWidth: "150px", color: "white", backgroundColor: "#578b36" }}
-                  onClick={handleRecipeDelete}
+                  onClick={() => handleRecipeDelete(recipeId!)}
                 >
                   삭제
                 </Button>
