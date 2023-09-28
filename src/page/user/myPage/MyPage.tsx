@@ -6,11 +6,12 @@ import { UserMyPage } from "../api/UserApi";
 import { getImageUrl } from "utility/s3/awsS3";
 import { User } from "page/user/entity/User";
 import AddressPopup from "./AddressPopup";
+import { toast } from "react-toastify";
 
 const MyPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const userToken = localStorage.getItem("userToken");
+  const userToken = localStorage.getItem("userToken") || "";
   const hasFetchedRef = React.useRef(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -48,7 +49,11 @@ const MyPage = () => {
   };
 
   const handleWithdrawalClick = () => {
-    navigate("/withdrawal");
+    if (userToken.includes("admin")) {
+      return toast.error("관리자는 회원 탈퇴할 수 없습니다.");
+    } else {
+      navigate("/withdrawal");
+    }
   };
 
   // const handleCancelClick = () => {
