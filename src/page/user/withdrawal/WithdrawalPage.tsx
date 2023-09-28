@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { deleteInfo } from "../api/UserApi";
 import { Box, Button, Container, InputLabel, TextField } from "@mui/material";
 import { toast } from "react-toastify";
@@ -29,6 +29,14 @@ const WithdrawalPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const userToken = localStorage.getItem("userToken");
+    if (userToken && userToken.includes("admin")) {
+      toast.error("관리자는 회원 탈퇴할 수 없습니다");
+      navigate("/");
+    }
+  }, [navigate]);
 
   const isConfirmTextValid = confirmText === "회원 탈퇴";
 

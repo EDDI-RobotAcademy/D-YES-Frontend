@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";
 import { toast } from "react-toastify";
 import { sendCartContainRequest } from "page/cart/api/CartApi";
@@ -205,6 +205,15 @@ const ProductDetail = () => {
     });
     setTotalPrice(totalPrice);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("fromReview") === "true") {
+      onMoveReview();
+      if (isLoading) {
+        localStorage.removeItem("fromReview");
+      }
+    }
+  }, [isLoading]);
 
   const yDetail = useRef<HTMLDivElement>(null);
   const yReview = useRef<HTMLDivElement>(null);

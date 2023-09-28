@@ -1,134 +1,226 @@
-import { Container, Grid, Paper, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
+import { RecipeDetail } from "./entity/Recipe";
+import {
+  mainIngredients,
+  recipeDifficulty,
+  recipeMainCategory,
+  recipeSubCategory,
+} from "./RecipeDictionary";
+import FireIcon from "@mui/icons-material/LocalFireDepartment";
+import TimerIcon from "@mui/icons-material/Timer";
+import GroupIcon from "@mui/icons-material/Group";
+import { deleteRecipe, getRecipeDetail } from "./api/RecipeApi";
+import { toast } from "react-toastify";
+import { getImageUrl } from "utility/s3/awsS3";
 
-const RecipeDetailPage = () => {
-  const recipeData = {
-    mainImage: `/img/sampleImg.jpg`,
-    recipeTitle: "레시피 제목",
-    cookingTime: "조리 시간",
-    briefDescription: "간략한 설명",
-    mainIngredient: "메인 재료",
-    subIngredients: ["부재료 1", "부재료 2", "부재료 3"],
-    detailedInstructions: ["단계 1 설명", "단계 2 설명", "단계 3 설명"],
+import "./css/RecipeDetailPage.css";
+
+interface RouteParams {
+  recipeId: string;
+  [key: string]: string;
+}
+const RecipeDetailPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { recipeId } = useParams<RouteParams>();
+  const [loadedItems, setLoadedItems] = useState<RecipeDetail>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchRecipeDetailData = async () => {
+      try {
+        const data = await getRecipeDetail(recipeId!);
+        setLoadedItems(data);
+        setIsLoading(true);
+      } catch (error) {
+        toast.error("레시피 정보를 가져오는데 실패했습니다");
+      }
+    };
+    fetchRecipeDetailData();
+  }, []);
+
+  const mainCategoryValue: string =
+    loadedItems?.recipeCategoryRegisterRequest.recipeMainCategory || "";
+  const mainCategoryList = recipeMainCategory.find(
+    (category) => category.value === mainCategoryValue
+  );
+
+  const subCategoryValue: string =
+    loadedItems?.recipeCategoryRegisterRequest.recipeSubCategory || "";
+  const subCategoryList = recipeSubCategory.find((category) => category.value === subCategoryValue);
+
+  const difficultyValue: string = loadedItems?.recipeContentRegisterRequest.difficulty || "";
+  const difficultyList = recipeDifficulty.find(
+    (difficulty) => difficulty.value === difficultyValue
+  );
+
+  const mainIngredientValue: string =
+    loadedItems?.recipeIngredientRegisterRequest.mainIngredient || "";
+  const mainIngredientList = mainIngredients.find(
+    (ingredient) => ingredient.value === mainIngredientValue
+  );
+
+  const handleRecipeModify = () => {
+    toast.error("준비중입니다");
+  };
+
+  const handleRecipeDelete = async (recipeId: string) => {
+    try {
+      const isDelete = await deleteRecipe(recipeId);
+      if (isDelete) {
+        toast.success("레시피가 삭제되었습니다");
+        navigate("/recipe/list", { replace: true });
+      } else {
+        toast.error("서버와의 통신 중 오류가 발생했습니다");
+      }
+    } catch (error) {
+      toast.error("레시피 삭제에 실패했습니다");
+    }
   };
 
   return (
-    <div>
-      <Container sx={{ marginTop: "2em", display: "flex", width: "1060px" }}>
-        <Grid container spacing={2}>
-          {/* 메인 이미지 */}
-          <Grid
-            item
-            xs={12}
-            md={6}
-            style={{ padding: "16px", display: "flex", justifyContent: "flex-end" }}
-          >
-            <img
-              src={recipeData.mainImage}
-              alt={recipeData.recipeTitle}
-              style={{
-                width: "500px",
-                height: "500px",
-                objectFit: "cover",
-              }}
-            />
-          </Grid>
-
-          {/* 레시피 정보 */}
-          <Grid
-            item
-            xs={12}
-            md={6}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              height: "500px",
-              width: "500px",
-            }}
-          >
-            {/* 레시피 제목 */}
-            <Typography variant="h4" gutterBottom>
-              {recipeData.recipeTitle}
-            </Typography>
-
-            {/* 조리 시간 */}
-            <Typography variant="subtitle1" gutterBottom>
-              조리 시간: {recipeData.cookingTime}
-            </Typography>
-            <hr
-              style={{
-                width: "500px",
-                border: "none",
-                borderBottom: "1px solid #ccc",
-                margin: "0 0 16px 0",
-              }}
-            />
-
-            {/* 간략한 설명 */}
-            <Typography variant="body1">{recipeData.briefDescription}</Typography>
-          </Grid>
-
-          {/* 부재료들 */}
-          <Grid item xs={12} sx={{ width: "100%" }}>
-            <div style={{ position: "relative" }}>
-              <Typography variant="h6">재료</Typography>
+    <div className="recipe-detail-container">
+      <div className="recipe-detail-grid">
+        <div className="recipe-detail-page-name">레시피 목록</div>
+        <hr />
+        {isLoading && loadedItems ? (
+          <div className="recipe-detail-flex">
+            <div className="recipe-detail-main-info">
+              <div className="recipe-detail-image-grid">
+                <img
+                  src={getImageUrl(loadedItems.recipeMainImageRegisterRequest.recipeMainImage)}
+                  alt={loadedItems.recipeRegisterRequest.recipeName}
+                  className="recipe-detail-image"
+                />
+              </div>
+              <div className="recipe-detail-info-grid">
+                <div className="recipe-detail-nickname-category">
+                  <p className="recipe-detail-nickname">{loadedItems.nickName}님의 레시피</p>
+                  <p>
+                    {mainCategoryList?.label} | {subCategoryList?.label}
+                  </p>
+                </div>
+                <p className="recipe-detail-recipe-name">
+                  {loadedItems.recipeRegisterRequest.recipeName}
+                </p>
+                <hr className="recipe-detail-hr-1" />
+                <p className="recipe-detail-description">
+                  {loadedItems.recipeContentRegisterRequest.recipeDescription}
+                </p>
+              </div>
             </div>
-          </Grid>
-          <Paper
-            style={{
-              padding: "16px",
-              marginTop: "16px",
-              backgroundColor: "purple",
-              height: "200px",
-              width: "470px",
-            }}
-          >
-            <Typography variant="h6">주재료</Typography>
-            <Typography variant="body1">{recipeData.mainIngredient}</Typography>
-          </Paper>
-
-          {/* 부재료 상자 */}
-          <Paper
-            style={{
-              padding: "16px",
-              marginTop: "16px",
-              marginLeft: "24px",
-              backgroundColor: "purple",
-              height: "200px",
-              width: "470px",
-            }}
-          >
-            <Typography variant="h6">부재료</Typography>
-            <Typography variant="body1">
-              <ul>
-                {recipeData.subIngredients.map((ingredient, index) => (
-                  <li key={index}>{ingredient}</li>
-                ))}
-              </ul>
-            </Typography>
-          </Paper>
-          <Grid item xs={12} sx={{ width: "100%" }}>
-            <div style={{ position: "relative" }}>
-              <Typography variant="h6">만드는 방법</Typography>
+            <div className="recipe-detail-spacer" />
+            <div className="recipe-detail-detail-info-grid">
+              <div className="recipe-detail-detail-icon">
+                <FireIcon fontSize="inherit" />
+                {difficultyList?.label}
+              </div>
+              <div className="recipe-detail-detail-icon">
+                <TimerIcon fontSize="inherit" />
+                {loadedItems.recipeContentRegisterRequest.cookingTime}
+              </div>
+              <div className="recipe-detail-detail-icon">
+                <GroupIcon fontSize="inherit" />
+                {loadedItems.recipeIngredientRegisterRequest.servingSize}인분
+              </div>
             </div>
-          </Grid>
-          <Paper
-            style={{
-              padding: "16px",
-              marginTop: "16px",
-              backgroundColor: "purple",
-              width: "100%",
-            }}
-          >
-            <ol>
-              {recipeData.detailedInstructions.map((instruction, index) => (
-                <li key={index}>{instruction}</li>
+            <div className="recipe-detail-spacer" />
+            <div className="recipe-detail-info">
+              <p className="recipe-detail-info-font">재료</p>
+            </div>
+            <div className="recipe-detail-ingredients">
+              <div className="recipe-detail-ingredient">
+                <p className="recipe-detail-ingredient-name">주재료</p>
+                <div className="recipe-detail-ingredient-container">
+                  <div className="recipe-detail-main-ingredient">
+                    <p>{mainIngredientList?.label}</p>
+                    <p>{loadedItems.recipeIngredientRegisterRequest.mainIngredientAmount}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="recipe-detail-ingredient">
+                <p className="recipe-detail-ingredient-name">부재료</p>
+                <div className="recipe-detail-ingredient-container">
+                  {loadedItems.recipeIngredientRegisterRequest.otherIngredientList.map(
+                    (ingredient, index) => (
+                      <div className="recipe-detail-sub-ingredient" key={index}>
+                        <p>{ingredient.ingredientName}</p>
+                        <p>{ingredient.ingredientAmount}</p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+              <div className="recipe-detail-ingredient">
+                <p className="recipe-detail-ingredient-name">양념</p>
+                <div className="recipe-detail-ingredient-container">
+                  {loadedItems.recipeIngredientRegisterRequest.seasoningList.map(
+                    (ingredient, index) => (
+                      <div className="recipe-detail-sub-ingredient" key={index}>
+                        <p>{ingredient.ingredientName}</p>
+                        <p>{ingredient.ingredientAmount}</p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="recipe-detail-spacer" />
+            <div className="recipe-detail-info">
+              <p className="recipe-detail-info-font">만드는 방법</p>
+            </div>
+            <div className="recipe-detail-instructions">
+              {loadedItems.recipeContentRegisterRequest.recipeDetails.map((detail, idx) => (
+                <div className="recipe-detail-instruction" key={idx}>
+                  <span className="recipe-detail-idx-num">{idx + 1}</span>
+                  {detail}
+                </div>
               ))}
-            </ol>
-          </Paper>
-        </Grid>
-      </Container>
+            </div>
+            <div className="recipe-detail-spacer" />
+            <div className="recipe-detail-info">
+              <p className="recipe-detail-info-font">댓글</p>
+            </div>
+            <div className="recipe-detail-comment-container">
+              <TextField className="recipe-detail-comment-field" placeholder="댓글을 입력하세요" />
+              <div className="recipe-detail-comment-btn">
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  style={{ minWidth: "50px", color: "#578b36", borderColor: "#578b36" }}
+                >
+                  확인
+                </Button>
+              </div>
+            </div>
+            {loadedItems.nickName === localStorage.getItem("encodedNickName") ? (
+              <div className="recipe-datail-control-btn">
+                <Button
+                  variant="contained"
+                  style={{ minWidth: "150px", color: "white", backgroundColor: "#578b36" }}
+                  onClick={handleRecipeModify}
+                >
+                  수정
+                </Button>
+                <Button
+                  variant="contained"
+                  style={{ minWidth: "150px", color: "white", backgroundColor: "#578b36" }}
+                  onClick={() => handleRecipeDelete(recipeId!)}
+                >
+                  삭제
+                </Button>
+              </div>
+            ) : (
+              <hr />
+            )}
+          </div>
+        ) : (
+          <div>레시피 상세정보를 불러오는 중</div>
+        )}
+      </div>
     </div>
   );
 };
+
 export default RecipeDetailPage;

@@ -1,11 +1,13 @@
 import axiosInstance from "utility/axiosInstance";
-import { Recipe } from "../entity/Recipe";
+import { RecipeDetail } from "../entity/Recipe";
 import { RecipeContent } from "../entity/RecipeContent";
 import { RecipeImage } from "../entity/RecipeImage";
 import { RecipeIngredient } from "../entity/RecipeIngredient";
 import { RecipeName } from "../entity/RecipeName";
 import { RecipeListResponseForm } from "../entity/RecipeList";
 import { RecipeCategory } from "../entity/RecipeCategory";
+
+const userToken = localStorage.getItem("userToken");
 
 // 레시피 등록
 export const recipeRegister = async (data: {
@@ -25,5 +27,20 @@ export const recipeRegister = async (data: {
 export const getRecipeList = async () => {
   const response = await axiosInstance.get<RecipeListResponseForm[]>("/recipe/list");
   console.log("레시피 목록 정보", response.data);
+  return response.data;
+};
+
+// 레시피 읽기
+export const getRecipeDetail = async (recipeId: string) => {
+  const response = await axiosInstance.get<RecipeDetail>(`/recipe/read/${recipeId}`);
+  console.log("레시피 상세정보", response.data);
+  return response.data;
+};
+
+// 레시피 삭제
+export const deleteRecipe = async (recipeId: string) => {
+  const response = await axiosInstance.delete<boolean>(`/recipe/delete/${recipeId}`, {
+    data: { userToken },
+  });
   return response.data;
 };
