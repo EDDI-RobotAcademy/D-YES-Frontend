@@ -1,0 +1,255 @@
+.tag-common {
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 0.2rem;
+}
+.tag-organic {
+  background-color: rgb(255, 200, 100);
+  color: black;
+}
+.tag-pesticide-free {
+  background-color: rgb(100, 100, 255);
+  color: white;
+}
+.tag-environment-friendly {
+  background-color: rgb(120, 200, 120);
+  color: white;
+}
+.event-product-detail-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.event-product-datail-main {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.event-product-info-grid {
+  padding-bottom: 56px;
+  gap: 20px;
+  display: grid;
+  flex-direction: column;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.event-product-main-image {
+  flex-direction: column;
+  display: flex;
+}
+.event-product-name {
+  font-family: "SUIT-Bold";
+  font-size: 30px;
+}
+.event-product-option-price {
+  font-family: "SUIT-ExtraBold";
+  font-size: 22px;
+}
+.spacer-1 {
+  height: 6px;
+}
+.spacer-2 {
+  height: 10px;
+}
+.hr-style {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.hr2-style {
+  border-color: rgb(250, 250, 250);
+}
+.event-product-quantity {
+  font-family: "SUIT-SemiBold";
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  margin-bottom: 9px;
+}
+.event-product-counter-button {
+  display: flex;
+  justify-content: space-between;
+  width: 80px;
+  padding: 10px 0 0 5px;
+}
+.event-product-counter {
+  margin-left: 5px;
+  margin-right: 5px;
+  line-height: 24px;
+  font-size: 16px;
+}
+.event-product-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.2rem;
+  background-color: aliceblue;
+  cursor: pointer;
+}
+.event-product-price-sum {
+  display: flex;
+}
+.event-price-sum {
+  text-align: right;
+  width: 120px;
+}
+.event-confirm-button {
+  width: 100%;
+  height: 50px;
+}
+.event-choose-option {
+  font-size: medium;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.event-product-images {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+  height: auto;
+}
+.event-options-style {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.event-product-detail-container {
+  position: relative;
+}
+.event-product-description-container {
+  padding-bottom: 100px;
+}
+.event-sticky-header-container {
+  z-index: 50;
+  position: sticky;
+  top: -1px;
+}
+.event-sticky-header {
+  max-width: 1024px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.event-sticky-header-elements {
+  height: 60px;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+  display: flex;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.event-sticky-header-nav {
+  flex-direction: row;
+  width: 400px;
+  display: flex;
+}
+.event-sticky-header-button {
+  box-sizing: border-box;
+  font-family: "SUIT-Bold";
+  padding-top: 4px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 50%;
+  height: 60px;
+  display: flex;
+  border: 0 solid;
+  border-bottom-width: 4px;
+  border-color: darkgrey;
+}
+.event-sticky-header-options {
+  gap: 25px;
+  align-items: center;
+  flex-direction: row;
+  display: flex;
+  position: relative;
+}
+.event-example1 {
+  height: auto;
+  padding-top: 60px;
+}
+.event-example2 {
+  height: auto;
+  padding-top: 60px;
+}
+.event-scroll-styling {
+  background-color: yellow;
+}
+.example-container {
+  font-size: x-large;
+  color: #252525;
+  text-align: center;
+  padding-bottom: 100px;
+}
+.event-farm-details {
+  margin-top: 10px;
+  object-fit: cover;
+}
+.event-product-detail-header-name {
+  text-align: center;
+  font-size: 24px;
+  color: #252525;
+  margin-bottom: 20px;
+}
+.event-farm-profile {
+  left: 0;
+  width: 30%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  object-fit: cover;
+}
+.event-farm-name {
+  font-size: 12px;
+  padding-right: 10px;
+}
+.event-farm-introduce {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+.event-farm-profile-container {
+  width: 100%;
+  display: flex;
+  font-size: 18px;
+  background-color: rgb(250, 250, 250);
+  border-radius: 15px;
+  margin-bottom: 12px;
+  color: #252525;
+}
+.event-selected-options-container {
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  border-bottom: 0.25px solid;
+}
+.event-selected-options-style {
+  width: 95%;
+}
+.event-selected-option-count {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.event-selected-option-price {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.event-product-option-delete {
+  cursor: pointer;
+  display: flex;
+}
+.event-d-day {
+  margin-bottom: 10px;
+}
+.event-slider {
+  margin-top: 20px;
+}

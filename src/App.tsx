@@ -38,12 +38,12 @@ import PaymentRefundPage from "page/payment/PaymentRefundPage";
 import RecipeListPage from "page/recipe/RecipeListPage";
 import RecipeDetailPage from "page/recipe/RecipeDetailPage";
 import RecipeRegisterPage from "page/recipe/RecipeRegisterPage";
-// import RecipeReadPage from "page/recipe/RecipeReadPage";
 import EventRegisterPage from "page/event/EventRegisterPage";
 import AdminEventListPage from "page/event/AdminEventListPage";
 import EventModifyPage from "page/event/EventModifyPage";
 import InquiryRegisterPage from "page/inquiry/InquiryRegisterPage";
 import EventListPage from "page/event/EventListPage";
+import EventProductDetailPage from "page/event/EventProductDetailPage";
 
 const theme = createTheme({
   typography: {
@@ -86,6 +86,8 @@ const App: React.FC = () => {
               <Route path="/recipe/register" element={<RecipeRegisterPage />} />
               <Route path="/inquiry/register" element={<InquiryRegisterPage />} />
               <Route path="/event/list/all" element={<EventListPage />} />
+              <Route path="/eventProductDetail/:eventProductId" element={<EventProductDetailPage />}
+              />
             </Route>
 
             <Route element={<AdminLayout />}>

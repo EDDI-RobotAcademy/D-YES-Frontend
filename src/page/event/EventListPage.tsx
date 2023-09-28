@@ -7,23 +7,27 @@ import {
   Typography,
   CardMedia,
   Slider,
-  Chip,
 } from "@mui/material";
 import { CardActionArea } from "@mui/material";
-import { EventProductAdminListResponse } from "./entity/EventProductAdminListResponse";
-import { getEventProductList } from "./api/EventApi";
+import { getEventProductDetail, getEventProductList } from "./api/EventApi";
 import { won } from "utility/filters/wonFilter";
 import { getImageUrl } from "utility/s3/awsS3";
 import "./css/EventProductListPage.css";
 import { styled } from "@mui/material/styles";
+import useEventReadStore from "./store/EventReadStore";
+import { useNavigate } from "react-router-dom";
+import { EventRead } from "./entity/EventRead";
+import { EventProductListResponse } from "./entity/EventProductListResponse";
 
 const EventListPage = () => {
+  const navigate = useNavigate();
+  const { setEventRead } = useEventReadStore();
   const [loading, setLoading] = useState(true);
   const [loadedProducts, setLoadedProducts] = useState<
-    EventProductAdminListResponse[]
+    EventProductListResponse[]
   >([]);
   const [loadedMainProduct, setLoadedMainProduct] =
-    useState<EventProductAdminListResponse>();
+    useState<EventProductListResponse>();
 
   const deadline = loadedMainProduct?.deadLineResponse.deadLine;
   let remainingDays = null;
@@ -154,6 +158,21 @@ const EventListPage = () => {
   // const matchedOption = options.find(
   //   (option) => option.value === loadedMainProduct?.productResponseForListForUser.cultivationMethod
   // );
+
+  const handleProductDetail = async (eventProductId: string) => {
+    try {
+      const eventData = await getEventProductDetail(eventProductId);
+      if (eventData !== null) {
+        setEventRead(eventData as unknown as EventRead);
+      }
+      navigate(`/eventProductDetail/${eventProductId}`);
+    } catch (error) {
+      console.error(
+        "상세 페이지 이벤트 데이터를 불러오는 중 오류 발생:",
+        error
+      );
+    }
+  };
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -452,7 +471,14 @@ const EventListPage = () => {
                     position: "relative",
                   }}
                 >
-                  <CardActionArea>
+                  <CardActionArea
+                    onClick={() =>
+                      handleProductDetail(
+                        product.eventProductIdResponse?.eventProductId.toString() ||
+                          ""
+                      )
+                    }
+                  >
                     <CardContent
                       style={{
                         display: "flex",

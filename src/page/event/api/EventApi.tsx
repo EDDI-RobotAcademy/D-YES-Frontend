@@ -6,6 +6,9 @@ import axiosInstance from "utility/axiosInstance";
 import { EventRead } from "../entity/EventRead";
 import { EventModify } from "../entity/EventModify";
 import { EventProductAdminListResponseForm } from "../entity/EventProductAdminListResponseForm";
+import { UseQueryResult, useQuery } from "react-query";
+import { EventReadForUser } from "../entity/EventReadForUser";
+import { EventProductListResponseForm } from "../entity/EventProductListResponseForm";
 
 // 이벤트 등록
 export const registerEvent = async (data: {
@@ -64,11 +67,34 @@ export const updateEvent = async (
   return response.data;
 };
 
-// 사용자용 상품 리스트 확인
+// 사용자용 이벤트 상품 리스트 확인
 export const getEventProductList = async () => {
-  const response = await axiosInstance.get<EventProductAdminListResponseForm>(
+  const response = await axiosInstance.get<EventProductListResponseForm>(
     "/event/list/all"
   );
   console.log("이벤트 상품 리스트 데이터", response.data);
   return response.data;
+};
+
+// 사용자용 이벤트 상품 상세 읽기
+export const getEventProductDetail = async (
+  eventProductId: string
+): Promise<EventReadForUser | null> => {
+  const response = await axiosInstance.get<EventReadForUser>(
+    `/event/read/${eventProductId}`
+  );
+  console.log(response.data);
+  return response.data;
+};
+
+export const useEventProductDetailQuery = (
+  eventProductId: string
+): UseQueryResult<EventReadForUser | null, unknown> => {
+  return useQuery(
+    ["eventProductRead", eventProductId],
+    () => getEventProductDetail(eventProductId),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 };
