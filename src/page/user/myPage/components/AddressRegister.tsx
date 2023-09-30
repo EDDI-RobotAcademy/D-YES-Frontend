@@ -28,7 +28,7 @@ const AddressRegister = () => {
 
   const mutation = useMutation(registerAddress, {
     onSuccess: (data) => {
-      queryClient.setQueryData("address", data);
+      queryClient.invalidateQueries("addressList");
       console.log("주소 확인", data);
     },
   });

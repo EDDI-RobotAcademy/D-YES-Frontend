@@ -4,17 +4,15 @@ import { AddressLists } from "page/user/entity/AddressLists";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Checkbox, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
 import { toast } from "react-toastify";
+import { useQuery } from "react-query";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
+  const { data: addressListFromQuery } = useQuery("addressList", getAddressList, {
+    refetchOnWindowFocus: false,
+  });
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const hasFetchedRef = React.useRef(false);
-
-  useEffect(() => {
-    if (!hasFetchedRef.current) {
-      fetchAddressList();
-    }
-  }, []);
 
   const fetchAddressList = async () => {
     try {
@@ -35,6 +33,18 @@ const AddressList = () => {
       console.error("배송지 목록 불러오기 실패:", error);
     }
   };
+
+  useEffect(() => {
+    if (!hasFetchedRef.current) {
+      fetchAddressList();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (addressListFromQuery) {
+      setAddressList(addressListFromQuery);
+    }
+  }, [addressListFromQuery]);
 
   const handleDeleteClick = async (addressBookId: string) => {
     try {

@@ -123,7 +123,6 @@ export const registerAddress = async (data: {
   address: UserAddress;
 }): Promise<AddressBook> => {
   const response = await axiosInstance.post<AddressBook>("/user/address-book/update", data);
-  console.log("api데이터 확인", response.data);
   return response.data;
 };
 
@@ -134,7 +133,6 @@ export const getAddressList = async () => {
       userToken: localStorage.getItem("userToken"),
     },
   });
-  console.log("읽기", response.data);
   return response.data;
 };
 
