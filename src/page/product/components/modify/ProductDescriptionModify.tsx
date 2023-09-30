@@ -1,10 +1,29 @@
 import { Box, Container } from "@mui/material";
 import ToggleComponent from "../productOption/ToggleComponent";
 import TextQuill from "utility/quill/TextQuill";
-import useProductModifyStore from "page/product/store/ProductModifyStore";
+import useProductModifyRefactorStore from "page/product/store/ProductRefactorModifyStore";
+import useProductReadStore from "page/product/store/ProductReadStore";
 
 const ProductDescriptionModify = () => {
-  const { modifyProducts, setModifyProducts } = useProductModifyStore();
+  const { modifyProducts, setModifyProducts } = useProductModifyRefactorStore();
+  const { productReads, setProductRead } = useProductReadStore();
+
+  const handleProductDescriptionChange = (newDescription: string) => {
+    setModifyProducts({
+      ...modifyProducts,
+      productModifyRequest: {
+        ...modifyProducts.productModifyRequest,
+        productDescription: newDescription,
+      },
+    });
+    setProductRead({
+      ...productReads,
+      productResponseForAdmin: {
+        ...productReads.productResponseForAdmin,
+        productDescription: newDescription,
+      },
+    });
+  };
 
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
@@ -20,8 +39,12 @@ const ProductDescriptionModify = () => {
             >
               <TextQuill
                 name="productDescription"
-                value={modifyProducts.productDescription || ""}
-                setValue={(newValue) => setModifyProducts({ ...modifyProducts, productDescription: newValue })}
+                value={
+                  productReads.productResponseForAdmin?.productDescription
+                    ? productReads.productResponseForAdmin?.productDescription
+                    : modifyProducts.productModifyRequest?.productDescription || ""
+                }
+                setValue={handleProductDescriptionChange}
                 isDisable={false}
               />
             </Box>

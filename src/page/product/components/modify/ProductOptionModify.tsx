@@ -3,19 +3,28 @@ import { useState } from "react";
 import ToggleComponent from "../productOption/ToggleComponent";
 import OptionTable from "../productOption/OptionTable";
 import OptionInput from "../productOption/OptionInput";
-import useProductModifyStore from "page/product/store/ProductModifyStore";
 import { useOptions } from "page/product/entity/useOptions";
+import useProductModifyRefactorStore from "page/product/store/ProductRefactorModifyStore";
+import useProductReadStore from "page/product/store/ProductReadStore";
 
 const ProductOptionModify = () => {
-  const { modifyProducts, setModifyProducts } = useProductModifyStore();
+  const { modifyProducts, setModifyProducts } = useProductModifyRefactorStore();
+  const { productReads, setProductRead } = useProductReadStore();
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
+
+  if (!modifyProducts.productOptionModifyRequest) {
+    setModifyProducts({
+      ...modifyProducts,
+      productOptionModifyRequest: [],
+    });
+  }
 
   function calculateToggleHeight() {
     const minHeight = 100;
     const optionHeight = 78;
-    const optionsCount = Array.isArray(modifyProducts.productOptionList)
-      ? modifyProducts.productOptionList.length
+    const optionsCount = Array.isArray(productReads.optionResponseForAdmin)
+      ? productReads.optionResponseForAdmin.length
       : 0; // 옵션 개수
     const calculatedHeight = minHeight + optionHeight * optionsCount;
 
@@ -29,7 +38,12 @@ const ProductOptionModify = () => {
 
     setModifyProducts({
       ...modifyProducts,
-      productOptionList: [...modifyProducts.productOptionList, newOption],
+      productOptionModifyRequest: [...modifyProducts.productOptionModifyRequest, newOption],
+    });
+
+    setProductRead({
+      ...productReads,
+      optionResponseForAdmin: [...productReads.optionResponseForAdmin, newOption],
     });
   };
 
@@ -40,11 +54,16 @@ const ProductOptionModify = () => {
     setOptionToggleHeight(optionToggleHeight - 78);
     setUseOptions(newOptions);
 
-    const newProductOptionList = [...modifyProducts.productOptionList];
+    const newProductOptionList = [...modifyProducts.productOptionModifyRequest];
     newProductOptionList.splice(index, 1);
     setModifyProducts({
       ...modifyProducts,
-      productOptionList: newProductOptionList,
+      productOptionModifyRequest: newProductOptionList,
+    });
+
+    setProductRead({
+      ...productReads,
+      optionResponseForAdmin: newProductOptionList,
     });
   };
 
@@ -53,7 +72,12 @@ const ProductOptionModify = () => {
 
     setModifyProducts({
       ...modifyProducts,
-      productOptionList: newOption,
+      productOptionModifyRequest: newOption,
+    });
+
+    setProductRead({
+      ...productReads,
+      optionResponseForAdmin: newOption,
     });
   };
 
@@ -64,9 +88,9 @@ const ProductOptionModify = () => {
           <ToggleComponent label="옵션정보" height={calculateToggleHeight()}>
             <Box display="flex" flexDirection="column" gap={2}>
               <OptionTable
-                optionRows={modifyProducts.productOptionList || []}
+                optionRows={productReads.optionResponseForAdmin || []}
                 onChangeOption={(index, updatedOption) => {
-                  const newProductOptionList = [...modifyProducts.productOptionList];
+                  const newProductOptionList = [...modifyProducts.productOptionModifyRequest];
                   newProductOptionList[index] = updatedOption;
                   handleProductOptionChange(newProductOptionList);
                 }}

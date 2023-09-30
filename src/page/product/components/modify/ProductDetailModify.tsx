@@ -7,20 +7,13 @@ import {
   TextField,
   SelectChangeEvent,
 } from "@mui/material";
-import useProductModifyStore from "page/product/store/ProductModifyStore";
 import ToggleComponent from "../productOption/ToggleComponent";
-import { useProductQuery } from "page/product/api/ProductApi";
-import { useParams } from "react-router-dom";
-
-interface RouteParams {
-  productId: string;
-  [key: string]: string;
-}
+import useProductModifyRefactorStore from "page/product/store/ProductRefactorModifyStore";
+import useProductReadStore from "page/product/store/ProductReadStore";
 
 const ProductDetailModify = () => {
-  const { modifyProducts, setModifyProducts } = useProductModifyStore();
-  const { productId } = useParams<RouteParams>();
-  const { data } = useProductQuery(productId || "");
+  const { modifyProducts, setModifyProducts } = useProductModifyRefactorStore();
+  const { productReads, setProductRead } = useProductReadStore();
 
   const options = [
     { value: "PESTICIDE_FREE", label: "무농약" },
@@ -52,22 +45,64 @@ const ProductDetailModify = () => {
   ];
 
   const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
-    setModifyProducts({ ...modifyProducts, produceType: event.target.value.toString() });
+    setProductRead({
+      ...productReads,
+      productResponseForAdmin: {
+        ...productReads.productResponseForAdmin,
+        produceType: event.target.value.toString(),
+      },
+    });
   };
 
   const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newProductName = event.target.value;
-    setModifyProducts({ ...modifyProducts, productName: newProductName });
+    setModifyProducts({
+      ...modifyProducts,
+      productModifyRequest: {
+        ...modifyProducts.productModifyRequest,
+        productName: event.target.value,
+      },
+    });
+    setProductRead({
+      ...productReads,
+      productResponseForAdmin: {
+        ...productReads.productResponseForAdmin,
+        productName: event.target.value,
+      },
+    });
   };
 
-  const handleOptionChange = (event: SelectChangeEvent<string>) => {
-    const newCultivationMethod = event.target.value;
-    setModifyProducts({ ...modifyProducts, cultivationMethod: newCultivationMethod });
+  const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+    setModifyProducts({
+      ...modifyProducts,
+      productModifyRequest: {
+        ...modifyProducts.productModifyRequest,
+        cultivationMethod: event.target.value.toString(),
+      },
+    });
+    setProductRead({
+      ...productReads,
+      productResponseForAdmin: {
+        ...productReads.productResponseForAdmin,
+        cultivationMethod: event.target.value.toString(),
+      },
+    });
   };
 
-  const handleSaleStatusChange = (event: SelectChangeEvent<string>) => {
-    const newProductSaleStatus = event.target.value;
-    setModifyProducts({ ...modifyProducts, productSaleStatus: newProductSaleStatus });
+  const handleSaleStatusChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+    setModifyProducts({
+      ...modifyProducts,
+      productModifyRequest: {
+        ...modifyProducts.productModifyRequest,
+        productSaleStatus: event.target.value.toString(),
+      },
+    });
+    setProductRead({
+      ...productReads,
+      productResponseForAdmin: {
+        ...productReads.productResponseForAdmin,
+        productSaleStatus: event.target.value.toString(),
+      },
+    });
   };
 
   return (
@@ -84,7 +119,11 @@ const ProductDetailModify = () => {
                   name="productName"
                   className="text-field-input"
                   size="small"
-                  value={modifyProducts.productName || ""}
+                  value={
+                    productReads.productResponseForAdmin?.productName
+                      ? productReads.productResponseForAdmin?.productName
+                      : modifyProducts.productModifyRequest?.productName
+                  }
                   onChange={handleProductNameChange}
                 />
               </div>
@@ -100,7 +139,15 @@ const ProductDetailModify = () => {
                 >
                   <Select
                     name="cultivationMethod"
-                    value={modifyProducts.cultivationMethod || ""}
+                    value={
+                      (productReads.productResponseForAdmin?.cultivationMethod as
+                        | ""
+                        | { value: string; label: string }) ||
+                      (modifyProducts.productModifyRequest?.cultivationMethod as
+                        | ""
+                        | { value: string; label: string }) ||
+                      ""
+                    }
                     sx={{ width: "100%" }}
                     onChange={handleOptionChange}
                   >
@@ -121,7 +168,7 @@ const ProductDetailModify = () => {
                   name="farmName"
                   className="text-field-input"
                   size="small"
-                  value={data?.farmInfoResponseForAdmin.farmName}
+                  value={productReads.farmInfoResponseForAdmin?.farmName}
                 />
               </div>
               <div className="text-field-container">
@@ -136,7 +183,15 @@ const ProductDetailModify = () => {
                 >
                   <Select
                     name="saleStatus"
-                    value={modifyProducts.productSaleStatus || ""}
+                    value={
+                      (productReads.productResponseForAdmin?.productSaleStatus as
+                        | ""
+                        | { value: string; label: string }) ||
+                      (modifyProducts.productModifyRequest?.productSaleStatus as
+                        | ""
+                        | { value: string; label: string }) ||
+                      ""
+                    }
                     sx={{ width: "100%" }}
                     onChange={handleSaleStatusChange}
                   >
@@ -164,7 +219,7 @@ const ProductDetailModify = () => {
                   <Select
                     name="produceTypes"
                     value={
-                      (modifyProducts.produceType as "" | { value: string; label: string }) || ""
+                      (productReads.productResponseForAdmin?.produceType as "" | { value: string; label: string }) || ""
                     }
                     onChange={handleProduceTypesChange}
                     className="text-field"
