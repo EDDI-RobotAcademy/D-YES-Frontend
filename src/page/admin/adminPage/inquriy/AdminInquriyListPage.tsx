@@ -51,6 +51,10 @@ const AdminInquriyListPage = () => {
     }
   };
 
+  const handleInquiryClick = (inquiryId: string) => {
+    navigate(`/adminInquiryReadPage/${inquiryId}`);
+  };
+
   useEffect(() => {
     fetchInquiryList();
   }, []);
@@ -134,7 +138,13 @@ const AdminInquriyListPage = () => {
           </TableHead>
           <tbody>
             {inquiryList?.map((inquiry) => (
-              <TableRow key={inquiry.inquiryId} style={{ cursor: "pointer" }}>
+              <TableRow
+                key={inquiry.inquiryId}
+                style={{ cursor: "pointer" }}
+                onClick={(e) =>
+                  handleInquiryClick(inquiry.inquiryId.toString())
+                }
+              >
                 <TableCell
                   style={{
                     padding: "8px 16px",
