@@ -149,7 +149,8 @@ const MyOrderPage: React.FC = () => {
             </ButtonGroup>
           </div>
           <div className="ordered-notice">
-            ※ 주문 후 7일 이상 경과한 상품은 환불 신청이 불가능합니다.
+            ※ 상품이 준비 중인 상태에는 주문을 취소할 수 있습니다.
+            <br />※ 주문 후 7일 이상 경과한 상품은 환불 신청이 불가능합니다.
           </div>
         </div>
         {isLoading ? (
@@ -175,7 +176,7 @@ const MyOrderPage: React.FC = () => {
                         <TableCell align="center">총 상품금액</TableCell>
                         <TableCell align="center">배송상태</TableCell>
                         <TableCell align="center">리뷰</TableCell>
-                        <TableCell align="center">환불</TableCell>
+                        <TableCell align="center">주문취소 및 환불</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -297,23 +298,33 @@ const MyOrderPage: React.FC = () => {
                                       }
                                       align="center"
                                     >
-                                      <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={() =>
-                                          goToRefund(
-                                            item.orderProductList,
-                                            item.orderDetailInfoResponse.productOrderId
-                                          )
-                                        }
-                                        disabled={refundDeadline.some(
-                                          (refundItem: UserOrderList) =>
-                                            refundItem.orderDetailInfoResponse.productOrderId ===
-                                            item.orderDetailInfoResponse.productOrderId
-                                        )}
-                                      >
-                                        환불 신청
-                                      </Button>
+                                      {item.orderDetailInfoResponse.deliveryStatus ===
+                                      "PREPARING" ? (
+                                        <Button
+                                          variant="contained"
+                                          color="error"
+                                          onClick={() =>
+                                            goToRefund(
+                                              item.orderProductList,
+                                              item.orderDetailInfoResponse.productOrderId
+                                            )
+                                          }
+                                        >
+                                          주문 취소
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          variant="contained"
+                                          color="error"
+                                          disabled={refundDeadline.some(
+                                            (refundItem: UserOrderList) =>
+                                              refundItem.orderDetailInfoResponse.productOrderId ===
+                                              item.orderDetailInfoResponse.productOrderId
+                                          )}
+                                        >
+                                          환불 신청
+                                        </Button>
+                                      )}
                                     </TableCell>
                                   </>
                                 ) : null}
