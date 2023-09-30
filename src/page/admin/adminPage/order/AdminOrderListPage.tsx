@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Select,
-  MenuItem,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { Select, MenuItem, TableCell, TableHead, TableRow } from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -32,21 +26,17 @@ const AdminOrderListPage = () => {
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
   const [orderList, setOrderList] = useState([] as AdminOrderList[]);
-  const [orderStatuses, setOrderStatuses] = useState<
-    Record<string, OrderDeliveryStatus>
-  >({});
-  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(
-    () => {
-      const savedDates: Record<string, string> = JSON.parse(
-        localStorage.getItem("selectedDates") || "{}"
-      );
-      const result: Record<string, dayjs.Dayjs> = {};
-      for (const key in savedDates) {
-        result[key] = dayjs(savedDates[key]);
-      }
-      return result;
+  const [orderStatuses, setOrderStatuses] = useState<Record<string, OrderDeliveryStatus>>({});
+  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(() => {
+    const savedDates: Record<string, string> = JSON.parse(
+      localStorage.getItem("selectedDates") || "{}"
+    );
+    const result: Record<string, dayjs.Dayjs> = {};
+    for (const key in savedDates) {
+      result[key] = dayjs(savedDates[key]);
     }
-  );
+    return result;
+  });
 
   useEffect(() => {
     if (!isAdmin) {
@@ -72,14 +62,9 @@ const AdminOrderListPage = () => {
     fetchOrderList();
   }, []);
 
-  const handleStatusChange = async (
-    productOrderId: string,
-    newStatus: OrderDeliveryStatus
-  ) => {
+  const handleStatusChange = async (productOrderId: string, newStatus: OrderDeliveryStatus) => {
     try {
-      const savedDates = JSON.parse(
-        localStorage.getItem("selectedDates") || "{}"
-      );
+      const savedDates = JSON.parse(localStorage.getItem("selectedDates") || "{}");
       const prevDate = savedDates[productOrderId];
       const currentDate = selectedDate[productOrderId]?.toDate().toISOString();
 
@@ -213,144 +198,146 @@ const AdminOrderListPage = () => {
             </TableRow>
           </TableHead>
           <tbody>
-            {orderList?.map((order) => (
-              <TableRow
-                key={order.orderDetailInfoResponse.productOrderId}
-                onClick={(e) =>
-                  handleOrderClick(order.orderDetailInfoResponse.productOrderId)
-                }
-                style={{ cursor: "pointer" }}
-              >
+            {orderList?.length === 0 ? (
+              <TableRow>
                 <TableCell
+                  colSpan={7}
                   style={{
                     padding: "8px 16px",
                     textAlign: "center",
                     fontFamily: "SUIT-Light",
                   }}
                 >
-                  {order.orderDetailInfoResponse.productOrderId}
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {order.orderUserInfo.userId}
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {order.orderUserInfo.address.address}{" "}
-                  {order.orderUserInfo.address.zipCode} (
-                  {order.orderUserInfo.address.addressDetail})
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {order.orderUserInfo.contactNumber}
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        adapterLocale="ko"
-                      >
-                        <DatePicker
-                          value={
-                            selectedDate[
-                              order.orderDetailInfoResponse.productOrderId
-                            ] || dayjs()
-                          }
-                          onChange={(date) =>
-                            setSelectedDate((prevSelectedDate) => ({
-                              ...prevSelectedDate,
-                              [order.orderDetailInfoResponse.productOrderId]:
-                                date || dayjs(),
-                            }))
-                          }
-                        />
-                      </LocalizationProvider>
-                    </div>
-                    <Select
-                      value={
-                        orderStatuses[
-                          order.orderDetailInfoResponse.productOrderId
-                        ] || order.orderDetailInfoResponse.deliveryStatus
-                      }
-                      onChange={(e) => {
-                        const newStatus = e.target.value as OrderDeliveryStatus;
-                        const currentStatus =
-                          orderStatuses[
-                            order.orderDetailInfoResponse.productOrderId
-                          ] || order.orderDetailInfoResponse.deliveryStatus;
-                        if (currentStatus.toString() === "DELIVERED") {
-                          toast.error(
-                            "이미 배송 완료된 주문은 상태를 변경할 수 없습니다."
-                          );
-                          return;
-                        }
-                        if (
-                          currentStatus.toString() === "SHIPPING" &&
-                          newStatus.toString() !== "DELIVERED"
-                        ) {
-                          toast.error(
-                            "배송 중인 주문은 배송 상태를 '배송 완료'로만 변경할 수 있습니다."
-                          );
-                          return;
-                        }
-
-                        handleStatusChange(
-                          order.orderDetailInfoResponse.productOrderId,
-                          newStatus
-                        );
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <MenuItem value="PREPARING">상품 준비 중</MenuItem>
-                      <MenuItem value="SHIPPING">배송 중</MenuItem>
-                      <MenuItem value="DELIVERED">배송 완료</MenuItem>
-                    </Select>
-                  </div>
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {order.orderDetailInfoResponse.orderedTime}
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {order.orderDetailInfoResponse.totalPrice}
+                  주문 목록이 없습니다.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              orderList.map((order) => (
+                <TableRow
+                  key={order.orderDetailInfoResponse.productOrderId}
+                  onClick={(e) => handleOrderClick(order.orderDetailInfoResponse.productOrderId)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {order.orderDetailInfoResponse.productOrderId}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {order.orderUserInfo.userId}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {order.orderUserInfo.address.address} {order.orderUserInfo.address.zipCode} (
+                    {order.orderUserInfo.address.addressDetail})
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {order.orderUserInfo.contactNumber}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                          <DatePicker
+                            value={
+                              selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
+                            }
+                            onChange={(date) =>
+                              setSelectedDate((prevSelectedDate) => ({
+                                ...prevSelectedDate,
+                                [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
+                              }))
+                            }
+                          />
+                        </LocalizationProvider>
+                      </div>
+                      <Select
+                        value={
+                          orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
+                          order.orderDetailInfoResponse.deliveryStatus
+                        }
+                        onChange={(e) => {
+                          const newStatus = e.target.value as OrderDeliveryStatus;
+                          const currentStatus =
+                            orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
+                            order.orderDetailInfoResponse.deliveryStatus;
+                          if (currentStatus.toString() === "DELIVERED") {
+                            toast.error("이미 배송 완료된 주문은 상태를 변경할 수 없습니다.");
+                            return;
+                          }
+                          if (
+                            currentStatus.toString() === "SHIPPING" &&
+                            newStatus.toString() !== "DELIVERED"
+                          ) {
+                            toast.error(
+                              "배송 중인 주문은 배송 상태를 '배송 완료'로만 변경할 수 있습니다."
+                            );
+                            return;
+                          }
+
+                          handleStatusChange(
+                            order.orderDetailInfoResponse.productOrderId,
+                            newStatus
+                          );
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <MenuItem value="PREPARING">상품 준비 중</MenuItem>
+                        <MenuItem value="SHIPPING">배송 중</MenuItem>
+                        <MenuItem value="DELIVERED">배송 완료</MenuItem>
+                      </Select>
+                    </div>
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {order.orderDetailInfoResponse.orderedTime}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {order.orderDetailInfoResponse.totalPrice}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </tbody>
         </table>
       </Box>
