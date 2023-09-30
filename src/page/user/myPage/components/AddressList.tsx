@@ -3,6 +3,7 @@ import { addressDelete, defaultChange, getAddressList } from "page/user/api/User
 import { AddressLists } from "page/user/entity/AddressLists";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Checkbox, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
+import { toast } from "react-toastify";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
@@ -58,6 +59,7 @@ const AddressList = () => {
       await defaultChange(updateData);
 
       setSelectedAddressId(addressId);
+      toast.success("기본 배송지가 변경되었습니다.");
     } catch (error) {
       console.error("주소 업데이트 실패:", error);
     }
