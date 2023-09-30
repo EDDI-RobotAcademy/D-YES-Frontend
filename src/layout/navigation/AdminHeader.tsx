@@ -30,6 +30,8 @@ function AdminHeader() {
         return "| 이벤트 상품 등록";
       case "/adminEventList":
         return "| 이벤트 상품 목록";
+      case "/adminInquiryListPage":
+        return "| 1:1 문의 목록";
       default:
         return "";
     }

@@ -20,6 +20,7 @@
 .account-management,
 .product-management,
 .order-management,
+.inquiry-management,
 .dash-board {
   padding: 10px; /* 버튼 간격 */
   margin-left: 20px;
@@ -62,7 +63,8 @@
 }
 .account-menu,
 .product-menu,
-.order-menu {
+.order-menu,
+.inquiry-menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
