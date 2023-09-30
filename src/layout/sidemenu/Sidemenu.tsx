@@ -206,7 +206,7 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
               <img
                 className="menu-icon"
                 alt="상품"
-                src="img/order-icon.png"
+                src="img/inquiry-icon.png"
                 width={18}
               />
               문의관리
