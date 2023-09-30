@@ -6,7 +6,7 @@ import { RecipeIngredient } from "../entity/RecipeIngredient";
 import { RecipeName } from "../entity/RecipeName";
 import { RecipeListResponseForm } from "../entity/RecipeList";
 import { RecipeCategory } from "../entity/RecipeCategory";
-import { RecipeRegisterForm } from "../entity/RecipeRegister";
+import { RecipeRegisterForm } from "../entity/RecipeCommentRegister";
 
 const userToken = localStorage.getItem("userToken");
 
