@@ -2,7 +2,6 @@ import { Box, Container } from "@mui/material";
 import useEventModifyStore from "page/event/store/EventModifyStore";
 import useEventReadStore from "page/event/store/EventReadStore";
 import ToggleComponent from "page/product/components/productOption/ToggleComponent";
-import React from "react";
 import TextQuill from "utility/quill/TextQuill";
 
 const EventModifyDescription = () => {

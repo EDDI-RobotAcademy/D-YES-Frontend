@@ -50,7 +50,15 @@ const AdminEventListPage = () => {
     fetchEventList();
   }, []);
 
-  const handleEditClick = async (eventProductId: string) => {
+  const handleEditClick = async (eventProductId: string, startLine: string) => {
+    const now = new Date();
+    const eventStartDate = new Date(startLine);
+
+    if (now >= eventStartDate) {
+      toast.warning("이벤트가 이미 시작되었습니다. 수정할 수 없습니다.");
+      return;
+    }
+
     try {
       const eventData = await fetchEvent(eventProductId);
       if (eventData !== null) {
@@ -61,7 +69,6 @@ const AdminEventListPage = () => {
       console.error("이벤트 데이터를 불러오는 중 오류 발생:", error);
     }
   };
-
   return (
     <div className="admin-event-list-container">
       <div className="admin-event-list-box">
@@ -148,7 +155,12 @@ const AdminEventListPage = () => {
                     <TableCell className="cellStyle">
                       <Button
                         className="modify-btn"
-                        onClick={() => handleEditClick(event.eventProductId.toString())}
+                        onClick={() =>
+                          handleEditClick(
+                            event.eventProductId.toString(),
+                            event.startLine.toString()
+                          )
+                        }
                         variant="contained"
                         style={{
                           fontSize: "13px",

@@ -52,18 +52,28 @@ const EventModifyPage = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const detailImages = eventModify.productDetailImagesModifyRequest || [];
-    if (detailImages.length < 6 || detailImages.length > 10) {
-      toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
+    const combinedDetailImages = [
+      ...(eventReads?.detailImagesForUser || []),
+      ...(eventModify?.productDetailImagesModifyRequest || []),
+    ];
+
+    if (combinedDetailImages.length < 6) {
+      toast.error("상세 이미지를 최소 6장 등록해주세요.");
       return;
     }
 
-    const hasIncompleteOption =
-      !eventModify.productOptionModifyRequest?.optionName ||
-      !eventModify.productOptionModifyRequest?.optionPrice ||
-      !eventModify.productOptionModifyRequest?.stock ||
-      !eventModify.productOptionModifyRequest?.unit;
+    if (combinedDetailImages.length > 10) {
+      toast.error("상세 이미지를 최대 10장까지 등록할 수 있습니다.");
+      return;
+    }
 
+    const eventReadsOptions = eventReads?.optionResponseForUser || {};
+    const eventModifyOptions = eventModify?.productOptionModifyRequest || {};
+
+    const allOptions = { ...eventReadsOptions, ...eventModifyOptions };
+
+    const hasIncompleteOption =
+      !allOptions.optionName || !allOptions.optionPrice || !allOptions.stock || !allOptions.unit;
     if (hasIncompleteOption) {
       toast.error("옵션 정보를 모두 입력해주세요.");
       return;
