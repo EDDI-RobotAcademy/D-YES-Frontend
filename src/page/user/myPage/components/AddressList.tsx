@@ -53,6 +53,20 @@ const AddressList = () => {
         (address) => address.addressId !== Number(addressBookId)
       );
       setAddressList(updatedAddressList);
+
+      if (updatedAddressList.length === 0) {
+        const firstAddress = addressListFromQuery[0];
+        if (firstAddress) {
+          const updateData = {
+            userToken: localStorage.getItem("userToken") || "",
+            addressBookOption: "DEFAULT_OPTION",
+            addressBookId: Number(firstAddress.addressId),
+          };
+          await defaultChange(updateData);
+          setSelectedAddressId(firstAddress.addressId.toString());
+          toast.success("프로필에 있는 배송지가 기본 배송지로 설정됩니다");
+        }
+      }
     } catch (error) {
       console.error("배송지 삭제 실패:", error);
     }
@@ -67,7 +81,7 @@ const AddressList = () => {
       };
 
       await defaultChange(updateData);
-
+      console.log("업데이트 주소", updateData)
       setSelectedAddressId(addressId);
       toast.success("기본 배송지가 변경되었습니다.");
     } catch (error) {
