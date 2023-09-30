@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useEventModifyStore from "./store/EventModifyStore";
 import { Box, Button, Container } from "@mui/material";
 import EventModifyDescription from "./components/modify/EventModifyDescription";
@@ -19,14 +19,28 @@ import { EventDetailImage } from "./entity/EventDetailImage";
 import { EventDate } from "./entity/EventDate";
 import { EventCount } from "./entity/EventCount";
 import EventModifyLimit from "./components/modify/EventModifyLimit";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const EventModifyPage = () => {
-  const { eventModify, setEventModify } = useEventModifyStore();
-  const { eventReads, setEventRead } = useEventReadStore();
+  const { eventModify } = useEventModifyStore();
+  const { eventReads } = useEventReadStore();
   const navigate = useNavigate();
   const { eventProductId } = useParams();
-  const hasFetchedRef = React.useRef(false);
   const queryClient = useQueryClient();
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
+
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
+
   const mutation = useMutation(updateEvent, {
     onSuccess: (data) => {
       queryClient.setQueryData("eventModify", data);
@@ -37,6 +51,33 @@ const EventModifyPage = () => {
   });
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    const combinedDetailImages = [
+      ...(eventReads?.detailImagesForUser || []),
+      ...(eventModify?.productDetailImagesModifyRequest || []),
+    ];
+
+    if (combinedDetailImages.length < 6) {
+      toast.error("상세 이미지를 최소 6장 등록해주세요.");
+      return;
+    }
+
+    if (combinedDetailImages.length > 10) {
+      toast.error("상세 이미지를 최대 10장까지 등록할 수 있습니다.");
+      return;
+    }
+
+    const eventReadsOptions = eventReads?.optionResponseForUser || {};
+    const eventModifyOptions = eventModify?.productOptionModifyRequest || {};
+
+    const allOptions = { ...eventReadsOptions, ...eventModifyOptions };
+
+    const hasIncompleteOption =
+      !allOptions.optionName || !allOptions.optionPrice || !allOptions.stock || !allOptions.unit;
+    if (hasIncompleteOption) {
+      toast.error("옵션 정보를 모두 입력해주세요.");
+      return;
+    }
 
     let mainImage = eventReads?.mainImageResponseForUser?.mainImg || "";
 

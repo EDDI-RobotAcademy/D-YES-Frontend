@@ -1,10 +1,7 @@
 import axiosInstance from "utility/axiosInstance";
 import {
-  UseMutationResult,
   UseQueryResult,
-  useMutation,
   useQuery,
-  useQueryClient,
 } from "react-query";
 import { Product } from "page/product/entity/Product";
 import { useOptions } from "page/product/entity/useOptions";
@@ -99,12 +96,6 @@ export const fetchProduct = async (productId: string): Promise<ProductRead | nul
   return response.data;
 };
 
-export const useProductQuery = (productId: string): UseQueryResult<ProductRead | null, unknown> => {
-  return useQuery(["productRead", productId], () => fetchProduct(productId), {
-    refetchOnWindowFocus: false,
-  });
-};
-
 // 관리자 수정
 export const updateProduct = async (updatedData: ProductModify): Promise<ProductModify> => {
   const {
@@ -123,19 +114,6 @@ export const updateProduct = async (updatedData: ProductModify): Promise<Product
     productDetailImagesModifyRequest,
   });
   return response.data;
-};
-
-export const useProductUpdateMutation = (): UseMutationResult<
-  ProductModify,
-  unknown,
-  ProductModify
-> => {
-  const queryClient = useQueryClient();
-  return useMutation(updateProduct, {
-    onSuccess: (data) => {
-      queryClient.setQueryData(["productModify", data.productId], data);
-    },
-  });
 };
 
 // 사용자용 상품 상세정보 확인

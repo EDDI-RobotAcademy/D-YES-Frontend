@@ -1,145 +1,91 @@
 import React, { useEffect } from "react";
 import { Box, Button, Container } from "@mui/material";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  fetchProduct,
-  useProductQuery,
-  useProductUpdateMutation,
-} from "page/product/api/ProductApi";
+import { updateProduct } from "page/product/api/ProductApi";
 import { Product } from "page/product/entity/Product";
-import { ProductImg } from "page/product/entity/ProductMainImg";
 import { ProductModify } from "page/product/entity/ProductModify";
 import ProductDetailModify from "../../../product/components/modify/ProductDetailModify";
 import ProductImageModify from "../../../product/components/modify/ProductImageModify";
 import ProductOptionModify from "../../../product/components/modify/ProductOptionModify";
 import ProductDescriptionModify from "../../../product/components/modify/ProductDescriptionModify";
-import useProductModifyStore from "page/product/store/ProductModifyStore";
-import useProductImageStore from "page/product/store/ProductImageStore";
 import { ProductDetailImg } from "page/product/entity/ProductDetailImg";
 import { toast } from "react-toastify";
 import { useAuth } from "layout/navigation/AuthConText";
-
-interface RouteParams {
-  productId: string;
-  [key: string]: string;
-}
+import useProductModifyRefactorStore from "page/product/store/ProductRefactorModifyStore";
+import useProductReadStore from "page/product/store/ProductReadStore";
+import { ProductModifyImg } from "page/product/entity/ProductModifyImg";
+import { useOptions } from "page/product/entity/useOptions";
 
 const AdminProductModifyPage = () => {
   const navigate = useNavigate();
-  const hasFetchedRef = React.useRef(false);
-  const { productId } = useParams<RouteParams>();
-  const mutation = useProductUpdateMutation();
+  const { productId } = useParams();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken");
-  const { modifyProducts, setModifyProducts } = useProductModifyStore();
-  const { productImgs, setProductImgs, productDetailImgs, setProductDetailImgs } =
-    useProductImageStore();
-    const { checkAdminAuthorization } = useAuth();
-    const isAdmin = checkAdminAuthorization();
-  
-    useEffect(() => {
-      if (!isAdmin) {
-        toast.error("권한이 없습니다.");
-        navigate("/");
-      }
-    }, [isAdmin, navigate]);
-  
-    if (!isAdmin) {
-      return null;
-    }
-
-  const fetchModify = async () => {
-    hasFetchedRef.current = true;
-    const productData = await fetchProduct(productId || "");
-    return productData;
-  };
-
-  const { data } = useQuery("user", fetchModify, {
-    enabled: !!productId && !hasFetchedRef.current,
-    initialData: queryClient.getQueryData("productRead") || undefined,
-  });
+  const { modifyProducts } = useProductModifyRefactorStore();
+  const { productReads } = useProductReadStore();
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
 
   useEffect(() => {
-    const newProductName = data?.productResponseForAdmin.productName || "";
-    const newCultivationMethod = data?.productResponseForAdmin.cultivationMethod || "";
-    const newProductSaleStatus = data?.productResponseForAdmin.productSaleStatus || "";
-    const newProductDescription = data?.productResponseForAdmin.productDescription || "";
-    const newOptions = data?.optionResponseForAdmin || [];
-    const newMainImages = data?.mainImageResponseForAdmin || "";
-    const newDetailImages = data?.detailImagesForAdmin || [];
-    const newProduceType = data?.productResponseForAdmin.produceType || "";
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
 
-    setModifyProducts({
-      ...modifyProducts,
-      productName: newProductName,
-      cultivationMethod: newCultivationMethod,
-      productSaleStatus: newProductSaleStatus,
-      productDescription: newProductDescription,
-      productOptionList: newOptions,
-      produceType: newProduceType,
-    });
+  if (!isAdmin) {
+    return null;
+  }
 
-    setProductImgs({
-      ...productImgs,
-      mainImg: newMainImages as string,
-    });
+  const mutation = useMutation(updateProduct, {
+    onSuccess: (data) => {
+      queryClient.setQueryData("productModify", data);
+      console.log("수정확인", data);
+      toast.success("수정되었습니다.");
+      navigate("/adminProductListPage");
+    },
+  });
 
-    setProductDetailImgs([...newDetailImages]);
-  }, [
-    data,
-    setModifyProducts,
-    // 아래 부분이 무한 루프를 발생시킴(우선 주석 처리)
-    // productImgs,
-    // products,
-    setProductDetailImgs,
-    setProductImgs,
-  ]);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-  const handleEditFinishClick = async () => {
-    if (
-      modifyProducts.productName &&
-      modifyProducts.cultivationMethod &&
-      modifyProducts.productDescription &&
-      modifyProducts.productSaleStatus
-    ) {
-      const productModifyRequestData: Partial<Product> = {
-        productName: modifyProducts.productName,
-        cultivationMethod: modifyProducts.cultivationMethod,
-        productDescription: modifyProducts.productDescription,
-        productSaleStatus: modifyProducts.productSaleStatus,
-      };
-      console.log("받은 데이터 확인", modifyProducts);
+    const productModifyRequestData: Partial<Product> = {
+      productName:
+        modifyProducts.productModifyRequest?.productName ||
+        productReads.productResponseForAdmin?.productName,
+      cultivationMethod:
+        modifyProducts.productModifyRequest?.cultivationMethod ||
+        productReads.productResponseForAdmin?.cultivationMethod,
+      productDescription:
+        modifyProducts.productModifyRequest?.productDescription ||
+        productReads.productResponseForAdmin?.productDescription,
+      productSaleStatus:
+        modifyProducts.productModifyRequest?.productSaleStatus ||
+        productReads.productResponseForAdmin?.productSaleStatus,
+    };
 
-      const mainFileToUpload =
-        productImgs instanceof Blob
-          ? (() => {
-              const blobWithProperties = productImgs as Blob & { name: string };
-              return new File([productImgs], blobWithProperties.name);
-            })()
-          : null;
+    let mainImage = productReads?.mainImageResponseForAdmin?.mainImg || "";
 
-      let s3MainObjectVersion = "";
-      if (mainFileToUpload) {
-        s3MainObjectVersion = (await uploadFileAwsS3(mainFileToUpload)) || "";
-      }
+    if (modifyProducts.productMainImageModifyRequest?.mainImg) {
+      const s3MainObjectVersion =
+        (await uploadFileAwsS3(modifyProducts.productMainImageModifyRequest?.mainImg)) || "";
+      mainImage = (modifyProducts.productMainImageModifyRequest?.mainImg.name +
+        "?versionId=" +
+        s3MainObjectVersion) as unknown as File;
+    }
 
-      const existingMainImageUrl = data?.mainImageResponseForAdmin?.mainImg;
+    const productMainImageModifyRequest: ProductModifyImg = {
+      mainImageId:
+        productReads.mainImageResponseForAdmin.mainImageId ||
+        modifyProducts.productMainImageModifyRequest.mainImageId,
+      mainImg: mainImage,
+    };
 
-      const productMainImageModifyRequest: ProductImg = {
-        mainImageId: data!.mainImageResponseForAdmin!.mainImageId,
-        mainImg: mainFileToUpload
-          ? ((mainFileToUpload
-              ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
-              : "undefined main image") as string)
-          : ((existingMainImageUrl || "undefined main image") as string),
-      };
-
-      const detailImageUploadPromises = productDetailImgs.map(async (image, idx) => {
-        if (image instanceof Blob) {
-          const blobWithProperties = image as Blob & { name: string };
-          const detailFileToUpload = new File([image], blobWithProperties.name);
+    const detailImageUploadPromises = modifyProducts.productDetailImagesModifyRequest
+      ? modifyProducts.productDetailImagesModifyRequest.map(async (image, idx) => {
+          const detailFileToUpload = new File([image.detailImgs], image.detailImgs.name);
 
           let s3DetailObjectVersion = "";
           let name = "";
@@ -155,73 +101,106 @@ const AdminProductModifyPage = () => {
             detailImageId: 0,
             detailImgs: name + "?versionId=" + s3DetailObjectVersion,
           };
-        } else {
-          return image;
-        }
+        })
+      : [];
+    const existingDetailImageNames = productReads.detailImagesForAdmin.map((image) => ({
+      detailImageId: image.detailImageId,
+      detailImgs: image.detailImgs,
+    }));
+
+    const allDetailImageUploadPromises = [
+      ...detailImageUploadPromises,
+      ...existingDetailImageNames,
+    ];
+
+    const filteredAllDetailImageUploadPromises = allDetailImageUploadPromises.filter(
+      (image) => image !== null
+    );
+
+    const productDetailImagesModifyRequest = await Promise.all(
+      filteredAllDetailImageUploadPromises
+    );
+
+    const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest
+      .filter((detailImage) => detailImage !== null)
+      .map((detailImage) => {
+        const productDetailImg: ProductDetailImg = {
+          detailImageId: detailImage!.detailImageId,
+          detailImgs: detailImage!.detailImgs as unknown as File,
+        };
+
+        return productDetailImg;
       });
 
-      const filteredDetailImageUploadPromises = detailImageUploadPromises.filter(
-        (image) => image !== null
-      );
+    const productOptionModifyRequest = modifyProducts.productOptionModifyRequest || [];
+    const existingOptions = productReads.optionResponseForAdmin || [];
 
-      const productDetailImagesModifyRequest = await Promise.all(filteredDetailImageUploadPromises);
+    const productOptionModifyRequestMapped = existingOptions.map((existingOption, index) => {
+      const newOption = productOptionModifyRequest[index] || {};
 
-      const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest
-        .filter((detailImage) => detailImage !== null)
-        .map((detailImage) => {
-          const productDetailImg: ProductDetailImg = {
-            detailImageId: detailImage!.detailImageId,
-            detailImgs: detailImage!.detailImgs as unknown as File,
-          };
-
-          return productDetailImg;
-        });
-
-      const updatedData: ProductModify = {
-        productId: parseInt(productId || ""),
-        productModifyRequest: productModifyRequestData,
-        productOptionModifyRequest: modifyProducts.productOptionList,
-        productMainImageModifyRequest: productMainImageModifyRequest,
-        productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
-        userToken: userToken || "",
+      return {
+        optionId: existingOption.optionId,
+        optionName: newOption.optionName || existingOption.optionName,
+        optionPrice: newOption.optionPrice || existingOption.optionPrice,
+        stock: newOption.stock || existingOption.stock,
+        value: newOption.value || existingOption.value,
+        unit: newOption.unit || existingOption.unit,
+        optionSaleStatus: newOption.optionSaleStatus || existingOption.optionSaleStatus, // 추가
       };
+    });
 
-      const isDuplicateOptionName = modifyProducts.productOptionList.some((option, index) =>
-        modifyProducts.productOptionList.some(
-          (otherOption, otherIndex) =>
-            option.optionName === otherOption.optionName && index !== otherIndex
-        )
-      );
+    const updatedData: ProductModify = {
+      productId: parseInt(productId || ""),
+      productModifyRequest: productModifyRequestData,
+      productOptionModifyRequest: productOptionModifyRequestMapped,
+      productMainImageModifyRequest: productMainImageModifyRequest,
+      productDetailImagesModifyRequest: updatedProductDetailImagesModifyRequest,
+      userToken: userToken || "",
+    };
 
-      if (isDuplicateOptionName) {
-        toast.error("이미 존재하는 옵션 이름입니다.");
-        return;
-      }
+    const isDuplicateOptionName = productOptionModifyRequest.some((option, index) =>
+      productOptionModifyRequest.some(
+        (otherOption, otherIndex) =>
+          option.optionName === otherOption.optionName && index !== otherIndex
+      )
+    );
 
-      const hasIncompleteOption = modifyProducts.productOptionList.some((option) => {
-        return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
-      });
-
-      if (hasIncompleteOption) {
-        toast.error("옵션 정보를 모두 입력해주세요.");
-        return;
-      }
-
-      if (productDetailImgs.length < 6 || productDetailImgs.length > 10) {
-        toast.error("상세 이미지를 최소 6장, 최대 10장 등록해주세요.");
-        return;
-      }
-
-      await mutation.mutateAsync(updatedData);
-      console.log("수정확인", updatedData);
-      queryClient.invalidateQueries(["productModify", parseInt(productId || "")]);
-      navigate("/adminProductListPage");
+    if (isDuplicateOptionName) {
+      toast.error("이미 존재하는 옵션 이름입니다.");
+      return;
     }
+
+    const hasIncompleteOption = modifyProducts.productOptionModifyRequest?.some((option) => {
+      return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
+    });
+
+    if (hasIncompleteOption) {
+      toast.error("옵션 정보를 모두 입력해주세요.");
+      return;
+    }
+
+    const combinedDetailImages = [
+      ...(productReads?.detailImagesForAdmin || []),
+      ...(modifyProducts?.productDetailImagesModifyRequest || []),
+    ];
+
+    if (combinedDetailImages.length < 6) {
+      toast.error("상세 이미지를 최소 6장 등록해주세요.");
+      return;
+    }
+
+    if (combinedDetailImages.length > 10) {
+      toast.error("상세 이미지를 최대 10장까지 등록할 수 있습니다.");
+      return;
+    }
+
+    console.log("아이디확인", updatedData);
+    await mutation.mutateAsync(updatedData);
   };
 
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           <h1>상품 수정</h1>
           <ProductDetailModify />
@@ -229,9 +208,7 @@ const AdminProductModifyPage = () => {
           <ProductOptionModify />
           <ProductDescriptionModify />
         </Box>
-        <Button variant="outlined" onClick={handleEditFinishClick}>
-          수정 완료
-        </Button>
+        <Button type="submit">수정 완료</Button>
       </form>
     </Container>
   );

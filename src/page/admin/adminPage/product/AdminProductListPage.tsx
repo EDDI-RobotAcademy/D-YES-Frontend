@@ -19,17 +19,19 @@ import ReadPopup from "../../../product/components/productOption/ReadPopup";
 import useProductStore from "page/product/store/ProductStore";
 import {
   deleteProducts,
+  fetchProduct,
   fetchProductList,
   useProductListQuery,
 } from "../../../product/api/ProductApi";
 import { useNavigate } from "react-router-dom";
-import useProductModifyStore from "page/product/store/ProductModifyStore";
 import { useAuth } from "layout/navigation/AuthConText";
 import { toast } from "react-toastify";
+import { ProductRead } from "page/product/entity/ProductRead";
+import useProductReadStore from "page/product/store/ProductReadStore";
 
 const AdminProductList: React.FC = () => {
   const setProducts = useProductStore((state) => state.setProducts);
-  const { setModifyProducts } = useProductModifyStore();
+  const { setProductRead } = useProductReadStore();
   const [selectedOptions, setSelectedOptions] = useState<{
     [productId: number]: string;
   }>({});
@@ -89,16 +91,17 @@ const AdminProductList: React.FC = () => {
     }
   };
 
-  const handleEditClick = (productId: number) => {
-    navigate(`../adminProductModifyPage/${productId}`);
-    if (products) {
-      const modifiedData = products.find(
-        (product) => product.productId === productId
-      );
-      if (modifiedData) {
-        setModifyProducts(modifiedData);
+  const handleEditClick = async (event: React.MouseEvent, productId: string) => {
+    event.stopPropagation();
+
+    try {
+      const productData = await fetchProduct(productId);
+      if (productData !== null) {
+        setProductRead(productData as unknown as ProductRead);
       }
-      console.log("상품 수정 읽기 데이터 받아오는지 확인", modifiedData);
+      navigate(`../adminProductModifyPage/${productId}`);
+    } catch (error) {
+      console.log("오류 발생", error);
     }
   };
 
@@ -114,9 +117,7 @@ const AdminProductList: React.FC = () => {
 
   const handleDeleteProduct = (productId: number) => {
     if (products) {
-      const updatedProducts = products.filter(
-        (product) => product.productId !== productId
-      );
+      const updatedProducts = products.filter((product) => product.productId !== productId);
       setProducts(updatedProducts);
     }
   };
@@ -124,10 +125,7 @@ const AdminProductList: React.FC = () => {
   return (
     <div className="admin-product-list-container">
       <div className="admin-product-list-box">
-        <TableContainer
-          component={Paper}
-          style={{ boxShadow: "none", width: "100%" }}
-        >
+        <TableContainer component={Paper} style={{ boxShadow: "none", width: "100%" }}>
           <table
             style={{
               borderCollapse: "collapse",
@@ -256,7 +254,7 @@ const AdminProductList: React.FC = () => {
                     <TableCell className="cellStyle">
                       <Button
                         className="modify-btn"
-                        onClick={() => handleEditClick(product.productId)}
+                        onClick={(e) => handleEditClick(e, product.productId.toString())}
                         variant="contained"
                         style={{
                           fontSize: "13px", // 수정 버튼의 크기를 조정할 값
@@ -268,12 +266,8 @@ const AdminProductList: React.FC = () => {
                         수정
                       </Button>
                     </TableCell>
-                    <TableCell className="cellStyle">
-                      {product.productId}
-                    </TableCell>
-                    <TableCell className="cellStyle">
-                      {product.productName}
-                    </TableCell>
+                    <TableCell className="cellStyle">{product.productId}</TableCell>
+                    <TableCell className="cellStyle">{product.productName}</TableCell>
                     <TableCell className="cellStyle">
                       {product.productSaleStatus === "AVAILABLE" ? (
                         <Chip label="판매중" color="success" />
@@ -281,12 +275,9 @@ const AdminProductList: React.FC = () => {
                         <Chip label="판매중지" color="error" />
                       )}
                     </TableCell>
+                    <TableCell className="cellStyle">{product.farmName}</TableCell>
                     <TableCell className="cellStyle">
-                      {product.farmName}
-                    </TableCell>
-                    <TableCell className="cellStyle">
-                      {product.productOptionList &&
-                      product.productOptionList.length > 0 ? (
+                      {product.productOptionList && product.productOptionList.length > 0 ? (
                         <Select
                           className="noOutline"
                           variant="outlined"
@@ -324,22 +315,16 @@ const AdminProductList: React.FC = () => {
                       ) : null}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] &&
-                      product.productOptionList
+                      {selectedOptions[product.productId] && product.productOptionList
                         ? product.productOptionList.find(
-                            (option) =>
-                              option.optionName ===
-                              selectedOptions[product.productId]
+                            (option) => option.optionName === selectedOptions[product.productId]
                           )?.optionPrice
                         : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {selectedOptions[product.productId] &&
-                      product.productOptionList
+                      {selectedOptions[product.productId] && product.productOptionList
                         ? product.productOptionList.find(
-                            (option) =>
-                              option.optionName ===
-                              selectedOptions[product.productId]
+                            (option) => option.optionName === selectedOptions[product.productId]
                           )?.stock
                         : ""}
                     </TableCell>
@@ -348,16 +333,14 @@ const AdminProductList: React.FC = () => {
                         product.productOptionList &&
                         product.productOptionList.find(
                           (option) =>
-                            option.optionName ===
-                              selectedOptions[product.productId] &&
+                            option.optionName === selectedOptions[product.productId] &&
                             option.optionSaleStatus === "AVAILABLE"
                         ) && <Chip label="판매중" color="success" />}
                       {selectedOptions[product.productId] &&
                         product.productOptionList &&
                         !product.productOptionList.find(
                           (option) =>
-                            option.optionName ===
-                              selectedOptions[product.productId] &&
+                            option.optionName === selectedOptions[product.productId] &&
                             option.optionSaleStatus === "AVAILABLE"
                         ) && <Chip label="판매중지" color="error" />}
                     </TableCell>

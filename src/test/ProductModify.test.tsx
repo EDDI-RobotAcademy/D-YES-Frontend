@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 // import { QueryClient, QueryClientProvider } from "react-query";
 // import { BrowserRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
-import { useProductQuery } from "page/product/api/ProductApi";
+// import { useProductQuery } from "page/product/api/ProductApi";
 // import AdminProductModifyPage from "page/admin/adminPage/product/AdminProductModifyPage";
 
 jest.mock("page/product/api/ProductApi", () => ({
@@ -42,10 +42,10 @@ it("상품 수정 테스트", async () => {
     optionResponseForAdmin: true,
   };
 
-  (useProductQuery as jest.Mock).mockReturnValue({
-    data: fakeUserData,
-    isSuccess: true,
-  });
+  // (useProductQuery as jest.Mock).mockReturnValue({
+  //   data: fakeUserData,
+  //   isSuccess: true,
+  // });
 
   // render(
   //   <BrowserRouter>

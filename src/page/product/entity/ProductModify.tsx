@@ -1,13 +1,13 @@
 import { useOptions } from "./useOptions";
-import { ProductImg } from "./ProductMainImg";
 import { ProductDetailImg } from "./ProductDetailImg";
 import { Product } from "./Product";
+import { ProductModifyImg } from "./ProductModifyImg";
 
 export interface ProductModify {
   productId: number;
   productModifyRequest: Partial<Product>;
   productOptionModifyRequest: useOptions[];
-  productMainImageModifyRequest: ProductImg;
+  productMainImageModifyRequest: ProductModifyImg;
   productDetailImagesModifyRequest: ProductDetailImg[];
   userToken: string;
 }
