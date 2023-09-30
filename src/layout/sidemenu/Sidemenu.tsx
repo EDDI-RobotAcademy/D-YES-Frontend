@@ -41,7 +41,12 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
                 navigate("/adminMainPage");
               }}
             >
-              <img className="menu-icon" alt="상품" src="img/dash-board-icon.png" width={18} />
+              <img
+                className="menu-icon"
+                alt="상품"
+                src="img/dash-board-icon.png"
+                width={18}
+              />
               대쉬보드
             </p>
           </div>
@@ -49,7 +54,12 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
           {/* 회원 관련 */}
           <div className="account-management">
             <p className="menu-name">
-              <img className="menu-icon" alt="회원" src="img/account-icon.png" width={18} />
+              <img
+                className="menu-icon"
+                alt="회원"
+                src="img/account-icon.png"
+                width={18}
+              />
               회원관리
               <img
                 className="btn-icon"
@@ -103,7 +113,12 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
           {/* 상품 관련 */}
           <div className="product-management">
             <p className="menu-name">
-              <img className="menu-icon" alt="상품" src="img/product-icon.png" width={18} />
+              <img
+                className="menu-icon"
+                alt="상품"
+                src="img/product-icon.png"
+                width={18}
+              />
               상품관리
               <img
                 className="btn-icon"
@@ -155,7 +170,12 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
 
           <div className="order-management">
             <p className="menu-name">
-              <img className="menu-icon" alt="상품" src="img/order-icon.png" width={18} />
+              <img
+                className="menu-icon"
+                alt="상품"
+                src="img/order-icon.png"
+                width={18}
+              />
               주문관리
               <img
                 className="btn-icon"
@@ -175,6 +195,39 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
                     }}
                   >
                     주문 목록
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="inquiry-management">
+            <p className="menu-name">
+              <img
+                className="menu-icon"
+                alt="상품"
+                src="img/order-icon.png"
+                width={18}
+              />
+              문의관리
+              <img
+                className="btn-icon"
+                src="/img/drop-down-btn.png"
+                alt=""
+                onClick={() => handleMenuClick("inquiry")}
+                style={{ width: "20px", alignSelf: "center" }}
+              />
+            </p>
+            {isMenuActive("inquiry") && (
+              <div className="sub-menu">
+                <div>
+                  <p
+                    className="inquiry-menu"
+                    onClick={() => {
+                      navigate("/adminInquiryListPage");
+                    }}
+                  >
+                    문의 목록
                   </p>
                 </div>
               </div>
