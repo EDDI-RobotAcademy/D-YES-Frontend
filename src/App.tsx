@@ -44,6 +44,8 @@ import EventModifyPage from "page/event/EventModifyPage";
 import InquiryRegisterPage from "page/inquiry/InquiryRegisterPage";
 import EventListPage from "page/event/EventListPage";
 import EventProductDetailPage from "page/event/EventProductDetailPage";
+import AdminInquriyListPage from "page/admin/adminPage/inquriy/AdminInquriyListPage";
+import AdminInquiryReadPage from "page/admin/adminPage/inquriy/AdminInquiryReadPage";
 
 const theme = createTheme({
   typography: {
@@ -103,6 +105,8 @@ const App: React.FC = () => {
               <Route path="/adminEventRegister" element={<EventRegisterPage />} />
               <Route path="/adminEventList" element={<AdminEventListPage />} />
               <Route path="/adminEventModifyPage/:eventProductId" element={<EventModifyPage />} />
+              <Route path="/adminInquiryListPage" element={<AdminInquriyListPage />} />
+              <Route path="/adminInquiryReadPage/:inquiryId" element={<AdminInquiryReadPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

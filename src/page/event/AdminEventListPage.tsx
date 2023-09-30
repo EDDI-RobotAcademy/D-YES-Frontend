@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { EventList } from "./entity/EventList";
-import { fetchEvent, getEventList } from "./api/EventApi";
+import {
+  fetchEvent,
+  getEventList,
+  getEventProductDetail,
+} from "./api/EventApi";
 import {
   Button,
   Paper,
@@ -69,10 +73,29 @@ const AdminEventListPage = () => {
       console.error("이벤트 데이터를 불러오는 중 오류 발생:", error);
     }
   };
+
+  const handleProductDetail = async (eventProductId: string) => {
+    try {
+      const eventData = await getEventProductDetail(eventProductId);
+      if (eventData !== null) {
+        setEventRead(eventData as unknown as EventRead);
+      }
+      navigate(`/eventProductDetail/${eventProductId}`);
+    } catch (error) {
+      console.error(
+        "상세 페이지 이벤트 데이터를 불러오는 중 오류 발생:",
+        error
+      );
+    }
+  };
+
   return (
     <div className="admin-event-list-container">
       <div className="admin-event-list-box">
-        <TableContainer component={Paper} style={{ boxShadow: "none", width: "100%" }}>
+        <TableContainer
+          component={Paper}
+          style={{ boxShadow: "none", width: "100%" }}
+        >
           <table
             style={{
               borderCollapse: "collapse",
@@ -94,12 +117,21 @@ const AdminEventListPage = () => {
                 <TableCell
                   className="cellStyle-header"
                   style={{
+                    width: "4%",
+                    textAlign: "center",
+                  }}
+                >
+                  상세페이지
+                </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
                     width: "6%",
                     textAlign: "center",
                   }}
                   data-testid="product-id"
                 >
-                  EVENTID
+                  ID
                 </TableCell>
                 <TableCell
                   className="cellStyle-header"
@@ -170,6 +202,23 @@ const AdminEventListPage = () => {
                         }}
                       >
                         수정
+                      </Button>
+                    </TableCell>
+                    <TableCell className="cellStyle">
+                      <Button
+                        className="modify-btn"
+                        onClick={() =>
+                          handleProductDetail(event.eventProductId.toString())
+                        }
+                        variant="contained"
+                        style={{
+                          fontSize: "13px",
+                          padding: "4px 8px",
+                          fontFamily: "SUIT-Regular",
+                          backgroundColor: "#EABF79",
+                        }}
+                      >
+                        읽기
                       </Button>
                     </TableCell>
                     <TableCell className="cellStyle">{event.eventProductId}</TableCell>

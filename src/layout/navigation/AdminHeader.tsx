@@ -26,6 +26,12 @@ function AdminHeader() {
         return "| 주문 목록";
       case "/adminOrderListPage/orderReadPage":
         return "| 주문 상세 내역";
+      case "/adminEventRegister":
+        return "| 이벤트 상품 등록";
+      case "/adminEventList":
+        return "| 이벤트 상품 목록";
+      case "/adminInquiryListPage":
+        return "| 1:1 문의 목록";
       default:
         return "";
     }
