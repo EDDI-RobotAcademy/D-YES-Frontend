@@ -11,7 +11,7 @@ import {
 import FireIcon from "@mui/icons-material/LocalFireDepartment";
 import TimerIcon from "@mui/icons-material/Timer";
 import GroupIcon from "@mui/icons-material/Group";
-import { deleteRecipe, getRecipeDetail } from "./api/RecipeApi";
+import { deleteRecipe, getRecipeDetail, recipeCommentRegister } from "./api/RecipeApi";
 import { toast } from "react-toastify";
 import { getImageUrl } from "utility/s3/awsS3";
 
@@ -26,6 +26,7 @@ const RecipeDetailPage: React.FC = () => {
   const { recipeId } = useParams<RouteParams>();
   const [loadedItems, setLoadedItems] = useState<RecipeDetail>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [comment, setComment] = useState<string>("");
 
   useEffect(() => {
     const fetchRecipeDetailData = async () => {
@@ -76,6 +77,25 @@ const RecipeDetailPage: React.FC = () => {
       }
     } catch (error) {
       toast.error("레시피 삭제에 실패했습니다");
+    }
+  };
+
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newComment = event.target.value;
+    setComment(newComment);
+  };
+
+  const handleCommentRegister = async () => {
+    if (comment === "") return toast.error("댓글을 입력해주세요");
+    const requestData = {
+      userToken: localStorage.getItem("userToken") || "",
+      recipeId: Number(recipeId),
+      commentContent: comment,
+    };
+    const data = await recipeCommentRegister(requestData);
+    setComment("");
+    if (!data) {
+      toast.error("댓글 등록 중 오류가 발생했습니다");
     }
   };
 
@@ -183,12 +203,18 @@ const RecipeDetailPage: React.FC = () => {
               <p className="recipe-detail-info-font">댓글</p>
             </div>
             <div className="recipe-detail-comment-container">
-              <TextField className="recipe-detail-comment-field" placeholder="댓글을 입력하세요" />
+              <TextField
+                className="recipe-detail-comment-field"
+                placeholder="댓글을 입력하세요"
+                value={comment}
+                onChange={handleCommentChange}
+              />
               <div className="recipe-detail-comment-btn">
                 <Button
                   type="submit"
                   variant="outlined"
                   style={{ minWidth: "50px", color: "#578b36", borderColor: "#578b36" }}
+                  onClick={handleCommentRegister}
                 >
                   확인
                 </Button>
