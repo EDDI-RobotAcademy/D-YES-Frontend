@@ -72,3 +72,13 @@ export const recipeCommentDelete = async (commentId: number) => {
   console.log("댓글 삭제 확인", response.data);
   return response.data;
 };
+
+// 레시피 댓글 수정
+export const recipeCommentModify = async (commentId: number, modifyComment: string) => {
+  const data = {
+    userToken: userToken,
+    modifyCommentContent: modifyComment,
+  };
+  const response = await axiosInstance.put<boolean>(`/recipe/comment/modify/${commentId}`, data);
+  return response.data;
+};
