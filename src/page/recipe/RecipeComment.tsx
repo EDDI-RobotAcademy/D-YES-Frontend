@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { toast } from "react-toastify";
-import { getRecipeCommentList, recipeCommentRegister } from "./api/RecipeApi";
+import { getRecipeCommentList, recipeCommentDelete, recipeCommentRegister } from "./api/RecipeApi";
 import { RecipeCommentList } from "./entity/RecipeCommentList";
 
 import "./css/RecipeComment.css";
@@ -49,6 +49,20 @@ const RecipeComment: React.FC<RecipeCommentProps> = ({ recipeId }) => {
     }
   };
 
+  const handleCommentDelete = async (commentId: number) => {
+    try {
+      const isDelete = await recipeCommentDelete(commentId);
+      if (isDelete) {
+        toast.success("댓글이 삭제되었습니다");
+      } else {
+        toast.error("댓글 삭제에 실패했습니다");
+      }
+    } catch (error) {
+      toast.error("댓글 삭제 요청 중 오류가 발생했습니다");
+    }
+    fetchRecipeCommentList();
+  };
+
   return (
     <div className="recipe-comment-flex">
       <div className="recipe-comment-info">
@@ -77,38 +91,45 @@ const RecipeComment: React.FC<RecipeCommentProps> = ({ recipeId }) => {
             {loadedItems.recipeCommentInfoResponseList.map((comment, idx) => (
               <div key={idx}>
                 <div className="recipe-comment-grid">
-                  <div className="recipe-comment-container">
-                    <p className="recipe-comment-date">{comment.commentDate}</p>
-                    <p className="recipe-comment-nickname">{comment.nickName}</p>
-                    {comment.isDeleted ? (
-                      <>삭제된 댓글입니다.</>
-                    ) : (
+                  {comment.isDeleted ? (
+                    <p className="recipe-comment-deleted-content">작성자가 삭제한 댓글입니다.</p>
+                  ) : (
+                    <div className="recipe-comment-container">
+                      <p className="recipe-comment-date">{comment.commentDate}</p>
+                      <p className="recipe-comment-nickname">{comment.nickName}</p>
                       <p className="recipe-comment-content">{comment.content}</p>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="recipe-comment-btn">
-                    <Button
-                      variant="outlined"
-                      style={{
-                        minWidth: "60px",
-                        maxHeight: "40px",
-                        color: "#578b36",
-                        borderColor: "#578b36",
-                      }}
-                    >
-                      수정
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      style={{
-                        minWidth: "60px",
-                        maxHeight: "40px",
-                        color: "#578b36",
-                        borderColor: "#578b36",
-                      }}
-                    >
-                      삭제
-                    </Button>
+                    {comment.isMyRecipeComment && !comment.isDeleted ? (
+                      <>
+                        <Button
+                          variant="outlined"
+                          style={{
+                            minWidth: "60px",
+                            maxHeight: "40px",
+                            color: "#578b36",
+                            borderColor: "#578b36",
+                          }}
+                        >
+                          수정
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          style={{
+                            minWidth: "60px",
+                            maxHeight: "40px",
+                            color: "#578b36",
+                            borderColor: "#578b36",
+                          }}
+                          onClick={() => handleCommentDelete(comment.commentId)}
+                        >
+                          삭제
+                        </Button>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               </div>
