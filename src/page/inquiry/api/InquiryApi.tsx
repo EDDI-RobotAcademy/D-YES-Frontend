@@ -3,6 +3,8 @@ import axiosInstance from "utility/axiosInstance";
 import { InquiryDetail } from "../entity/InquiryDetail";
 import { InquiryReply } from "../entity/InquiryReply";
 
+const userToken = localStorage.getItem("userToken");
+
 // 문의 등록
 export const inquiryRegister = async (data: {
   inquiryRegisterRequest: Inquiry;
@@ -34,5 +36,15 @@ export const inquiryReplyRegister = async (data: {
     "/inquiry/reply",
     data
   );
+  return response.data;
+};
+
+// 사용자의 자신의 문의 조회
+export const getMyInquiryList = async () => {
+  const response = await axiosInstance.get("/inquiry/user-list", {
+    params: {
+      userToken: localStorage.getItem("userToken"),
+    },
+  });
   return response.data;
 };

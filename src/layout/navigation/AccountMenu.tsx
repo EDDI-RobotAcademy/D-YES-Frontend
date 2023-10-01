@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import HelpIcon from '@mui/icons-material/Help';
 import LogoutIcon from "@mui/icons-material/Logout";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { getImageUrl } from "utility/s3/awsS3";
@@ -45,6 +46,10 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
 
   const goToMyOrder = () => {
     navigate("/myOrder");
+  };
+
+  const goToMyInquiry = () => {
+    navigate("/myInquiry");
   };
 
   const userProfileImg = localStorage.getItem("encodedProfileImg");
@@ -152,6 +157,20 @@ export default function AccountMenu({ handleLogout }: AccountMenuProps) {
           </ListItemIcon>
           <ListItemText>
             <Typography>내 주문목록</Typography>
+          </ListItemText>
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            goToMyInquiry();
+            handleClose();
+          }}
+        >
+          <ListItemIcon>
+            <HelpIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>
+            <Typography>내 문의내역</Typography>
           </ListItemText>
         </MenuItem>
 
