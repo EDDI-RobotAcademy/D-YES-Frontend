@@ -5,4 +5,5 @@ export interface AdminProductData {
   productOptionCount: number;
   productOptionName: string;
   productOptionPrice: number;
+  orderedProductStatus: string;
 }

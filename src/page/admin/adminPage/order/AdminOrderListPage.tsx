@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Select, MenuItem, TableCell, TableHead, TableRow } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -26,17 +32,27 @@ const AdminOrderListPage = () => {
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
   const [orderList, setOrderList] = useState([] as AdminOrderList[]);
-  const [orderStatuses, setOrderStatuses] = useState<Record<string, OrderDeliveryStatus>>({});
-  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(() => {
-    const savedDates: Record<string, string> = JSON.parse(
-      localStorage.getItem("selectedDates") || "{}"
-    );
-    const result: Record<string, dayjs.Dayjs> = {};
-    for (const key in savedDates) {
-      result[key] = dayjs(savedDates[key]);
+  const [orderStatuses, setOrderStatuses] = useState<
+    Record<string, OrderDeliveryStatus>
+  >({});
+  const [selectedDate, setSelectedDate] = useState<Record<string, dayjs.Dayjs>>(
+    () => {
+      const savedDates: Record<string, string> = JSON.parse(
+        localStorage.getItem("selectedDates") || "{}"
+      );
+      const result: Record<string, dayjs.Dayjs> = {};
+      for (const key in savedDates) {
+        result[key] = dayjs(savedDates[key]);
+      }
+      return result;
     }
-    return result;
-  });
+  );
+
+  const orderStatusTypes = [
+    { value: "SUCCESS_PAYMENT", label: "결제 완료" },
+    { value: "CANCEL_PAYMENT", label: "전체 취소" },
+    { value: "PART_CANCEL_PAYMENT", label: "부분 취소" },
+  ];
 
   useEffect(() => {
     if (!isAdmin) {
@@ -62,9 +78,14 @@ const AdminOrderListPage = () => {
     fetchOrderList();
   }, []);
 
-  const handleStatusChange = async (productOrderId: string, newStatus: OrderDeliveryStatus) => {
+  const handleStatusChange = async (
+    productOrderId: string,
+    newStatus: OrderDeliveryStatus
+  ) => {
     try {
-      const savedDates = JSON.parse(localStorage.getItem("selectedDates") || "{}");
+      const savedDates = JSON.parse(
+        localStorage.getItem("selectedDates") || "{}"
+      );
       const prevDate = savedDates[productOrderId];
       const currentDate = selectedDate[productOrderId]?.toDate().toISOString();
 
@@ -132,7 +153,7 @@ const AdminOrderListPage = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "15%",
+                  width: "7%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -196,6 +217,17 @@ const AdminOrderListPage = () => {
               >
                 결제 금액
               </TableCell>
+              <TableCell
+                style={{
+                  width: "8%",
+                  padding: "18px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Bold",
+                }}
+              >
+                주문 상태
+              </TableCell>
             </TableRow>
           </TableHead>
           <tbody>
@@ -216,7 +248,11 @@ const AdminOrderListPage = () => {
               orderList.map((order) => (
                 <TableRow
                   key={order.orderDetailInfoResponse.productOrderId}
-                  onClick={(e) => handleOrderClick(order.orderDetailInfoResponse.productOrderId)}
+                  onClick={(e) =>
+                    handleOrderClick(
+                      order.orderDetailInfoResponse.productOrderId
+                    )
+                  }
                   style={{ cursor: "pointer" }}
                 >
                   <TableCell
@@ -244,7 +280,8 @@ const AdminOrderListPage = () => {
                       fontFamily: "SUIT-Light",
                     }}
                   >
-                    {order.orderUserInfo.address.address} {order.orderUserInfo.address.zipCode} (
+                    {order.orderUserInfo.address.address}{" "}
+                    {order.orderUserInfo.address.zipCode} (
                     {order.orderUserInfo.address.addressDetail})
                   </TableCell>
                   <TableCell
@@ -265,15 +302,21 @@ const AdminOrderListPage = () => {
                   >
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <div onClick={(e) => e.stopPropagation()}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                        <LocalizationProvider
+                          dateAdapter={AdapterDayjs}
+                          adapterLocale="ko"
+                        >
                           <DatePicker
                             value={
-                              selectedDate[order.orderDetailInfoResponse.productOrderId] || dayjs()
+                              selectedDate[
+                                order.orderDetailInfoResponse.productOrderId
+                              ] || dayjs()
                             }
                             onChange={(date) =>
                               setSelectedDate((prevSelectedDate) => ({
                                 ...prevSelectedDate,
-                                [order.orderDetailInfoResponse.productOrderId]: date || dayjs(),
+                                [order.orderDetailInfoResponse.productOrderId]:
+                                  date || dayjs(),
                               }))
                             }
                           />
@@ -281,16 +324,23 @@ const AdminOrderListPage = () => {
                       </div>
                       <Select
                         value={
-                          orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
-                          order.orderDetailInfoResponse.deliveryStatus
+                          orderStatuses[
+                            order.orderDetailInfoResponse.productOrderId
+                          ] || order.orderDetailInfoResponse.deliveryStatus
                         }
                         onChange={(e) => {
-                          const newStatus = e.target.value as OrderDeliveryStatus;
+                          const newStatus = e.target
+                            .value as OrderDeliveryStatus;
                           const currentStatus =
-                            orderStatuses[order.orderDetailInfoResponse.productOrderId] ||
-                            order.orderDetailInfoResponse.deliveryStatus;
+                            orderStatuses[
+                              order.orderDetailInfoResponse.productOrderId
+                            ] || order.orderDetailInfoResponse.deliveryStatus;
+                          const orderStatus =
+                            order.orderDetailInfoResponse.orderStatus;
                           if (currentStatus.toString() === "DELIVERED") {
-                            toast.error("이미 배송 완료된 주문은 상태를 변경할 수 없습니다.");
+                            toast.error(
+                              "이미 배송 완료된 주문은 상태를 변경할 수 없습니다."
+                            );
                             return;
                           }
                           if (
@@ -302,7 +352,10 @@ const AdminOrderListPage = () => {
                             );
                             return;
                           }
-
+                          if (orderStatus.toString() === "CANCEL_PAYMENT") {
+                            toast.error("취소된 주문건입니다.");
+                            return;
+                          }
                           handleStatusChange(
                             order.orderDetailInfoResponse.productOrderId,
                             newStatus
@@ -335,6 +388,18 @@ const AdminOrderListPage = () => {
                     }}
                   >
                     {order.orderDetailInfoResponse.totalPrice}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {orderStatusTypes.find(
+                      (item) =>
+                        item.value === order.orderDetailInfoResponse.orderStatus
+                    )?.label || order.orderDetailInfoResponse.orderStatus}
                   </TableCell>
                 </TableRow>
               ))
