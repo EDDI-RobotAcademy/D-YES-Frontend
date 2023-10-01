@@ -1,0 +1,39 @@
+.inquiry-container {
+  width: 100%;
+  position: relative;
+  padding-top: 4px;
+  font-family: "SUIT-SemiBold";
+}
+.inquiry-grid {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1024px;
+}
+.inquiry-page-name {
+  font-size: x-large;
+  font-family: "SUIT-Bold";
+  margin-left: 10px;
+}
+.inquiry-component-name {
+  font-family: "SUIT-Bold";
+}
+.inquiry-component {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+  font-family: "SUIT-SemiBold";
+}
+.my-inquiry-list-container {
+  margin-bottom: 40px;
+}
+.inquiry-register-btn {
+  background-color: #373c3f;
+  line-height: 1.25rem;
+  margin: 0;
+  color: white;
+  font-family: "SUIT-SemiBold";
+  border-radius: 6px;
+  cursor: pointer;
+}
