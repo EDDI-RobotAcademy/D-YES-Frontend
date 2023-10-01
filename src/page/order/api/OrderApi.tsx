@@ -40,3 +40,10 @@ export const monthlyOrderStatistics = async (): Promise<OrderStatisticsResponse>
   console.log("당월 주문 통계 데이터", response.data);
   return response.data;
 };
+
+// 관리자 환불 목록
+export const getRefundList = async () => {
+  const response = await axiosInstance.get("/order/admin/refund-list");
+  console.log("받은 데이터", response.data);
+  return response.data;
+};
