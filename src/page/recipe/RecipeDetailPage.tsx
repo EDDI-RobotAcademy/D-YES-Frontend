@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import { RecipeDetail } from "./entity/Recipe";
 import {
   mainIngredients,
@@ -14,6 +14,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import { deleteRecipe, getRecipeDetail } from "./api/RecipeApi";
 import { toast } from "react-toastify";
 import { getImageUrl } from "utility/s3/awsS3";
+import RecipeComment from "./RecipeComment";
 
 import "./css/RecipeDetailPage.css";
 
@@ -179,21 +180,7 @@ const RecipeDetailPage: React.FC = () => {
               ))}
             </div>
             <div className="recipe-detail-spacer" />
-            <div className="recipe-detail-info">
-              <p className="recipe-detail-info-font">댓글</p>
-            </div>
-            <div className="recipe-detail-comment-container">
-              <TextField className="recipe-detail-comment-field" placeholder="댓글을 입력하세요" />
-              <div className="recipe-detail-comment-btn">
-                <Button
-                  type="submit"
-                  variant="outlined"
-                  style={{ minWidth: "50px", color: "#578b36", borderColor: "#578b36" }}
-                >
-                  확인
-                </Button>
-              </div>
-            </div>
+            <RecipeComment recipeId={recipeId!} />
             {loadedItems.nickName === localStorage.getItem("encodedNickName") ? (
               <div className="recipe-datail-control-btn">
                 <Button

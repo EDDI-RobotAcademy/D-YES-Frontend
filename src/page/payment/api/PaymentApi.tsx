@@ -39,13 +39,16 @@ export const kakaoPaymentRejectRequest = async () => {
   return response.data;
 };
 
-// 카카오 상품 환불
+// 카카오 상품 주문 취소
 export const refundOrderedItems = async (refundItems: OrderRefund) => {
-  const requestForm = {
-    userToken: userToken,
-    requestList: refundItems,
+  const requestData = {
+    orderAndTokenAndReasonRequest: {
+      userToken: userToken,
+      orderId: refundItems.orderId,
+      refundReason: refundItems.refundReason,
+    },
+    requestList: refundItems.productOptionId,
   };
-  const response = await axiosInstance.post<boolean>("/order/payment/kakao/refund", requestForm);
-  console.log("환불 데이터", requestForm);
+  const response = await axiosInstance.post<boolean>("/order/payment/kakao/refund", requestData);
   return response.data;
 };

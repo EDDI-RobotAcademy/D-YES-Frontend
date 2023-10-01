@@ -6,6 +6,7 @@ import { RecipeIngredient } from "../entity/RecipeIngredient";
 import { RecipeName } from "../entity/RecipeName";
 import { RecipeListResponseForm } from "../entity/RecipeList";
 import { RecipeCategory } from "../entity/RecipeCategory";
+import { RecipeRegisterForm } from "../entity/RecipeCommentRegister";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -42,5 +43,11 @@ export const deleteRecipe = async (recipeId: string) => {
   const response = await axiosInstance.delete<boolean>(`/recipe/delete/${recipeId}`, {
     data: { userToken },
   });
+  return response.data;
+};
+
+// 레시피 댓글 등록
+export const recipeCommentRegister = async (data: RecipeRegisterForm) => {
+  const response = await axiosInstance.post<boolean>("/recipe/comment/register", data);
   return response.data;
 };
