@@ -1,0 +1,52 @@
+.recipe-comment-flex {
+  width: 100%;
+}
+.recipe-comment-info {
+  padding-left: 40px;
+  padding-bottom: 15px;
+  font-size: 20px;
+  font-family: "SUIT-Bold";
+}
+.recipe-comment-reg-container {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+.recipe-comment-reg-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.recipe-comment-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  align-items: flex-end;
+  padding-bottom: 5px;
+}
+.recipe-comment-container {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 0;
+}
+.recipe-comment-date {
+  font-size: 12px;
+}
+.recipe-comment-nickname {
+  margin-top: 3px;
+  font-size: 14px;
+}
+.recipe-comment-content {
+  margin-top: 5px;
+  margin-left: 1px;
+  font-size: 16px;
+  font-family: "SUIT-Medium";
+  display: flex;
+  justify-content: space-between;
+}
+.recipe-comment-btn {
+  display: flex;
+  max-height: 30px;
+  align-items: flex-end;
+  gap: 3px;
+}
