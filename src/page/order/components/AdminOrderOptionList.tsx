@@ -5,6 +5,13 @@ import { Box, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 const AdminOrderOptionList = () => {
   const { orderOptionData } = useOrderOptionDataStore();
 
+  const orderedProductStatusTypes = [
+    { value: "PURCHASED", label: "결제 완료" },
+    { value: "REFUNDED", label: "환불 완료" },
+    { value: "PAYBACK", label: "페이백 완료" },
+    { value: "WAITING_REFUND", label: "환불 대기" },
+  ];
+
   return (
     <div style={{ paddingTop: "32px", paddingBottom: "32px" }}>
       <Box
@@ -110,40 +117,86 @@ const AdminOrderOptionList = () => {
               >
                 옵션가격
               </TableCell>
+              <TableCell
+                style={{
+                  width: "200px",
+                  padding: "8px 16px",
+                  textAlign: "center",
+                  color: "#252525",
+                  fontFamily: "SUIT-Medium",
+                }}
+              >
+                결제상태
+              </TableCell>
             </TableRow>
           </TableHead>
           <tbody>
             {orderOptionData.map((productData, index) => (
               <TableRow key={index}>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {productData.productId}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {productData.productName}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {productData.productOptionId}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {productData.productOptionName}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {productData.productOptionCount}
                 </TableCell>
                 <TableCell
-                  style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
                 >
                   {productData.productOptionPrice}
+                </TableCell>
+                <TableCell
+                  style={{
+                    padding: "8px 16px",
+                    textAlign: "center",
+                    fontFamily: "SUIT-Light",
+                  }}
+                >
+                  {orderedProductStatusTypes.find(
+                    (item) => item.value === productData.orderedProductStatus
+                  )?.label || productData.orderedProductStatus}
                 </TableCell>
               </TableRow>
             ))}
