@@ -4,6 +4,12 @@ import { Box, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 const AdminOrderData = () => {
   const { orderData } = useOrderDataStore();
 
+  const orderStatusTypes = [
+    { value: "SUCCESS_PAYMENT", label: "결제 완료" },
+    { value: "CANCEL_PAYMENT", label: "전체 취소" },
+    { value: "PART_CANCEL_PAYMENT", label: "부분 취소" },
+  ];
+
   const transformDeliveryStatus = (status: string) => {
     switch (status) {
       case "PREPARING":
@@ -30,7 +36,9 @@ const AdminOrderData = () => {
     deliveryStatus: transformDeliveryStatus(orderData.deliveryStatus),
   };
 
-  updatedOrderData.orderStatus = transformOrderStatus(updatedOrderData.orderStatus);
+  updatedOrderData.orderStatus = transformOrderStatus(
+    updatedOrderData.orderStatus
+  );
 
   return (
     <div style={{ paddingTop: "32px", paddingBottom: "32px" }}>
@@ -109,19 +117,33 @@ const AdminOrderData = () => {
           <tbody>
             <TableRow>
               <TableCell
-                style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                style={{
+                  padding: "8px 16px",
+                  textAlign: "center",
+                  fontFamily: "SUIT-Light",
+                }}
               >
                 {orderData.productOrderId}
               </TableCell>
               <TableCell
-                style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                style={{
+                  padding: "8px 16px",
+                  textAlign: "center",
+                  fontFamily: "SUIT-Light",
+                }}
               >
                 {updatedOrderData.deliveryStatus}
               </TableCell>
               <TableCell
-                style={{ padding: "8px 16px", textAlign: "center", fontFamily: "SUIT-Light" }}
+                style={{
+                  padding: "8px 16px",
+                  textAlign: "center",
+                  fontFamily: "SUIT-Light",
+                }}
               >
-                {updatedOrderData.orderStatus}
+                {orderStatusTypes.find(
+                  (item) => item.value === updatedOrderData.orderStatus
+                )?.label || updatedOrderData.orderStatus}
               </TableCell>
             </TableRow>
           </tbody>
