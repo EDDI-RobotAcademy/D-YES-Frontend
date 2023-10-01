@@ -1,6 +1,15 @@
-import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import {
+  MenuItem,
+  Paper,
+  Select,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { useAuth } from "layout/navigation/AuthConText";
-import { getRefundList } from "page/order/api/OrderApi";
+import { changeRefundStatus, getRefundList } from "page/order/api/OrderApi";
 import { AdminOrderRefund } from "page/order/entity/AdminOrderRefund";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +21,7 @@ const AdminRefundPage = () => {
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
   const navigate = useNavigate();
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   useEffect(() => {
     if (!isAdmin) {
@@ -37,6 +47,31 @@ const AdminRefundPage = () => {
   useEffect(() => {
     fetchRefundList();
   }, []);
+
+  const handleRefund = async (refundItem: AdminOrderRefund) => {
+    try {
+      const orderAndTokenAndReasonRequest = {
+        userToken: localStorage.getItem("userToken") || "",
+        orderId: refundItem.orderRefundDetailInfoResponse?.orderId,
+        refundReason: refundItem.orderRefundDetailInfoResponse?.refundReason,
+      };
+
+      const requestList = [
+        {
+          productOptionId: refundItem.orderRefundDetailInfoResponse?.productOrderId,
+        },
+      ];
+
+      const data = {
+        orderAndTokenAndReasonRequest,
+        requestList,
+      };
+      await changeRefundStatus(data);
+      console.log("보낸데이터", data);
+    } catch (error) {
+      console.error("환불 실패:", error);
+    }
+  };
 
   return (
     <div className="admin-refund-list-container">
@@ -133,12 +168,21 @@ const AdminRefundPage = () => {
                 >
                   연락처
                 </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "6%",
+                    textAlign: "center",
+                  }}
+                >
+                  환불사유
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {refundList?.length ? (
                 refundList?.map((refund) => (
-                  <TableRow key={refund.orderUserInfo.userId}>
+                  <TableRow key={refund.orderRefundDetailInfoResponse?.orderId}>
                     <TableCell className="cellStyle">{refund.orderUserInfo?.userId}</TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.productOrderId}
@@ -153,17 +197,39 @@ const AdminRefundPage = () => {
                       {refund.orderRefundDetailInfoResponse?.cancelPrice}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {refund.orderRefundDetailInfoResponse?.orderedProductStatus}
+                      <Select
+                        value={
+                          selectedStatus ||
+                          refund.orderRefundDetailInfoResponse?.orderedProductStatus
+                        }
+                        onChange={(event) => {
+                          const newSelectedStatus = event.target.value;
+                          setSelectedStatus(newSelectedStatus);
+                          if (
+                            newSelectedStatus === "WAITING_REFUND" ||
+                            newSelectedStatus === "REFUNDED"
+                          ) {
+                            handleRefund(refund);
+                          }
+                        }}
+                      >
+                        <MenuItem value="WAITING_REFUND">환불 대기</MenuItem>
+                        <MenuItem value="REFUNDED">환불 완료</MenuItem>
+                      </Select>
                     </TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.totalPrice}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {refund.orderUserInfo?.address.address} {refund.orderUserInfo?.address.zipCode}
-                      ({refund.orderUserInfo?.address.addressDetail})
+                      {refund.orderUserInfo?.address.address}{" "}
+                      {refund.orderUserInfo?.address.zipCode}(
+                      {refund.orderUserInfo?.address.addressDetail})
                     </TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderUserInfo?.contactNumber}
+                    </TableCell>
+                    <TableCell className="cellStyle">
+                      {refund.orderRefundDetailInfoResponse?.refundReason}
                     </TableCell>
                   </TableRow>
                 ))
