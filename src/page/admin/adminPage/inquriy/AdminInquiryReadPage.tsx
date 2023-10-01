@@ -55,15 +55,15 @@ const AdminInquiryReadPage = () => {
   };
 
   useEffect(() => {
-    const fetchRecipeDetailData = async () => {
+    const fetchInquiryDetailData = async () => {
       try {
         const data = await getInquiryDetail(inquiryId!);
         setLoadedItems(data);
       } catch (error) {
-        toast.error("레시피 정보를 가져오는데 실패했습니다");
+        toast.error("문의 정보를 가져오는데 실패했습니다");
       }
     };
-    fetchRecipeDetailData();
+    fetchInquiryDetailData();
   }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
