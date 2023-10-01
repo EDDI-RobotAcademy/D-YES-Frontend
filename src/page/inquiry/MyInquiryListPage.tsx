@@ -1,15 +1,19 @@
 import React from "react";
 import { Box, TableCell, TableHead, TableRow, Chip } from "@mui/material";
 import { useState, useEffect } from "react";
-import { getMyInquiryList } from "./api/InquiryApi";
+import { getInquiryDetail, getMyInquiryList } from "./api/InquiryApi";
 import { AdminInquiryList } from "./entity/AdminInquiryList";
 import { useNavigate } from "react-router-dom";
 
 import "./css/MyInquiryPage.css";
+import { InquiryDetail } from "./entity/InquiryDetail";
+import { toast } from "react-toastify";
 
 const MyInquiryListPage = () => {
   const navigate = useNavigate();
   const [inquiryList, setInquriyList] = useState([] as AdminInquiryList[]);
+  const [loadedItems, setLoadedItems] = useState<InquiryDetail | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const inquiryTypesOptions = [
     { value: "PURCHASE", label: "구매" },
@@ -28,10 +32,6 @@ const MyInquiryListPage = () => {
     { value: "DONE", label: "답변 완료" },
   ];
 
-  // const handleInquiryClick = (inquiryId: string) => {
-  //   navigate(`/adminInquiryReadPage/${inquiryId}`);
-  // };
-
   const fetchInquiryList = async () => {
     try {
       const fetchInquiryList = await getMyInquiryList();
@@ -47,6 +47,26 @@ const MyInquiryListPage = () => {
 
   const handleButtonClick = () => {
     navigate("/inquiry/register");
+  };
+
+  const handleRowClick = async (inquiryId: string) => {
+    const expandedRowsCopy = new Set(expandedRows);
+
+    if (expandedRowsCopy.has(inquiryId)) {
+      expandedRowsCopy.delete(inquiryId);
+      setLoadedItems(null);
+    } else {
+      expandedRowsCopy.add(inquiryId);
+
+      try {
+        const data = await getInquiryDetail(inquiryId);
+        setLoadedItems(data);
+      } catch (error) {
+        toast.error("문의 답변 정보를 가져오는데 실패했습니다");
+      }
+    }
+
+    setExpandedRows(expandedRowsCopy);
   };
 
   return (
@@ -159,77 +179,120 @@ const MyInquiryListPage = () => {
                   </TableRow>
                 ) : (
                   inquiryList?.map((inquiry) => (
-                    <TableRow
-                      key={inquiry.inquiryId}
-                      style={{ cursor: "pointer" }}
-                      // onClick={(e) =>
-                      //   handleInquiryClick(inquiry.inquiryId.toString())
-                      // }
-                    >
-                      <TableCell
-                        style={{
-                          padding: "8px 16px",
-                          textAlign: "center",
-                          fontFamily: "SUIT-Light",
-                        }}
-                      >
-                        {inquiry.inquiryId}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          padding: "8px 16px",
-                          textAlign: "center",
-                          fontFamily: "SUIT-Light",
-                        }}
-                      >
-                        {inquiry.title}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          padding: "8px 16px",
-                          textAlign: "center",
-                          fontFamily: "SUIT-Light",
-                        }}
-                      >
-                        {
-                          inquiryTypesOptions.find(
-                            (option) => option.value === inquiry.inquiryType
-                          )?.label
+                    <React.Fragment key={inquiry.inquiryId}>
+                      <TableRow
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          handleRowClick(inquiry.inquiryId.toString())
                         }
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          padding: "8px 16px",
-                          textAlign: "center",
-                          fontFamily: "SUIT-Light",
-                        }}
                       >
-                        {inquiry.inquiryStatus && (
-                          <Chip
-                            label={
-                              inquiryStatusOptions.find(
-                                (option) =>
-                                  option.value === inquiry.inquiryStatus
-                              )?.label
-                            }
-                            color={
-                              inquiry.inquiryStatus === "WAITING"
-                                ? "error"
-                                : "primary"
-                            }
-                          />
+                        <TableCell
+                          style={{
+                            padding: "8px 16px",
+                            textAlign: "center",
+                            fontFamily: "SUIT-Light",
+                          }}
+                        >
+                          {inquiry.inquiryId}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            padding: "8px 16px",
+                            textAlign: "center",
+                            fontFamily: "SUIT-Light",
+                          }}
+                        >
+                          {inquiry.title}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            padding: "8px 16px",
+                            textAlign: "center",
+                            fontFamily: "SUIT-Light",
+                          }}
+                        >
+                          {
+                            inquiryTypesOptions.find(
+                              (option) => option.value === inquiry.inquiryType
+                            )?.label
+                          }
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            padding: "8px 16px",
+                            textAlign: "center",
+                            fontFamily: "SUIT-Light",
+                          }}
+                        >
+                          {inquiry.inquiryStatus && (
+                            <Chip
+                              label={
+                                inquiryStatusOptions.find(
+                                  (option) =>
+                                    option.value === inquiry.inquiryStatus
+                                )?.label
+                              }
+                              color={
+                                inquiry.inquiryStatus === "WAITING"
+                                  ? "error"
+                                  : "primary"
+                              }
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            padding: "8px 16px",
+                            textAlign: "center",
+                            fontFamily: "SUIT-Light",
+                          }}
+                        >
+                          {inquiry.createDate.toString()}
+                        </TableCell>
+                      </TableRow>
+                      {expandedRows.has(inquiry.inquiryId.toString()) &&
+                        loadedItems?.replyResponse.replyContent &&
+                        inquiry.inquiryId.toString() ===
+                          loadedItems?.inquiryReadInquiryInfoResponse.inquiryId.toString() && (
+                          <>
+                            <TableRow>
+                              <TableCell
+                                colSpan={1}
+                                style={{
+                                  backgroundColor: "#f1f8ea",
+                                  textAlign: "center",
+                                }}
+                              >
+                                답변 일자
+                              </TableCell>
+                              <TableCell
+                                colSpan={4}
+                                style={{
+                                  backgroundColor: "#f1f8ea",
+                                  textAlign: "left",
+                                }}
+                              >
+                                {loadedItems?.replyResponse.createDate.toString()}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell
+                                colSpan={5}
+                                style={{
+                                  padding: "8px 16px",
+                                  textAlign: "left",
+                                  verticalAlign: "top",
+                                  fontFamily: "SUIT-Light",
+                                  height: "200px",
+                                  backgroundColor: "#f1f8ea",
+                                }}
+                              >
+                                {loadedItems?.replyResponse.replyContent}
+                              </TableCell>
+                            </TableRow>
+                          </>
                         )}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          padding: "8px 16px",
-                          textAlign: "center",
-                          fontFamily: "SUIT-Light",
-                        }}
-                      >
-                        {inquiry.createDate.toString()}
-                      </TableCell>
-                    </TableRow>
+                    </React.Fragment>
                   ))
                 )}
               </tbody>
