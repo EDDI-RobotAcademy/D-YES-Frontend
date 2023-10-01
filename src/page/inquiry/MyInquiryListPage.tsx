@@ -8,13 +8,23 @@ import { useNavigate } from "react-router-dom";
 import "./css/MyInquiryPage.css";
 import { InquiryDetail } from "./entity/InquiryDetail";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const MyInquiryListPage = () => {
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const [inquiryList, setInquriyList] = useState([] as AdminInquiryList[]);
   const [loadedItems, setLoadedItems] = useState<InquiryDetail | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
+  
   const inquiryTypesOptions = [
     { value: "PURCHASE", label: "구매" },
     { value: "ACCOUNT", label: "회원" },

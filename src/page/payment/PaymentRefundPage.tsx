@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -16,11 +16,14 @@ import { OrderOptionListResponse } from "page/order/entity/UserOrderOption";
 import { toast } from "react-toastify";
 import { refundOrderedItems } from "./api/PaymentApi";
 import { OrderRefund } from "page/order/entity/OrderRefund";
+import { useAuth } from "layout/navigation/AuthConText";
 
 import "./css/PaymentRefund.css";
 
 const PaymentRefundPage: React.FC = () => {
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const location = useLocation();
   const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
   const [selectedOption, setSelectedOption] = React.useState("상품이 마음에 들지 않음");
@@ -86,6 +89,13 @@ const PaymentRefundPage: React.FC = () => {
       toast.error("주문 취소 신청 중 오류가 발생했습니다");
     }
   };
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   return (
     <div>

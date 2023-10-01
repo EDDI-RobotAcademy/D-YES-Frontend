@@ -1,5 +1,5 @@
 import { Box, Button, Container, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { reviewRegister } from "./api/ReviewApi";
@@ -11,11 +11,14 @@ import { OrderOptionListResponse } from "page/order/entity/UserOrderOption";
 import Rating from "@mui/material/Rating";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 import "./css/ReviewRegisterPage.css";
 
 const ReviewRegisterPage = () => {
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const queryClient = useQueryClient();
   const { reviews, setReviews } = useReviewStore();
   const [ratingValue, setRatingValue] = React.useState<number>(0);
@@ -121,6 +124,14 @@ const ReviewRegisterPage = () => {
     setReviews({ ...reviews, content: "" });
     setReviewImages([]);
   };
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
+
   return (
     <Container maxWidth="md" sx={{ marginTop: "2em" }}>
       <form onSubmit={handleSubmit}>

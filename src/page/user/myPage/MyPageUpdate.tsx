@@ -14,6 +14,7 @@ import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { compressImgForProfile } from "utility/s3/imageCompression";
+import { useAuth } from "layout/navigation/AuthConText";
 
 import "./css/MyPage.css";
 
@@ -36,6 +37,8 @@ interface RouterParams {
 const MyPageUpdate = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const queryClient = useQueryClient();
   const { userId } = useParams<RouterParams>();
   const { data: user } = useUserQuery();
@@ -48,6 +51,13 @@ const MyPageUpdate = () => {
   const [checkedNickNameDuplicated, setCheckedNickNameDuplicated] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
+  
   const onDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length > 0) {
       try {

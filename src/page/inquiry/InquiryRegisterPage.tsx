@@ -6,13 +6,14 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { inquiryRegister } from "./api/InquiryApi";
 import useInquiryStore from "./store/InquiryStore";
 import { InquiryRegisterRequest } from "./entity/InquiryRegisterRequest";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 import "./css/InquiryRegisterPage.css";
 
@@ -30,6 +31,8 @@ const InquiryRegisterPage = () => {
   ];
   const { inquiry, setInquiry } = useInquiryStore();
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const queryClient = useQueryClient();
   const mutation = useMutation(inquiryRegister, {
     onSuccess: (data) => {
@@ -92,6 +95,13 @@ const InquiryRegisterPage = () => {
 
     await mutation.mutateAsync(data);
   };
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   return (
     <div>

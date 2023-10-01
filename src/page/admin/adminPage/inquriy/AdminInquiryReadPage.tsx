@@ -19,8 +19,11 @@ import {
 import { InquiryDetail } from "page/inquiry/entity/InquiryDetail";
 import { InquiryReplyRequest } from "page/inquiry/entity/InquiryReplyRequest";
 import useInquiryReplyStore from "page/inquiry/store/InquiryReplyStore";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const AdminInquiryReadPage = () => {
+  const { checkAdminAuthorization } = useAuth();
+  const isAdmin = checkAdminAuthorization();
   const inquiryTypesOptions = [
     { value: "PURCHASE", label: "구매" },
     { value: "ACCOUNT", label: "회원" },
@@ -54,6 +57,13 @@ const AdminInquiryReadPage = () => {
     setInquiryReply({ ...inquiryReply, content: newContent });
   };
 
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.error("권한이 없습니다.");
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
+  
   useEffect(() => {
     const fetchInquiryDetailData = async () => {
       try {

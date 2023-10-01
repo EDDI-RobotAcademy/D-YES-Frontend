@@ -10,7 +10,7 @@ import {
   Backdrop,
   Box,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useRecipeStore from "./store/RecipeStore";
@@ -30,6 +30,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import ClearIcon from "@mui/icons-material/Clear";
 import TimerIcon from "@mui/icons-material/Timer";
 import { mainIngredients, recipeMainCategory, recipeSubCategory } from "./RecipeDictionary";
+import { useAuth } from "layout/navigation/AuthConText";
 
 import "./css/RecipeRegisterPage.css";
 
@@ -40,6 +41,8 @@ interface Category {
 
 const RecipeRegisterPage = () => {
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const queryClient = useQueryClient();
   const { recipes, setRecipes } = useRecipeStore();
   const [currentStep, setCurrentStep] = React.useState(1);
@@ -334,6 +337,13 @@ const RecipeRegisterPage = () => {
   const goToRecipeList = () => {
     navigate("/recipe/list");
   };
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   return (
     <div className="recipe-reg-container">
