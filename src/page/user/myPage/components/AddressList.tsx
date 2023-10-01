@@ -3,17 +3,16 @@ import { addressDelete, defaultChange, getAddressList } from "page/user/api/User
 import { AddressLists } from "page/user/entity/AddressLists";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Checkbox, IconButton, TableCell, TableHead, TableRow } from "@mui/material";
+import { toast } from "react-toastify";
+import { useQuery } from "react-query";
 
 const AddressList = () => {
   const [addressList, setAddressList] = useState([] as AddressLists[]);
+  const { data: addressListFromQuery } = useQuery("addressList", getAddressList, {
+    refetchOnWindowFocus: false,
+  });
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const hasFetchedRef = React.useRef(false);
-
-  useEffect(() => {
-    if (!hasFetchedRef.current) {
-      fetchAddressList();
-    }
-  }, []);
 
   const fetchAddressList = async () => {
     try {
@@ -35,6 +34,18 @@ const AddressList = () => {
     }
   };
 
+  useEffect(() => {
+    if (!hasFetchedRef.current) {
+      fetchAddressList();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (addressListFromQuery) {
+      setAddressList(addressListFromQuery);
+    }
+  }, [addressListFromQuery]);
+
   const handleDeleteClick = async (addressBookId: string) => {
     try {
       await addressDelete(addressBookId);
@@ -42,6 +53,20 @@ const AddressList = () => {
         (address) => address.addressId !== Number(addressBookId)
       );
       setAddressList(updatedAddressList);
+
+      if (updatedAddressList.length === 0) {
+        const firstAddress = addressListFromQuery[0];
+        if (firstAddress) {
+          const updateData = {
+            userToken: localStorage.getItem("userToken") || "",
+            addressBookOption: "DEFAULT_OPTION",
+            addressBookId: Number(firstAddress.addressId),
+          };
+          await defaultChange(updateData);
+          setSelectedAddressId(firstAddress.addressId.toString());
+          toast.success("프로필에 있는 배송지가 기본 배송지로 설정됩니다");
+        }
+      }
     } catch (error) {
       console.error("배송지 삭제 실패:", error);
     }
@@ -56,8 +81,9 @@ const AddressList = () => {
       };
 
       await defaultChange(updateData);
-
+      console.log("업데이트 주소", updateData)
       setSelectedAddressId(addressId);
+      toast.success("기본 배송지가 변경되었습니다.");
     } catch (error) {
       console.error("주소 업데이트 실패:", error);
     }

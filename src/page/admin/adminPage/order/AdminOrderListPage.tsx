@@ -68,10 +68,11 @@ const AdminOrderListPage = () => {
       const prevDate = savedDates[productOrderId];
       const currentDate = selectedDate[productOrderId]?.toDate().toISOString();
 
-      if (prevDate === currentDate) {
-        toast.error("날짜를 선택해주세요.");
+      if (!currentDate) {
+        toast.error("배송 날짜를 선택해주세요.");
         return;
       }
+
       setOrderStatuses((prevStatuses) => ({
         ...prevStatuses,
         [productOrderId]: newStatus,

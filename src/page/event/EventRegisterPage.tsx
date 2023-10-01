@@ -47,6 +47,15 @@ const EventRegisterPage = () => {
       return;
     }
 
+    if (
+      !events ||
+      !events.eventProductRegisterRequest ||
+      !events.eventProductRegisterRequest.produceType
+    ) {
+      toast.error("농산물을 선택해주세요.");
+      return;
+    }
+
     if (!events.eventProductRegisterRequest.productDescription) {
       toast.error("상품 설명을 입력하세요.");
       return;
