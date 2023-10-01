@@ -145,22 +145,6 @@
   width: 100%;
   background-color: rgb(249 250 251);
 }
-.recipe-detail-comment-container {
-  width: auto;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding-left: 30px;
-}
-.recipe-detail-comment-field {
-  width: 90%;
-}
-.recipe-detail-comment-btn {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-  width: 90%;
-}
 .recipe-datail-control-btn {
   width: 95%;
   display: flex;

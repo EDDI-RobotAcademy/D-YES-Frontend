@@ -7,6 +7,7 @@ import { RecipeName } from "../entity/RecipeName";
 import { RecipeListResponseForm } from "../entity/RecipeList";
 import { RecipeCategory } from "../entity/RecipeCategory";
 import { RecipeRegisterForm } from "../entity/RecipeCommentRegister";
+import { RecipeCommentList } from "../entity/RecipeCommentList";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -49,5 +50,16 @@ export const deleteRecipe = async (recipeId: string) => {
 // 레시피 댓글 등록
 export const recipeCommentRegister = async (data: RecipeRegisterForm) => {
   const response = await axiosInstance.post<boolean>("/recipe/comment/register", data);
+  return response.data;
+};
+
+// 레시피 댓글 목록
+export const getRecipeCommentList = async (recipeId: string) => {
+  const myRecipeCheckForm = { userToken: userToken };
+  const response = await axiosInstance.post<RecipeCommentList>(
+    `/recipe/comment/list/${recipeId}`,
+    myRecipeCheckForm
+  );
+  console.log("댓글 목록 데이터", response.data);
   return response.data;
 };
