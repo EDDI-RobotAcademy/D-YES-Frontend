@@ -4,6 +4,9 @@ import axiosInstance from "utility/axiosInstance";
 import { UserOrderList } from "../entity/UserOrderList";
 import { OrderInfoResponse } from "../entity/OrderInfoResponse";
 import { OrderStatisticsResponse } from "../entity/OrderStatisticsResponse";
+import { AdminReason } from "../entity/AdminReason";
+import { AdminOrderDetail } from "../entity/AdminOrderDetail";
+import { AdminRefund } from "../entity/AdminRefund";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -38,5 +41,21 @@ export const fetchNewOrderList = async (): Promise<OrderInfoResponse> => {
 export const monthlyOrderStatistics = async (): Promise<OrderStatisticsResponse> => {
   const response = await axiosInstance.get<OrderStatisticsResponse>("/order/admin/monthly_orders");
   console.log("당월 주문 통계 데이터", response.data);
+  return response.data;
+};
+
+// 관리자 환불 목록
+export const getRefundList = async () => {
+  const response = await axiosInstance.get("/order/admin/refund-list");
+  console.log("받은 데이터", response.data);
+  return response.data;
+};
+
+// 관리자 환불
+export const changeRefundStatus = async (data: {
+  orderAndTokenAndReasonRequest: AdminReason;
+  requestList: { productOptionId: number }[];
+}): Promise<AdminRefund> => {
+  const response = await axiosInstance.post<AdminRefund>("/order/payment/kakao/refund", data);
   return response.data;
 };

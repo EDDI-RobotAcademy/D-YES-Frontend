@@ -23,11 +23,13 @@
   border-bottom: 1px solid #ccc;
   align-items: flex-end;
   padding-bottom: 5px;
+  padding-left: 10px;
 }
 .recipe-comment-container {
   display: flex;
   flex-direction: column;
   padding: 15px 0;
+  flex: 1;
 }
 .recipe-comment-date {
   font-size: 12px;
@@ -35,6 +37,9 @@
 .recipe-comment-nickname {
   margin-top: 3px;
   font-size: 14px;
+}
+.recipe-comment-deleted-content {
+  margin: 10px 0;
 }
 .recipe-comment-content {
   margin-top: 5px;

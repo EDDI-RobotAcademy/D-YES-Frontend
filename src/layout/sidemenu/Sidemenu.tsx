@@ -196,6 +196,14 @@ const Sidemenu: React.FC<HeaderProps> = ({ children }) => {
                   >
                     주문 목록
                   </p>
+                  <p
+                    className="order-menu"
+                    onClick={() => {
+                      navigate("/adminRefund");
+                    }}
+                  >
+                    환불 목록
+                  </p>
                 </div>
               </div>
             )}

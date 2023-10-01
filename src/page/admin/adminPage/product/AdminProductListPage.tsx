@@ -28,6 +28,7 @@ import { useAuth } from "layout/navigation/AuthConText";
 import { toast } from "react-toastify";
 import { ProductRead } from "page/product/entity/ProductRead";
 import useProductReadStore from "page/product/store/ProductReadStore";
+import Swal from "sweetalert2";
 
 const AdminProductList: React.FC = () => {
   const setProducts = useProductStore((state) => state.setProducts);
@@ -44,6 +45,7 @@ const AdminProductList: React.FC = () => {
   const hasFetchedRef = React.useRef(false);
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -84,10 +86,41 @@ const AdminProductList: React.FC = () => {
     }
 
     try {
-      await deleteProducts(selectedProducts.map((id) => id.toString()));
-      queryClient.invalidateQueries("productList");
+      const isAllOptionsUnavailable = selectedProducts.every((productId) => {
+        const product = products?.find((p) => p.productId === productId);
+        if (product) {
+          return product.productOptionList.every(
+            (option) => option.optionSaleStatus === "UNAVAILABLE"
+          );
+        }
+        return false;
+      });
+
+      if (isAllOptionsUnavailable) {
+        const result = await Swal.fire({
+          title: "삭제하시겠습니까?",
+          text: "삭제하면 복구할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "예, 삭제합니다",
+          customClass: {
+            container: "custom-swal-container",
+          },
+        });
+
+        if (result.isConfirmed) {
+          await deleteProducts(selectedProducts.map((id) => id.toString()));
+          queryClient.invalidateQueries("productList");
+
+          Swal.fire("삭제되었습니다!", "상품이 삭제되었습니다.", "success");
+        }
+      } else {
+        Swal.fire("삭제 불가", "판매중인 상품이 존재합니다.", "error");
+      }
     } catch (error) {
-      console.error("상품 삭제 실패:", error);
+      Swal.fire("오류!", "상품 삭제 중 오류가 발생했습니다.", "error");
     }
   };
 
@@ -122,6 +155,17 @@ const AdminProductList: React.FC = () => {
     }
   };
 
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (!selectAll) {
+      if (products) {
+        setSelectedProducts(products.map((product) => product.productId));
+      }
+    } else {
+      setSelectedProducts([]);
+    }
+  };
+
   return (
     <div className="admin-product-list-container">
       <div className="admin-product-list-box">
@@ -138,11 +182,12 @@ const AdminProductList: React.FC = () => {
                 <TableCell
                   className="cellStyle-header"
                   style={{
-                    width: "4%",
+                    width: "6%",
                     textAlign: "center",
                   }}
                 >
                   선택
+                  <Checkbox checked={selectAll} onChange={() => handleSelectAll()} />
                 </TableCell>
                 <TableCell
                   className="cellStyle-header"
