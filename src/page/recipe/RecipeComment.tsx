@@ -15,16 +15,17 @@ const RecipeComment: React.FC<RecipeCommentProps> = ({ recipeId }) => {
   const [loadedItems, setLoadedItems] = useState<RecipeCommentList>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const fetchRecipeCommentList = async () => {
+    try {
+      const data = await getRecipeCommentList(recipeId);
+      setLoadedItems(data);
+      setIsLoading(true);
+    } catch (error) {
+      toast.error("댓글 정보를 가져오는데 실패했습니다");
+    }
+  };
+
   useEffect(() => {
-    const fetchRecipeCommentList = async () => {
-      try {
-        const data = await getRecipeCommentList(recipeId);
-        setLoadedItems(data);
-        setIsLoading(true);
-      } catch (error) {
-        toast.error("댓글 정보를 가져오는데 실패했습니다");
-      }
-    };
     fetchRecipeCommentList();
   }, []);
 
@@ -42,6 +43,7 @@ const RecipeComment: React.FC<RecipeCommentProps> = ({ recipeId }) => {
     };
     const data = await recipeCommentRegister(requestData);
     setComment("");
+    fetchRecipeCommentList();
     if (!data) {
       toast.error("댓글 등록 중 오류가 발생했습니다");
     }
