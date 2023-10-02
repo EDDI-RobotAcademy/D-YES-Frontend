@@ -1,12 +1,11 @@
 import { OrderInfo } from "../entity/OrderInfo";
-import { OrderRequset } from "../entity/OrderRequset";
 import axiosInstance from "utility/axiosInstance";
 import { UserOrderList } from "../entity/UserOrderList";
 import { OrderInfoResponse } from "../entity/OrderInfoResponse";
 import { OrderStatisticsResponse } from "../entity/OrderStatisticsResponse";
 import { AdminReason } from "../entity/AdminReason";
-import { AdminOrderDetail } from "../entity/AdminOrderDetail";
 import { AdminRefund } from "../entity/AdminRefund";
+import { RefundPopup } from "../entity/RefundPopup";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -57,5 +56,15 @@ export const changeRefundStatus = async (data: {
   requestList: { productOptionId: number }[];
 }): Promise<AdminRefund> => {
   const response = await axiosInstance.post<AdminRefund>("/order/payment/kakao/refund", data);
+  return response.data;
+};
+
+// 관리자 환불 팝업
+export const fetchPopupRefund = async (
+  productOrderId: string
+): Promise<RefundPopup | null> => {
+  const response = await axiosInstance.get<RefundPopup>(
+    `/order/admin/refund/read/${productOrderId}`
+  );
   return response.data;
 };
