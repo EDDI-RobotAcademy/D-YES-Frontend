@@ -12,6 +12,7 @@ import Rating from "@mui/material/Rating";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import { useAuth } from "layout/navigation/AuthConText";
+import { ReviewRegister } from "./entity/ReviewRegister";
 
 import "./css/ReviewRegisterPage.css";
 
@@ -104,18 +105,25 @@ const ReviewRegisterPage = () => {
       })
     );
 
-    const data = {
-      userToken: localStorage.getItem("userToken") || "",
-      orderId: orderId,
-      productOptionId: Number(productOptionId[0]),
-      content: reviews.content,
-      rating: ratingValue,
-      imagesRegisterRequestList: reviewImagesRegisterRequests,
+    const filteredArray: string[] = reviewImgsName.filter(
+      (item): item is string => typeof item === "string"
+    );
+
+    const data: ReviewRegister = {
+      reviewRegisterRequest: {
+        userToken: localStorage.getItem("userToken") || "",
+        orderId: orderId,
+        productOptionIdList: productOptionId,
+        content: reviews.content,
+        rating: ratingValue,
+      },
+      imagesRegisterRequestList: filteredArray.map((image) => ({ reviewImages: image })),
     };
     await mutation.mutateAsync({
       ...data,
+      userToken: localStorage.getItem("userToken") || "",
       orderId: orderId,
-      productOptionId: Number(productOptionId[0]),
+      productOptionId: productOptionId,
       content: reviews.content,
       rating: ratingValue,
       imagesRegisterRequestList: reviewImagesRegisterRequests as ReviewImage[],
