@@ -14,6 +14,7 @@ import FarmSearch from "../productOption/FarmSearch";
 import { Farm } from "page/farm/entity/farm/Farm";
 import "../../css/ProductPage.css";
 import useProductRegisterStore from "page/product/store/ProductRegisterStore";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 const ProductDetailRegister = () => {
   // Zustand 스토어로부터 필요한 상태와 함수를 가져옴
@@ -56,26 +57,41 @@ const ProductDetailRegister = () => {
     { value: "WELSH_ONION", label: "대파" },
   ];
 
-  const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
-    setProducts({ ...products, cultivationMethod: event.target.value.toString() });
+  const handleOptionChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
+    setProducts({
+      ...products,
+      cultivationMethod: event.target.value.toString(),
+    });
   };
 
-  const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleProduceTypesChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setProducts({ ...products, produceType: event.target.value.toString() });
   };
 
-  const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProductNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newProductName = event.target.value;
     setProducts({ ...products, productName: newProductName });
   };
 
   return (
-    <div className="product-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <div>
+    <div className="product-register-detail-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-register-toggle-component">
           <ToggleComponent label="기본정보" height={200}>
-            <Box display="flex" flexDirection="column" gap={2}>
+            <Box display="flex" flexDirection="column" gap={2} width="100%">
               <div className="text-field-container">
+                {/* <FiberManualRecordIcon
+                  style={{
+                    width: "10px",
+                    color: "red",
+                  }}
+                ></FiberManualRecordIcon> */}
                 <div className="text-field-label" aria-label="상품명*">
                   상품명*
                 </div>
@@ -88,36 +104,6 @@ const ProductDetailRegister = () => {
                 />
               </div>
               <div className="text-field-container">
-                <div className="text-field-label">재배방식*</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="cultivationMethod"
-                    value={
-                      (products.cultivationMethod as "" | { value: string; label: string }) || ""
-                    }
-                    onChange={handleOptionChange}
-                    className="text-field"
-                    sx={{
-                      width: "100%",
-                    }}
-                  >
-                    <MenuItem value="">옵션을 선택해주세요</MenuItem>
-                    {options.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="text-field-container">
                 <div className="text-field-label">농가 이름*</div>
                 <TextField
                   name="farmName"
@@ -128,7 +114,19 @@ const ProductDetailRegister = () => {
                     setSelectedFarmName(event.target.value);
                   }}
                 />
-                <Button onClick={handleOpenFarmSearch}>조회</Button>
+                <Button
+                  onClick={handleOpenFarmSearch}
+                  variant="outlined"
+                  style={{
+                    marginLeft: "8px",
+                    fontFamily: "SUIT-Light",
+                    backgroundColor: "#4F72CA",
+                    color: "white",
+                  }}
+                >
+                  조회
+                </Button>
+
                 <FarmSearch
                   open={openFarmSearch}
                   onClose={() => setOpenFarmSearch(false)}
@@ -136,35 +134,69 @@ const ProductDetailRegister = () => {
                   onSelectFarm={handleFarmSelect}
                 />
               </div>
-              <div className="text-field-container">
-                <div className="text-field-label">농산물*</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="produceType"
-                    value={
-                      (products.produceType as "" | { value: string; label: string }) || ""
-                    }
-                    onChange={handleProduceTypesChange}
-                    className="text-field"
+              <div className="select-field-container">
+                <div className="select-field">
+                  <div className="text-field-label">재배 방식*</div>
+                  <FormControl
                     sx={{
-                      width: "100%",
+                      display: "flex",
+                      flexGrow: 1,
+                      justifyContent: "flex-end",
                     }}
                   >
-                    <MenuItem value="">판매상품을 선택해주세요</MenuItem>
-                    {produceTypesOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <Select
+                      name="cultivationMethod"
+                      value={
+                        (products.cultivationMethod as
+                          | ""
+                          | { value: string; label: string }) || ""
+                      }
+                      onChange={handleOptionChange}
+                      className="text-field"
+                      sx={{
+                        width: "84%",
+                      }}
+                    >
+                      <MenuItem value="">재배 방식을 선택해주세요</MenuItem>
+                      {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="select-field">
+                  <div className="text-field-label">판매 품목*</div>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      flexGrow: 1,
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Select
+                      name="produceType"
+                      value={
+                        (products.produceType as
+                          | ""
+                          | { value: string; label: string }) || ""
+                      }
+                      onChange={handleProduceTypesChange}
+                      className="text-field"
+                      sx={{
+                        width: "84%",
+                      }}
+                    >
+                      <MenuItem value="">판매할 상품을 선택해주세요</MenuItem>
+                      {produceTypesOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
               </div>
             </Box>
           </ToggleComponent>

@@ -31,7 +31,7 @@ const OptionInput: React.FC<OptionInputProps> = ({ onAddOption }) => {
   };
 
   return (
-    <Box className="text-field-container">
+    <Box className="btn-add-container">
       <Button
         onClick={handleAddOption}
         style={{

@@ -42,12 +42,18 @@ const ProductImageRegister = () => {
     }
   };
 
-  const { getRootProps: mainImageRootProps, getInputProps: mainImageInputProps } = useDropzone({
+  const {
+    getRootProps: mainImageRootProps,
+    getInputProps: mainImageInputProps,
+  } = useDropzone({
     onDrop: onMainImageDrop,
     maxFiles: 1,
   });
 
-  const { getRootProps: detailImageRootProps, getInputProps: detailImageInputProps } = useDropzone({
+  const {
+    getRootProps: detailImageRootProps,
+    getInputProps: detailImageInputProps,
+  } = useDropzone({
     onDrop: onDetailImageDrop,
     maxFiles: 10,
   });
@@ -62,89 +68,140 @@ const ProductImageRegister = () => {
   };
 
   return (
-    <div className="product-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <div>
-          <Box display="flex" flexDirection="column" gap={2} p={2}>
-            <ToggleComponent label="이미지" height={850}>
-              <div className="text-field-label">메인 이미지*</div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  height: "400px",
-                  backgroundColor: "#e4e4e4",
-                  cursor: "pointer",
-                }}
-                {...mainImageRootProps()}
-              >
-                {selectedMainImage ? (
-                  <img
-                    // 선택된 사진이 있으면 미리보기
-                    src={URL.createObjectURL(selectedMainImage)}
-                    style={{ maxWidth: "100%", maxHeight: "100%", cursor: "pointer" }}
-                    alt="Selected"
-                  />
-                ) : (
-                  <div style={{ textAlign: "center" }}>
-                    <div>상품의 메인 이미지를 추가해주세요.</div>
-                    <div>메인 이미지는 사용자에게 가장 처음 보여지는 대표 이미지입니다.</div>
-                    <input {...mainImageInputProps()} />
-                  </div>
-                )}
-              </div>
-              <div className="text-field-label">상세 이미지*</div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  height: "400px",
-                  backgroundColor: "#e4e4e4",
-                  cursor: "pointer",
-                  flexWrap: "wrap", // 이미지가 4개 이상일 경우 줄바꿈
-                }}
-                {...detailImageRootProps()}
-              >
-                {selectedDetailImages.length > 0 ? (
-                  selectedDetailImages.map((image, idx) => (
-                    <div
-                      key={idx}
+    <div className="product-register-image-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-register-toggle-component">
+          <Box display="flex" flexDirection="column" gap={2} width="100%">
+            <ToggleComponent label="이미지" height={1110}>
+              <div className="main-image-container">
+                <div
+                  className="image-text-field-label"
+                  style={{ display: "flex" }}
+                >
+                  메인 이미지*
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "600px",
+                    backgroundColor: "#e4e4e4",
+                    cursor: "pointer",
+                  }}
+                  {...mainImageRootProps()}
+                >
+                  {selectedMainImage ? (
+                    <img
+                      // 선택된 사진이 있으면 미리보기
+                      src={URL.createObjectURL(selectedMainImage)}
                       style={{
-                        width: "calc(33.33% - 16px)",
-                        height: "auto",
-                        margin: "8px",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
                         cursor: "pointer",
-                        position: "relative", // 상대 위치 설정
                       }}
-                    >
-                      <img
-                        src={URL.createObjectURL(image)}
-                        alt={`Selected ${idx}`}
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                      <RemoveCircleOutlineSharpIcon
-                        style={{
-                          position: "absolute",
-                          top: "5px",
-                          right: "5px",
-                          cursor: "pointer",
-                          zIndex: 1,
-                        }}
-                        onClick={(event) => handleRemoveDetailImage(event, idx)}
-                      />
+                      alt="Selected"
+                    />
+                  ) : (
+                    <div style={{ textAlign: "center" }}>
+                      <div>상품의 메인 이미지를 추가해주세요.</div>
+                      <div>
+                        메인 이미지는 사용자에게 가장 처음 보여지는 대표
+                        이미지입니다.
+                      </div>
+                      <input {...mainImageInputProps()} />
                     </div>
-                  ))
-                ) : (
-                  <div style={{ textAlign: "center", width: "100%" }}>
-                    <div>상품의 상세 이미지를 추가해주세요.</div>
-                    <div>상세 이미지는 최소 6장, 최대 10장까지 등록할 수 있습니다.</div>
-                    <input {...detailImageInputProps()} />
-                  </div>
-                )}
+                  )}
+                </div>
+              </div>
+              <div className="detail-image-container">
+                <div
+                  className="image-text-field-label"
+                  style={{ display: "flex" }}
+                >
+                  상세 이미지*
+                </div>
+                <div
+                  className="detail-image-box"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "460px",
+                    backgroundColor: "#e4e4e4",
+                    cursor: "pointer",
+                    flexWrap: "wrap", // 이미지가 4개 이상일 경우 줄바꿈
+                  }}
+                  {...detailImageRootProps()}
+                >
+                  {selectedDetailImages.length > 0 ? (
+                    selectedDetailImages.map((image, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          width: "calc(18.33% - 16px)",
+                          cursor: "pointer",
+                          position: "relative",
+                          padding: "6px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "100%",
+                            backgroundColor: "yellow",
+                            borderRadius: "4px",
+                            overflow: "hidden",
+                            position: "relative",
+                          }}
+                        >
+                          <div
+                            style={{
+                              paddingBottom: "100%",
+                            }}
+                          >
+                            <img
+                              src={URL.createObjectURL(image)}
+                              alt={`Selected ${idx}`}
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                boxSizing: "border-box",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <RemoveCircleOutlineSharpIcon
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            cursor: "pointer",
+                            zIndex: 1,
+                          }}
+                          onClick={(event) =>
+                            handleRemoveDetailImage(event, idx)
+                          }
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ textAlign: "center", width: "100%" }}>
+                      <div>상품의 상세 이미지를 추가해주세요.</div>
+                      <div>
+                        상세 이미지는 최소 6장, 최대 10장까지 등록할 수
+                        있습니다.
+                      </div>
+                      <input {...detailImageInputProps()} />
+                    </div>
+                  )}
+                </div>
               </div>
             </ToggleComponent>
           </Box>

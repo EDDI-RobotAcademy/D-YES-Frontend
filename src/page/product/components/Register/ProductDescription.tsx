@@ -11,10 +11,10 @@ const ProductDescription = () => {
   };
 
   return (
-    <div className="product-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <div>
-          <Box display="flex" flexDirection="column" gap={2} p={2}>
+    <div className="product-register-description-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-register-toggle-component">
+          <Box display="flex" flexDirection="column" gap={2} width="100%">
             <ToggleComponent label="상세정보" height={500}>
               <Box
                 display="flex"

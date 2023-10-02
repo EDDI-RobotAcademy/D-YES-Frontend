@@ -9,9 +9,9 @@ function AdminHeader() {
   const getPageText = () => {
     switch (path) {
       case "/userListPage":
-        return "| 유저 목록";
+        return "| 회원 목록";
       case "/adminMainPage":
-        return "| 어드민 메인 페이지";
+        return "| 관리자 메인 페이지";
       case "/adminRegisterPage":
         return "| 관리자 등록";
       case "/farmRegisterPage":

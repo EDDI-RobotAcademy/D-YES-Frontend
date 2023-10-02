@@ -1,5 +1,17 @@
-.product-register-container {
-  display: flex;
+.admin-product-register-container {
+  padding: 20px 20px 20px 20px;
+  font-family: "SUIT-Medium";
+  font-size: 16px;
+}
+.admin-product-register-box {
+  width: 100%;
+  background-color: white;
+}
+.product-register-toggle-component {
+  width: 100%;
+}
+.product-register-detail-container {
+  width: 100%;
 }
 
 .input-container {
@@ -7,6 +19,8 @@
   overflow: hidden;
   transition: height 0.3s ease-in-out, padding 0.3s ease-in-out;
   margin-bottom: 10px; /* 토글 간의 기본 간격 설정 */
+  border: solid 1px;
+  border-color: #d3d3d3;
 }
 
 .input-container.active {
@@ -17,13 +31,44 @@
 .text-field-container {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+}
+.select-field-container {
+  display: flex;
+}
+
+.select-field {
+  width: 100%;
+  display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-add-container {
+  width: 100%;
+  display: flex;
+  margin-left: 20px;
 }
 
 .text-field-label {
-  flex: 0 0 140px;
+  flex: 0 0 240px;
+  height: 40px;
+  color: #252525;
 }
 
+.image-text-field-label {
+  height: 400px;
+  width: 20%;
+  color: #252525;
+  align-items: center;
+}
+.main-image-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+.detail-image-container {
+  display: flex;
+}
 .text-field-input {
   flex-grow: 1 !important;
 }
@@ -82,4 +127,14 @@
 
 .text-field {
   height: 40px; /* 원하는 높이로 조정 */
+}
+.submit-btn-container {
+  display: flex;
+  padding-left: 40px;
+  margin-bottom: 40px;
+}
+
+.submit-btn-container button {
+  width: 100px;
+  height: 40px;
 }
