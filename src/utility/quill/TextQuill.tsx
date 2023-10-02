@@ -97,7 +97,7 @@ export default function TextQuill({
       formats={formats}
       value={value || ""}
       onChange={(content, _, source, editor) => setValue(editor.getHTML())}
-      style={{ width: "100%", height: "450px" }}
+      style={{ width: "100%", height: "950px" }}
       readOnly={isDisable}
     />
   );

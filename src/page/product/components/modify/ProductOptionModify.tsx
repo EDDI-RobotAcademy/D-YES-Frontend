@@ -21,7 +21,7 @@ const ProductOptionModify = () => {
   }
 
   function calculateToggleHeight() {
-    const minHeight = 100;
+    const minHeight = 180;
     const optionHeight = 78;
     const optionsCount = Array.isArray(productReads.optionResponseForAdmin)
       ? productReads.optionResponseForAdmin.length
@@ -38,12 +38,18 @@ const ProductOptionModify = () => {
 
     setModifyProducts({
       ...modifyProducts,
-      productOptionModifyRequest: [...modifyProducts.productOptionModifyRequest, newOption],
+      productOptionModifyRequest: [
+        ...modifyProducts.productOptionModifyRequest,
+        newOption,
+      ],
     });
 
     setProductRead({
       ...productReads,
-      optionResponseForAdmin: [...productReads.optionResponseForAdmin, newOption],
+      optionResponseForAdmin: [
+        ...productReads.optionResponseForAdmin,
+        newOption,
+      ],
     });
   };
 
@@ -82,28 +88,32 @@ const ProductOptionModify = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <div>
-        <Box display="flex" flexDirection="column" gap={2} p={2}>
-          <ToggleComponent label="옵션정보" height={calculateToggleHeight()}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <OptionTable
-                optionRows={productReads.optionResponseForAdmin || []}
-                onChangeOption={(index, updatedOption) => {
-                  const newProductOptionList = [...modifyProducts.productOptionModifyRequest];
-                  newProductOptionList[index] = updatedOption;
-                  handleProductOptionChange(newProductOptionList);
-                }}
-                onDeleteOption={handleDeleteOption}
-                // 옵션 판매 상태
-                isEditMode={true}
-              />
-              <OptionInput onAddOption={handleAddOption} />
-            </Box>
-          </ToggleComponent>
-        </Box>
-      </div>
-    </Container>
+    <div className="product-modify-option-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-modify-toggle-component">
+          <Box display="flex" flexDirection="column" gap={2} width="100%">
+            <ToggleComponent label="옵션정보" height={calculateToggleHeight()}>
+              <Box display="flex" flexDirection="column" gap={2}>
+                <OptionTable
+                  optionRows={productReads.optionResponseForAdmin || []}
+                  onChangeOption={(index, updatedOption) => {
+                    const newProductOptionList = [
+                      ...modifyProducts.productOptionModifyRequest,
+                    ];
+                    newProductOptionList[index] = updatedOption;
+                    handleProductOptionChange(newProductOptionList);
+                  }}
+                  onDeleteOption={handleDeleteOption}
+                  // 옵션 판매 상태
+                  isEditMode={true}
+                />
+                <OptionInput onAddOption={handleAddOption} />
+              </Box>
+            </ToggleComponent>
+          </Box>
+        </div>
+      </Container>
+    </div>
   );
 };
 

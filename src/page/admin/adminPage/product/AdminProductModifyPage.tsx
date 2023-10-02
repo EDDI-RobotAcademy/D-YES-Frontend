@@ -17,6 +17,7 @@ import useProductModifyRefactorStore from "page/product/store/ProductRefactorMod
 import useProductReadStore from "page/product/store/ProductReadStore";
 import { ProductModifyImg } from "page/product/entity/ProductModifyImg";
 import { useOptions } from "page/product/entity/useOptions";
+import "./css/AdminProductModifyPage.css";
 
 const AdminProductModifyPage = () => {
   const navigate = useNavigate();
@@ -70,7 +71,9 @@ const AdminProductModifyPage = () => {
 
     if (modifyProducts.productMainImageModifyRequest?.mainImg) {
       const s3MainObjectVersion =
-        (await uploadFileAwsS3(modifyProducts.productMainImageModifyRequest?.mainImg)) || "";
+        (await uploadFileAwsS3(
+          modifyProducts.productMainImageModifyRequest?.mainImg
+        )) || "";
       mainImage = (modifyProducts.productMainImageModifyRequest?.mainImg.name +
         "?versionId=" +
         s3MainObjectVersion) as unknown as File;
@@ -83,71 +86,84 @@ const AdminProductModifyPage = () => {
       mainImg: mainImage,
     };
 
-    const detailImageUploadPromises = modifyProducts.productDetailImagesModifyRequest
-      ? modifyProducts.productDetailImagesModifyRequest.map(async (image, idx) => {
-          const detailFileToUpload = new File([image.detailImgs], image.detailImgs.name);
+    const detailImageUploadPromises =
+      modifyProducts.productDetailImagesModifyRequest
+        ? modifyProducts.productDetailImagesModifyRequest.map(
+            async (image, idx) => {
+              const detailFileToUpload = new File(
+                [image.detailImgs],
+                image.detailImgs.name
+              );
 
-          let s3DetailObjectVersion = "";
-          let name = "";
+              let s3DetailObjectVersion = "";
+              let name = "";
 
-          s3DetailObjectVersion = (await uploadFileAwsS3(detailFileToUpload)) || "";
-          name = detailFileToUpload.name;
+              s3DetailObjectVersion =
+                (await uploadFileAwsS3(detailFileToUpload)) || "";
+              name = detailFileToUpload.name;
 
-          if (name.trim() === "") {
-            return null;
-          }
+              if (name.trim() === "") {
+                return null;
+              }
 
-          return {
-            detailImageId: 0,
-            detailImgs: name + "?versionId=" + s3DetailObjectVersion,
-          };
-        })
-      : [];
-    const existingDetailImageNames = productReads.detailImagesForAdmin.map((image) => ({
-      detailImageId: image.detailImageId,
-      detailImgs: image.detailImgs,
-    }));
+              return {
+                detailImageId: 0,
+                detailImgs: name + "?versionId=" + s3DetailObjectVersion,
+              };
+            }
+          )
+        : [];
+    const existingDetailImageNames = productReads.detailImagesForAdmin.map(
+      (image) => ({
+        detailImageId: image.detailImageId,
+        detailImgs: image.detailImgs,
+      })
+    );
 
     const allDetailImageUploadPromises = [
       ...detailImageUploadPromises,
       ...existingDetailImageNames,
     ];
 
-    const filteredAllDetailImageUploadPromises = allDetailImageUploadPromises.filter(
-      (image) => image !== null
-    );
+    const filteredAllDetailImageUploadPromises =
+      allDetailImageUploadPromises.filter((image) => image !== null);
 
     const productDetailImagesModifyRequest = await Promise.all(
       filteredAllDetailImageUploadPromises
     );
 
-    const updatedProductDetailImagesModifyRequest = productDetailImagesModifyRequest
-      .filter((detailImage) => detailImage !== null)
-      .map((detailImage) => {
-        const productDetailImg: ProductDetailImg = {
-          detailImageId: detailImage!.detailImageId,
-          detailImgs: detailImage!.detailImgs as unknown as File,
-        };
+    const updatedProductDetailImagesModifyRequest =
+      productDetailImagesModifyRequest
+        .filter((detailImage) => detailImage !== null)
+        .map((detailImage) => {
+          const productDetailImg: ProductDetailImg = {
+            detailImageId: detailImage!.detailImageId,
+            detailImgs: detailImage!.detailImgs as unknown as File,
+          };
 
-        return productDetailImg;
-      });
+          return productDetailImg;
+        });
 
-    const productOptionModifyRequest = modifyProducts.productOptionModifyRequest || [];
+    const productOptionModifyRequest =
+      modifyProducts.productOptionModifyRequest || [];
     const existingOptions = productReads.optionResponseForAdmin || [];
 
-    const productOptionModifyRequestMapped = existingOptions.map((existingOption, index) => {
-      const newOption = productOptionModifyRequest[index] || {};
+    const productOptionModifyRequestMapped = existingOptions.map(
+      (existingOption, index) => {
+        const newOption = productOptionModifyRequest[index] || {};
 
-      return {
-        optionId: existingOption.optionId,
-        optionName: newOption.optionName || existingOption.optionName,
-        optionPrice: newOption.optionPrice || existingOption.optionPrice,
-        stock: newOption.stock || existingOption.stock,
-        value: newOption.value || existingOption.value,
-        unit: newOption.unit || existingOption.unit,
-        optionSaleStatus: newOption.optionSaleStatus || existingOption.optionSaleStatus, // 추가
-      };
-    });
+        return {
+          optionId: existingOption.optionId,
+          optionName: newOption.optionName || existingOption.optionName,
+          optionPrice: newOption.optionPrice || existingOption.optionPrice,
+          stock: newOption.stock || existingOption.stock,
+          value: newOption.value || existingOption.value,
+          unit: newOption.unit || existingOption.unit,
+          optionSaleStatus:
+            newOption.optionSaleStatus || existingOption.optionSaleStatus, // 추가
+        };
+      }
+    );
 
     const updatedData: ProductModify = {
       productId: parseInt(productId || ""),
@@ -158,11 +174,12 @@ const AdminProductModifyPage = () => {
       userToken: userToken || "",
     };
 
-    const isDuplicateOptionName = productOptionModifyRequest.some((option, index) =>
-      productOptionModifyRequest.some(
-        (otherOption, otherIndex) =>
-          option.optionName === otherOption.optionName && index !== otherIndex
-      )
+    const isDuplicateOptionName = productOptionModifyRequest.some(
+      (option, index) =>
+        productOptionModifyRequest.some(
+          (otherOption, otherIndex) =>
+            option.optionName === otherOption.optionName && index !== otherIndex
+        )
     );
 
     if (isDuplicateOptionName) {
@@ -170,9 +187,16 @@ const AdminProductModifyPage = () => {
       return;
     }
 
-    const hasIncompleteOption = modifyProducts.productOptionModifyRequest?.some((option) => {
-      return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
-    });
+    const hasIncompleteOption = modifyProducts.productOptionModifyRequest?.some(
+      (option) => {
+        return (
+          !option.optionName ||
+          !option.optionPrice ||
+          !option.stock ||
+          !option.unit
+        );
+      }
+    );
 
     if (hasIncompleteOption) {
       toast.error("옵션 정보를 모두 입력해주세요.");
@@ -199,18 +223,36 @@ const AdminProductModifyPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <form onSubmit={handleSubmit}>
-        <Box display="flex" flexDirection="column" gap={2} p={2}>
-          <h1>상품 수정</h1>
-          <ProductDetailModify />
-          <ProductImageModify />
-          <ProductOptionModify />
-          <ProductDescriptionModify />
-        </Box>
-        <Button type="submit">수정 완료</Button>
-      </form>
-    </Container>
+    <div className="admin-product-modify-container">
+      <div className="admin-product-modify-box">
+        <Container maxWidth="xl" sx={{ display: "flex", width: "100%" }}>
+          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <Box display="flex" flexDirection="column" width="100%">
+              <ProductDetailModify />
+              <ProductImageModify />
+              <ProductOptionModify />
+              <ProductDescriptionModify />
+            </Box>
+            <div className="submit-btn-container">
+              <Button
+                className="modify-btn"
+                variant="contained"
+                type="submit"
+                style={{
+                  fontSize: "14x",
+                  padding: "4px 8px",
+                  marginTop: "20px",
+                  fontFamily: "SUIT-Regular",
+                  backgroundColor: "#4F72CA",
+                }}
+              >
+                수정 완료
+              </Button>
+            </div>
+          </form>
+        </Container>
+      </div>
+    </div>
   );
 };
 
