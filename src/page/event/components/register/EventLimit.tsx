@@ -25,7 +25,9 @@ dayjs.tz.setDefault("Asia/Seoul");
 const EventLimit = () => {
   const { events, setEvents } = useEventStore();
 
-  const handleEventTargetCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEventTargetCountChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterPurchaseCountRequest: {
@@ -36,23 +38,41 @@ const EventLimit = () => {
   };
 
   return (
-    <div className="event-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <div>
+    <div className="product-register-option-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="event-register-toggle-component">
           <ToggleComponent label="이벤트 기한" height={150}>
             <Box display="flex" flexDirection="column" gap={2}>
-              <TableContainer component={Paper}>
-                <table>
-                  <TableHead style={{ backgroundColor: "#D0D0D0" }}>
+              <TableContainer
+                component={Paper}
+                style={{ boxShadow: "none", width: "100%" }}
+              >
+                <table
+                  style={{
+                    borderCollapse: "collapse",
+                    textAlign: "center",
+                    width: "100%",
+                  }}
+                >
+                  <TableHead style={{ backgroundColor: "#F8F9FA" }}>
                     <TableRow>
-                      <TableCell className="cell" style={{ width: "30%", textAlign: "center" }}>
-                        시작
+                      <TableCell
+                        className="cell"
+                        style={{ width: "40%", textAlign: "center" }}
+                      >
+                        시작일자
                       </TableCell>
-                      <TableCell className="cell" style={{ width: "25%", textAlign: "center" }}>
-                        마감
+                      <TableCell
+                        className="cell"
+                        style={{ width: "40%", textAlign: "center" }}
+                      >
+                        마감일자
                       </TableCell>
-                      <TableCell className="cell" style={{ width: "15%", textAlign: "center" }}>
-                        최대참여 인원수
+                      <TableCell
+                        className="cell"
+                        style={{ width: "20%", textAlign: "center" }}
+                      >
+                        최대 참여 인원수
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -65,19 +85,34 @@ const EventLimit = () => {
                           fontFamily: "SUIT-Light",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ width: "100%" }}
+                          >
+                            <LocalizationProvider
+                              dateAdapter={AdapterDayjs}
+                              adapterLocale="ko"
+                            >
                               <DatePicker
+                                className="event-date-picker"
                                 value={
-                                  events.eventProductRegisterDeadLineRequest?.startLine || dayjs()
+                                  events.eventProductRegisterDeadLineRequest
+                                    ?.startLine || dayjs()
                                 }
                                 onChange={(date) => {
                                   if (date !== null) {
                                     setEvents({
                                       ...events,
                                       eventProductRegisterDeadLineRequest: {
-                                        ...(events.eventProductRegisterDeadLineRequest || {}),
+                                        ...(events.eventProductRegisterDeadLineRequest ||
+                                          {}),
                                         startLine: date,
                                       },
                                     });
@@ -95,19 +130,34 @@ const EventLimit = () => {
                           fontFamily: "SUIT-Light",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ width: "100%" }}
+                          >
+                            <LocalizationProvider
+                              dateAdapter={AdapterDayjs}
+                              adapterLocale="ko"
+                            >
                               <DatePicker
+                                className="event-date-picker"
                                 value={
-                                  events.eventProductRegisterDeadLineRequest?.deadLine || dayjs()
+                                  events.eventProductRegisterDeadLineRequest
+                                    ?.deadLine || dayjs()
                                 }
                                 onChange={(date) => {
                                   if (date !== null) {
                                     setEvents({
                                       ...events,
                                       eventProductRegisterDeadLineRequest: {
-                                        ...(events.eventProductRegisterDeadLineRequest || {}),
+                                        ...(events.eventProductRegisterDeadLineRequest ||
+                                          {}),
                                         deadLine: date,
                                       },
                                     });
@@ -122,7 +172,10 @@ const EventLimit = () => {
                         <TextField
                           name="targetCount"
                           size="small"
-                          value={events.eventProductRegisterPurchaseCountRequest?.targetCount}
+                          value={
+                            events.eventProductRegisterPurchaseCountRequest
+                              ?.targetCount
+                          }
                           fullWidth
                           onChange={handleEventTargetCountChange}
                         />

@@ -14,7 +14,7 @@ import EventLimit from "./components/register/EventLimit";
 import { EventDate } from "./entity/EventDate";
 import { EventCount } from "./entity/EventCount";
 import EventDescription from "./components/register/EventDescription";
-
+import "./css/EventProductPage.css";
 const EventRegisterPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -74,10 +74,14 @@ const EventRegisterPage = () => {
     const mainFileToUpload =
       events.eventProductRegisterRequest.mainImg instanceof Blob
         ? (() => {
-            const blobWithProperties = events.eventProductRegisterRequest.mainImg as Blob & {
+            const blobWithProperties = events.eventProductRegisterRequest
+              .mainImg as Blob & {
               name: string;
             };
-            return new File([events.eventProductRegisterRequest.mainImg], blobWithProperties.name);
+            return new File(
+              [events.eventProductRegisterRequest.mainImg],
+              blobWithProperties.name
+            );
           })()
         : null;
 
@@ -115,13 +119,18 @@ const EventRegisterPage = () => {
       return;
     }
 
-    const detailImageUpload = events.eventProductRegisterRequest.detailImgs.map(async (image) => {
-      if (image instanceof Blob) {
-        const blobWithProperties = image as Blob & { name: string };
-        const detailFileToUpload = new File([blobWithProperties], blobWithProperties.name);
-        return (await uploadFileAwsS3(detailFileToUpload)) || "";
+    const detailImageUpload = events.eventProductRegisterRequest.detailImgs.map(
+      async (image) => {
+        if (image instanceof Blob) {
+          const blobWithProperties = image as Blob & { name: string };
+          const detailFileToUpload = new File(
+            [blobWithProperties],
+            blobWithProperties.name
+          );
+          return (await uploadFileAwsS3(detailFileToUpload)) || "";
+        }
       }
-    });
+    );
 
     const s3DetailObjectVersion = await Promise.all(detailImageUpload);
 
@@ -131,13 +140,17 @@ const EventRegisterPage = () => {
       ? mainFileToUpload.name + "?versionId=" + s3MainObjectVersion
       : "undefined main image";
 
-    const detailImgsName = events.eventProductRegisterRequest.detailImgs.map((image, idx) => {
-      if (image instanceof Blob) {
-        const blobWithProperties = image as Blob & { name: string };
-        return blobWithProperties.name + "?versionId=" + s3DetailObjectVersion[idx];
+    const detailImgsName = events.eventProductRegisterRequest.detailImgs.map(
+      (image, idx) => {
+        if (image instanceof Blob) {
+          const blobWithProperties = image as Blob & { name: string };
+          return (
+            blobWithProperties.name + "?versionId=" + s3DetailObjectVersion[idx]
+          );
+        }
+        return undefined;
       }
-      return undefined;
-    });
+    );
 
     const eventProductRegisterRequest: EventProduct = {
       userToken: localStorage.getItem("userToken") || "",
@@ -167,26 +180,43 @@ const EventRegisterPage = () => {
     const data = {
       eventProductRegisterRequest: eventProductRegisterRequest,
       eventProductRegisterDeadLineRequest: eventProductRegisterDeadLineRequest,
-      eventProductRegisterPurchaseCountRequest: eventProductRegisterPurchaseCountRequest,
+      eventProductRegisterPurchaseCountRequest:
+        eventProductRegisterPurchaseCountRequest,
     };
 
     await mutation.mutateAsync(data);
   };
 
   return (
-    <div className="event-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <form onSubmit={handleSubmit}>
-          <Box display="flex" flexDirection="column" gap={2} p={2}>
-            <h1>이벤트 등록</h1>
-            <EventDetail />
-            <EventImage />
-            <EventLimit />
-            <EventDescription />
-          </Box>
-          <Button type="submit">등록</Button>
-        </form>
-      </Container>
+    <div className="admin-event-product-register-container">
+      <div className="admin-event-product-register-box">
+        <Container maxWidth="xl" sx={{ display: "flex", width: "100%" }}>
+          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <Box display="flex" flexDirection="column" width="100%">
+              <EventDetail />
+              <EventImage />
+              <EventLimit />
+              <EventDescription />
+            </Box>
+            <div className="submit-btn-container">
+              <Button
+                className="modify-btn"
+                variant="contained"
+                type="submit"
+                style={{
+                  fontSize: "14x",
+                  padding: "4px 8px",
+                  marginTop: "20px",
+                  fontFamily: "SUIT-Regular",
+                  backgroundColor: "#4F72CA",
+                }}
+              >
+                작성 완료
+              </Button>
+            </div>
+          </form>
+        </Container>
+      </div>
     </div>
   );
 };
