@@ -13,7 +13,11 @@ import {
   Paper,
   TableBody,
 } from "@mui/material";
-import { deleteProduct, fetchPopupProduct, usePopupProductQuery } from "page/product/api/ProductApi";
+import {
+  deleteProduct,
+  fetchPopupProduct,
+  usePopupProductQuery,
+} from "page/product/api/ProductApi";
 import { useQueryClient } from "react-query";
 import Swal from "sweetalert2";
 import "../../css/ReadPopup.css";
@@ -103,7 +107,9 @@ const ReadPopup: React.FC<ReadPopupProps & { productId: number | null }> = ({
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell align="center">{data?.productSummaryResponseForAdmin?.productName}</TableCell>
+                <TableCell align="center">
+                  {data?.productSummaryResponseForAdmin?.productName}
+                </TableCell>
                 <TableCell align="center">
                   {data?.productSummaryResponseForAdmin.productSaleStatus === "AVAILABLE"
                     ? "판매중"
@@ -127,8 +133,12 @@ const ReadPopup: React.FC<ReadPopupProps & { productId: number | null }> = ({
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell align="center">{data?.farmInfoSummaryResponseForAdmin?.farmId}</TableCell>
-                <TableCell align="center">{data?.farmInfoSummaryResponseForAdmin?.farmName}</TableCell>
+                <TableCell align="center">
+                  {data?.farmInfoSummaryResponseForAdmin?.farmId}
+                </TableCell>
+                <TableCell align="center">
+                  {data?.farmInfoSummaryResponseForAdmin?.farmName}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>

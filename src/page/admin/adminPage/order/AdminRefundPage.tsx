@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "layout/navigation/AuthConText";
 import { changeRefundStatus, getRefundList } from "page/order/api/OrderApi";
+import AdminRefundPopup from "page/order/components/AdminRefundPopup";
 import { AdminOrderRefund } from "page/order/entity/AdminOrderRefund";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,8 @@ const AdminRefundPage = () => {
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
   const navigate = useNavigate();
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedRefund, setSelectedRefund] = useState<AdminOrderRefund | null>(null);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -71,6 +73,16 @@ const AdminRefundPage = () => {
     } catch (error) {
       console.error("환불 실패:", error);
     }
+  };
+
+  const handleRowClick = (refundItem: AdminOrderRefund) => {
+    setSelectedRefund(refundItem); 
+    setIsPopupOpen(true);
+  };
+  
+  const closePopup = () => {
+    setSelectedRefund(null);
+    setIsPopupOpen(false);
   };
 
   return (
@@ -182,7 +194,11 @@ const AdminRefundPage = () => {
             <TableBody>
               {refundList?.length ? (
                 refundList?.map((refund) => (
-                  <TableRow key={refund.orderRefundDetailInfoResponse?.orderId}>
+                  <TableRow
+                    key={refund.orderRefundDetailInfoResponse?.orderId}
+                    onClick={() => handleRowClick(refund)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <TableCell className="cellStyle">{refund.orderUserInfo?.userId}</TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.productOrderId}
@@ -197,25 +213,12 @@ const AdminRefundPage = () => {
                       {refund.orderRefundDetailInfoResponse?.cancelPrice}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      <Select
-                        value={
-                          selectedStatus ||
-                          refund.orderRefundDetailInfoResponse?.orderedProductStatus
-                        }
-                        onChange={(event) => {
-                          const newSelectedStatus = event.target.value;
-                          setSelectedStatus(newSelectedStatus);
-                          if (
-                            newSelectedStatus === "WAITING_REFUND" ||
-                            newSelectedStatus === "REFUNDED"
-                          ) {
-                            handleRefund(refund);
-                          }
-                        }}
-                      >
-                        <MenuItem value="WAITING_REFUND">환불 대기</MenuItem>
-                        <MenuItem value="REFUNDED">환불 완료</MenuItem>
-                      </Select>
+                      {refund.orderRefundDetailInfoResponse?.orderedProductStatus ===
+                      "WAITING_REFUND"
+                        ? "환불 대기"
+                        : refund.orderRefundDetailInfoResponse?.orderedProductStatus === "REFUNDED"
+                        ? "환불 완료"
+                        : ""}
                     </TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.totalPrice}
@@ -241,6 +244,14 @@ const AdminRefundPage = () => {
             </TableBody>
           </table>
         </TableContainer>
+        {isPopupOpen && selectedRefund && (
+          <AdminRefundPopup
+            open={isPopupOpen}
+            refundItem={selectedRefund}
+            onClose={closePopup}
+            onRefundProduct={handleRefund}
+          />
+        )}
       </div>
     </div>
   );
