@@ -35,6 +35,7 @@ import ReviewRegisterPage from "page/review/ReviewRegisterPage";
 import AdminOrderReadPage from "page/admin/adminPage/order/AdminOrderReadPage";
 import PaymentErrorPage from "page/payment/kakao/PaymentErrorPage";
 import PaymentRefundPage from "page/payment/PaymentRefundPage";
+import PaymentWaitingForRefundPage from "page/payment/PaymentWaitingForRefundPage";
 import RecipeListPage from "page/recipe/RecipeListPage";
 import RecipeDetailPage from "page/recipe/RecipeDetailPage";
 import RecipeRegisterPage from "page/recipe/RecipeRegisterPage";
@@ -84,6 +85,7 @@ const App: React.FC = () => {
               <Route path="/payment/kakao/error" element={<PaymentErrorPage />} />
               <Route path="/payment/complete" element={<PaymentCompletePage />} />
               <Route path="/payment/refund" element={<PaymentRefundPage />} />
+              <Route path="/payment/waiting-for-refund" element={<PaymentWaitingForRefundPage/>} />
               <Route path="/review/register" element={<ReviewRegisterPage />} />
               <Route path="/recipe/list" element={<RecipeListPage />} />
               <Route path="/recipe/detail/:recipeId" element={<RecipeDetailPage />} />
