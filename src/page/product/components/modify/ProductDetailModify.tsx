@@ -44,7 +44,9 @@ const ProductDetailModify = () => {
     { value: "WELSH_ONION", label: "대파" },
   ];
 
-  const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleProduceTypesChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setProductRead({
       ...productReads,
       productResponseForAdmin: {
@@ -54,7 +56,9 @@ const ProductDetailModify = () => {
     });
   };
 
-  const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProductNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setModifyProducts({
       ...modifyProducts,
       productModifyRequest: {
@@ -71,7 +75,9 @@ const ProductDetailModify = () => {
     });
   };
 
-  const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleOptionChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setModifyProducts({
       ...modifyProducts,
       productModifyRequest: {
@@ -88,7 +94,9 @@ const ProductDetailModify = () => {
     });
   };
 
-  const handleSaleStatusChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleSaleStatusChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setModifyProducts({
       ...modifyProducts,
       productModifyRequest: {
@@ -106,142 +114,150 @@ const ProductDetailModify = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <div>
-        <Box display="flex" flexDirection="column" gap={2} p={2}>
-          <ToggleComponent label="기본정보" height={290}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <div className="text-field-container">
-                <div className="text-field-label" aria-label="상품명">
-                  상품명
+    <div className="product-modify-detail-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-modify-toggle-component">
+          <Box display="flex" flexDirection="column" gap={2} width="100%">
+            <ToggleComponent label="기본정보" height={290}>
+              <Box display="flex" flexDirection="column" gap={2}>
+                <div className="text-field-container">
+                  <div className="text-field-label" aria-label="상품명">
+                    상품명
+                  </div>
+                  <TextField
+                    name="productName"
+                    className="text-field-input"
+                    size="small"
+                    value={
+                      productReads.productResponseForAdmin?.productName
+                        ? productReads.productResponseForAdmin?.productName
+                        : modifyProducts.productModifyRequest?.productName
+                    }
+                    onChange={handleProductNameChange}
+                  />
                 </div>
-                <TextField
-                  name="productName"
-                  className="text-field-input"
-                  size="small"
-                  value={
-                    productReads.productResponseForAdmin?.productName
-                      ? productReads.productResponseForAdmin?.productName
-                      : modifyProducts.productModifyRequest?.productName
-                  }
-                  onChange={handleProductNameChange}
-                />
-              </div>
-              <div className="text-field-container">
-                <div className="text-field-label">재배방식</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="cultivationMethod"
-                    value={
-                      (productReads.productResponseForAdmin?.cultivationMethod as
-                        | ""
-                        | { value: string; label: string }) ||
-                      (modifyProducts.productModifyRequest?.cultivationMethod as
-                        | ""
-                        | { value: string; label: string }) ||
-                      ""
-                    }
-                    sx={{ width: "100%" }}
-                    onChange={handleOptionChange}
-                  >
-                    <MenuItem value="" disabled>
-                      옵션을 선택해주세요
-                    </MenuItem>
-                    {options.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="text-field-container">
-                <div className="text-field-label">농가 이름</div>
-                <TextField
-                  name="farmName"
-                  className="text-field-input"
-                  size="small"
-                  value={productReads.farmInfoResponseForAdmin?.farmName}
-                />
-              </div>
-              <div className="text-field-container">
-                <div className="text-field-label">판매 상태</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="saleStatus"
-                    value={
-                      (productReads.productResponseForAdmin?.productSaleStatus as
-                        | ""
-                        | { value: string; label: string }) ||
-                      (modifyProducts.productModifyRequest?.productSaleStatus as
-                        | ""
-                        | { value: string; label: string }) ||
-                      ""
-                    }
-                    sx={{ width: "100%" }}
-                    onChange={handleSaleStatusChange}
-                  >
-                    <MenuItem value="" disabled>
-                      판매 상태를 선택해주세요
-                    </MenuItem>
-                    {saleStatus.map((status) => (
-                      <MenuItem key={status.value} value={status.value}>
-                        {status.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="text-field-container">
-                <div className="text-field-label">농산물*</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="produceTypes"
-                    value={
-                      (productReads.productResponseForAdmin?.produceType as "" | { value: string; label: string }) || ""
-                    }
-                    onChange={handleProduceTypesChange}
-                    className="text-field"
+                <div className="text-field-container">
+                  <div className="text-field-label">농가 이름</div>
+                  <TextField
+                    name="farmName"
+                    className="text-field-input"
+                    size="small"
+                    value={productReads.farmInfoResponseForAdmin?.farmName}
+                  />
+                </div>
+                <div className="text-field-container">
+                  <div className="text-field-label">재배 방식</div>
+                  <FormControl
                     sx={{
-                      width: "100%",
+                      display: "flex",
+                      flexGrow: 1,
+                      alignItems: "center",
+                      justifyContent: "flex-end",
                     }}
-                    disabled
                   >
-                    <MenuItem value="">판매상품을 선택해주세요</MenuItem>
-                    {produceTypesOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    <Select
+                      name="cultivationMethod"
+                      value={
+                        (productReads.productResponseForAdmin
+                          ?.cultivationMethod as
+                          | ""
+                          | { value: string; label: string }) ||
+                        (modifyProducts.productModifyRequest
+                          ?.cultivationMethod as
+                          | ""
+                          | { value: string; label: string }) ||
+                        ""
+                      }
+                      sx={{ width: "100%" }}
+                      onChange={handleOptionChange}
+                    >
+                      <MenuItem value="" disabled>
+                        재배 방식을 선택해주세요
                       </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-            </Box>
-          </ToggleComponent>
-        </Box>
-      </div>
-    </Container>
+                      {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="text-field-container">
+                  <div className="text-field-label">판매 상태</div>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      flexGrow: 1,
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Select
+                      name="saleStatus"
+                      value={
+                        (productReads.productResponseForAdmin
+                          ?.productSaleStatus as
+                          | ""
+                          | { value: string; label: string }) ||
+                        (modifyProducts.productModifyRequest
+                          ?.productSaleStatus as
+                          | ""
+                          | { value: string; label: string }) ||
+                        ""
+                      }
+                      sx={{ width: "100%" }}
+                      onChange={handleSaleStatusChange}
+                    >
+                      <MenuItem value="" disabled>
+                        판매 상태를 선택해주세요
+                      </MenuItem>
+                      {saleStatus.map((status) => (
+                        <MenuItem key={status.value} value={status.value}>
+                          {status.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="text-field-container">
+                  <div className="text-field-label">판매 품목</div>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      flexGrow: 1,
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Select
+                      name="produceTypes"
+                      value={
+                        (productReads.productResponseForAdmin?.produceType as
+                          | ""
+                          | { value: string; label: string }) || ""
+                      }
+                      onChange={handleProduceTypesChange}
+                      className="text-field"
+                      sx={{
+                        width: "100%",
+                      }}
+                      disabled
+                    >
+                      <MenuItem value="">판매 상품을 선택해주세요</MenuItem>
+                      {produceTypesOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </Box>
+            </ToggleComponent>
+          </Box>
+        </div>
+      </Container>
+    </div>
   );
 };
 

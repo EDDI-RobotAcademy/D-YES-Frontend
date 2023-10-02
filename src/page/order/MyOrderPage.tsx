@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   ButtonGroup,
@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { won } from "utility/filters/wonFilter";
 import { UserOrderList } from "./entity/UserOrderList";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "layout/navigation/AuthConText";
 import { OrderProductListResponse } from "./entity/UserOrderProduct";
 import { OrderOptionListResponse } from "./entity/UserOrderOption";
 
@@ -25,10 +26,19 @@ const MyOrderPage: React.FC = () => {
   const [filter, setFilter] = React.useState<string>("today");
   const [filteredOrderList, setFilteredOrderList] = React.useState<UserOrderList[]>([]);
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
 
   const currentDate = new Date();
   const koreanTime = 9 * 60 * 60 * 1000;
   const msKoreanTime = currentDate.getTime() + koreanTime;
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   React.useEffect(() => {
     const fetchOrderData = async (): Promise<void> => {

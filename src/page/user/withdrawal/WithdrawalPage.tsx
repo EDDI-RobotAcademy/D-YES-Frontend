@@ -10,6 +10,8 @@ import { AxiosError } from "axios";
 const WithdrawalPage = () => {
   const [confirmText, setConfirmText] = useState("");
   const { setIsLoggedIn } = useAuth();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +31,13 @@ const WithdrawalPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   useEffect(() => {
     const userToken = localStorage.getItem("userToken");

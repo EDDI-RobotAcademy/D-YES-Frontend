@@ -26,32 +26,35 @@ const ProductDescriptionModify = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2em" }}>
-      <div>
-        <Box display="flex" flexDirection="column" gap={2} p={2}>
-          <ToggleComponent label="상세정보" height={500}>
-            <Box
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              gap={2}
-              aria-label="상세정보"
-            >
-              <TextQuill
-                name="productDescription"
-                value={
-                  productReads.productResponseForAdmin?.productDescription
-                    ? productReads.productResponseForAdmin?.productDescription
-                    : modifyProducts.productModifyRequest?.productDescription || ""
-                }
-                setValue={handleProductDescriptionChange}
-                isDisable={false}
-              />
-            </Box>
-          </ToggleComponent>
-        </Box>
-      </div>
-    </Container>
+    <div className="product-modify-option-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-modify-toggle-component">
+          <Box display="flex" flexDirection="column" gap={2} width="100%">
+            <ToggleComponent label="상세정보" height={1000}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                gap={2}
+                aria-label="상세정보"
+              >
+                <TextQuill
+                  name="productDescription"
+                  value={
+                    productReads.productResponseForAdmin?.productDescription
+                      ? productReads.productResponseForAdmin?.productDescription
+                      : modifyProducts.productModifyRequest
+                          ?.productDescription || ""
+                  }
+                  setValue={handleProductDescriptionChange}
+                  isDisable={false}
+                />
+              </Box>
+            </ToggleComponent>
+          </Box>
+        </div>
+      </Container>
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import CartList from "page/cart/Cart";
 import * as CartApi from "page/cart/api/CartApi";
 import { act } from "react-dom/test-utils";
+import { AuthProvider } from "layout/navigation/AuthConText";
 
 jest.mock("page/cart/api/CartApi", () => ({
   getCartItemList: jest.fn(),
@@ -29,11 +30,13 @@ it("장바구니 상품 목록", async () => {
   (CartApi.getCartItemList as jest.Mock).mockResolvedValue(cartList);
 
   render(
-    <BrowserRouter>
-      <QueryClientProvider client={new QueryClient()}>
-        <CartList />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={new QueryClient()}>
+          <CartList />
+        </QueryClientProvider>
+      </BrowserRouter>
+    </AuthProvider>
   );
 
   await act(async () => {
@@ -47,7 +50,9 @@ it("장바구니 상품 목록", async () => {
 
   await act(async () => {
     await waitFor(() => {
-      const increaseButton = screen.getByTestId(`cart-increase-test-id-${cartList[0].optionId}`);
+      const increaseButton = screen.getByTestId(
+        `cart-increase-test-id-${cartList[0].optionId}`
+      );
       fireEvent.click(increaseButton);
       expect(CartApi.changeCartItemCount).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -56,7 +61,9 @@ it("장바구니 상품 목록", async () => {
         })
       );
 
-      const decreaseButton = screen.getByTestId(`cart-decrease-test-id-${cartList[0].optionId}`);
+      const decreaseButton = screen.getByTestId(
+        `cart-decrease-test-id-${cartList[0].optionId}`
+      );
       fireEvent.click(decreaseButton);
       expect.objectContaining({
         productOptionId: 1,
@@ -69,9 +76,13 @@ it("장바구니 상품 목록", async () => {
 
   await act(async () => {
     await waitFor(() => {
-      const deleteButton = screen.getByTestId(`cart-delete-test-id-${cartList[0].optionId}`);
+      const deleteButton = screen.getByTestId(
+        `cart-delete-test-id-${cartList[0].optionId}`
+      );
       fireEvent.click(deleteButton);
-      expect(CartApi.deleteCartItems).toHaveBeenCalledWith([cartList[0].optionId]);
+      expect(CartApi.deleteCartItems).toHaveBeenCalledWith([
+        cartList[0].optionId,
+      ]);
     });
   });
 
@@ -82,7 +93,9 @@ it("장바구니 상품 목록", async () => {
       const deleteSelectedButton = screen.getByText("선택한 상품 삭제");
       if (deleteSelectedButton) {
         for (const item of cartList) {
-          const selectItem = screen.getByTestId(`cart-select-test-id-${item.optionId}`);
+          const selectItem = screen.getByTestId(
+            `cart-select-test-id-${item.optionId}`
+          );
           fireEvent.click(selectItem);
         }
         fireEvent.click(deleteSelectedButton);

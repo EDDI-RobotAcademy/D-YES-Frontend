@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "layout/navigation/AuthConText";
 import { changeCartItemCount, deleteCartItems, getCartItemList } from "./api/CartApi";
 import { toast } from "react-toastify";
 import {
@@ -38,6 +39,15 @@ export default function CartList() {
   const [selectAll, setSelectAll] = useState(true);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   const calculateTotalPrice = useCallback(() => {
     let totalPrice = 0;

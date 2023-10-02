@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import MyPage from "page/user/myPage/MyPage";
 import { act } from "react-dom/test-utils";
+import { AuthProvider } from "layout/navigation/AuthConText";
 
 jest.mock("page/user/api/UserApi", () => ({
   updateInfo: jest.fn().mockResolvedValue({ success: true }),
@@ -12,11 +13,13 @@ jest.mock("page/user/api/UserApi", () => ({
 
 it("회원 정보 테스트", async () => {
   render(
-    <BrowserRouter>
-      <QueryClientProvider client={new QueryClient()}>
-        <MyPage />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={new QueryClient()}>
+          <MyPage />
+        </QueryClientProvider>
+      </BrowserRouter>
+    </AuthProvider>
   );
 
   const email = screen.getByLabelText("이메일");

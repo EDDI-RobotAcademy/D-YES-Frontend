@@ -7,14 +7,24 @@ import { getImageUrl } from "utility/s3/awsS3";
 import { User } from "page/user/entity/User";
 import AddressPopup from "./AddressPopup";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const MyPage = () => {
   const navigate = useNavigate();
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
   const queryClient = useQueryClient();
   const userToken = localStorage.getItem("userToken") || "";
   const hasFetchedRef = React.useRef(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
 
   const fetchUser = async () => {
     hasFetchedRef.current = true;

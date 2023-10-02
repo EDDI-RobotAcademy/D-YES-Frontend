@@ -3,12 +3,22 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { kakaoPaymentRejectRequest } from "../api/PaymentApi";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 import "../css/PaymentFail.css";
 
 const PaymentErrorPage: React.FC = () => {
   const navigate = useNavigate();
-
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
+  
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
+  
   useEffect(() => {
     const fetchPaymentData = async () => {
       try {

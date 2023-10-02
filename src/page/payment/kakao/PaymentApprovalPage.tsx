@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { kakaoPaymentApprovalRequest } from "../api/PaymentApi";
 import { toast } from "react-toastify";
+import { useAuth } from "layout/navigation/AuthConText";
 
 const PaymentApprovalPage: React.FC = () => {
   const navigate = useNavigate();
@@ -9,7 +10,16 @@ const PaymentApprovalPage: React.FC = () => {
   const params: URLSearchParams = new URLSearchParams(location.search);
   const pg_token: string = params.get("pg_token")!;
   const [paymentRequested, setPaymentRequested] = useState(false);
+  const { checkAuthorization } = useAuth();
+  const isUser = checkAuthorization();
 
+  useEffect(() => {
+    if (!isUser) {
+      toast.error("로그인을 해주세요.");
+      navigate("/login");
+    }
+  }, [isUser, navigate]);
+  
   useEffect(() => {
     if (!paymentRequested) {
       const fetchPaymentData = async () => {

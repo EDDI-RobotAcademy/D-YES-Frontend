@@ -7,7 +7,11 @@ interface ToggleComponentProps {
   height: number;
 }
 
-const ToggleComponent: React.FC<ToggleComponentProps> = ({ label, children, height }) => {
+const ToggleComponent: React.FC<ToggleComponentProps> = ({
+  label,
+  children,
+  height,
+}) => {
   const [isInputVisible, setInputVisible] = useState(true);
   const [contentHeight, setContentHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -30,9 +34,13 @@ const ToggleComponent: React.FC<ToggleComponentProps> = ({ label, children, heig
         style={{
           width: "100%",
           height: "40px",
-          fontWeight: "normal",
-          border: "none",
-          backgroundColor: "#D0D0D0",
+          fontFamily: "SUIT-Medium",
+          fontSize: "16px",
+          color: "#252525",
+          border: "solid 1px",
+          borderColor: "#d3d3d3",
+          borderBottom: "none",
+          backgroundColor: "#F8F9FA",
         }}
       >
         {isInputVisible ? label : label}

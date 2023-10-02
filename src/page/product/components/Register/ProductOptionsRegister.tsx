@@ -7,7 +7,7 @@ import OptionInput from "../productOption/OptionInput";
 import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 
 const ProductOptionsRegister = () => {
-  const [optionToggleHeight, setOptionToggleHeight] = useState(200);
+  const [optionToggleHeight, setOptionToggleHeight] = useState(220);
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const { products, setProducts } = useProductRegisterStore();
 
@@ -32,11 +32,11 @@ const ProductOptionsRegister = () => {
   };
 
   return (
-    <div className="product-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <div>
-          <Box display="flex" flexDirection="column" gap={2} p={2}>
-            <ToggleComponent label="옵션정보*" height={optionToggleHeight}>
+    <div className="product-register-option-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-register-toggle-component">
+          <Box display="flex" flexDirection="column" gap={2} width="100%">
+            <ToggleComponent label="옵션정보" height={optionToggleHeight}>
               <Box display="flex" flexDirection="column" gap={2}>
                 <OptionTable
                   optionRows={useOptions}

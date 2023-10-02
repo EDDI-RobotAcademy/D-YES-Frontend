@@ -53,20 +53,47 @@ const OptionTable: React.FC<OptionTableProps> = ({
   }
 
   return (
-    <TableContainer component={Paper}>
-      <table>
-        <TableHead style={{ backgroundColor: "#D0D0D0" }}>
+    <TableContainer
+      component={Paper}
+      style={{ boxShadow: "none", width: "100%" }}
+    >
+      <table
+        style={{
+          borderCollapse: "collapse",
+          textAlign: "center",
+          margin: "20px",
+        }}
+      >
+        <TableHead style={{ backgroundColor: "#F8F9FA" }}>
           <TableRow>
-            <TableCell className="cell" style={{ width: "30%", textAlign: "center" }}>
+            <TableCell
+              className="cell"
+              style={{ width: "5%", textAlign: "center" }}
+            >
+              번호
+            </TableCell>
+            <TableCell
+              className="cell"
+              style={{ width: "35%", textAlign: "center" }}
+            >
               옵션명
             </TableCell>
-            <TableCell className="cell" style={{ width: "25%", textAlign: "center" }}>
+            <TableCell
+              className="cell"
+              style={{ width: "25%", textAlign: "center" }}
+            >
               가격
             </TableCell>
-            <TableCell className="cell" style={{ width: "15%", textAlign: "center" }}>
+            <TableCell
+              className="cell"
+              style={{ width: "15%", textAlign: "center" }}
+            >
               재고
             </TableCell>
-            <TableCell className="cell" style={{ textAlign: "center" }}>
+            <TableCell
+              className="cell"
+              style={{ width: "15%", textAlign: "center" }}
+            >
               단위
             </TableCell>
             {isEditMode && (
@@ -74,13 +101,18 @@ const OptionTable: React.FC<OptionTableProps> = ({
                 옵션 판매여부
               </TableCell>
             )}
-            <TableCell style={{ textAlign: "center" }}>삭제</TableCell>
+            <TableCell style={{ width: "5%", textAlign: "center" }}>
+              삭제
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {optionRows.map((option, index) =>
             option ? (
               <TableRow key={index}>
+                <TableCell style={{ textAlign: "center" }}>
+                  {index + 1}
+                </TableCell>
                 <TableCell>
                   <TextField
                     name="optionName"
@@ -88,7 +120,10 @@ const OptionTable: React.FC<OptionTableProps> = ({
                     value={option.optionName}
                     fullWidth
                     onChange={(event) => {
-                      const updatedOption = { ...option, optionName: event.target.value };
+                      const updatedOption = {
+                        ...option,
+                        optionName: event.target.value,
+                      };
                       onChangeOption(index, updatedOption);
                     }}
                   />
@@ -115,7 +150,10 @@ const OptionTable: React.FC<OptionTableProps> = ({
                     value={option.stock || 0}
                     fullWidth
                     onChange={(event) => {
-                      const updatedOption = { ...option, stock: parseInt(event.target.value) };
+                      const updatedOption = {
+                        ...option,
+                        stock: parseInt(event.target.value),
+                      };
                       onChangeOption(index, updatedOption);
                     }}
                   />
@@ -128,7 +166,10 @@ const OptionTable: React.FC<OptionTableProps> = ({
                       value={option.value || 0}
                       fullWidth
                       onChange={(event) => {
-                        const updatedOption = { ...option, value: parseInt(event.target.value) };
+                        const updatedOption = {
+                          ...option,
+                          value: parseInt(event.target.value),
+                        };
                         onChangeOption(index, updatedOption);
                       }}
                     />
@@ -137,7 +178,10 @@ const OptionTable: React.FC<OptionTableProps> = ({
                       size="small"
                       value={option.unit || ""}
                       onChange={(event) => {
-                        const updatedOption = { ...option, unit: event.target.value };
+                        const updatedOption = {
+                          ...option,
+                          unit: event.target.value,
+                        };
                         onChangeOption(index, updatedOption);
                       }}
                       sx={{ minWidth: "70px" }}
@@ -157,7 +201,10 @@ const OptionTable: React.FC<OptionTableProps> = ({
                       size="small"
                       value={option.optionSaleStatus}
                       onChange={(event) => {
-                        const updatedOption = { ...option, optionSaleStatus: event.target.value };
+                        const updatedOption = {
+                          ...option,
+                          optionSaleStatus: event.target.value,
+                        };
                         onChangeOption(index, updatedOption);
                       }}
                       sx={{ minWidth: "100px" }}

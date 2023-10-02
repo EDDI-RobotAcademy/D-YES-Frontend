@@ -63,11 +63,12 @@ const ProductRegisterPage = () => {
     // some함수는 useOptions배열을 순회하면서 중복 여부를 확인
     // 조건은 옵션명이 동일하고 옵션의 인덱스가 같이 않을 때
     // 중복한 옵션이 있다면 true를 반환
-    const isDuplicateOptionName = products.productOptionList.some((option, index) =>
-      products.productOptionList.some(
-        (otherOption, otherIndex) =>
-          option.optionName === otherOption.optionName && index !== otherIndex
-      )
+    const isDuplicateOptionName = products.productOptionList.some(
+      (option, index) =>
+        products.productOptionList.some(
+          (otherOption, otherIndex) =>
+            option.optionName === otherOption.optionName && index !== otherIndex
+        )
     );
 
     if (isDuplicateOptionName) {
@@ -76,7 +77,12 @@ const ProductRegisterPage = () => {
     }
 
     const hasIncompleteOption = products.productOptionList.some((option) => {
-      return !option.optionName || !option.optionPrice || !option.stock || !option.unit;
+      return (
+        !option.optionName ||
+        !option.optionPrice ||
+        !option.stock ||
+        !option.unit
+      );
     });
 
     if (hasIncompleteOption) {
@@ -111,7 +117,10 @@ const ProductRegisterPage = () => {
       if (image instanceof Blob) {
         const blobWithProperties = image as Blob & { name: string };
         // 이미지 Blob을 File로 변환하여 원래 이미지 파일의 이름을 사용
-        const detailFileToUpload = new File([blobWithProperties], blobWithProperties.name);
+        const detailFileToUpload = new File(
+          [blobWithProperties],
+          blobWithProperties.name
+        );
         return (await uploadFileAwsS3(detailFileToUpload)) || "";
       }
     });
@@ -129,24 +138,27 @@ const ProductRegisterPage = () => {
     const detailImgsName = productDetailImgs.map((image, idx) => {
       if (image instanceof Blob) {
         const blobWithProperties = image as Blob & { name: string };
-        return blobWithProperties.name + "?versionId=" + s3DetailObjectVersion[idx];
+        return (
+          blobWithProperties.name + "?versionId=" + s3DetailObjectVersion[idx]
+        );
       }
       return undefined;
     });
 
-    const productDetailImagesRegisterRequests: Partial<ProductDetailImg>[] = detailImgsName.map(
-      (detailImg) => ({
+    const productDetailImagesRegisterRequests: Partial<ProductDetailImg>[] =
+      detailImgsName.map((detailImg) => ({
         detailImgs: detailImg as unknown as File,
+      }));
+
+    const optionObjects: Partial<useOptions>[] = products.productOptionList.map(
+      (option) => ({
+        optionName: option.optionName,
+        optionPrice: option.optionPrice,
+        stock: option.stock,
+        value: option.value,
+        unit: option.unit,
       })
     );
-
-    const optionObjects: Partial<useOptions>[] = products.productOptionList.map((option) => ({
-      optionName: option.optionName,
-      optionPrice: option.optionPrice,
-      stock: option.stock,
-      value: option.value,
-      unit: option.unit,
-    }));
 
     const productRegisterRequest: Partial<Product> = {
       productName: products.productName,
@@ -168,7 +180,8 @@ const ProductRegisterPage = () => {
       ...data,
       productRegisterRequest: productRegisterRequest as Product,
       productOptionRegisterRequest: optionObjects as useOptions[],
-      productMainImageRegisterRequest: partialProductMainImageRegisterRequest as ProductImg,
+      productMainImageRegisterRequest:
+        partialProductMainImageRegisterRequest as ProductImg,
       productDetailImagesRegisterRequests:
         productDetailImagesRegisterRequests as ProductDetailImg[],
     });
@@ -176,19 +189,35 @@ const ProductRegisterPage = () => {
   };
 
   return (
-    <div className="product-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <form onSubmit={handleSubmit}>
-          <Box display="flex" flexDirection="column" gap={2} p={2}>
-            <h1>상품 등록</h1>
-            <ProductDetailRegister />
-            <ProductImageRegister />
-            <ProductOptionsRegister />
-            <ProductDescription />
-          </Box>
-          <Button type="submit">등록</Button>
-        </form>
-      </Container>
+    <div className="admin-product-register-container">
+      <div className="admin-product-register-box">
+        <Container maxWidth="xl" sx={{ display: "flex", width: "100%" }}>
+          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <Box display="flex" flexDirection="column" width="100%">
+              <ProductDetailRegister />
+              <ProductImageRegister />
+              <ProductOptionsRegister />
+              <ProductDescription />
+            </Box>
+            <div className="submit-btn-container">
+              <Button
+                className="modify-btn"
+                variant="contained"
+                type="submit"
+                style={{
+                  fontSize: "14x",
+                  padding: "4px 8px",
+                  marginTop: "20px",
+                  fontFamily: "SUIT-Regular",
+                  backgroundColor: "#4F72CA",
+                }}
+              >
+                작성 완료
+              </Button>
+            </div>
+          </form>
+        </Container>
+      </div>
     </div>
   );
 };

@@ -1,16 +1,19 @@
-.admin-product-register-container {
+.admin-product-modify-container {
   padding: 20px 20px 20px 20px;
   font-family: "SUIT-Medium";
   font-size: 16px;
 }
-.admin-product-register-box {
+
+.admin-product-modify-box {
   width: 100%;
   background-color: white;
 }
-.product-register-toggle-component {
+
+.product-modify-toggle-component {
   width: 100%;
 }
-.product-register-detail-container {
+
+.product-modify-detail-container {
   width: 100%;
 }
 
@@ -33,6 +36,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .select-field-container {
   display: flex;
 }
@@ -44,6 +48,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .btn-add-container {
   width: 100%;
   display: flex;
@@ -62,13 +67,16 @@
   color: #252525;
   align-items: center;
 }
+
 .main-image-container {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 100px;
 }
+
 .detail-image-container {
   display: flex;
 }
+
 .text-field-input {
   flex-grow: 1 !important;
 }
@@ -128,6 +136,7 @@
 .text-field {
   height: 40px; /* 원하는 높이로 조정 */
 }
+
 .submit-btn-container {
   display: flex;
   padding-left: 40px;

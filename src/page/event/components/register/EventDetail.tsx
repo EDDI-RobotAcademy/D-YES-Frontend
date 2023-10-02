@@ -25,7 +25,9 @@ const EventDetail = () => {
   const [selectedFarmName, setSelectedFarmName] = React.useState("");
   const [openFarmSearch, setOpenFarmSearch] = React.useState(false);
 
-  const handleEventProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEventProductNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterRequest: {
@@ -35,7 +37,9 @@ const EventDetail = () => {
     });
   };
 
-  const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleOptionChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterRequest: {
@@ -85,7 +89,9 @@ const EventDetail = () => {
     { value: "WELSH_ONION", label: "대파" },
   ];
 
-  const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleProduceTypesChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterRequest: {
@@ -95,7 +101,9 @@ const EventDetail = () => {
     });
   };
 
-  const handleOptionNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOptionNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterRequest: {
@@ -105,7 +113,9 @@ const EventDetail = () => {
     });
   };
 
-  const handleOptionPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOptionPriceChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterRequest: {
@@ -135,7 +145,9 @@ const EventDetail = () => {
     });
   };
 
-  const handleUnitChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
+  const handleUnitChange = (
+    event: SelectChangeEvent<{ value: string; label: string }>
+  ) => {
     setEvents({
       ...events,
       eventProductRegisterRequest: {
@@ -152,11 +164,11 @@ const EventDetail = () => {
   ];
 
   return (
-    <div className="event-register-container">
-      <Container maxWidth="md" sx={{ marginTop: "2em", display: "flex" }}>
-        <div>
+    <div className="event-register-detail-container">
+      <Container maxWidth="xl" sx={{ marginTop: "2em", display: "flex" }}>
+        <div className="product-register-toggle-component">
           <ToggleComponent label="기본정보" height={350}>
-            <Box display="flex" flexDirection="column" gap={2}>
+            <Box display="flex" flexDirection="column" gap={2} width="100%">
               <div className="text-field-container">
                 <div className="text-field-label" aria-label="상품명*">
                   상품명*
@@ -170,38 +182,6 @@ const EventDetail = () => {
                 />
               </div>
               <div className="text-field-container">
-                <div className="text-field-label">재배방식*</div>
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    flexGrow: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Select
-                    name="cultivationMethod"
-                    value={
-                      (events.eventProductRegisterRequest?.cultivationMethod as
-                        | ""
-                        | { value: string; label: string }) || ""
-                    }
-                    onChange={handleOptionChange}
-                    className="text-field"
-                    sx={{
-                      width: "100%",
-                    }}
-                  >
-                    <MenuItem value="">옵션을 선택해주세요</MenuItem>
-                    {options.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="text-field-container">
                 <div className="text-field-label">농가 이름*</div>
                 <TextField
                   name="farmName"
@@ -212,7 +192,18 @@ const EventDetail = () => {
                     setSelectedFarmName(event.target.value);
                   }}
                 />
-                <Button onClick={handleOpenFarmSearch}>조회</Button>
+                <Button
+                  onClick={handleOpenFarmSearch}
+                  variant="outlined"
+                  style={{
+                    marginLeft: "8px",
+                    fontFamily: "SUIT-Light",
+                    backgroundColor: "#4F72CA",
+                    color: "white",
+                  }}
+                >
+                  조회
+                </Button>
                 <FarmSearch
                   open={openFarmSearch}
                   onClose={() => setOpenFarmSearch(false)}
@@ -220,13 +211,46 @@ const EventDetail = () => {
                   onSelectFarm={handleFarmSelect}
                 />
               </div>
-              <div className="text-field-container">
-                <div className="text-field-label">농산물*</div>
+              <div className="select-field-container">
+                <div className="select-field">
+                  <div className="text-field-label">재배 방식*</div>
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      flexGrow: 1,
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Select
+                      name="cultivationMethod"
+                      value={
+                        (events.eventProductRegisterRequest
+                          ?.cultivationMethod as
+                          | ""
+                          | { value: string; label: string }) || ""
+                      }
+                      onChange={handleOptionChange}
+                      className="text-field"
+                      sx={{
+                        width: "100%",
+                      }}
+                    >
+                      <MenuItem value="">재배 방식을 선택해주세요</MenuItem>
+                      {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+              <div className="select-field">
+                <div className="text-field-label">판매 품목*</div>
                 <FormControl
                   sx={{
                     display: "flex",
                     flexGrow: 1,
-                    alignItems: "center",
                     justifyContent: "flex-end",
                   }}
                 >
@@ -243,7 +267,7 @@ const EventDetail = () => {
                       width: "100%",
                     }}
                   >
-                    <MenuItem value="">판매상품을 선택해주세요</MenuItem>
+                    <MenuItem value="">판매 상품을 선택해주세요</MenuItem>
                     {produceTypesOptions.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
@@ -252,85 +276,118 @@ const EventDetail = () => {
                   </Select>
                 </FormControl>
               </div>
-              <TableContainer component={Paper}>
-                <table>
-                  <TableHead style={{ backgroundColor: "#D0D0D0" }}>
-                    <TableRow>
-                      <TableCell className="cell" style={{ width: "30%", textAlign: "center" }}>
-                        옵션명
-                      </TableCell>
-                      <TableCell className="cell" style={{ width: "25%", textAlign: "center" }}>
-                        가격
-                      </TableCell>
-                      <TableCell className="cell" style={{ width: "15%", textAlign: "center" }}>
-                        재고
-                      </TableCell>
-                      <TableCell className="cell" style={{ textAlign: "center" }}>
-                        단위
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <TextField
-                          name="optionName"
-                          size="small"
-                          value={events.eventProductRegisterRequest?.optionName}
-                          fullWidth
-                          onChange={handleOptionNameChange}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          name="optionPrice"
-                          size="small"
-                          value={events.eventProductRegisterRequest?.optionPrice}
-                          fullWidth
-                          onChange={handleOptionPriceChange}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          name="stock"
-                          size="small"
-                          value={events.eventProductRegisterRequest?.stock}
-                          fullWidth
-                          onChange={handleStockChange}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+              <div className="text-field-container">
+                <div className="text-field-label">옵션 정보*</div>
+                <TableContainer
+                  component={Paper}
+                  style={{ boxShadow: "none", width: "100%" }}
+                >
+                  <table
+                    style={{
+                      borderCollapse: "collapse",
+                      textAlign: "center",
+                      // margin: "20px",
+                    }}
+                  >
+                    <TableHead style={{ backgroundColor: "#F8F9FA" }}>
+                      <TableRow>
+                        <TableCell
+                          className="cell"
+                          style={{ width: "30%", textAlign: "center" }}
+                        >
+                          옵션명
+                        </TableCell>
+                        <TableCell
+                          className="cell"
+                          style={{ width: "25%", textAlign: "center" }}
+                        >
+                          가격
+                        </TableCell>
+                        <TableCell
+                          className="cell"
+                          style={{ width: "15%", textAlign: "center" }}
+                        >
+                          재고
+                        </TableCell>
+                        <TableCell
+                          className="cell"
+                          style={{ textAlign: "center" }}
+                        >
+                          단위
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
                           <TextField
-                            name="value"
-                            size="small"
-                            value={events.eventProductRegisterRequest?.value}
-                            fullWidth
-                            onChange={handleValueChange}
-                          />
-                          <Select
-                            name="unit"
+                            name="optionName"
                             size="small"
                             value={
-                              (events.eventProductRegisterRequest?.unit as
-                                | ""
-                                | { value: string; label: string }) || ""
+                              events.eventProductRegisterRequest?.optionName
                             }
-                            onChange={handleUnitChange}
-                            sx={{ minWidth: "70px" }}
+                            fullWidth
+                            onChange={handleOptionNameChange}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            name="optionPrice"
+                            size="small"
+                            value={
+                              events.eventProductRegisterRequest?.optionPrice
+                            }
+                            fullWidth
+                            onChange={handleOptionPriceChange}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            name="stock"
+                            size="small"
+                            value={events.eventProductRegisterRequest?.stock}
+                            fullWidth
+                            onChange={handleStockChange}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
                           >
-                            {unitOptions.map((option) => (
-                              <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </table>
-              </TableContainer>
+                            <TextField
+                              name="value"
+                              size="small"
+                              value={events.eventProductRegisterRequest?.value}
+                              fullWidth
+                              onChange={handleValueChange}
+                            />
+                            <Select
+                              name="unit"
+                              size="small"
+                              value={
+                                (events.eventProductRegisterRequest?.unit as
+                                  | ""
+                                  | { value: string; label: string }) || ""
+                              }
+                              onChange={handleUnitChange}
+                              sx={{ minWidth: "70px" }}
+                            >
+                              {unitOptions.map((option) => (
+                                <MenuItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </table>
+                </TableContainer>
+              </div>
             </Box>
           </ToggleComponent>
         </div>

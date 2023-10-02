@@ -1,16 +1,16 @@
-.admin-product-register-container {
+.admin-event-product-register-container {
   padding: 20px 20px 20px 20px;
   font-family: "SUIT-Medium";
   font-size: 16px;
 }
-.admin-product-register-box {
+.admin-event-product-register-box {
   width: 100%;
   background-color: white;
 }
-.product-register-toggle-component {
+.event-register-toggle-component {
   width: 100%;
 }
-.product-register-detail-container {
+.event-register-detail-container {
   width: 100%;
 }
 
@@ -137,4 +137,7 @@
 .submit-btn-container button {
   width: 100px;
   height: 40px;
+}
+.event-date-picker {
+  width: 100%;
 }
