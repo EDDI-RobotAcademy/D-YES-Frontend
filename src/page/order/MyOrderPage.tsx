@@ -339,7 +339,7 @@ const MyOrderPage: React.FC = () => {
                                       if (option.orderProductStatus === "PAYBACK") {
                                         return (
                                           <Button variant="contained" color="error" disabled>
-                                            페이백 대기 중
+                                            페이백 완료
                                           </Button>
                                         );
                                       }
