@@ -50,5 +50,18 @@ export const refundOrderedItems = async (refundItems: OrderRefund) => {
     requestList: refundItems.productOptionId,
   };
   const response = await axiosInstance.post<boolean>("/order/payment/kakao/refund", requestData);
+  // console.log("주문 취소 return값 확인", response.data);
+  return response.data;
+};
+
+// 환불 신청
+export const refundWaitingOrderedItems = async (refundItems: OrderRefund) => {
+  const requestData = {
+    userToken: userToken,
+    orderId: refundItems.orderId,
+    productOptionId: refundItems.productOptionId,
+    refundReason: refundItems.refundReason,
+  };
+  const response = await axiosInstance.post<boolean>("/order/waiting-for-refund", requestData);
   return response.data;
 };

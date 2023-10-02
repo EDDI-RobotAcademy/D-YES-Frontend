@@ -3,4 +3,5 @@ export interface OrderDetailInfoResponse {
   totalPrice: number;
   orderedTime: string;
   deliveryStatus: string;
+  orderStatus: string;
 }

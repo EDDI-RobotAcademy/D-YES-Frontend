@@ -40,7 +40,7 @@ const MyOrderPage: React.FC = () => {
     }
   }, [isUser, navigate]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchOrderData = async (): Promise<void> => {
       try {
         const data = await getUserOrderList();
@@ -53,7 +53,7 @@ const MyOrderPage: React.FC = () => {
     fetchOrderData();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const dateFilters: Record<string, number> = {
       today: 1,
       day7: 7,
@@ -121,7 +121,7 @@ const MyOrderPage: React.FC = () => {
     });
   };
 
-  const goToRefund = (options: OrderProductListResponse[], orderId: string) => {
+  const goToRefund = (options: OrderProductListResponse[], orderId: string, optionId: number) => {
     const productName: string = options[0].productName;
     const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item)
@@ -131,6 +131,26 @@ const MyOrderPage: React.FC = () => {
         orderId: orderId,
         productName: productName,
         optionInfo: optionInfo,
+        optionId: [optionId],
+      },
+    });
+  };
+
+  const goToRefundWaiting = (
+    options: OrderProductListResponse[],
+    orderId: string,
+    optionId: number
+  ) => {
+    const productName: string = options[0].productName;
+    const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
+      option.orderOptionList.map((item) => item)
+    );
+    navigate("/payment/waiting-for-refund", {
+      state: {
+        orderId: orderId,
+        productName: productName,
+        optionInfo: optionInfo,
+        optionId: [optionId],
       },
     });
   };
@@ -271,73 +291,119 @@ const MyOrderPage: React.FC = () => {
                                   </>
                                 ) : null}
                                 {isProductNameRowSpan ? (
-                                  <>
-                                    <TableCell
-                                      rowSpan={
-                                        item.orderProductList.filter(
-                                          (prod) => prod.productName === options.productName
-                                        ).length
+                                  <TableCell
+                                    rowSpan={
+                                      item.orderProductList.filter(
+                                        (prod) => prod.productName === options.productName
+                                      ).length
+                                    }
+                                    align="center"
+                                  >
+                                    {(() => {
+                                      if (
+                                        item.orderDetailInfoResponse.orderStatus == "CANCEL_PAYMENT"
+                                      ) {
+                                        return <p>리뷰 작성 불가</p>;
                                       }
-                                      align="center"
-                                    >
-                                      {options.reviewId === null ? (
-                                        <Button
-                                          variant="outlined"
-                                          onClick={() =>
-                                            goToReviewPage(
-                                              item.orderDetailInfoResponse.productOrderId,
-                                              item.orderProductList
-                                            )
-                                          }
-                                          disabled={
-                                            item.orderDetailInfoResponse.deliveryStatus !==
-                                            "DELIVERED"
-                                          }
-                                        >
-                                          리뷰 작성하기
-                                        </Button>
-                                      ) : (
-                                        <>리뷰 작성 완료</>
-                                      )}
-                                    </TableCell>
-                                    <TableCell
-                                      rowSpan={
-                                        item.orderProductList.filter(
-                                          (prod) => prod.productName === options.productName
-                                        ).length
+                                      if (options.reviewId === null) {
+                                        return (
+                                          <Button
+                                            variant="outlined"
+                                            style={{
+                                              color: "#578b36",
+                                              borderColor: "#578b36",
+                                            }}
+                                            onClick={() =>
+                                              goToReviewPage(
+                                                item.orderDetailInfoResponse.productOrderId,
+                                                item.orderProductList
+                                              )
+                                            }
+                                            disabled={
+                                              item.orderDetailInfoResponse.deliveryStatus !==
+                                              "DELIVERED"
+                                            }
+                                          >
+                                            리뷰 작성하기
+                                          </Button>
+                                        );
+                                      } else {
+                                        return <p>리뷰 작성 완료</p>;
                                       }
-                                      align="center"
-                                    >
-                                      {item.orderDetailInfoResponse.deliveryStatus ===
-                                      "PREPARING" ? (
-                                        <Button
-                                          variant="contained"
-                                          color="error"
-                                          onClick={() =>
-                                            goToRefund(
-                                              item.orderProductList,
-                                              item.orderDetailInfoResponse.productOrderId
-                                            )
-                                          }
-                                        >
-                                          주문 취소
-                                        </Button>
-                                      ) : (
-                                        <Button
-                                          variant="contained"
-                                          color="error"
-                                          disabled={refundDeadline.some(
-                                            (refundItem: UserOrderList) =>
-                                              refundItem.orderDetailInfoResponse.productOrderId ===
-                                              item.orderDetailInfoResponse.productOrderId
-                                          )}
-                                        >
-                                          환불 신청
-                                        </Button>
-                                      )}
-                                    </TableCell>
-                                  </>
+                                    })()}
+                                  </TableCell>
                                 ) : null}
+                                {options.orderOptionList.flatMap((option) => (
+                                  <TableCell align="center">
+                                    {(() => {
+                                      if (option.orderProductStatus === "PAYBACK") {
+                                        return (
+                                          <Button variant="contained" color="error" disabled>
+                                            페이백 완료
+                                          </Button>
+                                        );
+                                      }
+                                      if (option.orderProductStatus === "REFUNDED") {
+                                        return <p>환불 처리 완료</p>;
+                                      }
+                                      if (option.orderProductStatus === "WAITING_REFUND") {
+                                        return <p>환불 신청 완료</p>;
+                                      }
+                                      if (option.orderProductStatus === "PURCHASED") {
+                                        if (
+                                          item.orderDetailInfoResponse.deliveryStatus ===
+                                          "PREPARING"
+                                        ) {
+                                          return (
+                                            <Button
+                                              variant="contained"
+                                              style={{
+                                                backgroundColor: "#578b36",
+                                                borderColor: "#578b36",
+                                              }}
+                                              color="error"
+                                              onClick={() =>
+                                                goToRefund(
+                                                  item.orderProductList,
+                                                  item.orderDetailInfoResponse.productOrderId,
+                                                  option.optionId
+                                                )
+                                              }
+                                            >
+                                              주문 취소 신청
+                                            </Button>
+                                          );
+                                        } else {
+                                          return (
+                                            <Button
+                                              variant="contained"
+                                              style={{
+                                                backgroundColor: "#578b36",
+                                                borderColor: "#578b36",
+                                              }}
+                                              color="error"
+                                              disabled={refundDeadline.some(
+                                                (refundItem: UserOrderList) =>
+                                                  refundItem.orderDetailInfoResponse
+                                                    .productOrderId ===
+                                                  item.orderDetailInfoResponse.productOrderId
+                                              )}
+                                              onClick={() => {
+                                                goToRefundWaiting(
+                                                  item.orderProductList,
+                                                  item.orderDetailInfoResponse.productOrderId,
+                                                  option.optionId
+                                                );
+                                              }}
+                                            >
+                                              환불 신청
+                                            </Button>
+                                          );
+                                        }
+                                      }
+                                    })()}
+                                  </TableCell>
+                                ))}
                               </TableRow>
                             );
                           }
