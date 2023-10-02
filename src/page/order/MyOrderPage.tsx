@@ -108,15 +108,18 @@ const MyOrderPage: React.FC = () => {
       option.orderOptionList.map((item) => item.optionId)
     );
     const productName: string = options[0].productName;
-    const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
+    const optionInfoList: OrderOptionListResponse[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item)
+    );
+    const filteredOptionInfo = optionInfoList.filter(
+      (option) => option.orderProductStatus === "PURCHASED"
     );
     navigate("/review/register", {
       state: {
         productOptionId: productOptionIdList,
         orderId: productOrderId,
         productName: productName,
-        optionInfo: optionInfo,
+        optionInfo: filteredOptionInfo,
       },
     });
   };
@@ -166,9 +169,9 @@ const MyOrderPage: React.FC = () => {
           <div className="ordered-check-buttons">
             <span className="ordered-check-buttons-name">조회기간</span>
             <ButtonGroup variant="outlined" aria-label="outlined button group">
-              {timeFilters.map((filterItem: { label: string; value: string }) => (
+              {timeFilters.map((filterItem: { label: string; value: string }, idx: number) => (
                 <Button
-                  key={filterItem.value}
+                  key={idx}
                   className="ordered-button-group-style"
                   onClick={() => handleFilterClick(filterItem.value)}
                   variant={filter === filterItem.value ? "contained" : "outlined"}
@@ -210,11 +213,12 @@ const MyOrderPage: React.FC = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {filteredOrderList.map((item: UserOrderList) => {
+                      {filteredOrderList.map((item: UserOrderList, index: number) => {
                         const orderedTimes = new Set();
                         const productNames = new Set();
                         return item.orderProductList.map(
                           (options: OrderProductListResponse, idx: number) => {
+                            const uniqueKey = `${index}${idx}`;
                             const isProductNameRowSpan = !productNames.has(options.productName);
                             if (isProductNameRowSpan) {
                               productNames.add(options.productName);
@@ -242,7 +246,7 @@ const MyOrderPage: React.FC = () => {
                                 )
                               : null;
                             return (
-                              <TableRow key={idx}>
+                              <TableRow key={uniqueKey}>
                                 {isProductNameRowSpan ? (
                                   <>
                                     {idx === 0 ? (
@@ -301,11 +305,15 @@ const MyOrderPage: React.FC = () => {
                                   >
                                     {(() => {
                                       if (
-                                        item.orderDetailInfoResponse.orderStatus == "CANCEL_PAYMENT"
+                                        item.orderDetailInfoResponse.orderStatus ===
+                                        "CANCEL_PAYMENT"
                                       ) {
                                         return <p>리뷰 작성 불가</p>;
-                                      }
-                                      if (options.reviewId === null) {
+                                      } else if (
+                                        options.reviewId === null &&
+                                        item.orderDetailInfoResponse.orderStatus !==
+                                          "CANCEL_PAYMENT"
+                                      ) {
                                         return (
                                           <Button
                                             variant="outlined"
@@ -318,10 +326,6 @@ const MyOrderPage: React.FC = () => {
                                                 item.orderDetailInfoResponse.productOrderId,
                                                 item.orderProductList
                                               )
-                                            }
-                                            disabled={
-                                              item.orderDetailInfoResponse.deliveryStatus !==
-                                              "DELIVERED"
                                             }
                                           >
                                             리뷰 작성하기
