@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { EventList } from "./entity/EventList";
 import {
+  deleteEventProduct,
   fetchEvent,
   getEventList,
   getEventProductDetail,
 } from "./api/EventApi";
 import {
   Button,
+  IconButton,
   Paper,
   TableBody,
   TableCell,
@@ -20,6 +22,8 @@ import { useAuth } from "layout/navigation/AuthConText";
 import { toast } from "react-toastify";
 import useEventReadStore from "./store/EventReadStore";
 import { EventRead } from "./entity/EventRead";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
 
 const AdminEventListPage = () => {
   const [eventList, setEventList] = useState<EventList>();
@@ -82,20 +86,51 @@ const AdminEventListPage = () => {
       }
       navigate(`/eventProductDetail/${eventProductId}`);
     } catch (error) {
-      console.error(
-        "상세 페이지 이벤트 데이터를 불러오는 중 오류 발생:",
-        error
+      console.error("상세 페이지 이벤트 데이터를 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  const handleDeleteClick = async (eventProductId: number, eventStartLine: string) => {
+    const currentTime = new Date();
+    const eventStartDate = new Date(eventStartLine);
+
+    if (currentTime >= eventStartDate) {
+      Swal.fire(
+        "이벤트가 이미 시작되었습니다.",
+        "이벤트 시작 날짜가 지난 경우에는 상품을 삭제할 수 있습니다.",
+        "warning"
       );
+      return;
+    }
+
+    try {
+      const result = await Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "삭제하면 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "예, 삭제합니다",
+        customClass: {
+          container: "custom-swal-container",
+        },
+      });
+
+      if (result.isConfirmed) {
+        await deleteEventProduct(eventProductId.toString());
+        Swal.fire("삭제되었습니다!", "상품이 삭제되었습니다.", "success");
+      }
+    } catch (error) {
+      console.error("이벤트 상품 삭제 실패:", error);
+      Swal.fire("오류!", "상품 삭제 중 오류가 발생했습니다.", "error");
     }
   };
 
   return (
     <div className="admin-event-list-container">
       <div className="admin-event-list-box">
-        <TableContainer
-          component={Paper}
-          style={{ boxShadow: "none", width: "100%" }}
-        >
+        <TableContainer component={Paper} style={{ boxShadow: "none", width: "100%" }}>
           <table
             style={{
               borderCollapse: "collapse",
@@ -178,6 +213,15 @@ const AdminEventListPage = () => {
                 >
                   재고
                 </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "6%",
+                    textAlign: "center",
+                  }}
+                >
+                  삭제
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -207,9 +251,7 @@ const AdminEventListPage = () => {
                     <TableCell className="cellStyle">
                       <Button
                         className="modify-btn"
-                        onClick={() =>
-                          handleProductDetail(event.eventProductId.toString())
-                        }
+                        onClick={() => handleProductDetail(event.eventProductId.toString())}
                         variant="contained"
                         style={{
                           fontSize: "13px",
@@ -231,6 +273,23 @@ const AdminEventListPage = () => {
                       {format(new Date(event.deadLine), "yyyy년 MM월 dd일")}
                     </TableCell>
                     <TableCell className="cellStyle">{event.stock}</TableCell>
+                    <TableCell
+                      style={{
+                        padding: "8px 16px",
+                        textAlign: "center",
+                        fontFamily: "SUIT-Light",
+                      }}
+                    >
+                      <IconButton
+                        onClick={() =>
+                          handleDeleteClick(event.eventProductId, event.startLine.toString())
+                        }
+                        color="default"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
