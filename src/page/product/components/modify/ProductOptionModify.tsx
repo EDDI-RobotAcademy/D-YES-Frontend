@@ -1,5 +1,5 @@
 import { Container, Box } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ToggleComponent from "../productOption/ToggleComponent";
 import OptionTable from "../productOption/OptionTable";
 import OptionInput from "../productOption/OptionInput";
@@ -10,22 +10,19 @@ import useProductReadStore from "page/product/store/ProductReadStore";
 const ProductOptionModify = () => {
   const { modifyProducts, setModifyProducts } = useProductModifyRefactorStore();
   const { productReads, setProductRead } = useProductReadStore();
-  const [useOptions, setUseOptions] = useState<useOptions[]>([]);
+  const [localOptions, setLocalOptions] = useState<useOptions[]>([]);
   const [optionToggleHeight, setOptionToggleHeight] = useState(0);
 
-  if (!modifyProducts.productOptionModifyRequest) {
-    setModifyProducts({
-      ...modifyProducts,
-      productOptionModifyRequest: [],
-    });
-  }
+  useEffect(() => {
+    if (productReads.optionResponseForAdmin) {
+      setLocalOptions(productReads.optionResponseForAdmin);
+    }
+  }, [productReads.optionResponseForAdmin]);
 
   function calculateToggleHeight() {
-    const minHeight = 180;
+    const minHeight = 150;
     const optionHeight = 78;
-    const optionsCount = Array.isArray(productReads.optionResponseForAdmin)
-      ? productReads.optionResponseForAdmin.length
-      : 0; // 옵션 개수
+    const optionsCount = Array.isArray(localOptions) ? localOptions.length : 0;
     const calculatedHeight = minHeight + optionHeight * optionsCount;
 
     return calculatedHeight;
@@ -33,58 +30,73 @@ const ProductOptionModify = () => {
 
   // 옵션 추가
   const handleAddOption = (newOption: useOptions) => {
-    setUseOptions((prevOptions) => [...prevOptions, newOption]);
+    const newOptions = [...localOptions, newOption];
+    setLocalOptions(newOptions);
     setOptionToggleHeight(optionToggleHeight + 78);
 
-    setModifyProducts({
-      ...modifyProducts,
-      productOptionModifyRequest: [
-        ...modifyProducts.productOptionModifyRequest,
-        newOption,
-      ],
-    });
+    if (modifyProducts.productOptionModifyRequest) {
+      setModifyProducts({
+        ...modifyProducts,
+        productOptionModifyRequest: [...modifyProducts.productOptionModifyRequest, newOption],
+      });
+    }
 
-    setProductRead({
-      ...productReads,
-      optionResponseForAdmin: [
-        ...productReads.optionResponseForAdmin,
-        newOption,
-      ],
-    });
+    if (productReads.optionResponseForAdmin) {
+      setProductRead({
+        ...productReads,
+        optionResponseForAdmin: [...productReads.optionResponseForAdmin, newOption],
+      });
+    }
   };
 
   // 옵션 삭제
   const handleDeleteOption = (index: number) => {
-    const newOptions = [...useOptions];
+    const newOptions = [...localOptions];
     newOptions.splice(index, 1);
     setOptionToggleHeight(optionToggleHeight - 78);
-    setUseOptions(newOptions);
+    setLocalOptions(newOptions);
 
-    const newProductOptionList = [...modifyProducts.productOptionModifyRequest];
-    newProductOptionList.splice(index, 1);
-    setModifyProducts({
-      ...modifyProducts,
-      productOptionModifyRequest: newProductOptionList,
-    });
+    if (modifyProducts.productOptionModifyRequest) {
+      const newProductOptionList = [...modifyProducts.productOptionModifyRequest];
+      newProductOptionList.splice(index, 1);
+      setModifyProducts({
+        ...modifyProducts,
+        productOptionModifyRequest: newProductOptionList,
+      });
+    }
 
-    setProductRead({
-      ...productReads,
-      optionResponseForAdmin: newProductOptionList,
-    });
+    if (productReads.optionResponseForAdmin) {
+      const newProductOptionList = [...productReads.optionResponseForAdmin];
+      newProductOptionList.splice(index, 1);
+      setProductRead({
+        ...productReads,
+        optionResponseForAdmin: newProductOptionList,
+      });
+    }
   };
 
-  const handleProductOptionChange = (newOption: useOptions[]) => {
-    setUseOptions(newOption);
+  const handleProductOptionChange = (updatedOption: useOptions, index: number) => {
+    const newOptions = [...localOptions];
+    newOptions[index] = updatedOption;
+    setLocalOptions(newOptions);
 
-    setModifyProducts({
-      ...modifyProducts,
-      productOptionModifyRequest: newOption,
-    });
+    if (modifyProducts.productOptionModifyRequest) {
+      const newProductOptionList = [...modifyProducts.productOptionModifyRequest];
+      newProductOptionList[index] = updatedOption;
+      setModifyProducts({
+        ...modifyProducts,
+        productOptionModifyRequest: newProductOptionList,
+      });
+    }
 
-    setProductRead({
-      ...productReads,
-      optionResponseForAdmin: newOption,
-    });
+    if (productReads.optionResponseForAdmin) {
+      const newProductOptionList = [...productReads.optionResponseForAdmin];
+      newProductOptionList[index] = updatedOption;
+      setProductRead({
+        ...productReads,
+        optionResponseForAdmin: newProductOptionList,
+      });
+    }
   };
 
   return (
@@ -95,16 +107,13 @@ const ProductOptionModify = () => {
             <ToggleComponent label="옵션정보" height={calculateToggleHeight()}>
               <Box display="flex" flexDirection="column" gap={2}>
                 <OptionTable
-                  optionRows={productReads.optionResponseForAdmin || []}
+                  optionRows={localOptions || []}
                   onChangeOption={(index, updatedOption) => {
-                    const newProductOptionList = [
-                      ...modifyProducts.productOptionModifyRequest,
-                    ];
-                    newProductOptionList[index] = updatedOption;
-                    handleProductOptionChange(newProductOptionList);
+                    handleProductOptionChange(updatedOption, index);
                   }}
-                  onDeleteOption={handleDeleteOption}
-                  // 옵션 판매 상태
+                  onDeleteOption={(index) => {
+                    handleDeleteOption(index);
+                  }}
                   isEditMode={true}
                 />
                 <OptionInput onAddOption={handleAddOption} />
