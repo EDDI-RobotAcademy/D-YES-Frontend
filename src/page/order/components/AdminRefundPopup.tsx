@@ -14,21 +14,22 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AdminOrderRefund } from "../entity/AdminOrderRefund";
-import { fetchPopupRefund } from "../api/OrderApi";
+import { changeRefundStatus, fetchPopupRefund } from "../api/OrderApi";
 import { RefundPopup } from "../entity/RefundPopup";
 import { toast } from "react-toastify";
+import { RefundProductOptiontId } from "../entity/RefundProductOptiontId";
 
 interface ReadPopupProps {
   open: boolean;
   onClose: () => void;
   refundItem: AdminOrderRefund;
-  onRefundProduct: (refundItem: AdminOrderRefund) => Promise<void>;
+  onRefundProcessed: (productOrderId: number) => void;
 }
 const AdminRefundPopup: React.FC<ReadPopupProps> = ({
   open,
   onClose,
   refundItem,
-  onRefundProduct,
+  onRefundProcessed,
 }) => {
   const [refundData, setRefundData] = useState<RefundPopup | null>(null);
 
@@ -50,8 +51,35 @@ const AdminRefundPopup: React.FC<ReadPopupProps> = ({
   }, [refundItem]);
 
   const handleRefundClick = async () => {
-    await onRefundProduct(refundItem);
-    toast.success("환불이 완료되었습니다.");
+    const orderAndTokenAndReasonRequest = {
+      userToken: localStorage.getItem("userToken") || "",
+      orderId: refundItem.orderRefundDetailInfoResponse?.productOrderId,
+      refundReason:
+        refundData?.orderOptionList.find((option) => option.refundReason)?.refundReason || "",
+    };
+
+    const waitingRefundItems = refundData?.orderOptionList.filter(
+      (item) => item?.orderProductStatus === "WAITING_REFUND"
+    );
+    const productOptionId = waitingRefundItems?.map((item) => item?.optionId);
+    const requestList: RefundProductOptiontId[] = (productOptionId || []).map((optionId) => ({
+      productOptionId: optionId || 0,
+    }));
+
+    const data = {
+      orderAndTokenAndReasonRequest,
+      requestList,
+    };
+
+    try {
+      await changeRefundStatus(data);
+      console.log("환불 데이터확인", data);
+      toast.success("환불이 성공적으로 처리되었습니다.");
+      onRefundProcessed(refundItem.orderRefundDetailInfoResponse?.productOrderId);
+    } catch (error) {
+      toast.error("환불 처리 중 오류가 발생했습니다.");
+    }
+
     onClose();
   };
 
@@ -90,7 +118,7 @@ const AdminRefundPopup: React.FC<ReadPopupProps> = ({
                   옵션명
                 </TableCell>
                 <TableCell align="center" className="read-custom-cell">
-                  옵션가격
+                  수량
                 </TableCell>
                 <TableCell align="center" className="read-custom-cell">
                   판매 상태

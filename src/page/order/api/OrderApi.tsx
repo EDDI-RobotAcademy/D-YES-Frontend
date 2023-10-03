@@ -6,6 +6,7 @@ import { OrderStatisticsResponse } from "../entity/OrderStatisticsResponse";
 import { AdminReason } from "../entity/AdminReason";
 import { AdminRefund } from "../entity/AdminRefund";
 import { RefundPopup } from "../entity/RefundPopup";
+import { RefundProductOptiontId } from "../entity/RefundProductOptiontId";
 
 const userToken = localStorage.getItem("userToken");
 
@@ -53,18 +54,17 @@ export const getRefundList = async () => {
 // 관리자 환불
 export const changeRefundStatus = async (data: {
   orderAndTokenAndReasonRequest: AdminReason;
-  requestList: { productOptionId: number }[];
+  requestList: RefundProductOptiontId[];
 }): Promise<AdminRefund> => {
   const response = await axiosInstance.post<AdminRefund>("/order/payment/kakao/refund", data);
   return response.data;
 };
 
 // 관리자 환불 팝업
-export const fetchPopupRefund = async (
-  productOrderId: string
-): Promise<RefundPopup | null> => {
+export const fetchPopupRefund = async (productOrderId: string): Promise<RefundPopup | null> => {
   const response = await axiosInstance.get<RefundPopup>(
     `/order/admin/refund/read/${productOrderId}`
   );
+  console.log("데이터확인", response.data);
   return response.data;
 };

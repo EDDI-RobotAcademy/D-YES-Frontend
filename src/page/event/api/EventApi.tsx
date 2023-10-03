@@ -29,17 +29,13 @@ export const getEventList = async () => {
 };
 
 // 이벤트 수정 전 읽어오기
-export const fetchEvent = async (
-  eventProductId: string
-): Promise<EventRead | null> => {
+export const fetchEvent = async (eventProductId: string): Promise<EventRead | null> => {
   const response = await axiosInstance.get(`event/read/${eventProductId}`);
   console.log("읽기", response.data);
   return response.data;
 };
 
-export const updateEvent = async (
-  updatedData: EventModify
-): Promise<EventModify> => {
+export const updateEvent = async (updatedData: EventModify): Promise<EventModify> => {
   const {
     eventProductId,
     productModifyUserTokenAndEventProductIdRequest,
@@ -50,28 +46,23 @@ export const updateEvent = async (
     eventProductModifyDeadLineRequest,
     eventProductModifyPurchaseCountRequest,
   } = updatedData;
-  const response = await axiosInstance.put<EventModify>(
-    `/event/modify/${eventProductId}`,
-    {
-      eventProductId,
-      productModifyUserTokenAndEventProductIdRequest,
-      productModifyRequest,
-      productOptionModifyRequest,
-      productMainImageModifyRequest,
-      productDetailImagesModifyRequest,
-      eventProductModifyDeadLineRequest,
-      eventProductModifyPurchaseCountRequest,
-    }
-  );
+  const response = await axiosInstance.put<EventModify>(`/event/modify/${eventProductId}`, {
+    eventProductId,
+    productModifyUserTokenAndEventProductIdRequest,
+    productModifyRequest,
+    productOptionModifyRequest,
+    productMainImageModifyRequest,
+    productDetailImagesModifyRequest,
+    eventProductModifyDeadLineRequest,
+    eventProductModifyPurchaseCountRequest,
+  });
   console.log("수정데이터", response.data);
   return response.data;
 };
 
 // 사용자용 이벤트 상품 리스트 확인
 export const getEventProductList = async () => {
-  const response = await axiosInstance.get<EventProductListResponseForm>(
-    "/event/list/all"
-  );
+  const response = await axiosInstance.get<EventProductListResponseForm>("/event/list/all");
   console.log("이벤트 상품 리스트 데이터", response.data);
   return response.data;
 };
@@ -80,9 +71,7 @@ export const getEventProductList = async () => {
 export const getEventProductDetail = async (
   eventProductId: string
 ): Promise<EventReadForUser | null> => {
-  const response = await axiosInstance.get<EventReadForUser>(
-    `/event/read/${eventProductId}`
-  );
+  const response = await axiosInstance.get<EventReadForUser>(`/event/read/${eventProductId}`);
   console.log(response.data);
   return response.data;
 };
@@ -97,4 +86,13 @@ export const useEventProductDetailQuery = (
       refetchOnWindowFocus: false,
     }
   );
+};
+
+// 관리자 이벤트 상품 삭제
+export const deleteEventProduct = async (eventProductId: string) => {
+  await axiosInstance.delete(`/event/delete/${eventProductId}`, {
+    params: {
+      userToken: localStorage.getItem("userToken"),
+    },
+  });
 };
