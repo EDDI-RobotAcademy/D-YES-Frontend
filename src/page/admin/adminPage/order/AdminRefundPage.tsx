@@ -92,20 +92,20 @@ const AdminRefundPage = () => {
                 <TableCell
                   className="cellStyle-header"
                   style={{
-                    width: "4%",
-                    textAlign: "center",
-                  }}
-                >
-                  USERID
-                </TableCell>
-                <TableCell
-                  className="cellStyle-header"
-                  style={{
-                    width: "2%",
+                    width: "3%",
                     textAlign: "center",
                   }}
                 >
                   주문 번호
+                </TableCell>
+                <TableCell
+                  className="cellStyle-header"
+                  style={{
+                    width: "3%",
+                    textAlign: "center",
+                  }}
+                >
+                  USERID
                 </TableCell>
                 <TableCell
                   className="cellStyle-header"
@@ -174,7 +174,7 @@ const AdminRefundPage = () => {
                 <TableCell
                   className="cellStyle-header"
                   style={{
-                    width: "6%",
+                    width: "4%",
                     textAlign: "center",
                   }}
                 >
@@ -190,10 +190,10 @@ const AdminRefundPage = () => {
                     onClick={() => handleRowClick(refund)}
                     style={{ cursor: "pointer" }}
                   >
-                    <TableCell className="cellStyle">{refund.orderUserInfo?.userId}</TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.productOrderId}
                     </TableCell>
+                    <TableCell className="cellStyle">{refund.orderUserInfo?.userId}</TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.orderedTime}
                     </TableCell>
