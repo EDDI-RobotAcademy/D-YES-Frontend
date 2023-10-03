@@ -1,7 +1,7 @@
-import { OrderOptionListResponse } from "./UserOrderOption";
+import { RefundPopupOptionList } from "./RefundPopupOptionList";
 
 export interface RefundPopup {
   productId: number;
   productName: string;
-  orderOptionList: OrderOptionListResponse[];
+  orderOptionList: RefundPopupOptionList[];
 }

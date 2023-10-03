@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { useAuth } from "layout/navigation/AuthConText";
-import { changeRefundStatus, getRefundList } from "page/order/api/OrderApi";
+import { getRefundList } from "page/order/api/OrderApi";
 import AdminRefundPopup from "page/order/components/AdminRefundPopup";
 import { AdminOrderRefund } from "page/order/entity/AdminOrderRefund";
 import React, { useEffect, useState } from "react";
@@ -50,39 +50,30 @@ const AdminRefundPage = () => {
     fetchRefundList();
   }, []);
 
-  const handleRefund = async (refundItem: AdminOrderRefund) => {
-    try {
-      const orderAndTokenAndReasonRequest = {
-        userToken: localStorage.getItem("userToken") || "",
-        orderId: refundItem.orderRefundDetailInfoResponse?.orderId,
-        refundReason: refundItem.orderRefundDetailInfoResponse?.refundReason,
-      };
-
-      const requestList = [
-        {
-          productOptionId: refundItem.orderRefundDetailInfoResponse?.productOrderId,
-        },
-      ];
-
-      const data = {
-        orderAndTokenAndReasonRequest,
-        requestList,
-      };
-      await changeRefundStatus(data);
-      console.log("보낸데이터", data);
-    } catch (error) {
-      console.error("환불 실패:", error);
-    }
-  };
-
   const handleRowClick = (refundItem: AdminOrderRefund) => {
-    setSelectedRefund(refundItem); 
+    setSelectedRefund(refundItem);
     setIsPopupOpen(true);
   };
-  
+
   const closePopup = () => {
     setSelectedRefund(null);
     setIsPopupOpen(false);
+  };
+
+  const handleRefundProcessed = (productOrderId: number) => {
+    setRefundList((prevRefundList) =>
+      prevRefundList.map((refund) =>
+        refund.orderRefundDetailInfoResponse?.productOrderId === productOrderId
+          ? {
+              ...refund,
+              orderRefundDetailInfoResponse: {
+                ...refund.orderRefundDetailInfoResponse,
+                orderedProductStatus: "REFUNDED",
+              },
+            }
+          : refund
+      )
+    );
   };
 
   return (
@@ -195,7 +186,7 @@ const AdminRefundPage = () => {
               {refundList?.length ? (
                 refundList?.map((refund) => (
                   <TableRow
-                    key={refund.orderRefundDetailInfoResponse?.orderId}
+                    key={refund.orderRefundDetailInfoResponse?.productOrderId}
                     onClick={() => handleRowClick(refund)}
                     style={{ cursor: "pointer" }}
                   >
@@ -249,7 +240,7 @@ const AdminRefundPage = () => {
             open={isPopupOpen}
             refundItem={selectedRefund}
             onClose={closePopup}
-            onRefundProduct={handleRefund}
+            onRefundProcessed={handleRefundProcessed}
           />
         )}
       </div>
