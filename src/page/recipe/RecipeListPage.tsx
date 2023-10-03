@@ -160,7 +160,7 @@ const RecipeListPage: React.FC = () => {
                       <div className="recipe-list-detail">
                         <p className="recipe-list-icon">
                           <TimerIcon fontSize="inherit" />
-                          {recipe.cookingTime}분
+                          {recipe.cookingTime}
                         </p>
                         <p>{recipe.nickName}님의 레시피</p>
                       </div>
