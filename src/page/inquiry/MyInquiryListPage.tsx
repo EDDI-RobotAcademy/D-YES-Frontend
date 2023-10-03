@@ -24,7 +24,7 @@ const MyInquiryListPage = () => {
       navigate("/login");
     }
   }, [isUser, navigate]);
-  
+
   const inquiryTypesOptions = [
     { value: "PURCHASE", label: "구매" },
     { value: "ACCOUNT", label: "회원" },
@@ -261,30 +261,13 @@ const MyInquiryListPage = () => {
                         </TableCell>
                       </TableRow>
                       {expandedRows.has(inquiry.inquiryId.toString()) &&
-                        loadedItems?.replyResponse.replyContent &&
-                        inquiry.inquiryId.toString() ===
-                          loadedItems?.inquiryReadInquiryInfoResponse.inquiryId.toString() && (
+                        ((loadedItems?.replyResponse.replyContent &&
+                          inquiry.inquiryId.toString() ===
+                            loadedItems?.inquiryReadInquiryInfoResponse.inquiryId.toString()) ||
+                          (!loadedItems?.replyResponse.replyContent &&
+                            inquiry.inquiryId.toString() ===
+                              loadedItems?.inquiryReadInquiryInfoResponse.inquiryId.toString())) && (
                           <>
-                            <TableRow>
-                              <TableCell
-                                colSpan={1}
-                                style={{
-                                  backgroundColor: "#f1f8ea",
-                                  textAlign: "center",
-                                }}
-                              >
-                                답변 일자
-                              </TableCell>
-                              <TableCell
-                                colSpan={4}
-                                style={{
-                                  backgroundColor: "#f1f8ea",
-                                  textAlign: "left",
-                                }}
-                              >
-                                {loadedItems?.replyResponse.createDate.toString()}
-                              </TableCell>
-                            </TableRow>
                             <TableRow>
                               <TableCell
                                 colSpan={5}
@@ -294,12 +277,54 @@ const MyInquiryListPage = () => {
                                   verticalAlign: "top",
                                   fontFamily: "SUIT-Light",
                                   height: "200px",
-                                  backgroundColor: "#f1f8ea",
+                                  backgroundColor: "white",
                                 }}
                               >
-                                {loadedItems?.replyResponse.replyContent}
+                                {
+                                  loadedItems?.inquiryReadInquiryInfoResponse
+                                    .content
+                                }
                               </TableCell>
                             </TableRow>
+                            {loadedItems?.replyResponse.replyContent && (
+                              <>
+                                <TableRow>
+                                  <TableCell
+                                    colSpan={1}
+                                    style={{
+                                      backgroundColor: "#f1f8ea",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    답변 일자
+                                  </TableCell>
+                                  <TableCell
+                                    colSpan={4}
+                                    style={{
+                                      backgroundColor: "#f1f8ea",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {loadedItems?.replyResponse.createDate.toString()}
+                                  </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell
+                                    colSpan={5}
+                                    style={{
+                                      padding: "8px 16px",
+                                      textAlign: "left",
+                                      verticalAlign: "top",
+                                      fontFamily: "SUIT-Light",
+                                      height: "200px",
+                                      backgroundColor: "#f1f8ea",
+                                    }}
+                                  >
+                                    {loadedItems?.replyResponse.replyContent}
+                                  </TableCell>
+                                </TableRow>
+                              </>
+                            )}
                           </>
                         )}
                     </React.Fragment>
