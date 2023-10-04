@@ -125,8 +125,12 @@ const MyOrderPage: React.FC = () => {
     });
   };
 
-  const goToRefund = (options: OrderProductListResponse[], orderId: string, optionId: number) => {
-    const productName: string = options[0].productName;
+  const goToRefund = (
+    options: OrderProductListResponse[],
+    orderId: string,
+    optionId: number,
+    productName: string
+  ) => {
     const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item)
     );
@@ -143,9 +147,9 @@ const MyOrderPage: React.FC = () => {
   const goToRefundWaiting = (
     options: OrderProductListResponse[],
     orderId: string,
-    optionId: number
+    optionId: number,
+    productName: string
   ) => {
-    const productName: string = options[0].productName;
     const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item)
     );
@@ -405,7 +409,8 @@ const MyOrderPage: React.FC = () => {
                                                 goToRefund(
                                                   item.orderProductList,
                                                   item.orderDetailInfoResponse.productOrderId,
-                                                  option.optionId
+                                                  option.optionId,
+                                                  options.productName
                                                 )
                                               }
                                               disabled={refundDeadline?.some(
@@ -458,7 +463,8 @@ const MyOrderPage: React.FC = () => {
                                                 goToRefundWaiting(
                                                   item.orderProductList,
                                                   item.orderDetailInfoResponse.productOrderId,
-                                                  option.optionId
+                                                  option.optionId,
+                                                  options.productName
                                                 );
                                               }}
                                             >
