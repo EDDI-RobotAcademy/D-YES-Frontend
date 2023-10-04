@@ -57,24 +57,18 @@ const ProductDetailRegister = () => {
     { value: "WELSH_ONION", label: "대파" },
   ];
 
-  const handleOptionChange = (
-    event: SelectChangeEvent<{ value: string; label: string }>
-  ) => {
+  const handleOptionChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
     setProducts({
       ...products,
       cultivationMethod: event.target.value.toString(),
     });
   };
 
-  const handleProduceTypesChange = (
-    event: SelectChangeEvent<{ value: string; label: string }>
-  ) => {
+  const handleProduceTypesChange = (event: SelectChangeEvent<{ value: string; label: string }>) => {
     setProducts({ ...products, produceType: event.target.value.toString() });
   };
 
-  const handleProductNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleProductNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newProductName = event.target.value;
     setProducts({ ...products, productName: newProductName });
   };
@@ -113,6 +107,7 @@ const ProductDetailRegister = () => {
                   onChange={(event) => {
                     setSelectedFarmName(event.target.value);
                   }}
+                  disabled
                 />
                 <Button
                   onClick={handleOpenFarmSearch}
@@ -126,7 +121,6 @@ const ProductDetailRegister = () => {
                 >
                   조회
                 </Button>
-
                 <FarmSearch
                   open={openFarmSearch}
                   onClose={() => setOpenFarmSearch(false)}
@@ -147,9 +141,7 @@ const ProductDetailRegister = () => {
                     <Select
                       name="cultivationMethod"
                       value={
-                        (products.cultivationMethod as
-                          | ""
-                          | { value: string; label: string }) || ""
+                        (products.cultivationMethod as "" | { value: string; label: string }) || ""
                       }
                       onChange={handleOptionChange}
                       className="text-field"
@@ -177,11 +169,7 @@ const ProductDetailRegister = () => {
                   >
                     <Select
                       name="produceType"
-                      value={
-                        (products.produceType as
-                          | ""
-                          | { value: string; label: string }) || ""
-                      }
+                      value={(products.produceType as "" | { value: string; label: string }) || ""}
                       onChange={handleProduceTypesChange}
                       className="text-field"
                       sx={{

@@ -7,7 +7,7 @@ import OptionInput from "../productOption/OptionInput";
 import useProductRegisterStore from "page/product/store/ProductRegisterStore";
 
 const ProductOptionsRegister = () => {
-  const [optionToggleHeight, setOptionToggleHeight] = useState(220);
+  const [optionToggleHeight, setOptionToggleHeight] = useState(230);
   const [useOptions, setUseOptions] = useState<useOptions[]>([]);
   const { products, setProducts } = useProductRegisterStore();
 
