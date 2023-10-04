@@ -118,7 +118,7 @@ const AdminRefundPage = () => {
                     textAlign: "center",
                   }}
                 >
-                  USERID
+                  사용자ID
                 </TableCell>
                 <TableCell
                   className="cellStyle-header"
