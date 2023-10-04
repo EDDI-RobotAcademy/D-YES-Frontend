@@ -81,18 +81,18 @@ const AdminOrderData = () => {
             <TableRow>
               <TableCell
                 style={{
-                  width: "300px",
+                  width: "530px",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
                   fontFamily: "SUIT-Medium",
                 }}
               >
-                PRODUCTORDERID
+                주문번호
               </TableCell>
               <TableCell
                 style={{
-                  width: "300px",
+                  width: "530px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -103,7 +103,7 @@ const AdminOrderData = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "530px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
