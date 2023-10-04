@@ -399,6 +399,7 @@ const MyOrderPage: React.FC = () => {
                                               style={{
                                                 backgroundColor: "#578b36",
                                                 borderColor: "#578b36",
+                                                color: "white",
                                                 opacity: refundDeadline.some(
                                                   (refundItem: UserOrderList) =>
                                                     refundItem.orderDetailInfoResponse
