@@ -82,6 +82,7 @@ const MyOrderPage: React.FC = () => {
   };
 
   const refundDeadline = React.useMemo(() => {
+    if (loadedOrderList == null) return;
     return loadedOrderList.filter((item: UserOrderList) => {
       const orderedTime: Date = new Date(item.orderDetailInfoResponse.orderedTime);
       const timeDifference: number = msKoreanTime - orderedTime.getTime();
@@ -379,6 +380,25 @@ const MyOrderPage: React.FC = () => {
                                               style={{
                                                 backgroundColor: "#578b36",
                                                 borderColor: "#578b36",
+                                                color: "white",
+                                                opacity: refundDeadline?.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? 0.5
+                                                  : 1,
+                                                cursor: refundDeadline?.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? "not-allowed"
+                                                  : "pointer",
                                               }}
                                               color="error"
                                               onClick={() =>
@@ -388,6 +408,13 @@ const MyOrderPage: React.FC = () => {
                                                   option.optionId
                                                 )
                                               }
+                                              disabled={refundDeadline?.some(
+                                                (refundItem: UserOrderList) =>
+                                                  refundItem.orderDetailInfoResponse
+                                                    .productOrderId ===
+                                                    item.orderDetailInfoResponse.productOrderId ||
+                                                  options.reviewId !== null
+                                              )}
                                             >
                                               주문 취소 신청
                                             </Button>
@@ -400,7 +427,7 @@ const MyOrderPage: React.FC = () => {
                                                 backgroundColor: "#578b36",
                                                 borderColor: "#578b36",
                                                 color: "white",
-                                                opacity: refundDeadline.some(
+                                                opacity: refundDeadline?.some(
                                                   (refundItem: UserOrderList) =>
                                                     refundItem.orderDetailInfoResponse
                                                       .productOrderId ===
@@ -409,7 +436,7 @@ const MyOrderPage: React.FC = () => {
                                                 )
                                                   ? 0.5
                                                   : 1,
-                                                cursor: refundDeadline.some(
+                                                cursor: refundDeadline?.some(
                                                   (refundItem: UserOrderList) =>
                                                     refundItem.orderDetailInfoResponse
                                                       .productOrderId ===
@@ -420,7 +447,7 @@ const MyOrderPage: React.FC = () => {
                                                   : "pointer",
                                               }}
                                               color="error"
-                                              disabled={refundDeadline.some(
+                                              disabled={refundDeadline?.some(
                                                 (refundItem: UserOrderList) =>
                                                   refundItem.orderDetailInfoResponse
                                                     .productOrderId ===
