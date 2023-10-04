@@ -58,7 +58,12 @@ const AdminOrderListPage = () => {
   const fetchOrderList = async () => {
     try {
       const fetchedOrderList = await getOrderList();
-      setOrderList(fetchedOrderList);
+      const sortedOrderList = fetchedOrderList.sort(
+        (a: AdminOrderList, b: AdminOrderList) =>
+          parseInt(a.orderDetailInfoResponse.productOrderId) -
+          parseInt(b.orderDetailInfoResponse.productOrderId)
+      );
+      setOrderList(sortedOrderList);
     } catch (error) {
       console.log("주문 목록 불러오기 실패", error);
     }
