@@ -53,18 +53,18 @@ const AdminOrderOptionList = () => {
             <TableRow>
               <TableCell
                 style={{
-                  width: "300px",
+                  width: "220px",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
                   fontFamily: "SUIT-Medium",
                 }}
               >
-                PRODUCTID
+                상품번호
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -75,7 +75,7 @@ const AdminOrderOptionList = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -86,7 +86,7 @@ const AdminOrderOptionList = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -97,7 +97,7 @@ const AdminOrderOptionList = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -108,7 +108,7 @@ const AdminOrderOptionList = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -119,7 +119,7 @@ const AdminOrderOptionList = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",

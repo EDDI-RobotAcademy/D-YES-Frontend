@@ -46,7 +46,7 @@ const AdminOrderPaymentData = () => {
             <TableRow>
               <TableCell
                 style={{
-                  width: "300px",
+                  width: "400px",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -57,7 +57,7 @@ const AdminOrderPaymentData = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "400px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -68,7 +68,7 @@ const AdminOrderPaymentData = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "400px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -79,7 +79,7 @@ const AdminOrderPaymentData = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "200px",
+                  width: "400px",
                   padding: "8px 16px",
                   textAlign: "center",
                   color: "#252525",
