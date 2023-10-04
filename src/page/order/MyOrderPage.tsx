@@ -320,12 +320,26 @@ const MyOrderPage: React.FC = () => {
                                             style={{
                                               color: "#578b36",
                                               borderColor: "#578b36",
+                                              opacity:
+                                                item.orderDetailInfoResponse.deliveryStatus !==
+                                                "DELIVERED"
+                                                  ? 0.5
+                                                  : 1,
+                                              cursor:
+                                                item.orderDetailInfoResponse.deliveryStatus !==
+                                                "DELIVERED"
+                                                  ? "not-allowed"
+                                                  : "pointer",
                                             }}
                                             onClick={() =>
                                               goToReviewPage(
                                                 item.orderDetailInfoResponse.productOrderId,
                                                 item.orderProductList
                                               )
+                                            }
+                                            disabled={
+                                              item.orderDetailInfoResponse.deliveryStatus !==
+                                              "DELIVERED"
                                             }
                                           >
                                             리뷰 작성하기
