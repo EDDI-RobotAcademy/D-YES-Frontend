@@ -82,6 +82,7 @@ const MyOrderPage: React.FC = () => {
   };
 
   const refundDeadline = React.useMemo(() => {
+    if (loadedOrderList == null) return;
     return loadedOrderList.filter((item: UserOrderList) => {
       const orderedTime: Date = new Date(item.orderDetailInfoResponse.orderedTime);
       const timeDifference: number = msKoreanTime - orderedTime.getTime();
@@ -103,17 +104,17 @@ const MyOrderPage: React.FC = () => {
     setFilter(value);
   };
 
-  const goToReviewPage = (productOrderId: string, options: OrderProductListResponse[]) => {
+  const goToReviewPage = (
+    productOrderId: string,
+    options: OrderProductListResponse[],
+    productId: number
+  ) => {
     const productOptionIdList: number[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item.optionId)
     );
     const productName: string = options[0].productName;
-    const optionInfoList: OrderOptionListResponse[] = options.flatMap((option) =>
-      option.orderOptionList.map((item) => item)
-    );
-    const filteredOptionInfo = optionInfoList.filter(
-      (option) => option.orderProductStatus === "PURCHASED"
-    );
+    const filteredOptionInfo = options.filter((option) => option.productId === productId);
+
     navigate("/review/register", {
       state: {
         productOptionId: productOptionIdList,
@@ -124,8 +125,12 @@ const MyOrderPage: React.FC = () => {
     });
   };
 
-  const goToRefund = (options: OrderProductListResponse[], orderId: string, optionId: number) => {
-    const productName: string = options[0].productName;
+  const goToRefund = (
+    options: OrderProductListResponse[],
+    orderId: string,
+    optionId: number,
+    productName: string
+  ) => {
     const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item)
     );
@@ -142,9 +147,9 @@ const MyOrderPage: React.FC = () => {
   const goToRefundWaiting = (
     options: OrderProductListResponse[],
     orderId: string,
-    optionId: number
+    optionId: number,
+    productName: string
   ) => {
-    const productName: string = options[0].productName;
     const optionInfo: OrderOptionListResponse[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item)
     );
@@ -320,12 +325,27 @@ const MyOrderPage: React.FC = () => {
                                             style={{
                                               color: "#578b36",
                                               borderColor: "#578b36",
+                                              opacity:
+                                                item.orderDetailInfoResponse.deliveryStatus !==
+                                                "DELIVERED"
+                                                  ? 0.5
+                                                  : 1,
+                                              cursor:
+                                                item.orderDetailInfoResponse.deliveryStatus !==
+                                                "DELIVERED"
+                                                  ? "not-allowed"
+                                                  : "pointer",
                                             }}
                                             onClick={() =>
                                               goToReviewPage(
                                                 item.orderDetailInfoResponse.productOrderId,
-                                                item.orderProductList
+                                                item.orderProductList,
+                                                options.productId
                                               )
+                                            }
+                                            disabled={
+                                              item.orderDetailInfoResponse.deliveryStatus !==
+                                              "DELIVERED"
                                             }
                                           >
                                             리뷰 작성하기
@@ -364,15 +384,42 @@ const MyOrderPage: React.FC = () => {
                                               style={{
                                                 backgroundColor: "#578b36",
                                                 borderColor: "#578b36",
+                                                color: "white",
+                                                opacity: refundDeadline?.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? 0.5
+                                                  : 1,
+                                                cursor: refundDeadline?.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? "not-allowed"
+                                                  : "pointer",
                                               }}
                                               color="error"
                                               onClick={() =>
                                                 goToRefund(
                                                   item.orderProductList,
                                                   item.orderDetailInfoResponse.productOrderId,
-                                                  option.optionId
+                                                  option.optionId,
+                                                  options.productName
                                                 )
                                               }
+                                              disabled={refundDeadline?.some(
+                                                (refundItem: UserOrderList) =>
+                                                  refundItem.orderDetailInfoResponse
+                                                    .productOrderId ===
+                                                    item.orderDetailInfoResponse.productOrderId ||
+                                                  options.reviewId !== null
+                                              )}
                                             >
                                               주문 취소 신청
                                             </Button>
@@ -384,19 +431,40 @@ const MyOrderPage: React.FC = () => {
                                               style={{
                                                 backgroundColor: "#578b36",
                                                 borderColor: "#578b36",
+                                                color: "white",
+                                                opacity: refundDeadline?.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? 0.5
+                                                  : 1,
+                                                cursor: refundDeadline?.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? "not-allowed"
+                                                  : "pointer",
                                               }}
                                               color="error"
-                                              disabled={refundDeadline.some(
+                                              disabled={refundDeadline?.some(
                                                 (refundItem: UserOrderList) =>
                                                   refundItem.orderDetailInfoResponse
                                                     .productOrderId ===
-                                                  item.orderDetailInfoResponse.productOrderId
+                                                    item.orderDetailInfoResponse.productOrderId ||
+                                                  options.reviewId !== null
                                               )}
                                               onClick={() => {
                                                 goToRefundWaiting(
                                                   item.orderProductList,
                                                   item.orderDetailInfoResponse.productOrderId,
-                                                  option.optionId
+                                                  option.optionId,
+                                                  options.productName
                                                 );
                                               }}
                                             >

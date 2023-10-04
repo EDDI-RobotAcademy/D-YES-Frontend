@@ -1,9 +1,15 @@
 import React from "react";
 
 import "./css/Footer.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Footer: React.FC = () => {
+  const navigate = useNavigate();
+
+  const goToInquiryRegister = () => {
+    navigate("/inquiry/register");
+  };
+
   return (
     <div className="footer-container">
       <div className="footer-inner">
@@ -34,13 +40,13 @@ const Footer: React.FC = () => {
             </div>
           </div>
           <div className="flex button-style">
-            <button className="flex button-detail-1">
+            <button className="flex button-detail-1" onClick={goToInquiryRegister}>
               <div className="button-text-1">
-                <Link className="button-text-1" to={"/inquiry/register"}>
+                <div className="button-text-1">
                   <div style={{ minWidth: "60px", textAlign: "center" }}>
                     <p>문의하기</p>
                   </div>
-                </Link>
+                </div>
               </div>
             </button>
             <button className="flex button-detail-2">
@@ -52,13 +58,12 @@ const Footer: React.FC = () => {
         <hr className="hr-1" />
         <div className="detail-info">
           <p>
-            상호명 : 주식회사 투투마켓 &nbsp;|&nbsp; 대표 : 정다운 &nbsp;|&nbsp;
-            사업자등록번호 : 123-45-67890 &nbsp;|&nbsp; 소재지 : 서울특별시
-            어딘가
+            상호명 : 주식회사 투투마켓 &nbsp;|&nbsp; 대표 : 정다운 &nbsp;|&nbsp; 사업자등록번호 :
+            123-45-67890 &nbsp;|&nbsp; 소재지 : 서울특별시 어딘가
           </p>
           <p>
-            통신판매업 신고번호 : 2023-대한민국-0101 &nbsp;|&nbsp; 제휴 및 납품
-            문의 : biz@toto.co.kr
+            통신판매업 신고번호 : 2023-대한민국-0101 &nbsp;|&nbsp; 제휴 및 납품 문의 :
+            biz@toto.co.kr
           </p>
         </div>
         <div className="flex copyright-container">

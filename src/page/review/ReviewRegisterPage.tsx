@@ -7,12 +7,12 @@ import useReviewStore from "./store/ReviewStore";
 import useReviewImageStore from "./store/ReviewImageStore";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { ReviewImage } from "./entity/ReviewImage";
-import { OrderOptionListResponse } from "page/order/entity/UserOrderOption";
 import Rating from "@mui/material/Rating";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import { useAuth } from "layout/navigation/AuthConText";
 import { ReviewRegister } from "./entity/ReviewRegister";
+import { OrderProductListResponse } from "page/order/entity/UserOrderProduct";
 
 import "./css/ReviewRegisterPage.css";
 
@@ -149,12 +149,14 @@ const ReviewRegisterPage = () => {
               <div>
                 <p className="review-reg-product-name">{productName}</p>
                 <p className="review-reg-option-info">
-                  {optionInfo.map((option: OrderOptionListResponse, index: number) => (
-                    <span key={index}>
-                      {option.optionName}
-                      {index < optionInfo.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
+                  {optionInfo.flatMap((option: OrderProductListResponse, index: number) =>
+                    option.orderOptionList.map((item) => (
+                      <span key={index}>
+                        {item.optionName}
+                        {index < optionInfo.length - 1 ? ", " : ""}
+                      </span>
+                    ))
+                  )}
                 </p>
               </div>
             </div>
@@ -207,6 +209,7 @@ const ReviewRegisterPage = () => {
             )}
           </div>
           <div className="review-reg-submit-btn">
+            <p className="review-reg-notice">* 리뷰를 작성한 상품은 환불 신청할 수 없습니다.</p>
             <Button
               style={{ minWidth: "150px", color: "#578b36", borderColor: "#578b36" }}
               variant="outlined"

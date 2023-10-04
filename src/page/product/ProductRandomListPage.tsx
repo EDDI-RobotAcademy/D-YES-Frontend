@@ -109,12 +109,29 @@ const ProductRandomListPage = () => {
                   ></CardContent>
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="280"
                     image={getImageUrl(product.productMainImage)}
                     alt={`mainImage ${product.productId}`}
                   />
-                  <CardContent sx={{ padding: "8px" }}>
-                    <Typography data-testid="product-name" variant="h6" fontFamily={"SUIT-Bold"}>
+                  <CardContent
+                    style={{
+                      padding: "8px",
+                    }}
+                  >
+                    <Typography
+                      data-testid="product-name"
+                      variant="h6"
+                      fontFamily={"SUIT-Bold"}
+                      style={{
+                        height: "70px",
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        cursor: "pointer",
+                      }}
+                    >
                       {product.productName}
                     </Typography>
                     <Typography

@@ -49,5 +49,11 @@
 .review-reg-submit-btn {
   padding-bottom: 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+.review-reg-notice {
+  font-size: 14px;
+  color: orangered;
+  font-family: "SUIT-Bold";
 }
