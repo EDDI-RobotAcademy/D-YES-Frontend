@@ -399,13 +399,32 @@ const MyOrderPage: React.FC = () => {
                                               style={{
                                                 backgroundColor: "#578b36",
                                                 borderColor: "#578b36",
+                                                opacity: refundDeadline.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? 0.5
+                                                  : 1,
+                                                cursor: refundDeadline.some(
+                                                  (refundItem: UserOrderList) =>
+                                                    refundItem.orderDetailInfoResponse
+                                                      .productOrderId ===
+                                                      item.orderDetailInfoResponse.productOrderId ||
+                                                    options.reviewId !== null
+                                                )
+                                                  ? "not-allowed"
+                                                  : "pointer",
                                               }}
                                               color="error"
                                               disabled={refundDeadline.some(
                                                 (refundItem: UserOrderList) =>
                                                   refundItem.orderDetailInfoResponse
                                                     .productOrderId ===
-                                                  item.orderDetailInfoResponse.productOrderId
+                                                    item.orderDetailInfoResponse.productOrderId ||
+                                                  options.reviewId !== null
                                               )}
                                               onClick={() => {
                                                 goToRefundWaiting(

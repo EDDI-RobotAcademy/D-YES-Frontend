@@ -209,6 +209,7 @@ const ReviewRegisterPage = () => {
             )}
           </div>
           <div className="review-reg-submit-btn">
+            <p className="review-reg-notice">* 리뷰를 작성한 상품은 환불 신청할 수 없습니다.</p>
             <Button
               style={{ minWidth: "150px", color: "#578b36", borderColor: "#578b36" }}
               variant="outlined"
