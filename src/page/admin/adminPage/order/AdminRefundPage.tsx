@@ -76,6 +76,19 @@ const AdminRefundPage = () => {
     );
   };
 
+  const mapDeliveryStatus = (status: string) => {
+    switch (status) {
+      case "PREPARING":
+        return "상품 준비중";
+      case "SHIPPING":
+        return "배송중";
+      case "DELIVERED":
+        return "배송완료";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="admin-refund-list-container">
       <div className="admin-refund-list-box">
@@ -198,7 +211,7 @@ const AdminRefundPage = () => {
                       {refund.orderRefundDetailInfoResponse?.orderedTime}
                     </TableCell>
                     <TableCell className="cellStyle">
-                      {refund.orderRefundDetailInfoResponse?.deliveryStatus}
+                      {mapDeliveryStatus(refund.orderRefundDetailInfoResponse?.deliveryStatus)}
                     </TableCell>
                     <TableCell className="cellStyle">
                       {refund.orderRefundDetailInfoResponse?.cancelPrice}
