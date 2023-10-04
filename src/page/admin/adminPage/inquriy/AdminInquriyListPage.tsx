@@ -137,79 +137,80 @@ const AdminInquriyListPage = () => {
             </TableRow>
           </TableHead>
           <tbody>
-            {inquiryList?.map((inquiry) => (
-              <TableRow
-                key={inquiry.inquiryId}
-                style={{ cursor: "pointer" }}
-                onClick={(e) =>
-                  handleInquiryClick(inquiry.inquiryId.toString())
-                }
-              >
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {inquiry.inquiryId}
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {inquiry.title}
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {
-                    inquiryTypesOptions.find(
-                      (option) => option.value === inquiry.inquiryType
-                    )?.label
-                  }
-                </TableCell>
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {inquiry.inquiryStatus && (
-                    <Chip
-                      label={
-                        inquiryStatusOptions.find(
-                          (option) => option.value === inquiry.inquiryStatus
-                        )?.label
-                      }
-                      color={
-                        inquiry.inquiryStatus === "WAITING"
-                          ? "error"
-                          : "primary"
-                      }
-                    />
-                  )}
-                </TableCell>
-
-                <TableCell
-                  style={{
-                    padding: "8px 16px",
-                    textAlign: "center",
-                    fontFamily: "SUIT-Light",
-                  }}
-                >
-                  {inquiry.createDate.toString()}
+            {inquiryList?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} style={{ textAlign: "center" }}>
+                  등록된 문의가 없습니다.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              inquiryList?.map((inquiry) => (
+                <TableRow
+                  key={inquiry.inquiryId}
+                  style={{ cursor: "pointer" }}
+                  onClick={(e) => handleInquiryClick(inquiry.inquiryId.toString())}
+                >
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {inquiry.inquiryId}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {inquiry.title}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {
+                      inquiryTypesOptions.find((option) => option.value === inquiry.inquiryType)
+                        ?.label
+                    }
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {inquiry.inquiryStatus && (
+                      <Chip
+                        label={
+                          inquiryStatusOptions.find(
+                            (option) => option.value === inquiry.inquiryStatus
+                          )?.label
+                        }
+                        color={inquiry.inquiryStatus === "WAITING" ? "error" : "primary"}
+                      />
+                    )}
+                  </TableCell>
+
+                  <TableCell
+                    style={{
+                      padding: "8px 16px",
+                      textAlign: "center",
+                      fontFamily: "SUIT-Light",
+                    }}
+                  >
+                    {inquiry.createDate.toString()}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </tbody>
         </table>
       </Box>
