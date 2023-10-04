@@ -57,13 +57,13 @@ const MyPageUpdate = () => {
       navigate("/login");
     }
   }, [isUser, navigate]);
-  
+
   const onDrop = async (acceptedFile: File[]) => {
     if (acceptedFile.length > 0) {
       try {
         const compressedImage = await compressImgForProfile(acceptedFile[0]);
         setSelectedImage(compressedImage);
-        localStorage.setItem("profileImg", compressedImage.name);
+        localStorage.setItem("encodedProfileImg", compressedImage.name);
       } catch (error) {
         console.error(error);
       }
@@ -181,9 +181,9 @@ const MyPageUpdate = () => {
   useEffect(() => {
     // 입력데이터 유지
     // localStorage에서 저장된 데이터 불러오기
-    const savedImg = localStorage.getItem("profileImg");
+    const savedImg = localStorage.getItem("encodedProfileImg");
     const savedEmail = localStorage.getItem("email");
-    const savedNickName = localStorage.getItem("nickName");
+    const savedNickName = localStorage.getItem("encodedNickName");
     const savedContactNumber = localStorage.getItem("contactNumber");
     const savedAddress = localStorage.getItem("address");
     const savedZipCode = localStorage.getItem("zipCode");
@@ -236,7 +236,6 @@ const MyPageUpdate = () => {
   const removeLocalStorageItems = () => {
     localStorage.removeItem("profileImg");
     localStorage.removeItem("email");
-    localStorage.removeItem("nickName");
     localStorage.removeItem("contactNumber");
     localStorage.removeItem("address");
     localStorage.removeItem("zipCode");
@@ -354,7 +353,8 @@ const MyPageUpdate = () => {
                     top: 0, // 이미지를 원안의 상단에 배치
                     left: 0, // 이미지를 원안의 왼쪽에 배치
                   }}
-                  alt="" />
+                  alt=""
+                />
               </div>
             )}
             <input {...getInputProps()} />
@@ -380,7 +380,7 @@ const MyPageUpdate = () => {
               value={email}
               inputProps={{
                 style: {
-                  fontFamily: "SUIT-light"
+                  fontFamily: "SUIT-light",
                 },
               }}
               onChange={(event) => {
@@ -425,7 +425,7 @@ const MyPageUpdate = () => {
               value={nickName}
               inputProps={{
                 style: {
-                  fontFamily: "SUIT-light"
+                  fontFamily: "SUIT-light",
                 },
               }}
               onChange={(event) => {
@@ -433,7 +433,7 @@ const MyPageUpdate = () => {
                   setCheckedNickNameDuplicated(true);
                 }
                 setNickName(event.target.value);
-                localStorage.setItem("nickName", event.target.value);
+                localStorage.setItem("encodedNickName", event.target.value);
               }}
             />
             <Button
@@ -465,7 +465,7 @@ const MyPageUpdate = () => {
             InputProps={{
               style: {
                 backgroundColor: "rgb(250, 250, 250)",
-                fontFamily: "SUIT-light"
+                fontFamily: "SUIT-light",
               },
             }}
             onChange={(event) => {
@@ -490,7 +490,7 @@ const MyPageUpdate = () => {
               InputProps={{
                 onClick: onClickAddr,
                 style: {
-                  fontFamily: "SUIT-light"
+                  fontFamily: "SUIT-light",
                 },
               }}
             />
@@ -524,7 +524,7 @@ const MyPageUpdate = () => {
             InputProps={{
               style: {
                 backgroundColor: "rgb(250, 250, 250)",
-                fontFamily: "SUIT-light"
+                fontFamily: "SUIT-light",
               },
             }}
           />
@@ -543,7 +543,7 @@ const MyPageUpdate = () => {
             InputProps={{
               style: {
                 backgroundColor: "rgb(250, 250, 250)",
-                fontFamily: "SUIT-light"
+                fontFamily: "SUIT-light",
               },
             }}
             onChange={(event) => {
