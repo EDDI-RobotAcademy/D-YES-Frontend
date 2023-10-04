@@ -1,21 +1,11 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, TextField, MenuItem, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import "../../../inquiry/css/InquiryRegisterPage.css";
-import {
-  getInquiryDetail,
-  inquiryReplyRegister,
-} from "page/inquiry/api/InquiryApi";
+import { getInquiryDetail, inquiryReplyRegister } from "page/inquiry/api/InquiryApi";
 import { InquiryDetail } from "page/inquiry/entity/InquiryDetail";
 import { InquiryReplyRequest } from "page/inquiry/entity/InquiryReplyRequest";
 import useInquiryReplyStore from "page/inquiry/store/InquiryReplyStore";
@@ -63,7 +53,7 @@ const AdminInquiryReadPage = () => {
       navigate("/");
     }
   }, [isAdmin, navigate]);
-  
+
   useEffect(() => {
     const fetchInquiryDetailData = async () => {
       try {
@@ -88,16 +78,16 @@ const AdminInquiryReadPage = () => {
         content: inquiryReply.content,
       },
     };
-
-    await mutation.mutateAsync(data);
+    if (data.inquiryReplyRequest.content != null) {
+      await mutation.mutateAsync(data);
+    } else {
+      toast.error("답변을 작성해주세요");
+    }
   };
 
   return (
     <div>
-      <Container
-        maxWidth="md"
-        sx={{ marginTop: "2em", justifyContent: "center" }}
-      >
+      <Container maxWidth="md" sx={{ marginTop: "2em", justifyContent: "center" }}>
         <Box
           sx={{
             width: "96%",
@@ -136,9 +126,7 @@ const AdminInquiryReadPage = () => {
           <TextField
             select
             name="inquiryType"
-            value={
-              loadedItems?.inquiryReadInquiryInfoResponse.inquiryType || ""
-            }
+            value={loadedItems?.inquiryReadInquiryInfoResponse.inquiryType || ""}
             disabled={true}
           >
             <MenuItem value="">문의 유형을 선택해주세요</MenuItem>
@@ -196,32 +184,24 @@ const AdminInquiryReadPage = () => {
                   multiline
                   minRows={10}
                   maxRows={10}
-                  onChange={(
-                    event: React.ChangeEvent<
-                      HTMLInputElement | HTMLTextAreaElement
-                    >
-                  ) => handleContentChange(event.target.value)}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                    handleContentChange(event.target.value)
+                  }
                 />
               )}
               <div className="inquiry-reg-submit-btn">
                 <Button
                   style={{
                     minWidth: "150px",
-                    color: loadedItems?.replyResponse.replyContent
-                      ? "#252525"
-                      : "#578b36",
+                    color: loadedItems?.replyResponse.replyContent ? "#252525" : "#578b36",
                     backgroundColor: "white",
-                    borderColor: loadedItems?.replyResponse.replyContent
-                      ? "#252525"
-                      : "#578b36",
+                    borderColor: loadedItems?.replyResponse.replyContent ? "#252525" : "#578b36",
                   }}
                   variant="outlined"
                   type="submit"
                   disabled={!!loadedItems?.replyResponse.replyContent}
                 >
-                  {loadedItems?.replyResponse.replyContent
-                    ? "답변 작성 완료"
-                    : "답변 등록"}
+                  {loadedItems?.replyResponse.replyContent ? "답변 작성 완료" : "답변 등록"}
                 </Button>
               </div>
             </Box>
