@@ -83,7 +83,7 @@ const RecipeDetailPage: React.FC = () => {
   return (
     <div className="recipe-detail-container">
       <div className="recipe-detail-grid">
-        <div className="recipe-detail-page-name">레시피 목록</div>
+        <div className="recipe-detail-page-name">레시피 정보</div>
         <hr />
         {isLoading && loadedItems ? (
           <div className="recipe-detail-flex">
