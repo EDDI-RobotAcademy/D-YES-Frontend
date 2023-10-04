@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-width: 1200px
+  min-width: 1200px;
 }
 
 .chart-container {
@@ -25,7 +25,7 @@
 
 .table-container {
   /* background-color: blue; */
-  height: 600px;
+  height: auto;
   width: 70%;
   position: relative;
   padding-left: 20px;
