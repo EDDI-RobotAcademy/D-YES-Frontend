@@ -6,7 +6,7 @@ export const mainIngredients = [
   { value: "ONION", label: "양파" },
   { value: "POTATO", label: "감자" },
   { value: "WELSH_ONION", label: "대파" },
-  { value: "YOUNG_PUMPKIN", label: "청경채" },
+  { value: "YOUNG_PUMPKIN", label: "애호박" },
 ];
 
 export const recipeMainCategory = [
