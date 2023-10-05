@@ -60,8 +60,8 @@ const AdminOrderListPage = () => {
       const fetchedOrderList = await getOrderList();
       const sortedOrderList = fetchedOrderList.sort(
         (a: AdminOrderList, b: AdminOrderList) =>
-          parseInt(a.orderDetailInfoResponse.productOrderId) -
-          parseInt(b.orderDetailInfoResponse.productOrderId)
+          parseInt(b.orderDetailInfoResponse.productOrderId) -
+          parseInt(a.orderDetailInfoResponse.productOrderId)
       );
       setOrderList(sortedOrderList);
     } catch (error) {
