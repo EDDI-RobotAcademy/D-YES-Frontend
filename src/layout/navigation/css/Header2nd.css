@@ -61,12 +61,7 @@
   margin-left: 0;
   margin-right: 0;
 }
-.second-header-top-bar:hover .second-header-drawer {
+.second-header-btn-container-1:hover + .second-header-drawer,
+.second-header-drawer:hover {
   display: flex;
 }
-/* .second-header-top-bar .second-header-drawer {
-  display: flex;
-} */
-/* .drawer-open {
-  background-color: rgb(221, 238, 232);
-} */
