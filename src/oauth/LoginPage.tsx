@@ -33,7 +33,7 @@ const LoginPage = () => {
           <div className="login-icons">
             <div className="login-text">
               <h2>로그인·회원가입</h2>
-              <span>오늘부터 2주! 매일 업데이트되는 가격을 확인하세요</span>
+              <span>내일부터 2주! 매일 업데이트되는 가격을 확인하세요</span>
             </div>
             <KakaoLogin onSuccess={handleLoginSuccess} />
             <GoogleLogin onSuccess={handleLoginSuccess} />
