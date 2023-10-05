@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  CardMedia,
-  Slider,
-} from "@mui/material";
+import { Container, Box, Card, CardContent, Typography, CardMedia, Slider } from "@mui/material";
 import { CardActionArea } from "@mui/material";
 import { getEventProductDetail, getEventProductList } from "./api/EventApi";
 import { won } from "utility/filters/wonFilter";
@@ -23,11 +15,8 @@ const EventListPage = () => {
   const navigate = useNavigate();
   const { setEventRead } = useEventReadStore();
   const [loading, setLoading] = useState(true);
-  const [loadedProducts, setLoadedProducts] = useState<
-    EventProductListResponse[]
-  >([]);
-  const [loadedMainProduct, setLoadedMainProduct] =
-    useState<EventProductListResponse>();
+  const [loadedProducts, setLoadedProducts] = useState<EventProductListResponse[]>([]);
+  const [loadedMainProduct, setLoadedMainProduct] = useState<EventProductListResponse>();
 
   const deadline = loadedMainProduct?.deadLineResponse.deadLine;
   let remainingDays = null;
@@ -61,7 +50,7 @@ const EventListPage = () => {
     let percentage = 0;
 
     if (nowCount) {
-      percentage = ((targetCount - nowCount) / targetCount) * 100;
+      percentage = (nowCount / targetCount) * 100;
     }
 
     return {
@@ -81,22 +70,15 @@ const EventListPage = () => {
     percentage = Math.floor(percentage);
   }
 
-  const minOptionPrice =
-    loadedMainProduct?.productOptionResponseForListForUser.minOptionPrice ?? 0;
+  const minOptionPrice = loadedMainProduct?.productOptionResponseForListForUser.minOptionPrice ?? 0;
 
   let discountedCurrentPrice = 0;
   let discountPercentage = 0;
 
-  if (
-    nowCount1 !== undefined &&
-    targetCount1 !== undefined &&
-    targetCount1 !== 0
-  ) {
+  if (nowCount1 !== undefined && targetCount1 !== undefined && targetCount1 !== 0) {
     discountedCurrentPrice =
-      minOptionPrice -
-      (minOptionPrice * (3 / 10) * (nowCount1 / targetCount1) || 0);
-    discountPercentage =
-      ((minOptionPrice - discountedCurrentPrice) / minOptionPrice) * 100;
+      minOptionPrice - (minOptionPrice * (3 / 10) * (nowCount1 / targetCount1) || 0);
+    discountPercentage = ((minOptionPrice - discountedCurrentPrice) / minOptionPrice) * 100;
   }
 
   const marks = [
@@ -167,10 +149,7 @@ const EventListPage = () => {
       }
       navigate(`/eventProductDetail/${eventProductId}`);
     } catch (error) {
-      console.error(
-        "상세 페이지 이벤트 데이터를 불러오는 중 오류 발생:",
-        error
-      );
+      console.error("상세 페이지 이벤트 데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
@@ -221,9 +200,7 @@ const EventListPage = () => {
                 paddingTop="10px"
               >
                 <Card
-                  key={
-                    loadedMainProduct?.productResponseForListForUser.productId
-                  }
+                  key={loadedMainProduct?.productResponseForListForUser.productId}
                   className=""
                   sx={{
                     width: "auto",
@@ -242,10 +219,7 @@ const EventListPage = () => {
                       fontFamily={"SUIT-Bold"}
                       color={"white"}
                     >
-                      {
-                        loadedMainProduct?.productResponseForListForUser
-                          .productName
-                      }
+                      {loadedMainProduct?.productResponseForListForUser.productName}
                     </Typography>
                     <Typography
                       data-testid="event-option-price"
@@ -258,13 +232,11 @@ const EventListPage = () => {
                         {Math.floor(discountPercentage)}%
                       </span>
                       {discountedCurrentPrice !==
-                      loadedMainProduct?.productOptionResponseForListForUser
-                        .minOptionPrice ? (
+                      loadedMainProduct?.productOptionResponseForListForUser.minOptionPrice ? (
                         <del>
                           <span className="original-price">
                             {won(
-                              loadedMainProduct
-                                ?.productOptionResponseForListForUser
+                              loadedMainProduct?.productOptionResponseForListForUser
                                 .minOptionPrice || 0
                             )}
                           </span>
@@ -272,17 +244,15 @@ const EventListPage = () => {
                       ) : (
                         <span>
                           {won(
-                            loadedMainProduct
-                              ?.productOptionResponseForListForUser
-                              .minOptionPrice || 0
+                            loadedMainProduct?.productOptionResponseForListForUser.minOptionPrice ||
+                              0
                           )}
                         </span>
                       )}
 
                       <span className="discounted-current-price-value">
                         {discountedCurrentPrice !==
-                          loadedMainProduct?.productOptionResponseForListForUser
-                            .minOptionPrice &&
+                          loadedMainProduct?.productOptionResponseForListForUser.minOptionPrice &&
                           won(Math.floor(discountedCurrentPrice))}
                       </span>
                     </Typography>
@@ -317,8 +287,7 @@ const EventListPage = () => {
                         fontFamily={"SUIT-Light"}
                         style={{ letterSpacing: "-0.5px" }}
                       >
-                        {loadedMainProduct?.deadLineResponse.startLine.toString()}
-                        ~
+                        {loadedMainProduct?.deadLineResponse.startLine.toString()}~
                         {loadedMainProduct?.deadLineResponse.deadLine.toString()}
                       </Typography>
                     </div>
@@ -341,15 +310,8 @@ const EventListPage = () => {
                         fontSize={"16px"}
                         paddingLeft={"10px"}
                       >
-                        {
-                          loadedMainProduct?.farmInfoResponseForListForUser
-                            .farmName
-                        }
-                        |
-                        {
-                          loadedMainProduct?.farmInfoResponseForListForUser
-                            .representativeName
-                        }
+                        {loadedMainProduct?.farmInfoResponseForListForUser.farmName}|
+                        {loadedMainProduct?.farmInfoResponseForListForUser.representativeName}
                       </Typography>
                       <Typography
                         data-testid="event-option-price"
@@ -358,8 +320,7 @@ const EventListPage = () => {
                         fontFamily={"SUIT-Light"}
                         paddingLeft={"10px"}
                       >
-                        {loadedMainProduct?.countResponse.nowCount}명이 함께하고
-                        있어요!
+                        {loadedMainProduct?.countResponse.nowCount}명이 함께하고 있어요!
                       </Typography>
                       <Typography
                         data-testid="event-option-price"
@@ -388,8 +349,7 @@ const EventListPage = () => {
                           marginRight: "10px",
                         }}
                         image={getImageUrl(
-                          loadedMainProduct?.farmInfoResponseForListForUser
-                            .mainImage || ""
+                          loadedMainProduct?.farmInfoResponseForListForUser.mainImage || ""
                         )}
                         alt={`mainImage ${loadedMainProduct?.farmInfoResponseForListForUser.mainImage}`}
                       />
@@ -409,11 +369,7 @@ const EventListPage = () => {
                 height: "auto",
               }}
             >
-              <Box
-                flexWrap="wrap"
-                alignContent="center"
-                justifyContent="center"
-              >
+              <Box flexWrap="wrap" alignContent="center" justifyContent="center">
                 <CardMedia
                   component="img"
                   style={{
@@ -422,8 +378,7 @@ const EventListPage = () => {
                     height: "300px",
                   }}
                   image={getImageUrl(
-                    loadedMainProduct?.productMainImageResponseForListForUser
-                      .mainImg || ""
+                    loadedMainProduct?.productMainImageResponseForListForUser.mainImg || ""
                   )}
                   alt={`mainImage ${loadedMainProduct?.productResponseForListForUser.productId}`}
                 />
@@ -474,8 +429,7 @@ const EventListPage = () => {
                   <CardActionArea
                     onClick={() =>
                       handleProductDetail(
-                        product.eventProductIdResponse?.eventProductId.toString() ||
-                          ""
+                        product.eventProductIdResponse?.eventProductId.toString() || ""
                       )
                     }
                   >
@@ -492,9 +446,7 @@ const EventListPage = () => {
                     <CardMedia
                       component="img"
                       height="300"
-                      image={getImageUrl(
-                        product.productMainImageResponseForListForUser.mainImg
-                      )}
+                      image={getImageUrl(product.productMainImageResponseForListForUser.mainImg)}
                       alt={`mainImage ${product.productResponseForListForUser.productId}`}
                     />
                     <CardContent
@@ -518,10 +470,7 @@ const EventListPage = () => {
                           color="text.secondary"
                           fontFamily={"SUIT-Light"}
                         >
-                          {won(
-                            product.productOptionResponseForListForUser
-                              .minOptionPrice
-                          )}
+                          {won(product.productOptionResponseForListForUser.minOptionPrice)}
                         </Typography>
                         <Typography
                           data-testid="event-option-price"
@@ -529,8 +478,7 @@ const EventListPage = () => {
                           color="text.secondary"
                           fontFamily={"SUIT-Light"}
                         >
-                          {productsWithRemainingDays[index].remainingDays !==
-                          null
+                          {productsWithRemainingDays[index].remainingDays !== null
                             ? `남은 기간: ${productsWithRemainingDays[index].remainingDays}일`
                             : "남은 기간을 계산할 수 없습니다."}
                         </Typography>
@@ -562,12 +510,8 @@ const EventListPage = () => {
                             fontFamily={"SUIT-ExtraBold"}
                             fontSize={"12px"}
                           >
-                            {Math.floor(
-                              calculatePercentage[index].percentage
-                            ) !== null
-                              ? `${Math.floor(
-                                  calculatePercentage[index].percentage
-                                )}%`
+                            {Math.floor(calculatePercentage[index].percentage) !== null
+                              ? `${Math.floor(calculatePercentage[index].percentage)}%`
                               : "달성율을 계산할 수 없습니다."}
                           </Typography>
                         </Box>
