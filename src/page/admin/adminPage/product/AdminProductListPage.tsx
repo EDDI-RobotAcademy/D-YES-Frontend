@@ -186,7 +186,6 @@ const AdminProductList: React.FC = () => {
                     textAlign: "center",
                   }}
                 >
-                  선택
                   <Checkbox checked={selectAll} onChange={() => handleSelectAll()} />
                 </TableCell>
                 <TableCell
