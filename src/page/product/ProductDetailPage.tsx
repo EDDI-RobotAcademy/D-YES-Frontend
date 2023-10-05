@@ -48,6 +48,7 @@ const ProductDetail = () => {
   const optionList: useOptions[] = ProductOptionStore((state) => state.optionList);
   const [optionQuantities, setOptionQuantities] = useState<{ [key: number]: number }>({});
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const parsedHTMLRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -205,6 +206,13 @@ const ProductDetail = () => {
     });
     setTotalPrice(totalPrice);
   };
+
+  useEffect(() => {
+    if (!parsedHTMLRef.current) return;
+    const parsedHTMLElement = parsedHTMLRef.current;
+    const yOffset = parsedHTMLElement.offsetHeight;
+    window.scrollTo({ top: yOffset, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     if (localStorage.getItem("fromReview") === "true") {
@@ -433,7 +441,7 @@ const ProductDetail = () => {
                   <div>
                     <div className="product-description-container">
                       <div className="product-detail-header-name">상품정보</div>
-                      <div>{parsedHTML}</div>
+                      <div ref={parsedHTMLRef}>{parsedHTML}</div>
                     </div>
                     <hr className="hr2-style" />
                     {/* 여기에 상세 정보 작성하세요 */}
