@@ -15,6 +15,7 @@ import { useDropzone } from "react-dropzone";
 import { uploadFileAwsS3 } from "utility/s3/awsS3";
 import { compressImgForProfile } from "utility/s3/imageCompression";
 import { useAuth } from "layout/navigation/AuthConText";
+import { isValidImageExtension } from "utility/s3/checkValidImageExtension";
 
 import "./css/MyPage.css";
 
@@ -59,6 +60,8 @@ const MyPageUpdate = () => {
   }, [isUser, navigate]);
 
   const onDrop = async (acceptedFile: File[]) => {
+    if (!isValidImageExtension(acceptedFile[0].name))
+      return toast.error("확장자를 확인해주세요 (.jpg, .jpeg, .png)");
     if (acceptedFile.length > 0) {
       try {
         const compressedImage = await compressImgForProfile(acceptedFile[0]);

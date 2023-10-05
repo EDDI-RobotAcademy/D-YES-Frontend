@@ -31,6 +31,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import TimerIcon from "@mui/icons-material/Timer";
 import { mainIngredients, recipeMainCategory, recipeSubCategory } from "./RecipeDictionary";
 import { useAuth } from "layout/navigation/AuthConText";
+import { isValidImageExtension } from "utility/s3/checkValidImageExtension";
 
 import "./css/RecipeRegisterPage.css";
 
@@ -65,6 +66,8 @@ const RecipeRegisterPage = () => {
 
   // 이미지
   const onMainImageDrop = async (acceptedFile: File[]) => {
+    if (!isValidImageExtension(acceptedFile[0].name))
+      return toast.error("확장자를 확인해주세요 (.jpg, .jpeg, .png)");
     if (acceptedFile.length) {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
