@@ -107,12 +107,12 @@ const MyOrderPage: React.FC = () => {
   const goToReviewPage = (
     productOrderId: string,
     options: OrderProductListResponse[],
-    productId: number
+    productId: number,
+    productName: string
   ) => {
     const productOptionIdList: number[] = options.flatMap((option) =>
       option.orderOptionList.map((item) => item.optionId)
     );
-    const productName: string = options[0].productName;
     const filteredOptionInfo = options.filter((option) => option.productId === productId);
 
     navigate("/review/register", {
@@ -340,7 +340,8 @@ const MyOrderPage: React.FC = () => {
                                               goToReviewPage(
                                                 item.orderDetailInfoResponse.productOrderId,
                                                 item.orderProductList,
-                                                options.productId
+                                                options.productId,
+                                                options.productName
                                               )
                                             }
                                             disabled={
