@@ -32,7 +32,7 @@ const PriceListPage: React.FC = () => {
 
   return (
     <div className="farm-produce-price-container">
-      <h1>오늘부터 2주 후까지 예측된 가격을 확인해보세요</h1>
+      <h1>내일부터 2주 후까지 예측된 가격을 확인해보세요</h1>
       <div className="switch-container">
         <FormControlLabel
           control={<Switch checked={showTable} onChange={handleSwitchChange} color="warning" />}
