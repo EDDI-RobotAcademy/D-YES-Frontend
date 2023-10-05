@@ -13,7 +13,7 @@ import {
   Rating,
 } from "@mui/material";
 import { CardActionArea } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "utility/s3/awsS3";
 import { won } from "utility/filters/wonFilter";
 import { ProductListResponseFormForUser } from "page/product/entity/ProductList";
@@ -47,6 +47,11 @@ const NewProductListPage: React.FC = () => {
   }, []);
 
   const handleProductClick = (productId: number) => {
+    navigate(`/productDetail/${productId}`);
+  };
+
+  const goToReview = (productId: number) => {
+    localStorage.setItem("fromReview", "true");
     navigate(`/productDetail/${productId}`);
   };
 
@@ -186,8 +191,7 @@ const NewProductListPage: React.FC = () => {
                     </div>
                     <Button
                       size="small"
-                      component={Link}
-                      to={`/reviews/${product.productResponseForListForUser.productId}`}
+                      onClick={() => goToReview(product.productResponseForListForUser.productId)}
                     >
                       리뷰 확인하기
                     </Button>
