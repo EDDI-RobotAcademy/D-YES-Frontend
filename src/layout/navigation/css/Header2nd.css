@@ -65,3 +65,9 @@
 .second-header-drawer:hover {
   display: flex;
 }
+
+/* 수정용 */
+/* .second-header-drawer,
+.second-header-drawer:hover {
+  display: flex;
+} */
