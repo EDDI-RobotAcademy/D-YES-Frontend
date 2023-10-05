@@ -71,7 +71,15 @@ const MyOrderPage: React.FC = () => {
         const daysAgo: number = timeDifference / (24 * 60 * 60 * 1000);
         return daysAgo <= dateFilters[filter];
       });
-      setFilteredOrderList(filteredOrders);
+
+      const sortedOrders = filteredOrders.sort((a, b) => {
+        return (
+          parseInt(b.orderDetailInfoResponse.productOrderId) -
+          parseInt(a.orderDetailInfoResponse.productOrderId)
+        );
+      });
+
+      setFilteredOrderList(sortedOrders);
     }
   }, [filter, isLoading, loadedOrderList]);
 
