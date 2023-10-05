@@ -7,12 +7,16 @@ import { useDropzone } from "react-dropzone";
 import { getImageUrl } from "utility/s3/awsS3";
 import { compressImg } from "utility/s3/imageCompression";
 import { EventDetailImage } from "page/event/entity/EventDetailImage";
+import { isValidImageExtension } from "utility/s3/checkValidImageExtension";
+import { toast } from "react-toastify";
 
 const EventModifyImage = () => {
   const { eventReads, setEventRead } = useEventReadStore();
   const { eventModify, setEventModify } = useEventModifyStore();
 
   const onMainImageDrop = async (acceptedFile: File[]) => {
+    if (!isValidImageExtension(acceptedFile[0].name))
+      return toast.error("확장자를 확인해주세요 (.jpg, .jpeg, .png)");
     if (acceptedFile.length) {
       try {
         const compressedImage = await compressImg(acceptedFile[0]);
@@ -44,6 +48,11 @@ const EventModifyImage = () => {
   const onDetailImageDrop = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       try {
+        const invalidFiles = acceptedFiles.filter((file) => !isValidImageExtension(file.name));
+        if (invalidFiles.length > 0) {
+          toast.error("확장자를 확인해주세요 (.jpg, .jpeg, .png)");
+          return;
+        }
         const compressedImages = await Promise.all(
           acceptedFiles.map(async (file) => {
             return {

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./css/Header2nd.css";
@@ -10,26 +10,10 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const handleMouseEnter = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDrawerOpen(false);
-  };
-
   return (
     <div className="second-header-container">
       <div className="second-header-fontstyle">
-        <div
-          className={`second-header-top-bar ${
-            isDrawerOpen ? "drawer-open" : ""
-          }`}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
+        <div className="second-header-top-bar">
           <div className="second-header-btn-container-1">
             <Link className="second-header-link" to={"/productList/all"}>
               <MenuIcon />
@@ -37,6 +21,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                 <p>카테고리</p>
               </div>
             </Link>
+          </div>
+          <div className="second-header-drawer">
+            <Header3rd />
           </div>
           <div className="second-header-btn-container-2">
             <Link className="second-header-link" to={"/productList/new"}>
@@ -56,20 +43,10 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             </Link>
           </div>
           <div className="second-header-btn-container-3">
-            <Link
-              className="second-header-link second-header-recipe-btn"
-              to={"/recipe/list"}
-            >
+            <Link className="second-header-link second-header-recipe-btn" to={"/recipe/list"}>
               <RestaurantIcon fontSize="small" />
               레시피
             </Link>
-          </div>
-          <div
-            className={`second-header-drawer ${
-              isDrawerOpen ? "drawer-open" : ""
-            }`}
-          >
-            <Header3rd />
           </div>
         </div>
         {children}

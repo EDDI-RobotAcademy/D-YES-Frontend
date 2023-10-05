@@ -15,6 +15,7 @@ import { ReviewRegister } from "./entity/ReviewRegister";
 import { OrderProductListResponse } from "page/order/entity/UserOrderProduct";
 
 import "./css/ReviewRegisterPage.css";
+import { isValidImageExtension } from "utility/s3/checkValidImageExtension";
 
 const ReviewRegisterPage = () => {
   const navigate = useNavigate();
@@ -34,6 +35,11 @@ const ReviewRegisterPage = () => {
   });
 
   const onReviewImageDrop = async (acceptedFiles: File[]) => {
+    const invalidFiles = acceptedFiles.filter((file) => !isValidImageExtension(file.name));
+    if (invalidFiles.length > 0) {
+      toast.error("확장자를 확인해주세요 (.jpg, .jpeg, .png)");
+      return;
+    }
     try {
       const compressedImages = await Promise.all(
         acceptedFiles.map(async (file) => {
