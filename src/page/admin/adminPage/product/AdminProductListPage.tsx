@@ -166,6 +166,8 @@ const AdminProductList: React.FC = () => {
     }
   };
 
+  const sortedProducts = [...(products || [])].sort((a, b) => b.productId - a.productId);
+
   return (
     <div className="admin-product-list-container">
       <div className="admin-product-list-box">
@@ -273,14 +275,14 @@ const AdminProductList: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products?.length === 0 ? (
+              {sortedProducts.length === 0 ? (
                 <TableRow key={uuidv4()}>
                   <TableCell colSpan={9} align="center">
                     등록된 상품이 없습니다.
                   </TableCell>
                 </TableRow>
               ) : (
-                products?.map((product, index) => (
+                sortedProducts.map((product, index) => (
                   <TableRow
                     onClick={() => handleRowClick(product.productId)}
                     key={index}
