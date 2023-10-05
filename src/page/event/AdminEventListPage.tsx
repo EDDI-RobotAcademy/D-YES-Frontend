@@ -127,6 +127,10 @@ const AdminEventListPage = () => {
     }
   };
 
+  const sortedEventList = [...(eventList?.eventProductAdminListResponseList || [])].sort(
+    (a, b) => b.eventProductId - a.eventProductId
+  );
+
   return (
     <div className="admin-event-list-container">
       <div className="admin-event-list-box">
@@ -225,8 +229,8 @@ const AdminEventListPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventList?.eventProductAdminListResponseList?.length ? (
-                eventList.eventProductAdminListResponseList.map((event) => (
+              {sortedEventList.length ? (
+                sortedEventList.map((event) => (
                   <TableRow key={event.eventProductId}>
                     <TableCell className="cellStyle">
                       <Button
