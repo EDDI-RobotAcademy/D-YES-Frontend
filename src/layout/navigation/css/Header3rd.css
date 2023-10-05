@@ -1,26 +1,40 @@
 .third-header-container {
-  position: relative;
-  margin: 0 auto;
-  padding: 0 60px;
-  float: left;
-}
-.third-header-fontstyle {
-  font-family: "SUIT-Bold";
-  font-size: 18px;
-}
-.third-header-grid {
   display: flex;
-  float: left;
+  padding: 30px;
   flex-direction: column;
-  align-items: center;
-  background-color: white;
-  width: auto;
-  position: relative;
+  align-items: flex-start;
+  gap: 30px;
 }
-.third-header-options {
-  justify-self: baseline;
-}
-.third-header-categoryname {
+.category-component {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: baseline;
+}
+.category-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  min-width: 80px;
+}
+.category-elements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.category-elements > Link {
+  width: calc(25% - 10px);
+  margin-bottom: 10px;
+}
+.category-elements a {
+  text-decoration: none;
+  color: #333;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  width: 80px;
+  text-align: center;
+}
+.category-elements a:hover {
+  background-color: #333;
+  color: #fff;
 }

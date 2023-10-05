@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { CategoryType } from "./entity/CategoryType";
 
+import "./css/Header3rd.css";
+
 const categoryInfo: CategoryType[] = [
   {
     categoryId: 1,
@@ -31,32 +33,31 @@ const categoryInfo: CategoryType[] = [
 
 const CategoryComponent = ({ category }: { category: CategoryType }) => {
   return (
-    <div>
-      <div>{category.categoryName.name}</div>
-      <ul>
-        {Object.keys(category.categoryElements).map((key) => (
-          <li key={key}>
-            <Link
-              to={
-                category.categoryId === 1
-                  ? `/productList/category/${category.categoryElements[key].elementName}`
-                  : category.categoryId === 2
-                  ? `/productList/region/${category.categoryElements[key].elementName}`
-                  : "/"
-              }
-            >
-              {category.categoryElements[key].name}
-            </Link>
-          </li>
+    <div className="category-component">
+      <div className="category-name">{category.categoryName.name}</div>
+      <div className="category-elements">
+        {Object.keys(category.categoryElements).map((key: string) => (
+          <Link
+            to={
+              category.categoryId === 1
+                ? `/productList/category/${category.categoryElements[key].elementName}`
+                : category.categoryId === 2
+                ? `/productList/region/${category.categoryElements[key].elementName}`
+                : "/"
+            }
+            key={key}
+          >
+            {category.categoryElements[key].name}
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
 
 const Header3rd = () => {
   return (
-    <div>
+    <div className="third-header-container">
       {categoryInfo.map((category) => (
         <CategoryComponent key={category.categoryId} category={category} />
       ))}
