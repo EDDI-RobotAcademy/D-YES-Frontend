@@ -375,7 +375,7 @@ const EventListPage = () => {
                   style={{
                     objectFit: "cover",
                     width: "400px",
-                    height: "300px",
+                    height: "305px",
                   }}
                   image={getImageUrl(
                     loadedMainProduct?.productMainImageResponseForListForUser.mainImg || ""
