@@ -4,6 +4,10 @@ import { CategoryType } from "./entity/CategoryType";
 
 import "./css/Header3rd.css";
 
+type Header3rdProps = {
+  closeDrawer: () => void;
+};
+
 const categoryInfo: CategoryType[] = [
   {
     categoryId: 1,
@@ -31,12 +35,26 @@ const categoryInfo: CategoryType[] = [
   },
 ];
 
+const Header3rd: React.FC<Header3rdProps> = ({ closeDrawer }) => {
+  return (
+    <div className="third-header-container">
+      {categoryInfo.map((category) => (
+        <CategoryComponent key={category.categoryId} category={category} />
+      ))}
+    </div>
+  );
+};
+
 const CategoryComponent = ({ category }: { category: CategoryType }) => {
+  function closeDrawer(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="category-component">
       <div className="category-name">{category.categoryName.name}</div>
       <div className="category-elements">
-        {Object.keys(category.categoryElements).map((key: string) => (
+        {Object.keys(category.categoryElements).map((key) => (
           <Link
             to={
               category.categoryId === 1
@@ -46,21 +64,12 @@ const CategoryComponent = ({ category }: { category: CategoryType }) => {
                 : "/"
             }
             key={key}
+            onClick={closeDrawer}
           >
             {category.categoryElements[key].name}
           </Link>
         ))}
       </div>
-    </div>
-  );
-};
-
-const Header3rd = () => {
-  return (
-    <div className="third-header-container">
-      {categoryInfo.map((category) => (
-        <CategoryComponent key={category.categoryId} category={category} />
-      ))}
     </div>
   );
 };
