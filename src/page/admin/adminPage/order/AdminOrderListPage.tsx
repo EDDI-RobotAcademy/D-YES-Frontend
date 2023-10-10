@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Select, MenuItem, TableCell, TableHead, TableRow } from "@mui/material";
+import { Select, MenuItem, TableCell, TableHead, TableRow, TablePagination } from "@mui/material";
 import { Box } from "@mui/system";
+import { won } from "utility/filters/wonFilter";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,6 +23,9 @@ dayjs.extend(utc);
 dayjs.tz.setDefault("Asia/Seoul");
 
 const AdminOrderListPage = () => {
+  const [page, setPage] = useState(0);
+  const [OrderCount, setTotalOrderCount] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
   const { checkAdminAuthorization } = useAuth();
   const isAdmin = checkAdminAuthorization();
@@ -55,15 +59,25 @@ const AdminOrderListPage = () => {
     return null;
   }
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const fetchOrderList = async () => {
     try {
-      const fetchedOrderList = await getOrderList();
+      const fetchedOrderList = await getOrderList(page, rowsPerPage);
       const sortedOrderList = fetchedOrderList.sort(
         (a: AdminOrderList, b: AdminOrderList) =>
           parseInt(b.orderDetailInfoResponse.productOrderId) -
           parseInt(a.orderDetailInfoResponse.productOrderId)
       );
       setOrderList(sortedOrderList);
+      setTotalOrderCount(sortedOrderList[0].totalOrderCount);
     } catch (error) {
       console.log("주문 목록 불러오기 실패", error);
     }
@@ -71,7 +85,7 @@ const AdminOrderListPage = () => {
 
   useEffect(() => {
     fetchOrderList();
-  }, []);
+  }, [page, rowsPerPage]);
 
   const handleStatusChange = async (productOrderId: string, newStatus: OrderDeliveryStatus) => {
     try {
@@ -126,6 +140,7 @@ const AdminOrderListPage = () => {
             borderCollapse: "collapse",
             textAlign: "center",
             margin: "20px",
+            marginBottom: "0px",
           }}
         >
           <TableHead>
@@ -165,7 +180,7 @@ const AdminOrderListPage = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "7%",
+                  width: "9%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -176,18 +191,18 @@ const AdminOrderListPage = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "20%",
+                  width: "19%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
                   fontFamily: "SUIT-Bold",
                 }}
               >
-                배송상태
+                배송 상태
               </TableCell>
               <TableCell
                 style={{
-                  width: "10%",
+                  width: "9%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -209,7 +224,7 @@ const AdminOrderListPage = () => {
               </TableCell>
               <TableCell
                 style={{
-                  width: "8%",
+                  width: "9%",
                   padding: "18px 16px",
                   textAlign: "center",
                   color: "#252525",
@@ -255,6 +270,10 @@ const AdminOrderListPage = () => {
                       padding: "8px 16px",
                       textAlign: "center",
                       fontFamily: "SUIT-Light",
+                      overflow: "hidden",
+                      textOverflow: "clip",
+                      maxWidth: "40px",
+                      whiteSpace: "nowrap",
                     }}
                   >
                     {order.orderUserInfo.userId}
@@ -313,7 +332,7 @@ const AdminOrderListPage = () => {
                             order.orderDetailInfoResponse.deliveryStatus;
                           const orderStatus = order.orderDetailInfoResponse.orderStatus;
                           if (currentStatus.toString() === "DELIVERED") {
-                            toast.error("이미 배송 완료된 주문은 상태를 변경할 수 없습니다.");
+                            toast.error("배송 완료된 주문은 상태를 변경할 수 없습니다.");
                             return;
                           }
                           if (
@@ -337,12 +356,18 @@ const AdminOrderListPage = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
-                        style={{ width: "200px" }}
+                        style={{ width: "160px", fontSize: "14px" }}
                         autoWidth={false}
                       >
-                        <MenuItem value="PREPARING">상품 준비 중</MenuItem>
-                        <MenuItem value="SHIPPING">배송 중</MenuItem>
-                        <MenuItem value="DELIVERED">배송 완료</MenuItem>
+                        <MenuItem value="PREPARING">
+                          <div style={{ fontSize: "14px" }}>상품 준비 중</div>
+                        </MenuItem>
+                        <MenuItem value="SHIPPING">
+                          <div style={{ fontSize: "14px" }}>배송 중</div>
+                        </MenuItem>
+                        <MenuItem value="DELIVERED">
+                          <div style={{ fontSize: "14px" }}>배송 완료</div>
+                        </MenuItem>
                       </Select>
                     </div>
                   </TableCell>
@@ -357,12 +382,12 @@ const AdminOrderListPage = () => {
                   </TableCell>
                   <TableCell
                     style={{
-                      padding: "8px 16px",
-                      textAlign: "center",
+                      padding: "8px 44px",
+                      textAlign: "end",
                       fontFamily: "SUIT-Light",
                     }}
                   >
-                    {order.orderDetailInfoResponse.totalPrice}
+                    {won(order.orderDetailInfoResponse.totalPrice)}
                   </TableCell>
                   <TableCell
                     style={{
@@ -380,6 +405,17 @@ const AdminOrderListPage = () => {
             )}
           </tbody>
         </table>
+        <div className="pagination-container">
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={OrderCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
       </Box>
     </div>
   );

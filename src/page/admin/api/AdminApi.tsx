@@ -86,10 +86,11 @@ export const getUserList = async () => {
 };
 
 // 주문 조회
-export const getOrderList = async () => {
+export const getOrderList = async (page: number, pageSize: number) => {
   const response = await axiosInstance.get("/order/admin/list", {
     params: {
-      userToken: localStorage.getItem("userToken"),
+      page: page,
+      pageSize: pageSize,
     },
   });
   return response.data;
@@ -110,6 +111,8 @@ export const changeOrderStatus = async (data: {
 export const fetchOrderRead = async (
   productOrderId: string
 ): Promise<AdminOrderResponseDetail | null> => {
-  const response = await axiosInstance.get<AdminOrderResponseDetail>(`/order/admin/combine-order-data/${productOrderId}`);
+  const response = await axiosInstance.get<AdminOrderResponseDetail>(
+    `/order/admin/combine-order-data/${productOrderId}`
+  );
   return response.data;
 };
