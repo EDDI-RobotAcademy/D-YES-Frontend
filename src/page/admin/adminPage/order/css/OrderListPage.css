@@ -4,3 +4,6 @@
   align-items: center;
   border: 1px solid rgb(240, 240, 240);
 }
+.css-1hyrvs1-MuiInputBase-root-MuiOutlinedInput-root {
+  font-size: small !important;
+}
