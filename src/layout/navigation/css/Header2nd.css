@@ -24,6 +24,7 @@
   min-width: 140px;
   display: flex;
   gap: 50px;
+  height: inherit;
 }
 .second-header-btn-container-2 {
   min-width: 220px;
@@ -41,17 +42,17 @@
   border: 2px solid;
   border-radius: 2em;
 }
-.second-header-link {
+.second-header-element {
   align-items: center;
   display: flex;
   text-decoration: none;
   color: #252525;
   gap: 5px;
+  cursor: pointer;
 }
 .second-header-drawer {
   position: absolute;
   top: 100%;
-  display: none;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -61,13 +62,3 @@
   margin-left: 0;
   margin-right: 0;
 }
-.second-header-btn-container-1:hover + .second-header-drawer,
-.second-header-drawer:hover {
-  display: flex;
-}
-
-/* 수정용 */
-/* .second-header-drawer,
-.second-header-drawer:hover {
-  display: flex;
-} */
